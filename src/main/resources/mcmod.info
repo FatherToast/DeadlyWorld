@@ -1,0 +1,16 @@
+[
+{
+  "modid": "DeadlyWorld",
+  "name": "Deadly World",
+  "description": "Expands upon vanilla world generation to provide a more interesting - and dangerous - underground experience.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://www.minecraftforum.net/topic/1153874-/",
+  "updateUrl": "",
+  "authorList": ["FatherToast"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
