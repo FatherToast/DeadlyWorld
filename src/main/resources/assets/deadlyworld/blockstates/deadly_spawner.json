@@ -1,0 +1,19 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:cube_all",
+    "textures": {
+      "all": "minecraft:blocks/mob_spawner"
+    },
+    "uvlock": true
+  },
+  "variants": {
+    "type": {
+      "lone": {},
+      "stream": {},
+      "swarm": {},
+      "brutal": {},
+      "nest": {}
+    }
+  }
+}

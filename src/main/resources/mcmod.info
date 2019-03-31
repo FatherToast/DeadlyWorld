@@ -1,13 +1,13 @@
 [
 {
-  "modid": "DeadlyWorld",
+  "modid": "deadlyworld",
   "name": "Deadly World",
-  "description": "Expands upon vanilla world generation to provide a more interesting - and dangerous - underground experience.",
+  "description": "A world generation mod to spice up your underground.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "http://www.minecraftforum.net/topic/1153874-/",
+  "url": "https://github.com/FatherToast/DeadlyWorld",
   "updateUrl": "",
-  "authorList": ["FatherToast"],
+  "authorList": ["Father Toast"],
   "credits": "",
   "logoFile": "",
   "screenshots": [],
