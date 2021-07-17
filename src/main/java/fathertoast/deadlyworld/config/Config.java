@@ -1,9 +1,9 @@
-package fathertoast.specialai.config;
+package fathertoast.deadlyworld.config;
 
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.field.AbstractConfigField;
-import fathertoast.specialai.config.file.ToastConfigSpec;
-import fathertoast.specialai.config.file.TomlHelper;
+import fathertoast.deadlyworld.ModCore;
+import fathertoast.deadlyworld.config.field.AbstractConfigField;
+import fathertoast.deadlyworld.config.file.ToastConfigSpec;
+import fathertoast.deadlyworld.config.file.TomlHelper;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;

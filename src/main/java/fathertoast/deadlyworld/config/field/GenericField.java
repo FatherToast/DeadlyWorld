@@ -1,4 +1,4 @@
-package fathertoast.specialai.config.field;
+package fathertoast.deadlyworld.config.field;
 
 /**
  * Represents a config field with an object value.

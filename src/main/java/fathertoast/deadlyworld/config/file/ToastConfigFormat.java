@@ -1,4 +1,4 @@
-package fathertoast.specialai.config.file;
+package fathertoast.deadlyworld.config.file;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.ConfigFormat;

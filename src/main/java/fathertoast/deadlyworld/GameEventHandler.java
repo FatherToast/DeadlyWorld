@@ -1,4 +1,4 @@
-package fathertoast.specialai;
+package fathertoast.deadlyworld;
 
 
 import net.minecraftforge.event.TickEvent;

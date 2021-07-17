@@ -1,8 +1,8 @@
-package fathertoast.specialai.config.field;
+package fathertoast.deadlyworld.config.field;
 
 import com.electronwill.nightconfig.core.io.CharacterOutput;
-import fathertoast.specialai.config.file.ToastTomlWriter;
-import fathertoast.specialai.config.file.TomlHelper;
+import fathertoast.deadlyworld.config.file.ToastTomlWriter;
+import fathertoast.deadlyworld.config.file.TomlHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

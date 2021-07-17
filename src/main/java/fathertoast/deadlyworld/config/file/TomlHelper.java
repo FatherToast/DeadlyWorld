@@ -1,10 +1,10 @@
-package fathertoast.specialai.config.file;
+package fathertoast.deadlyworld.config.file;
 
 import com.electronwill.nightconfig.core.NullObject;
 import com.electronwill.nightconfig.core.utils.StringUtils;
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.field.DoubleField;
-import fathertoast.specialai.config.field.IntField;
+import fathertoast.deadlyworld.ModCore;
+import fathertoast.deadlyworld.config.field.DoubleField;
+import fathertoast.deadlyworld.config.field.IntField;
 
 import java.util.ArrayList;
 import java.util.Arrays;

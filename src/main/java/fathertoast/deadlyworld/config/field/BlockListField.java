@@ -1,8 +1,7 @@
-package fathertoast.specialai.config.field;
+package fathertoast.deadlyworld.config.field;
 
-import fathertoast.specialai.config.file.TomlHelper;
-import fathertoast.specialai.config.util.BlockEntry;
-import fathertoast.specialai.config.util.BlockList;
+import fathertoast.deadlyworld.config.file.TomlHelper;
+import fathertoast.deadlyworld.config.util.BlockList;
 import net.minecraft.block.BlockState;
 
 import javax.annotation.Nullable;

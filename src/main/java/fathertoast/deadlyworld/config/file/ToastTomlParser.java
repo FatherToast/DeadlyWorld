@@ -1,11 +1,11 @@
-package fathertoast.specialai.config.file;
+package fathertoast.deadlyworld.config.file;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.ConfigFormat;
 import com.electronwill.nightconfig.core.io.*;
 import com.electronwill.nightconfig.toml.TomlParser;
-import fathertoast.specialai.ModCore;
+import fathertoast.deadlyworld.ModCore;
 
 import java.io.Reader;
 

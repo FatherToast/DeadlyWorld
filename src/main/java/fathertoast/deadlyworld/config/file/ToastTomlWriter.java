@@ -1,9 +1,9 @@
-package fathertoast.specialai.config.file;
+package fathertoast.deadlyworld.config.file;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.io.*;
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.field.AbstractConfigField;
+import fathertoast.deadlyworld.ModCore;
+import fathertoast.deadlyworld.config.field.AbstractConfigField;
 
 import java.io.Writer;
 import java.util.Iterator;

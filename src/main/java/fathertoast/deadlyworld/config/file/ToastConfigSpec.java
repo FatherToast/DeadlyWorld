@@ -1,12 +1,12 @@
-package fathertoast.specialai.config.file;
+package fathertoast.deadlyworld.config.file;
 
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.file.FileConfigBuilder;
 import com.electronwill.nightconfig.core.io.CharacterOutput;
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.field.AbstractConfigField;
-import fathertoast.specialai.config.field.BlockListField;
-import fathertoast.specialai.config.field.EntityListField;
+import fathertoast.deadlyworld.ModCore;
+import fathertoast.deadlyworld.config.field.AbstractConfigField;
+import fathertoast.deadlyworld.config.field.BlockListField;
+import fathertoast.deadlyworld.config.field.EntityListField;
 
 import java.io.File;
 import java.util.ArrayList;

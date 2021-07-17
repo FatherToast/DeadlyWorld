@@ -1,12 +1,11 @@
-package fathertoast.specialai.config.util;
+package fathertoast.deadlyworld.config.util;
 
-import fathertoast.specialai.config.field.IStringArray;
-import fathertoast.specialai.config.file.TomlHelper;
+import fathertoast.deadlyworld.config.field.IStringArray;
+import fathertoast.deadlyworld.config.file.TomlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**

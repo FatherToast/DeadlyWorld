@@ -1,7 +1,7 @@
-package fathertoast.specialai.config.util;
+package fathertoast.deadlyworld.config.util;
 
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.field.EntityListField;
+import fathertoast.deadlyworld.ModCore;
+import fathertoast.deadlyworld.config.field.EntityListField;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;

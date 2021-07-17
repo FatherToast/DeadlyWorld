@@ -1,39 +1,39 @@
-package fathertoast.specialai.config.field;
+package fathertoast.deadlyworld.config.field;
 
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.file.TomlHelper;
+import fathertoast.deadlyworld.ModCore;
+import fathertoast.deadlyworld.config.file.TomlHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
 /**
- * Represents a config field with a double value.
+ * Represents a config field with an integer value.
  */
 @SuppressWarnings( "unused" )
-public class DoubleField extends AbstractConfigField {
+public class IntField extends AbstractConfigField {
     /** The default field value. */
-    private final double valueDefault;
+    private final int valueDefault;
     /** The minimum field value. */
-    private final double valueMin;
+    private final int valueMin;
     /** The maximum field value. */
-    private final double valueMax;
+    private final int valueMax;
     
     /** The underlying field value. */
-    private double value;
+    private int value;
     
     /** Creates a new field that accepts any value. */
-    public DoubleField( String key, double defaultValue, String... description ) {
+    public IntField( String key, int defaultValue, String... description ) {
         this( key, defaultValue, Range.ANY, description );
     }
     
     /** Creates a new field that accepts a common range of values. */
-    public DoubleField( String key, double defaultValue, Range range, String... description ) {
+    public IntField( String key, int defaultValue, Range range, String... description ) {
         this( key, defaultValue, range.MIN, range.MAX, description );
     }
     
     /** Creates a new field that accepts a specialized range of values. */
-    public DoubleField( String key, double defaultValue, double min, double max, String... description ) {
+    public IntField( String key, int defaultValue, int min, int max, String... description ) {
         super( key, description );
         valueDefault = defaultValue;
         valueMin = min;
@@ -41,10 +41,7 @@ public class DoubleField extends AbstractConfigField {
     }
     
     /** @return Returns the config field's value. */
-    public double get() { return value; }
-    
-    /** @return Treats the config field's value as a percent chance (from 0 to 1) and returns the result of a single roll. */
-    public boolean rollChance( Random random ) { return random.nextDouble() < value; }
+    public int get() { return value; }
     
     /** Adds info about the field type, format, and bounds to the end of a field's description. */
     public void appendFieldInfo( List<String> comment ) {
@@ -60,10 +57,10 @@ public class DoubleField extends AbstractConfigField {
     @Override
     public void load( @Nullable Object raw ) {
         // Use a final local variable to make sure the value gets set exactly one time
-        final double newValue;
+        final int newValue;
         if( raw instanceof Number ) {
             // Parse the value
-            final double rawValue = ((Number) raw).doubleValue();
+            final int rawValue = ((Number) raw).intValue();
             if( rawValue < valueMin ) {
                 ModCore.LOG.warn( "Value for {} \"{}\" is below the minimum ({})! Clamping value. Invalid value: {}",
                         getClass(), getKey(), valueMin, raw );
@@ -75,6 +72,10 @@ public class DoubleField extends AbstractConfigField {
                 newValue = valueMax;
             }
             else {
+                if( (double) rawValue != ((Number) raw).doubleValue() ) {
+                    ModCore.LOG.warn( "Value for {} \"{}\" is not an integer! Truncating value. Invalid value: {}",
+                            getClass(), getKey(), raw );
+                }
                 newValue = rawValue;
             }
         }
@@ -103,18 +104,18 @@ public class DoubleField extends AbstractConfigField {
     /** A set of commonly used ranges for this field type. */
     public enum Range {
         /** Accepts any value. */
-        ANY( Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY ),
-        /** Accepts any positive value (>= +0). */
-        POSITIVE( 0.0, Double.POSITIVE_INFINITY ),
-        /** Accepts any value between 0 and 1. */
-        PERCENT( 0.0, 1.0 ),
-        /** Accepts any value between -1 and 2. */
-        DROP_CHANCE( -1.0, 2.0 );
+        ANY( Integer.MIN_VALUE, Integer.MAX_VALUE ),
+        /** Accepts any positive value (> 0). */
+        POSITIVE( 1, Integer.MAX_VALUE ),
+        /** Accepts any non-negative value (>= 0). */
+        NON_NEGATIVE( 0, Integer.MAX_VALUE ),
+        /** Accepts any non-negative value and -1 (>= -1). */
+        TOKEN_NEGATIVE( -1, Integer.MAX_VALUE );
         
-        public final double MIN;
-        public final double MAX;
+        public final int MIN;
+        public final int MAX;
         
-        Range( double min, double max ) {
+        Range( int min, int max ) {
             MIN = min;
             MAX = max;
         }
@@ -122,16 +123,16 @@ public class DoubleField extends AbstractConfigField {
     
     /**
      * Represents two number fields, a minimum and a maximum, combined into one.
-     * This has convenience methods for returning a random value between the min (inclusive) and the max (exclusive).
+     * This has convenience methods for returning a random value between the min and the max (inclusive).
      */
     public static class RandomRange {
         /** The minimum. Defines the lower limit of the range (inclusive). */
-        private final DoubleField MINIMUM;
-        /** The maximum. Defines the upper limit of the range (exclusive). */
-        private final DoubleField MAXIMUM;
+        private final IntField MINIMUM;
+        /** The maximum. Defines the upper limit of the range (inclusive). */
+        private final IntField MAXIMUM;
         
         /** Links two values together as minimum and maximum. */
-        public RandomRange( DoubleField minimum, DoubleField maximum ) {
+        public RandomRange( IntField minimum, IntField maximum ) {
             MINIMUM = minimum;
             MAXIMUM = maximum;
             if( minimum.valueDefault > maximum.valueDefault ) {
@@ -141,18 +142,18 @@ public class DoubleField extends AbstractConfigField {
         }
         
         /** @return Returns the minimum value of this range. */
-        public double getMin() { return MINIMUM.get(); }
+        public int getMin() { return MINIMUM.get(); }
         
         /** @return Returns the maximum value of this range. */
-        public double getMax() { return MAXIMUM.get(); }
+        public int getMax() { return MAXIMUM.get(); }
         
-        /** @return Returns a random value between the minimum (inclusive) and the maximum (exclusive). */
-        public double next( Random random ) {
-            final double delta = getMax() - getMin();
-            if( delta > 1.0e-4 ) {
-                return getMin() + random.nextDouble() * delta;
+        /** @return Returns a random value between the minimum and the maximum (inclusive). */
+        public int next( Random random ) {
+            final int delta = getMax() - getMin();
+            if( delta > 0 ) {
+                return getMin() + random.nextInt( delta + 1 );
             }
-            if( delta < 0.0 ) {
+            if( delta < 0 ) {
                 ModCore.LOG.warn( "Value for range \"({},{})\" is invalid ({} > {})! Ignoring maximum value.",
                         MINIMUM.getKey(), MAXIMUM.getKey(), getMin(), getMax() );
             }

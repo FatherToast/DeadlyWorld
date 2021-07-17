@@ -1,7 +1,7 @@
-package fathertoast.specialai.config.field;
+package fathertoast.deadlyworld.config.field;
 
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.file.TomlHelper;
+import fathertoast.deadlyworld.ModCore;
+import fathertoast.deadlyworld.config.file.TomlHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;

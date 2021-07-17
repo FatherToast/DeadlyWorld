@@ -1,8 +1,8 @@
-package fathertoast.specialai.config.util;
+package fathertoast.deadlyworld.config.util;
 
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.field.AbstractConfigField;
-import fathertoast.specialai.config.file.TomlHelper;
+import fathertoast.deadlyworld.ModCore;
+import fathertoast.deadlyworld.config.field.AbstractConfigField;
+import fathertoast.deadlyworld.config.file.TomlHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

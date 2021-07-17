@@ -1,32 +1,30 @@
-package fathertoast.specialai.config.field;
-
-import fathertoast.specialai.ModCore;
-import fathertoast.specialai.config.file.TomlHelper;
+package fathertoast.deadlyworld.config.field;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
 
 /**
- * Represents a config field with a double value. The entered config value is squared when loaded.
+ * Represents a config field with a double value. The entered config value is converted from m/s when loaded.
  */
 @SuppressWarnings( "unused" )
-public class SqrDoubleField extends DoubleField {
+public class SpeedField extends DoubleField {
+    /** Conversion factor to convert from more meaningful units (blocks per second or m/s) to blocks per tick. */
+    private static final double PER_SECOND_TO_PER_TICK = 0.05;
+    
     /** The underlying field value, squared. */
-    private double valueSqr;
+    private double valueConverted;
     
     /** Creates a new field that accepts any value. */
-    public SqrDoubleField( String key, double defaultValue, String... description ) {
+    public SpeedField( String key, double defaultValue, String... description ) {
         super( key, defaultValue, description );
     }
     
     /** Creates a new field that accepts a common range of values. */
-    public SqrDoubleField( String key, double defaultValue, Range range, String... description ) {
+    public SpeedField( String key, double defaultValue, Range range, String... description ) {
         super( key, defaultValue, range, description );
     }
     
     /** Creates a new field that accepts a specialized range of values. */
-    public SqrDoubleField( String key, double defaultValue, double min, double max, String... description ) {
+    public SpeedField( String key, double defaultValue, double min, double max, String... description ) {
         super( key, defaultValue, min, max, description );
     }
     
@@ -39,13 +37,13 @@ public class SqrDoubleField extends DoubleField {
     @Override
     public void load( @Nullable Object raw ) {
         super.load( raw );
-        valueSqr = super.get() * super.get();
+        valueConverted = super.get() * PER_SECOND_TO_PER_TICK;
     }
     
     /** @return Returns the config field's value. */
     @Override
-    public double get() { return valueSqr; }
+    public double get() { return valueConverted; }
     
-    /** @return Returns the square root of the config field's value. */
-    public double getSqrRoot() { return super.get(); }
+    /** @return Returns the unconverted form (per second) of the config field's value. */
+    public double getUnconverted() { return super.get(); }
 }

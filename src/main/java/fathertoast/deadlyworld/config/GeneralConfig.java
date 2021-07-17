@@ -1,10 +1,10 @@
-package fathertoast.specialai.config;
+package fathertoast.deadlyworld.config;
 
-import fathertoast.specialai.config.field.*;
-import fathertoast.specialai.config.file.ToastConfigSpec;
-import fathertoast.specialai.config.util.BlockList;
-import fathertoast.specialai.config.util.EntityEntry;
-import fathertoast.specialai.config.util.EntityList;
+import fathertoast.deadlyworld.config.field.*;
+import fathertoast.deadlyworld.config.file.ToastConfigSpec;
+import fathertoast.deadlyworld.config.util.BlockList;
+import fathertoast.deadlyworld.config.util.EntityEntry;
+import fathertoast.deadlyworld.config.util.EntityList;
 import net.minecraft.entity.EntityType;
 
 import java.io.File;

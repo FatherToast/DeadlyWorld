@@ -1,6 +1,6 @@
-package fathertoast.specialai;
+package fathertoast.deadlyworld;
 
-import fathertoast.specialai.config.Config;
+import fathertoast.deadlyworld.config.Config;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

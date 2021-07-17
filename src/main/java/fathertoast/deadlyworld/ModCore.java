@@ -1,4 +1,4 @@
-package fathertoast.specialai;
+package fathertoast.deadlyworld;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
