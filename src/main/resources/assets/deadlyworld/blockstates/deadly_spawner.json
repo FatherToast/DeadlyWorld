@@ -9,11 +9,12 @@
   },
   "variants": {
     "type": {
-      "lone": {},
+      "simple": {},
       "stream": {},
       "swarm": {},
       "brutal": {},
-      "nest": {}
+      "nest": {},
+      "dungeon": {}
     }
   }
 }
