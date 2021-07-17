@@ -1,0 +1,189 @@
+{
+  "pools": [
+    {
+      "name": "semicommon",
+      "entries": [
+        {
+          "entryName": "Quartz",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": -1.0,
+                "max": 1.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "count": {
+                "min": 0.0,
+                "max": 1.0
+              },
+              "function": "minecraft:looting_enchant"
+            }
+          ],
+          "name": "minecraft:quartz"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "name": "cluster",
+      "entries": [
+        {
+          "entryName": "Redstone",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "count": {
+                "min": 0.0,
+                "max": 2.0
+              },
+              "function": "minecraft:looting_enchant"
+            }
+          ],
+          "name": "minecraft:redstone"
+        }
+      ],
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "chance": 0.25,
+          "looting_multiplier": 0.1,
+          "condition": "minecraft:random_chance_with_looting"
+        }
+      ]
+    },
+    {
+      "name": "cluster2",
+      "entries": [
+        {
+          "entryName": "Lapis Lazuli",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "data": 4.0,
+              "function": "minecraft:set_data"
+            },
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "count": {
+                "min": 0.0,
+                "max": 2.0
+              },
+              "function": "minecraft:looting_enchant"
+            }
+          ],
+          "name": "minecraft:dye"
+        }
+      ],
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "chance": 0.25,
+          "looting_multiplier": 0.1,
+          "condition": "minecraft:random_chance_with_looting"
+        }
+      ]
+    },
+    {
+      "name": "enchant",
+      "entries": [
+        {
+          "entryName": "Enchants",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "enchantments": [
+                "minecraft:projectile_protection",
+                "minecraft:fire_protection",
+                "minecraft:flame",
+                "minecraft:fire_aspect"
+              ],
+              "function": "minecraft:enchant_randomly"
+            }
+          ],
+          "name": "minecraft:book"
+        }
+      ],
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "chance": 0.025,
+          "looting_multiplier": 0.01,
+          "condition": "minecraft:random_chance_with_looting"
+        }
+      ]
+    },
+    {
+      "name": "common",
+      "entries": [
+        {
+          "entryName": "Fire Charge",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "count": {
+                "min": 0.0,
+                "max": 1.0
+              },
+              "function": "minecraft:looting_enchant"
+            }
+          ],
+          "name": "minecraft:fire_charge"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "name": "uncommon",
+      "entries": [
+        {
+          "entryName": "Blaze Powder 1",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:blaze_powder"
+        }
+      ],
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "chance": 0.25,
+          "looting_multiplier": 0.1,
+          "condition": "minecraft:random_chance_with_looting"
+        }
+      ]
+    }
+  ]
+}

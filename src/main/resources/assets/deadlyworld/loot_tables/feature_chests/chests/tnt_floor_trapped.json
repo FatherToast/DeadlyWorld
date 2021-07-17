@@ -1,0 +1,236 @@
+{
+  "pools": [
+    {
+      "name": "explosives",
+      "entries": [
+        {
+          "entryName": "Gunpowder",
+          "weight": 20,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:gunpowder"
+        },
+        {
+          "entryName": "TNT",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:tnt"
+        },
+        {
+          "entryName": "TNT Minecart",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:tnt_minecart"
+        },
+        {
+          "entryName": "Flame Bow",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "enchantments": [
+                "minecraft:flame"
+              ],
+              "function": "minecraft:enchant_randomly"
+            }
+          ],
+          "name": "minecraft:bow"
+        },
+        {
+          "entryName": "Fire Charge",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:fire_charge"
+        },
+        {
+          "entryName": "Flint \u0026 Steel",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:flint_and_steel"
+        },
+        {
+          "entryName": "Redstone",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:redstone"
+        },
+        {
+          "entryName": "Repeater",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:repeater"
+        },
+        {
+          "entryName": "Comparator",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:comparator"
+        },
+        {
+          "entryName": "Observer",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:observer"
+        },
+        {
+          "entryName": "Daylight Detector",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:daylight_detector"
+        },
+        {
+          "entryName": "Shears",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:shears"
+        },
+        {
+          "entryName": "String",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:string"
+        },
+        {
+          "entryName": "Tripwire",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": 2.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:tripwire_hook"
+        },
+        {
+          "entryName": "Enchanted Book",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "enchantments": [
+                "minecraft:blast_protection",
+                "minecraft:sweeping",
+                "minecraft:flame"
+              ],
+              "function": "minecraft:enchant_randomly"
+            }
+          ],
+          "name": "minecraft:book"
+        }
+      ],
+      "rolls": {
+        "min": 1.0,
+        "max": 3.0
+      }
+    },
+    {
+      "name": "base",
+      "entries": [
+        {
+          "entryName": "Vanilla Chest",
+          "weight": 1,
+          "quality": 0,
+          "type": "loot_table",
+          "name": "minecraft:chests/simple_dungeon"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

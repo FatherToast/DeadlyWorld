@@ -1,0 +1,167 @@
+{
+  "pools": [
+    {
+      "name": "common",
+      "entries": [
+        {
+          "entryName": "Redstone",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "count": {
+                "min": 0.0,
+                "max": 1.0
+              },
+              "function": "minecraft:looting_enchant"
+            }
+          ],
+          "name": "minecraft:redstone"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "name": "semicommon",
+      "entries": [
+        {
+          "entryName": "Gold Ingot",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": -1.0,
+                "max": 1.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "count": {
+                "min": 0.0,
+                "max": 1.0
+              },
+              "function": "minecraft:looting_enchant"
+            }
+          ],
+          "name": "minecraft:gold_ingot"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "name": "enchant",
+      "entries": [
+        {
+          "entryName": "Enchants",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "enchantments": [
+                "minecraft:protection",
+                "minecraft:thorns",
+                "minecraft:silk_touch"
+              ],
+              "function": "minecraft:enchant_randomly"
+            }
+          ],
+          "name": "minecraft:book"
+        }
+      ],
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "chance": 0.025,
+          "looting_multiplier": 0.01,
+          "condition": "minecraft:random_chance_with_looting"
+        }
+      ]
+    },
+    {
+      "name": "external",
+      "entries": [
+        {
+          "entryName": "Witch Loot",
+          "weight": 1,
+          "quality": 0,
+          "type": "loot_table",
+          "name": "minecraft:entities/witch"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "name": "uncommon",
+      "entries": [
+        {
+          "entryName": "Brewing 1",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:rabbit_foot"
+        },
+        {
+          "entryName": "Brewing 2",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:blaze_powder"
+        },
+        {
+          "entryName": "Brewing 3",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:speckled_melon"
+        },
+        {
+          "entryName": "Brewing 4",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:ghast_tear"
+        },
+        {
+          "entryName": "Brewing 5",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:magma_cream"
+        },
+        {
+          "entryName": "Brewing 6",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:golden_carrot"
+        },
+        {
+          "entryName": "Brewing 7",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:fermented_spider_eye"
+        }
+      ],
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "chance": 0.25,
+          "looting_multiplier": 0.1,
+          "condition": "minecraft:random_chance_with_looting"
+        }
+      ]
+    }
+  ]
+}
