@@ -2,11 +2,18 @@ package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.event.GameEventHandler;
 import fathertoast.deadlyworld.common.event.ModEventHandler;
+import fathertoast.deadlyworld.common.registry.DWFeatures;
+import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,6 +70,9 @@ public class DeadlyWorld {
 
     public DeadlyWorld() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        eventBus.register(DWTileEntities.TILE_ENTITIES);
+        eventBus.register(DWFeatures.FEATURES);
 
         MinecraftForge.EVENT_BUS.register( new GameEventHandler() );
         MinecraftForge.EVENT_BUS.register( new ModEventHandler() );
