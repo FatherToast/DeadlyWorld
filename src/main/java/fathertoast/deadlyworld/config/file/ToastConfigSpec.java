@@ -61,6 +61,11 @@ public class ToastConfigSpec {
         CONFIG_FILE.load();
     }
     
+    /** Called when the config is no longer needed. */
+    void destroy() {
+        CONFIG_FILE.close();
+    }
+    
     /** Called after the config is loaded to update cached values. */
     public void onLoad() {
         // Perform load actions

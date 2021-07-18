@@ -1,3 +1,61 @@
 {
-  "deadlyworld.example": "Example"
+  "entity.AreaEffectCloud": "Lingering Potion Cloud",
+
+  "block.deadlyworld.deadly_spawner": "Broken Spawner",
+  "block.deadlyworld.deadly_spawner.simple": "Monster Spawner",
+  "block.deadlyworld.deadly_spawner.stream": "Monster Stream Spawner",
+  "block.deadlyworld.deadly_spawner.swarm": "Monster Spawner of Swarms",
+  "block.deadlyworld.deadly_spawner.brutal": "Monster Spawner of Brutality",
+  "block.deadlyworld.deadly_spawner.nest": "Silverfish Nest",
+  "block.deadlyworld.deadly_spawner.dungeon": "Dungeon Monster Spawner",
+
+  "block.deadlyworld.floor_trap": "Broken Floor Trap",
+  "block.deadlyworld.floor_trap.tnt": "Exploding Floor Trap",
+  "block.deadlyworld.floor_trap.tnt_mob": "Exploding Monster Floor Trap",
+  "block.deadlyworld.floor_trap.potion": "Potion Floor Trap",
+
+  "block.deadlyworld.tower_dispenser": "Broken Tower Dispenser",
+  "block.deadlyworld.tower_dispenser.simple": "Arrow Tower Dispenser",
+  "block.deadlyworld.tower_dispenser.fire": "Arrow Tower Dispenser of Flame",
+  "block.deadlyworld.tower_dispenser.potion": "Arrow Tower Dispenser of Magic",
+  "block.deadlyworld.tower_dispenser.fireball": "Fireball Tower Dispenser",
+  "block.deadlyworld.tower_dispenser.gatling": "Arrow Tower Dispenser of Speed",
+
+  "block.deadlyworld.deadly_silverfish.tooltip": "Infested",
+
+  "item.deadlyworld.event_item": "Deadly World Event Item",
+  "block.deadlyworld.event_item.tooltip": "Event:",
+
+  "block.deadlyworld.event_item.tooltip.spawn_silverfish": "Spawn Silverfish",
+  "block.deadlyworld.event_item.tooltip.tnt": "Primed TNT",
+  "block.deadlyworld.event_item.tooltip.lava": "Lava Flow",
+  "block.deadlyworld.event_item.tooltip.poison_gas": "Poison Gas",
+  "block.deadlyworld.event_item.tooltip.spawn_mimic": "Spawn Mimic",
+
+  "item.deadlyworld.feature_tester": "Deadly World Feature Tester",
+  "block.deadlyworld.feature_tester.tooltip": "Feature:",
+
+  "block.deadlyworld.feature_tester.tooltip.chest.simple": "Simple Chest",
+  "block.deadlyworld.feature_tester.tooltip.chest.valuable": "Valuable Chest",
+  "block.deadlyworld.feature_tester.tooltip.chest.trapped": "Trapped Chest",
+  "block.deadlyworld.feature_tester.tooltip.chest.tnt_floor_trapped": "TNT Floor Trapped Chest",
+  "block.deadlyworld.feature_tester.tooltip.chest.infested": "Infested Chest",
+  "block.deadlyworld.feature_tester.tooltip.chest.surprise": "Surprise Chest",
+  "block.deadlyworld.feature_tester.tooltip.chest.mimic": "Mimic Chest",
+
+  "block.deadlyworld.feature_tester.tooltip.spawner.simple": "Simple Spawner",
+  "block.deadlyworld.feature_tester.tooltip.spawner.stream": "Stream Spawner",
+  "block.deadlyworld.feature_tester.tooltip.spawner.swarm": "Swarm Spawner",
+  "block.deadlyworld.feature_tester.tooltip.spawner.brutal": "Brutal Spawner",
+  "block.deadlyworld.feature_tester.tooltip.spawner.nest": "Silverfish Nest",
+
+  "block.deadlyworld.feature_tester.tooltip.floor_trap.tnt": "TNT Floor Trap",
+  "block.deadlyworld.feature_tester.tooltip.floor_trap.tnt_mob": "TNT Mob Floor Trap",
+  "block.deadlyworld.feature_tester.tooltip.floor_trap.potion": "Potion Floor Trap",
+
+  "block.deadlyworld.feature_tester.tooltip.tower.simple": "Simple Arrow Tower",
+  "block.deadlyworld.feature_tester.tooltip.tower.fire": "Fire Arrow Tower",
+  "block.deadlyworld.feature_tester.tooltip.tower.potion": "Potion Arrow Tower",
+  "block.deadlyworld.feature_tester.tooltip.tower.fireball": "Fireball Tower",
+  "block.deadlyworld.feature_tester.tooltip.tower.gatling": "Gatling Arrow Tower"
 }
