@@ -1,5 +1,7 @@
 package fathertoast.deadlyworld.common.tile;
 
+import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.block.properties.SpawnerType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.config.util.EntityList;
@@ -86,8 +88,8 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     }
 
 
-    public void initializeSpawner( EnumSpawnerType spawnerType, Config dimConfig ) {
-        Config.FeatureSpawner spawnerConfig = spawnerType.getFeatureConfig( dimConfig );
+    public void initializeSpawner( SpawnerType spawnerType, Config dimConfig ) {
+        Config.SpawnerFeatures spawnerConfig = spawnerType.getFeatureConfig( dimConfig );
 
         // Set attributes from the config
         if( this.level.random.nextFloat( ) < spawnerConfig.DYNAMIC_CHANCE ) {
@@ -125,14 +127,15 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         cachedEntity = null;
     }
 
-    private EnumSpawnerType getSpawnerType( ) {
+    private SpawnerType getSpawnerType( ) {
         if( this.worldPosition != null && this.level != null ) {
             BlockState block = this.level.getBlockState( this.worldPosition );
-            if( block.getBlock( ) == DWBlocks.DEADLY_SPAWNER_BLOCK.get() ) {
-                return block.getValue( EnumSpawnerType.PROPERTY );
+
+            if( block.getBlock( ) == DWBlocks.DEADLY_SPAWNER_BLOCK.get( ) ) {
+                return block.getValue( DeadlySpawnerBlock.SPAWNER_TYPE );
             }
         }
-        return EnumSpawnerType.LONE;
+        return SpawnerType.LONE;
     }
 
     @Override
@@ -203,7 +206,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         BlockPos pos = this.worldPosition;
 
         final Config             dimConfig          = Config.getOrDefault( world );
-        final EnumSpawnerType    spawnerType        = getSpawnerType( );
+        final SpawnerType        spawnerType        = this.getSpawnerType( );
         final DifficultyInstance difficultyInstance = world.getCurrentDifficultyAt( pos );
 
         boolean success = false;
@@ -249,7 +252,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 if ( livingEntity instanceof MobEntity ) {
                     ((MobEntity) entity).finalizeSpawn((ServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.SPAWNER, null, null);
                 }
-                spawnerType.initializeEntity( livingEntity, dimConfig, world, pos );
+                spawnerType.initEntity( livingEntity, dimConfig, world, pos );
             }
             world.addFreshEntity( entity );
             world.levelEvent( 2004, pos, 0 );
