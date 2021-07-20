@@ -75,7 +75,7 @@ public class DeadlySpawnerBlock extends ContainerBlock {
 
     @Override
     public int getExpDrop( BlockState state, IWorldReader reader, BlockPos pos, int fortune, int silktouch ) {
-        return silktouch <= 0 ? 0 : ( 15 + RANDOM.nextInt( 15 ) + RANDOM.nextInt( 15 ));
+        return silktouch > 0 ? 0 : ( 15 + RANDOM.nextInt( 15 ) + RANDOM.nextInt( 15 ));
     }
 
     @Override
