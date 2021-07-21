@@ -475,6 +475,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         return cachedEntity;
     }
 
+    @OnClient
     public float getRenderEntityRotation( float partialTicks ) {
         return (float) (prevMobRotation + (mobRotation - prevMobRotation) * partialTicks);
     }
