@@ -62,7 +62,7 @@ public class ToastConfigSpec {
     }
     
     /** Called when the config is no longer needed. */
-    void destroy() {
+    public void destroy() {
         CONFIG_FILE.close();
     }
     

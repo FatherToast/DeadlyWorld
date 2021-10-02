@@ -1,37 +1,44 @@
 package fathertoast.deadlyworld.common.core.config;
 
-import fathertoast.deadlyworld.common.core.config.field.*;
+import fathertoast.deadlyworld.common.block.properties.SpawnerType;
+import fathertoast.deadlyworld.common.core.config.field.BlockListField;
+import fathertoast.deadlyworld.common.core.config.field.BooleanField;
+import fathertoast.deadlyworld.common.core.config.field.DoubleField;
+import fathertoast.deadlyworld.common.core.config.field.EntityListField;
 import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
 import fathertoast.deadlyworld.common.core.config.util.BlockList;
 import fathertoast.deadlyworld.common.core.config.util.EntityEntry;
 import fathertoast.deadlyworld.common.core.config.util.EntityList;
-import fathertoast.deadlyworld.common.core.config.util.DynamicRegKeyList;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.World;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
-import java.util.HashMap;
 
-public class GeneralConfig extends Config.AbstractConfig {
+public class SpawnerConfig extends FeatureConfig {
     
     public final General GENERAL;
     
+    public final SpawnerTypeCategory LONE;
+    public final SpawnerTypeCategory STREAM;
+    public final SpawnerTypeCategory SWARM;
+    public final SpawnerTypeCategory NEST;
+    public final SpawnerTypeCategory BRUTAL;
+    
     /** Builds the config spec that should be used for this config. */
-    GeneralConfig( File dir, String fileName ) {
-        super( dir, fileName,
-                "This config contains options for several miscellaneous features in the mod, such as:",
-                "NOTHING, YET!"
-        );
+    SpawnerConfig( File dir, DimensionConfigGroup dimConfigs ) {
+        super( dir, dimConfigs, "spawner" );
         
         SPEC.newLine();
         SPEC.describeEntityList();
         SPEC.newLine();
         SPEC.describeBlockList();
         
-        GENERAL = new General( SPEC );
+        GENERAL = new General( SPEC, dimConfigs );
+        
+        LONE = new SpawnerTypeCategory( SPEC, this, SpawnerType.LONE, 0.16, 12, 52 );
+        STREAM = new SpawnerTypeCategory( SPEC, this, SpawnerType.STREAM, 0.16, 12, 52 );
+        SWARM = new SpawnerTypeCategory( SPEC, this, SpawnerType.SWARM, 0.16, 12, 52 );
+        NEST = new SpawnerTypeCategory( SPEC, this, SpawnerType.NEST, 0.16, 12, 52 );
+        BRUTAL = new SpawnerTypeCategory( SPEC, this, SpawnerType.BRUTAL, 0.16, 12, 52 );
     }
     
     public static class General extends Config.AbstractCategory {
@@ -48,16 +55,9 @@ public class GeneralConfig extends Config.AbstractConfig {
         public final BooleanField targetDoors;
         public final BlockListField.Combined targetList;
         
-        General( ToastConfigSpec parent ) {
+        General( ToastConfigSpec parent, DimensionConfigGroup dimConfigs ) {
             super( parent, "general",
                     "Options to customize NOTHING AT ALL." );
-            
-            //World.OVERWORLD.location();
-            
-            //enabledDimensions = SPEC.define( new RegKeyListField( "enabled_dimensions", new DynamicRegKeyList(
-            //        DimensionType.OVERWORLD_LOCATION.location().toString(), DimensionType.NETHER_LOCATION.location().toString() ),
-            //        "List of dimensions this mod's world gen is enabled in. Each dimension specified in this list",
-            //        "has its own config file named something like \"world_namespace_dimension_name.toml\"." ) );
             
             entityList = new EntityListField.Combined(
                     SPEC.define( new EntityListField( "entities.whitelist", new EntityList(
@@ -95,6 +95,20 @@ public class GeneralConfig extends Config.AbstractConfig {
                             "List of blocks that that can be broken by the door breaking AI." ) ),
                     SPEC.define( new BlockListField( "targets.blacklist", new BlockList() ) )
             );
+        }
+    }
+    
+    public static class SpawnerTypeCategory extends FeatureTypeCategory {
+        
+        //public final DoubleField breakSpeed;
+        
+        SpawnerTypeCategory( ToastConfigSpec parent, FeatureConfig feature, SpawnerType spawnerType,
+                             double chance, int minHeight, int maxHeight ) {
+            super( parent, feature, feature.noSpaces( spawnerType.NAME ), chance, minHeight, maxHeight );
+            
+            //SPEC.newLine();
+            
+            //TODO
         }
     }
 }

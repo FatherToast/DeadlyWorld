@@ -1,18 +1,34 @@
 package fathertoast.deadlyworld.common.event;
 
 
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.core.config.Config;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 /**
  * Contains and automatically registers all needed forge events.
- * Each event passes itself off to interested sub-mods.
  */
 @SuppressWarnings( "unused" )
+@Mod.EventBusSubscriber( modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE )
 public final class GameEventHandler {
+    /**
+     * Called after FMLServerAboutToStartEvent and before FMLServerStartedEvent.
+     * This event allows for customizations of the server.
+     *
+     * @param event The event data.
+     */
+    @SubscribeEvent( priority = EventPriority.NORMAL )
+    public static void onServerStarting( FMLServerStartingEvent event ) {
+        Config.initializeDynamic();
+    }
+    
     /**
      * Called for the server at the start and end of each tick.
      * <p>
@@ -21,7 +37,7 @@ public final class GameEventHandler {
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
-    public void onServerTick( TickEvent.ServerTickEvent event ) {
+    public static void onServerTick( TickEvent.ServerTickEvent event ) {
         //AIManager.onServerTick( event );
     }
     
@@ -31,7 +47,7 @@ public final class GameEventHandler {
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.LOW )
-    public void onJoinWorld( EntityJoinWorldEvent event ) {
+    public static void onJoinWorld( EntityJoinWorldEvent event ) {
         //AIManager.onJoinWorld( event );
     }
     
@@ -41,7 +57,7 @@ public final class GameEventHandler {
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
-    public void onLivingDeath( LivingDeathEvent event ) {
+    public static void onLivingDeath( LivingDeathEvent event ) {
         //AIManager.onLivingDeath( event );
     }
 }

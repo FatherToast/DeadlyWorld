@@ -65,19 +65,16 @@ public class DeadlyWorld {
     public static final String MOD_ID = "deadlyworld";
     
     /** The logger used by this mod. */
-    public static final Logger LOG = LogManager.getLogger(MOD_ID);
-
-
+    public static final Logger LOG = LogManager.getLogger( MOD_ID );
+    
+    
     public DeadlyWorld() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        eventBus.register(DWTileEntities.TILE_ENTITIES);
-        eventBus.register(DWFeatures.FEATURES);
-
-        MinecraftForge.EVENT_BUS.register( new GameEventHandler() );
-        MinecraftForge.EVENT_BUS.register( new ModEventHandler() );
+        
+        eventBus.register( DWTileEntities.TILE_ENTITIES );
+        eventBus.register( DWFeatures.FEATURES );
     }
-
+    
     /** @return A ResourceLocation with the mod's namespace */
     public static ResourceLocation resourceLoc( String path ) {
         return new ResourceLocation( MOD_ID, path );

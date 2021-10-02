@@ -2,9 +2,9 @@ package fathertoast.deadlyworld.common.tile;
 
 import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.properties.SpawnerType;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.config.Config;
-import fathertoast.deadlyworld.common.core.config.util.EntityList;
+import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.core.config.MainDimensionConfig;
+import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.registry.DWBlocks;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.OnClient;
@@ -14,66 +14,61 @@ import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.Constants;
+
+import java.util.Random;
 
 public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTileEntity {
-
+    
     private static final int EVENT_TIMER_RESET = 1;
-
+    
     // Attribute tags
     private static final String TAG_DYNAMIC_SPAWN_LIST = "DynamicSpawnList";
-
+    
     private static final String TAG_ACTIVATION_RANGE = "ActivationRange";
-    private static final String TAG_CHECK_SIGHT      = "CheckSight";
-
-    private static final String TAG_DELAY_MIN         = "DelayMin";
-    private static final String TAG_DELAY_MAX         = "DelayMax";
+    private static final String TAG_CHECK_SIGHT = "CheckSight";
+    
+    private static final String TAG_DELAY_MIN = "DelayMin";
+    private static final String TAG_DELAY_MAX = "DelayMax";
     private static final String TAG_DELAY_PROGRESSIVE = "DelayProgressive";
-
+    
     private static final String TAG_SPAWN_COUNT = "SpawnCount";
     private static final String TAG_SPAWN_RANGE = "SpawnRange";
-
+    
     // Logic tags
-    private static final String TAG_SPAWN_ENTITY  = "SpawnEntity";
-    private static final String TAG_DELAY         = "Delay";
+    private static final String TAG_SPAWN_ENTITY = "SpawnEntity";
+    private static final String TAG_DELAY = "Delay";
     private static final String TAG_DELAY_BUILDUP = "DelayBuildup";
-
+    
     // Attributes
-    private WeightedRandomConfig dynamicSpawnList;
-
-    private float   activationRange;
+    private Object dynamicSpawnList;//WeightedRandomConfig dynamicSpawnList; TODO
+    
+    private float activationRange;
     private boolean checkSight;
-
+    
     private int minSpawnDelay;
     private int maxSpawnDelay;
     private int progressiveSpawnDelay;
-
-    private int   spawnCount;
+    
+    private int spawnCount;
     private float spawnRange;
-
+    
     // Logic
-    private Class< ? extends Entity > entityToSpawn = PigEntity.class;
-
+    private Class<? extends Entity> entityToSpawn = PigEntity.class;
+    
     /** Whether or not this spawner is active. Reduces the number of times we need to iterate over the player list. */
     private boolean activated;
     /** Countdown until the next activation check. */
-    private int     activationDelay;
-
+    private int activationDelay;
+    
     /** Countdown until the next spawn attempt. If this is set below 0, the countdown is reset without attempting to spawn. */
-    private int    spawnDelay = 10;
+    private int spawnDelay = 10;
     /** The spawn delay previously set; the core of the progressive delay logic. */
     private double spawnDelayBuildup;
-
+    
     // Client logic
     /** Cached instance of the entity to render inside the spawner. */
     private Entity cachedEntity;
@@ -81,66 +76,66 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     private double mobRotation;
     /** the previous rotation of the mob inside the mob spawner */
     private double prevMobRotation;
-
-
-    public DeadlySpawnerTileEntity() {
-        super(DWTileEntities.DEADLY_SPAWNER.get());
-    }
-
-
-    public void initializeSpawner( SpawnerType spawnerType, Config dimConfig ) {
-        Config.SpawnerFeatures spawnerConfig = spawnerType.getFeatureConfig( dimConfig );
-
+    
+    public DeadlySpawnerTileEntity() { super( DWTileEntities.DEADLY_SPAWNER.get() ); }
+    
+    public void initializeSpawner( SpawnerType spawnerType, DimensionConfigGroup dimConfigs ) {
+        final Random random = level == null ? new Random() : level.random;
+        SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( dimConfigs );
+        
+        /* TODO Spawner-specific options
         // Set attributes from the config
-        if( this.level.random.nextFloat( ) < spawnerConfig.DYNAMIC_CHANCE ) {
+        if( random.nextFloat() < spawnerConfig.DYNAMIC_CHANCE ) {
             dynamicSpawnList = spawnerConfig.SPAWN_LIST;
         }
         else {
             dynamicSpawnList = null;
         }
-
+        
         activationRange = spawnerConfig.ACTIVATION_RANGE;
         checkSight = spawnerConfig.CHECK_SIGHT;
-
+        
         minSpawnDelay = spawnerConfig.DELAY_MIN;
         maxSpawnDelay = spawnerConfig.DELAY_MAX;
         progressiveSpawnDelay = spawnerConfig.DELAY_PROGRESSIVE;
-
+        
         spawnCount = spawnerConfig.SPAWN_COUNT;
         spawnRange = spawnerConfig.SPAWN_RANGE;
-
+        
         // Initialize logic
-        setEntityToSpawn( spawnerConfig.SPAWN_LIST.nextItem( world.rand ) );
-
+        setEntityToSpawn( spawnerConfig.SPAWN_LIST.nextItem( random ) );
+        */
     }
-
+    
     private void setEntityToSpawn( ResourceLocation registryName ) {
+        /*
         entityToSpawn = EntityList.getClass( registryName );
         if( entityToSpawn == null ) {
             DeadlyWorld.LOG.warn(
                     "Spawner received non-registered entity name '{}'" +
                             " - This is probably caused by an error or change in the config for dimension \"{}\" (expect to see pig spawners)",
-                    registryName, this.level.dimension( ).getRegistryName().toString()
+                    registryName, this.level.dimension().getRegistryName().toString()
             );
             entityToSpawn = PigEntity.class;
         }
         cachedEntity = null;
+         */
     }
-
-    private SpawnerType getSpawnerType( ) {
+    
+    private SpawnerType getSpawnerType() {
         if( this.worldPosition != null && this.level != null ) {
             BlockState block = this.level.getBlockState( this.worldPosition );
-
-            if( block.getBlock( ) == DWBlocks.DEADLY_SPAWNER_BLOCK.get( ) ) {
+            
+            if( block.getBlock() == DWBlocks.DEADLY_SPAWNER.get() ) {
                 return block.getValue( DeadlySpawnerBlock.SPAWNER_TYPE );
             }
         }
         return SpawnerType.LONE;
     }
-
+    
     @Override
-    public void tick( ) {
-
+    public void tick() {
+        /*
         // Update activation status
         if( this.activationDelay > 0 ) {
             this.activationDelay--;
@@ -194,13 +189,15 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 spawnDelayBuildup -= progressiveSpawnDelay * Config.get( ).GENERAL.PROGRESSIVE_RECOVERY;
             }
         }
+        */
     }
-
-
-    private void doSpawn( ) {
+    
+    
+    private void doSpawn() {
         // Should only be called server side anyways
-        if (this.level.isClientSide)
+        if( this.level.isClientSide )
             return;
+        /*
 
         World world = this.level;
         BlockPos pos = this.worldPosition;
@@ -220,6 +217,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             final Entity entity;
             try {
                 // TODO - Consider a different way to do this. It do indeed work, but reflection is very disgusting and awfully slow
+                // TODO This is the old way; we will update to the new entity type factory method (which is essentially still reflection)
                 entity = this.entityToSpawn.getConstructor( World.class ).newInstance( world );
             }
             catch( Exception ex ) {
@@ -263,25 +261,27 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             }
         }
         this.resetTimer( success );
+         */
     }
-
+    
     private boolean canSpawnNearLocation( LivingEntity entity, final double x, final double y, final double z ) {
         return entity.level.noCollision( entity ) ||
                 trySpawnOffsets( entity, x, y, z, Direction.UP, Direction.DOWN ) ||
-                trySpawnOffsets( entity, x, y, z, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH) || trySpawnOffsets( entity, x, y + 1, z, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH );
+                trySpawnOffsets( entity, x, y, z, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH ) || trySpawnOffsets( entity, x, y + 1, z, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH );
     }
-
+    
     private boolean trySpawnOffsets( LivingEntity entity, final double x, final double y, final double z, Direction... facings ) {
         for( Direction direction : facings ) {
-            entity.setPos( x + direction.getStepX( ), y + direction.getStepY( ), z + direction.getStepZ( ) );
+            entity.setPos( x + direction.getStepX(), y + direction.getStepY(), z + direction.getStepZ() );
             if( entity.level.noCollision( entity ) ) {
                 return true;
             }
         }
         return false;
     }
-
+    
     private void resetTimer( boolean incrProgressiveDelay ) {
+        /*
         if ( this.level == null )
             return;
 
@@ -320,12 +320,14 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             }
             world.setBlock( this.worldPosition, DWBlocks.DEADLY_SPAWNER_BLOCK.get().defaultBlockState(), EVENT_TIMER_RESET, 0 );
         }
+         */
     }
-
+    
     @Override
     public CompoundNBT save( CompoundNBT compound ) {
         super.save( compound );
 
+        /*
         // Attributes
         compound.putString( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList == null ? "" : dynamicSpawnList.toString( ) );
 
@@ -339,11 +341,13 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
 
         // Logic
         compound.putDouble( TAG_DELAY_BUILDUP, spawnDelayBuildup );
-
+         */
+        
         return writeNBTSentToClient( compound );
     }
-
+    
     private CompoundNBT writeNBTSentToClient( CompoundNBT compound ) {
+        /*
         // Attributes
         compound.putFloat( TAG_ACTIVATION_RANGE, activationRange );
 
@@ -352,13 +356,15 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         // Logic
         compound.putString( TAG_SPAWN_ENTITY, entityToSpawn == PigEntity.class ? "" : EntityList.getKey( entityToSpawn ).toString( ) );
         compound.putInt( TAG_DELAY, spawnDelay );
-
+         */
+        
         return compound;
     }
-
+    
     @Override
     public void load( BlockState state, CompoundNBT tag ) {
         super.load( state, tag );
+        /*
 
         // Attributes
         if( tag.contains( TAG_DYNAMIC_SPAWN_LIST, Constants.NBT.TAG_STRING ) ) {
@@ -413,28 +419,32 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         if( tag.contains( TAG_DELAY_BUILDUP, Constants.NBT.TAG_ANY_NUMERIC ) ) {
             spawnDelayBuildup = tag.getDouble( TAG_DELAY_BUILDUP );
         }
+        */
     }
-
+    
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket( ) {
-        return new SUpdateTileEntityPacket( this.worldPosition, 0, getUpdateTag( ) );
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket( this.worldPosition, 0, getUpdateTag() );
     }
-
+    
     @Override
-    public CompoundNBT getUpdateTag( ) {
-        CompoundNBT tag = super.save( new CompoundNBT( ) );
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT tag = super.save( new CompoundNBT() );
         return writeNBTSentToClient( tag );
     }
-
+    
     @Override
     public void onDataPacket( NetworkManager net, SUpdateTileEntityPacket pkt ) {
+        /*
         if( this.level.isClientSide ) {
             handleUpdateTag( this.getBlockState(), pkt.getTag( ) );
         }
+         */
     }
-
+    
     @Override
     public boolean triggerEvent( int id, int type ) {
+        /*
         if( this.level != null && this.level.isClientSide ) {
             DeadlyWorld.LOG.warn( "Getting client event '{}:{}'", id, type );
 
@@ -443,16 +453,18 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 return true;
             }
         }
+        */
         return super.triggerEvent( id, type );
     }
-
+    
     @Override
     public boolean onlyOpCanSetNbt() {
         return true;
     }
-
+    
     @OnClient
-    public Entity getRenderEntity( ) {
+    public Entity getRenderEntity() {
+        /*
         if( cachedEntity == null && this.level != null ) {
             World world = this.level;
 
@@ -466,15 +478,14 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             }
 
             // TODO - finalizeSpawn only happens on the server. Is it needed?
-            /*
             if( cachedEntity instanceof MobEntity) {
                 ((MobEntity) cachedEntity).finalizeSpawn( (ServerWorld) this.level, this.level.getCurrentDifficultyAt(this.worldPosition), SpawnReason.SPAWNER, null, null );
             }
-             */
         }
+        */
         return cachedEntity;
     }
-
+    
     @OnClient
     public float getRenderEntityRotation( float partialTicks ) {
         return (float) (prevMobRotation + (mobRotation - prevMobRotation) * partialTicks);

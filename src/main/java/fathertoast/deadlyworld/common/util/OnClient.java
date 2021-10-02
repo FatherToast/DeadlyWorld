@@ -7,5 +7,4 @@ package fathertoast.deadlyworld.common.util;
  * this annotation does not actually strip away any
  * code from any logical side.
  */
-public @interface OnClient {
-}
+public @interface OnClient {}

@@ -15,7 +15,7 @@ public class DWTileEntities {
     public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create( ForgeRegistries.TILE_ENTITIES, DeadlyWorld.MOD_ID );
 
                                                                                                                                                                                                                                    // Null data fixer is safe; they are not needed.
-    public static final RegistryObject<TileEntityType<DeadlySpawnerTileEntity>> DEADLY_SPAWNER = register("deadly_spawner", () -> TileEntityType.Builder.of(DeadlySpawnerTileEntity::new, DWBlocks.DEADLY_SPAWNER_BLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<DeadlySpawnerTileEntity>> DEADLY_SPAWNER = register("deadly_spawner", () -> TileEntityType.Builder.of(DeadlySpawnerTileEntity::new, DWBlocks.DEADLY_SPAWNER.get()).build(null));
 
 
     private static <T extends TileEntity> RegistryObject<TileEntityType<T>> register( String name, Supplier<TileEntityType<T>> tileEntityTypeSupplier ) {
