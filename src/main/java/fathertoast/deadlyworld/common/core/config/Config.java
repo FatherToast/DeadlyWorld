@@ -7,6 +7,7 @@ import fathertoast.deadlyworld.common.core.config.file.TomlHelper;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
@@ -29,6 +30,33 @@ public class Config {
     
     /** Mapping of each dimension type to its config. */
     private static HashMap<RegistryKey<DimensionType>, DimensionConfigGroup> DIMENSIONS;
+    private static DimensionConfigGroup OVERWORLD_CONFIGS;
+    
+    /**
+     * @return The group of configs associated with the given world's dimension.
+     * <p>
+     * Returns the overworld's config if the requested dimension config was not properly loaded;
+     * throws an exception if dimension configs have not yet been loaded.
+     */
+    public static DimensionConfigGroup getDimensionConfigs( World world ) {
+        // TODO
+        world.dimensionType();
+        return null;
+    }
+    
+    /**
+     * @return The group of configs associated with the given dimension type key.
+     * <p>
+     * Returns the overworld's config if the requested dimension config was not properly loaded;
+     * throws an exception if dimension configs have not yet been loaded.
+     */
+    public static DimensionConfigGroup getDimensionConfigs( RegistryKey<DimensionType> dimension ) {
+        if( OVERWORLD_CONFIGS == null ) {
+            throw new IllegalStateException( "Attempted to access dimension configs before any have been loaded." );
+        }
+        final DimensionConfigGroup configs = DIMENSIONS.get( dimension );
+        return configs == null ? OVERWORLD_CONFIGS : configs;
+    }
     
     /** Performs initial loading of configs in this mod. */
     public static void initialize() {
@@ -60,14 +88,13 @@ public class Config {
             dimConfigs.initialize();
             DIMENSIONS.put( dimension, dimConfigs );
         }
+        if( OVERWORLD_CONFIGS == null ) { OVERWORLD_CONFIGS = DIMENSIONS.get( DimensionType.OVERWORLD_LOCATION ); }
         
         // Close any configs no longer being used
         if( previousDims != null && !previousDims.isEmpty() ) {
             for( DimensionConfigGroup dimConfigs : previousDims.values() ) { dimConfigs.destroy(); }
         }
     }
-    
-    public static DimensionConfigGroup getDimensionConfigs( RegistryKey<DimensionType> dimension ) { return DIMENSIONS.get( dimension ); }
     
     /**
      * Represents one config file that contains a reference for each configurable value within and a specification
@@ -82,9 +109,6 @@ public class Config {
             SPEC = new ToastConfigSpec( dir, fileName );
             SPEC.header( TomlHelper.newComment( fileDescription ) );
         }
-        
-        /** @return The string with all spaces replaced with underscores. */
-        protected final String noSpaces( String str ) { return str.replace( ' ', '_' ); }
     }
     
     /**
@@ -100,8 +124,8 @@ public class Config {
             SPEC = parent;
             SPEC.category( name, TomlHelper.newComment( categoryDescription ) );
         }
-        
-        /** @return The string with all spaces replaced with underscores. */
-        protected final String noSpaces( String str ) { return str.replace( ' ', '_' ); }
     }
+    
+    /** @return The string with all spaces replaced with underscores. */
+    static String noSpaces( String str ) { return str.replace( ' ', '_' ); }
 }

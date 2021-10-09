@@ -3,10 +3,12 @@ package fathertoast.deadlyworld.common.core.config.util;
 import fathertoast.deadlyworld.common.core.config.field.IStringArray;
 import fathertoast.deadlyworld.common.core.config.file.TomlHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A list of entity-value entries used to link one or more numbers to specific entity types.
@@ -14,7 +16,7 @@ import java.util.List;
 @SuppressWarnings( { "unused", "SameParameterValue" } )
 public class EntityList implements IStringArray {
     /** The entity-value entries in this list. */
-    private final EntityEntry[] ENTRIES;
+    protected final EntityEntry[] ENTRIES;
     
     /** The number of values each entry must have. If this is negative, then entries may have any non-zero number of values. */
     private int entryValues = -1;
@@ -138,7 +140,7 @@ public class EntityList implements IStringArray {
     public EntityList setRangePos() { return setRange( 0.0, Double.POSITIVE_INFINITY ); }
     
     /** Bounds entry values in this list to the specified limits, inclusive. Note that 0 must be within the range. */
-    private EntityList setRange( double min, double max ) {
+    public EntityList setRange( double min, double max ) {
         minValue = min;
         maxValue = max;
         return this;

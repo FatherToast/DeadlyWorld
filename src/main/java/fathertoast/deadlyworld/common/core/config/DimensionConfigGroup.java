@@ -25,9 +25,7 @@ public class DimensionConfigGroup extends ConfigGroup {
     }
     
     /** @return The short name for this dimension (e.g. "'the_nether' dimension"). */
-    public String dimensionName() {
-        return "'" + DIMENSION.location().getPath() + "' dimension";
-    }
+    public String dimensionName() { return "'" + DIMENSION.location().getPath() + "' dimension"; }
     
     /** @return The long name for this dimension (e.g. "'the_nether' dimension from 'minecraft'"). */
     public String longDimensionName() {

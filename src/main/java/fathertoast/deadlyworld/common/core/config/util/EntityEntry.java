@@ -89,7 +89,14 @@ public class EntityEntry {
      * Format is "~registry_key value0 value1 ...", the ~ prefix is optional.
      */
     @Override
-    public String toString() {
+    public String toString() { return toString( false ); }
+    
+    /**
+     * @return The string representation of this entity list entry, as it would appear in a config file.
+     * <p>
+     * Format is "~registry_key value0 value1 ...", the ~ prefix is optional.
+     */
+    public String toString( boolean castToInt ) {
         // Start with the entity type registry key
         ResourceLocation resource = TYPE == null ? null : ForgeRegistries.ENTITIES.getKey( TYPE );
         StringBuilder str = new StringBuilder( resource == null ? EntityListField.REG_KEY_DEFAULT : resource.toString() );
@@ -100,7 +107,9 @@ public class EntityEntry {
         // Append values array
         if( VALUES != null && VALUES.length > 0 ) {
             for( double value : VALUES ) {
-                str.append( ' ' ).append( value );
+                str.append( ' ' );
+                if( castToInt ) { str.append( (int) value ); }
+                else { str.append( value ); }
             }
         }
         return str.toString();

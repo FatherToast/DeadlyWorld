@@ -2,13 +2,13 @@ package fathertoast.deadlyworld.common.core.config;
 
 import fathertoast.deadlyworld.common.core.config.field.*;
 import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
-import fathertoast.deadlyworld.common.core.config.util.BlockList;
-import fathertoast.deadlyworld.common.core.config.util.EntityEntry;
-import fathertoast.deadlyworld.common.core.config.util.EntityList;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.DimensionType;
 
 import java.io.File;
 
+/**
+ * A config file for one set of features (e.g. spawners). Establishes framework and config options used by all features.
+ */
 public abstract class FeatureConfig extends Config.AbstractConfig {
     /** The name of this feature (e.g. "spawner feature"). */
     final String FEATURE_NAME;
@@ -17,7 +17,7 @@ public abstract class FeatureConfig extends Config.AbstractConfig {
     public final DimensionConfigGroup DIMENSION_CONFIGS;
     
     FeatureConfig( File dir, DimensionConfigGroup dimConfigs, String name ) {
-        super( dir, "feature_" + name.replace( ' ', '_' ) + "s",
+        super( dir, "feature_" + Config.noSpaces( name ) + "s",
                 "This config contains options for all " + name + " features specific to the",
                 dimConfigs.longDimensionName() + "."
         );
@@ -31,25 +31,25 @@ public abstract class FeatureConfig extends Config.AbstractConfig {
         
         public final BooleanField debugMarker;
         
-        public final DoubleField placements;
+        public final DoubleField countPerChunk;
         
         public final IntField.RandomRange heights;
         
         FeatureTypeCategory( ToastConfigSpec parent, FeatureConfig feature, String name,
-                             double chance, int minHeight, int maxHeight ) {
-            super( parent, (name + "_" + feature.FEATURE_NAME).replace( ' ', '_' ) + "s",
+                             double placements, int minHeight, int maxHeight ) {
+            super( parent, Config.noSpaces( name + "_" + feature.FEATURE_NAME ) + "s",
                     "Options to customize " + name + " " + feature.FEATURE_NAME + "s specific to the",
                     feature.DIMENSION_CONFIGS.longDimensionName() + "." );
             FEATURE_TYPE_NAME = name + " " + feature.FEATURE_NAME;
             
             debugMarker = SPEC.define( new BooleanField( "testing_markers", false,
                     "When set to true, places a 1x1 column of glass to the height limit from a few blocks above each",
-                    "generated " + FEATURE_TYPE_NAME + ". This is game-breaking and laggy.",
+                    "generated " + FEATURE_TYPE_NAME + ". This is game-breaking and laggy. Also prints a message to the console.",
                     "Consider using a tool to strip away all stone/dirt/etc. or xray after world gen for more intensive testing." ) );
             
             SPEC.newLine();
             
-            placements = SPEC.define( new DoubleField( "placements", chance, DoubleField.Range.POSITIVE,
+            countPerChunk = SPEC.define( new DoubleField( "placements", placements, DoubleField.Range.POSITIVE,
                     "The number of placement attempts per chunk (16x16 blocks) for " + FEATURE_TYPE_NAME,
                     "A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt)." ) );
             
@@ -60,6 +60,16 @@ public abstract class FeatureConfig extends Config.AbstractConfig {
                             "The minimum and maximum (inclusive) heights/y-values " + FEATURE_TYPE_NAME + "s can generate at." ) ),
                     SPEC.define( new IntField( "height.max", maxHeight, IntField.Range.NON_NEGATIVE ) )
             );
+        }
+        
+        /** @return True if this config is for the Nether dimension. */
+        protected boolean isNetherDimension( FeatureConfig feature ) {
+            return DimensionType.NETHER_LOCATION.equals( feature.DIMENSION_CONFIGS.DIMENSION );
+        }
+        
+        /** @return True if this config is for the End dimension. */
+        protected boolean isEndDimension( FeatureConfig feature ) {
+            return DimensionType.END_LOCATION.equals( feature.DIMENSION_CONFIGS.DIMENSION );
         }
     }
 }

@@ -24,7 +24,7 @@ public class DeadlySpawnerBlock extends ContainerBlock {
     
     public DeadlySpawnerBlock() {
         super( AbstractBlock.Properties.copy( Blocks.SPAWNER ) );
-        this.registerDefaultState( this.stateDefinition.any().setValue( SPAWNER_TYPE, SpawnerType.LONE ) );
+        this.registerDefaultState( stateDefinition.any().setValue( SPAWNER_TYPE, SpawnerType.LONE ) );
         
         // TODO - Will the config be loaded before the Forge registries are?
         //      - They can be; needed options here can be loaded during FMLConstructModEvent or in the mod's constructor
@@ -41,9 +41,7 @@ public class DeadlySpawnerBlock extends ContainerBlock {
     
     @Nullable
     @Override
-    public TileEntity newBlockEntity( IBlockReader world ) {
-        return new DeadlySpawnerTileEntity();
-    }
+    public TileEntity newBlockEntity( IBlockReader world ) { return new DeadlySpawnerTileEntity(); }
     
     
     public void initTileEntity( World world, BlockPos pos, BlockState state, DimensionConfigGroup dimConfigs ) {
@@ -85,7 +83,7 @@ public class DeadlySpawnerBlock extends ContainerBlock {
         super.setPlacedBy( world, pos, state, placer, itemStack );
         
         if( !world.isClientSide ) {
-            this.initTileEntity( world, pos, state, null/*Config.getOrDefault( world )*/ );
+            initTileEntity( world, pos, state, null/*Config.getOrDefault( world )*/ );
         }
     }
     

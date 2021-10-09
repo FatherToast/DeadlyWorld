@@ -75,7 +75,7 @@ public class DeadlyWorld {
         eventBus.register( DWFeatures.FEATURES );
     }
     
-    /** @return A ResourceLocation with the mod's namespace */
+    /** @return A ResourceLocation with the mod's namespace. */
     public static ResourceLocation resourceLoc( String path ) {
         return new ResourceLocation( MOD_ID, path );
     }
