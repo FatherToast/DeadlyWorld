@@ -2,7 +2,9 @@ package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.event.GameEventHandler;
 import fathertoast.deadlyworld.common.event.ModEventHandler;
+import fathertoast.deadlyworld.common.registry.DWBlocks;
 import fathertoast.deadlyworld.common.registry.DWFeatures;
+import fathertoast.deadlyworld.common.registry.DWItems;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.DynamicRegistries;
@@ -70,10 +72,12 @@ public class DeadlyWorld {
     
     
     public DeadlyWorld() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        
-        eventBus.register( DWTileEntities.TILE_ENTITIES );
-        eventBus.register( DWFeatures.FEATURES );
+        IEventBus eventBus = FMLJavaModLoadingContext.get( ).getModEventBus( );
+
+        DWBlocks.BLOCKS.register( eventBus );
+        DWItems.ITEMS.register( eventBus );
+        DWTileEntities.TILE_ENTITIES.register( eventBus );
+        DWFeatures.FEATURES.register( eventBus );
     }
     
     /** @return A ResourceLocation with the mod's namespace. */
