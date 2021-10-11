@@ -5,14 +5,12 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
-import fathertoast.deadlyworld.common.core.config.util.EntityList;
 import fathertoast.deadlyworld.common.core.config.util.WeightedEntityList;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.OnClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -32,6 +30,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.Function;
 
 public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTileEntity {
     
@@ -121,9 +120,9 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         setEntityToSpawn( spawnerConfig.spawnList.get().next( random ) );
     }
     
-    private void setEntityToSpawn( EntityType<? extends Entity> entityType ) {
+    public void setEntityToSpawn( EntityType<? extends Entity> entityType ) {
         this.entityToSpawn.getTag().putString("id", Objects.requireNonNull(entityType.getRegistryName()).toString());
-        cachedEntity = null;
+        this.cachedEntity = EntityType.loadEntityRecursive(this.entityToSpawn.getTag(), this.level, Function.identity());
     }
     
     private SpawnerType getSpawnerType() {
@@ -438,16 +437,14 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     @Override
     public void onDataPacket( NetworkManager net, SUpdateTileEntityPacket pkt ) {
-        /*
         if( this.level.isClientSide ) {
-            handleUpdateTag( this.getBlockState(), pkt.getTag( ) );
+            super.handleUpdateTag( this.getBlockState(), pkt.getTag( ) );
         }
-         */
     }
     
     @Override
     public boolean triggerEvent( int id, int type ) {
-        /*
+
         if( this.level != null && this.level.isClientSide ) {
             DeadlyWorld.LOG.warn( "Getting client event '{}:{}'", id, type );
 
@@ -456,7 +453,6 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 return true;
             }
         }
-        */
         return super.triggerEvent( id, type );
     }
     
@@ -467,26 +463,10 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     @OnClient
     public Entity getRenderEntity() {
-        /*
-        if( cachedEntity == null && this.level != null ) {
-            World world = this.level;
-
-            try {
-                // TODO - Same thing as the above todo
-                cachedEntity = entityToSpawn.getConstructor( World.class ).newInstance( world );
-            }
-            catch( Exception ex ) {
-                DeadlyWorld.LOG.error( "Encountered exception while constructing entity for render '{}'", entityToSpawn, ex );
-                cachedEntity = new PigEntity( EntityType.PIG, world );
-            }
-
-            // TODO - finalizeSpawn only happens on the server. Is it needed?
-            if( cachedEntity instanceof MobEntity) {
-                ((MobEntity) cachedEntity).finalizeSpawn( (ServerWorld) this.level, this.level.getCurrentDifficultyAt(this.worldPosition), SpawnReason.SPAWNER, null, null );
-            }
+        if (this.cachedEntity == null) {
+            this.cachedEntity = EntityType.loadEntityRecursive(this.entityToSpawn.getTag(), this.level, Function.identity());
         }
-        */
-        return cachedEntity;
+        return this.cachedEntity;
     }
     
     @OnClient
