@@ -192,7 +192,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             }
             else if( spawnDelayBuildup > minSpawnDelay ) {
                 // Decrement the progressive delay buildup
-                spawnDelayBuildup -= spawnDelayRecovery;
+                spawnDelayBuildup = Math.max( spawnDelayBuildup - spawnDelayRecovery, minSpawnDelay );
             }
         }
     }
