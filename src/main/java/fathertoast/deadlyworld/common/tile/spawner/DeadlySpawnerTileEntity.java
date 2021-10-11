@@ -1,17 +1,17 @@
 package fathertoast.deadlyworld.common.tile.spawner;
 
 import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
+import fathertoast.deadlyworld.common.core.config.util.EntityList;
 import fathertoast.deadlyworld.common.core.config.util.WeightedEntityList;
-import fathertoast.deadlyworld.common.registry.DWBlocks;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.OnClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -20,10 +20,17 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.WeightedSpawnerEntity;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTileEntity {
@@ -64,7 +71,8 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     private float spawnRange;
     
     // Logic
-    private Class<? extends Entity> entityToSpawn = PigEntity.class;
+    private WeightedSpawnerEntity entityToSpawn = new WeightedSpawnerEntity();
+
     
     /** Whether or not this spawner is active. Reduces the number of times we need to iterate over the player list. */
     private boolean activated;
@@ -113,19 +121,9 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         setEntityToSpawn( spawnerConfig.spawnList.get().next( random ) );
     }
     
-    private void setEntityToSpawn( EntityType<? extends Entity> registryName ) {
-        /*TODO
-        entityToSpawn = EntityList.getClass( registryName );
-        if( entityToSpawn == null ) {
-            DeadlyWorld.LOG.warn(
-                    "Spawner received non-registered entity name '{}'" +
-                            " - This is probably caused by an error or change in the config for dimension \"{}\" (expect to see pig spawners)",
-                    registryName, this.level.dimension().getRegistryName().toString()
-            );
-            entityToSpawn = PigEntity.class;
-        }
+    private void setEntityToSpawn( EntityType<? extends Entity> entityType ) {
+        this.entityToSpawn.getTag().putString("id", Objects.requireNonNull(entityType.getRegistryName()).toString());
         cachedEntity = null;
-         */
     }
     
     private SpawnerType getSpawnerType() {
@@ -197,18 +195,16 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
     }
     
-    
     private void doSpawn() {
         // Should only be called server side anyways
         if( level == null || level.isClientSide ) return;
-        /*
 
-        World world = this.level;
+        ServerWorld world = (ServerWorld) this.level;
         BlockPos pos = this.worldPosition;
 
-        final Config             dimConfig          = Config.getOrDefault( world );
-        final SpawnerType        spawnerType        = this.getSpawnerType( );
         final DifficultyInstance difficultyInstance = world.getCurrentDifficultyAt( pos );
+        final DimensionConfigGroup dimConfig = Config.getDimensionConfigs( world );
+        final SpawnerType spawnerType = this.getSpawnerType( );
 
         boolean success = false;
 
@@ -219,11 +215,12 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
 
             // Try to create the entity to spawn
             final Entity entity;
-            try {
-                // TODO - Consider a different way to do this. It do indeed work, but reflection is very disgusting and awfully slow
-                // TODO This is the old way; we will update to the new entity type factory method (which is essentially still reflection)
-                entity = this.entityToSpawn.getConstructor( World.class ).newInstance( world );
 
+            try {
+                entity = EntityType.loadEntityRecursive(this.entityToSpawn.getTag(), world, (spawnedEntity) -> {
+                    spawnedEntity.moveTo(xSpawn, ySpawn, zSpawn, spawnedEntity.yRot, spawnedEntity.xRot);
+                    return spawnedEntity;
+                });
             }
             catch( Exception ex ) {
                 DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", this.entityToSpawn, ex );
@@ -243,8 +240,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             }
 
             // Initialize the entity
-            entity.setPos( xSpawn, ySpawn, zSpawn );
-            entity.setRot(world.random.nextFloat( ) * 360.0F, 0.0F);
+            entity.moveTo( entity.getX(), entity.getY(), entity.getZ(), world.random.nextFloat() * 360.0F, 0.0F);
 
             if( entity instanceof LivingEntity ) {
                 LivingEntity livingEntity = (LivingEntity) entity;
@@ -252,7 +248,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 if( !canSpawnNearLocation( livingEntity, xSpawn, ySpawn, zSpawn ) ) {
                     continue;
                 }
-                if ( livingEntity instanceof MobEntity ) {
+                if ( livingEntity instanceof MobEntity) {
                     ((MobEntity) entity).finalizeSpawn((ServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.SPAWNER, null, null);
                 }
                 spawnerType.initEntity( livingEntity, dimConfig, world, pos );
@@ -261,12 +257,11 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             world.levelEvent( 2004, pos, 0 );
             success = true;
 
-            if( entity instanceof LivingEntity ) {
-                //((LivingEntity) entity).spawnExplosionParticle( );
+            if( entity instanceof MobEntity ) {
+                ( (MobEntity) entity).spawnAnim();
             }
         }
         this.resetTimer( success );
-         */
     }
     
     private boolean canSpawnNearLocation( LivingEntity entity, final double x, final double y, final double z ) {
@@ -355,7 +350,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         compound.putInt( TAG_DELAY_MIN, minSpawnDelay );
         
         // Logic TODO
-        //compound.putString( TAG_SPAWN_ENTITY, entityToSpawn == PigEntity.class ? "" : EntityList.getKey( entityToSpawn ).toString( ) );
+        compound.put( TAG_SPAWN_ENTITY, entityToSpawn.getTag() );
         compound.putInt( TAG_DELAY, spawnDelay );
         
         return compound;
@@ -368,7 +363,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         // Attributes
         if( tag.contains( TAG_DYNAMIC_SPAWN_LIST, Constants.NBT.TAG_STRING ) ) {
             String line = tag.getString( TAG_DYNAMIC_SPAWN_LIST );
-            
+
             if( line.isEmpty() ) {
                 dynamicSpawnList = null;
             }
@@ -409,12 +404,17 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         if( tag.contains( TAG_SPAWN_ENTITY, Constants.NBT.TAG_STRING ) ) {
             String line = tag.getString( TAG_SPAWN_ENTITY );
             if( line.isEmpty() ) {
-                entityToSpawn = PigEntity.class;
+                entityToSpawn = new WeightedSpawnerEntity();
                 cachedEntity = null;
             }
             else {
-                // TODO
-                //setEntityToSpawn( new ResourceLocation( line ) );
+                EntityType<?> entityType = EntityType.PIG;
+                ResourceLocation entityRegName = ResourceLocation.tryParse( line );
+
+                if (entityRegName != null && ForgeRegistries.ENTITIES.containsKey( entityRegName )) {
+                    entityType = ForgeRegistries.ENTITIES.getValue( entityRegName );
+                }
+                setEntityToSpawn( entityType );
             }
         }
         if( tag.contains( TAG_DELAY, Constants.NBT.TAG_ANY_NUMERIC ) ) {

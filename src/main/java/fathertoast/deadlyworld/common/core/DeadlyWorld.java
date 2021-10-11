@@ -59,6 +59,9 @@ public class DeadlyWorld {
      *      ? option to allow floor traps to trigger vs creative mode players, and vice-versa for other traps
      *
      * Utility features:
+     *  TODO - Note that vanilla structures are saved as NBT files and only so much can be changed.
+     *   - For instance, we may do post processing, but we cannot change anything before the structure has
+     *   - been generated
      *  - modify vanilla structures?
      *  ? add chance to fail replacing blocks in config (notably per silverfish replaceable block and per vein)
      */

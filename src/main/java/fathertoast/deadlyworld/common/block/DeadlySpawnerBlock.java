@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.block;
 
+import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
@@ -69,7 +70,7 @@ public class DeadlySpawnerBlock extends ContainerBlock {
         super.setPlacedBy( world, pos, state, placer, itemStack );
         
         if( !world.isClientSide ) {
-            initTileEntity( world, pos, null/*Config.getOrDefault( world )*/ );
+            initTileEntity( world, pos, Config.getDimensionConfigs( world ));
         }
     }
     
