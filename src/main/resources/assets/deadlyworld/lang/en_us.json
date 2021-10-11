@@ -1,13 +1,12 @@
 {
   "entity.AreaEffectCloud": "Lingering Potion Cloud",
 
-  "block.deadlyworld.deadly_spawner": "Broken Spawner",
-  "block.deadlyworld.deadly_spawner.simple": "Monster Spawner",
-  "block.deadlyworld.deadly_spawner.stream": "Monster Stream Spawner",
-  "block.deadlyworld.deadly_spawner.swarm": "Monster Spawner of Swarms",
-  "block.deadlyworld.deadly_spawner.brutal": "Monster Spawner of Brutality",
-  "block.deadlyworld.deadly_spawner.nest": "Silverfish Nest",
-  "block.deadlyworld.deadly_spawner.dungeon": "Dungeon Monster Spawner",
+  "block.deadlyworld.lone_deadly_spawner": "Monster Spawner",
+  "block.deadlyworld.stream_deadly_spawner": "Monster Stream Spawner",
+  "block.deadlyworld.swarm_deadly_spawner": "Monster Spawner of Swarms",
+  "block.deadlyworld.brutal_deadly_spawner": "Monster Spawner of Brutality",
+  "block.deadlyworld.nest_deadly_spawner": "Silverfish Nest",
+  "block.deadlyworld.dungeon_deadly_spawner": "Dungeon Monster Spawner",
 
   "block.deadlyworld.floor_trap": "Broken Floor Trap",
   "block.deadlyworld.floor_trap.tnt": "Exploding Floor Trap",
