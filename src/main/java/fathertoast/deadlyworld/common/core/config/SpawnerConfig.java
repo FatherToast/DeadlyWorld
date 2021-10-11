@@ -122,7 +122,6 @@ public class SpawnerConfig extends FeatureConfig {
                             "10%). Set this to 0 to",
                     "revert to the vanilla spawner behavior (simple random between min and max).",
                     "See above for a more in-depth description of progressive spawn delay." ) );
-            //TODO Implementation note: previously, the global recovery was multiplied by progression; now we have type recovery
             delayRecovery = SPEC.define( new DoubleField( "delay.recovery_rate", delayPrgr * 0.0025, DoubleField.Range.POSITIVE,
                     "The rate at which the spawn delay buildup on spawners recovers while no players are within range.",
                     "Inactive spawners' delay are reduced by this value each tick (20 times per second)." ) );

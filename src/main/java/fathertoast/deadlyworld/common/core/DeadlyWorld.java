@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 public class DeadlyWorld {
     /* TODO LIST:
      *  - everything
-     *  - upgrade config to allow per-dimension files
      *  - veins
      *  - features
      *  - silverfish block
@@ -48,7 +47,7 @@ public class DeadlyWorld {
      *      + lava
      *  - combo traps
      *      + spider spawner & splash poison dispenser
-     *      + undead spawner & splash harm dispener
+     *      + undead spawner & splash harm dispenser
      *      ? any spawner & fish hook dispenser (custom entity)
      *      ? any floor trap & fish hook dispenser (custom entity)
      *      ? fire immune spawner & fireball dispenser
@@ -81,9 +80,7 @@ public class DeadlyWorld {
     }
     
     /** @return A ResourceLocation with the mod's namespace. */
-    public static ResourceLocation resourceLoc( String path ) {
-        return new ResourceLocation( MOD_ID, path );
-    }
+    public static ResourceLocation resourceLoc( String path ) { return new ResourceLocation( MOD_ID, path ); }
     
     /** @return Returns a Forge registry entry as a string, or "null" if it is null. */
     public static String toString( @Nullable ForgeRegistryEntry<?> regEntry ) { return regEntry == null ? "null" : toString( regEntry.getRegistryName() ); }
