@@ -31,6 +31,7 @@ public class DeadlyWorld {
      *  - veins
      *  - features
      *  - silverfish block
+     *  - FUNNIE STORM DRAIN TRAP #FunnyTrolling #MustSee
      *
      * Primary features:
      *  - chests
