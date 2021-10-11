@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.core.config;
 
 import net.minecraft.util.RegistryKey;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 
 import java.io.File;
 
@@ -10,12 +11,12 @@ import java.io.File;
  */
 public class DimensionConfigGroup extends ConfigGroup {
     
-    public final RegistryKey<DimensionType> DIMENSION;
+    public final RegistryKey<World> DIMENSION;
     
     public final MainDimensionConfig MAIN;
     public final SpawnerConfig SPAWNERS;
     
-    DimensionConfigGroup( File dir, RegistryKey<DimensionType> dimension ) {
+    DimensionConfigGroup( File dir, RegistryKey<World> dimension ) {
         DIMENSION = dimension;
         final File dimensionDir = new File( dir,
                 "dimensions/" + dimension.location().getNamespace() + "/" + dimension.location().getPath() );

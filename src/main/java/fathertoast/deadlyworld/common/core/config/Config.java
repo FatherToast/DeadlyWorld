@@ -5,13 +5,11 @@ import fathertoast.deadlyworld.common.core.config.field.AbstractConfigField;
 import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
 import fathertoast.deadlyworld.common.core.config.file.TomlHelper;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +27,7 @@ public class Config {
     public static final GeneralConfig GENERAL = new GeneralConfig( CONFIG_DIR, "general" );
     
     /** Mapping of each dimension type to its config. */
-    private static HashMap<RegistryKey<DimensionType>, DimensionConfigGroup> DIMENSIONS;
+    private static HashMap<RegistryKey<World>, DimensionConfigGroup> DIMENSIONS;
     private static DimensionConfigGroup OVERWORLD_CONFIGS;
     
     /**
@@ -39,9 +37,7 @@ public class Config {
      * throws an exception if dimension configs have not yet been loaded.
      */
     public static DimensionConfigGroup getDimensionConfigs( World world ) {
-        // TODO
-        world.dimensionType();
-        return null;
+        return getDimensionConfigs( world.dimension() );
     }
     
     /**
@@ -50,7 +46,7 @@ public class Config {
      * Returns the overworld's config if the requested dimension config was not properly loaded;
      * throws an exception if dimension configs have not yet been loaded.
      */
-    public static DimensionConfigGroup getDimensionConfigs( RegistryKey<DimensionType> dimension ) {
+    public static DimensionConfigGroup getDimensionConfigs( RegistryKey<World> dimension ) {
         if( OVERWORLD_CONFIGS == null ) {
             throw new IllegalStateException( "Attempted to access dimension configs before any have been loaded." );
         }
@@ -71,14 +67,18 @@ public class Config {
         
         //TODO Actually register dimensions dynamically - DynamicRegistries.builtin().dimensionTypes()?
         //  - Note; should make sure overworld is loaded no matter what, and maybe store a reference to it to use as a default in case of issues
-        final List<RegistryKey<DimensionType>> temp = Arrays.asList( DimensionType.OVERWORLD_LOCATION, DimensionType.NETHER_LOCATION );
+        //
+        // TODO NOTE - We have it figured out! RegistryKey<World> represents a specific world. Vanilla has 3 worlds;
+        //  - The End, Overworld and The Nether. They all have their own dimension type, but if we had 3 worlds
+        //  - with the overworld dimension type we would still want a separate config for each world, right?
+        final List<RegistryKey<World>> temp = Arrays.asList( World.OVERWORLD, World.NETHER );
         
         // Keep track of opened files so we can close any we don't need
-        final HashMap<RegistryKey<DimensionType>, DimensionConfigGroup> previousDims = DIMENSIONS;
+        final HashMap<RegistryKey<World>, DimensionConfigGroup> previousDims = DIMENSIONS;
         
         // Load dimension configs
         DIMENSIONS = new HashMap<>();
-        for( RegistryKey<DimensionType> dimension : temp ) {
+        for( RegistryKey<World> dimension : temp ) {
             // Use previously opened config if available and remove to prevent it from being closed
             final DimensionConfigGroup dimConfigs = previousDims != null && previousDims.containsKey( dimension ) ?
                     previousDims.remove( dimension ) :

@@ -1,18 +1,7 @@
 package fathertoast.deadlyworld.common.core.config;
 
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.config.field.BlockListField;
 import fathertoast.deadlyworld.common.core.config.field.BooleanField;
-import fathertoast.deadlyworld.common.core.config.field.DoubleField;
-import fathertoast.deadlyworld.common.core.config.field.EntityListField;
 import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
-import fathertoast.deadlyworld.common.core.config.util.BlockList;
-import fathertoast.deadlyworld.common.core.config.util.EntityEntry;
-import fathertoast.deadlyworld.common.core.config.util.EntityList;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.World;
 
 import java.io.File;
 
