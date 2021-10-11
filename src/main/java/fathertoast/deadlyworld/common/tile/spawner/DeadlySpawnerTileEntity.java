@@ -1,13 +1,13 @@
-package fathertoast.deadlyworld.common.tile;
+package fathertoast.deadlyworld.common.tile.spawner;
 
 import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
-import fathertoast.deadlyworld.common.block.properties.SpawnerType;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.config.util.WeightedEntityList;
 import fathertoast.deadlyworld.common.registry.DWBlocks;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.OnClient;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -130,10 +130,10 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     private SpawnerType getSpawnerType() {
         if( this.worldPosition != null && this.level != null ) {
-            BlockState block = this.level.getBlockState( this.worldPosition );
+            Block block = this.level.getBlockState( this.worldPosition ).getBlock( );
             
-            if( block.getBlock() == DWBlocks.DEADLY_SPAWNER.get() ) {
-                return block.getValue( DeadlySpawnerBlock.SPAWNER_TYPE );
+            if( block instanceof DeadlySpawnerBlock ) {
+                return ((DeadlySpawnerBlock) block).getSpawnerType( );
             }
         }
         return SpawnerType.LONE;
@@ -223,6 +223,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 // TODO - Consider a different way to do this. It do indeed work, but reflection is very disgusting and awfully slow
                 // TODO This is the old way; we will update to the new entity type factory method (which is essentially still reflection)
                 entity = this.entityToSpawn.getConstructor( World.class ).newInstance( world );
+
             }
             catch( Exception ex ) {
                 DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", this.entityToSpawn, ex );
@@ -321,7 +322,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 final BlockState block = world.getBlockState( worldPosition );
                 world.sendBlockUpdated( worldPosition, block, block, 4 );
             }
-            world.setBlock( worldPosition, DWBlocks.DEADLY_SPAWNER.get().defaultBlockState(), EVENT_TIMER_RESET, 0 );
+            world.blockEvent( worldPosition, this.getBlockState().getBlock(), EVENT_TIMER_RESET, 0 );
         }
     }
     

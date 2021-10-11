@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.client.renderer.tile;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import fathertoast.deadlyworld.common.tile.DeadlySpawnerTileEntity;
+import fathertoast.deadlyworld.common.tile.spawner.DeadlySpawnerTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;

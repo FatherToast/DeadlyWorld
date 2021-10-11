@@ -1,13 +1,10 @@
-package fathertoast.deadlyworld.common.block.properties;
+package fathertoast.deadlyworld.common.tile.spawner;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.core.config.MainDimensionConfig;
 import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -16,10 +13,10 @@ import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 @MethodsReturnNonnullByDefault
@@ -67,9 +64,28 @@ public enum SpawnerType implements IStringSerializable {
     
     @Override
     public String getSerializedName() { return ID; }
+
+    /**
+     * Returns a SpawnerType from ID.
+     * If there exists no SpawnerType
+     * with the given ID, default to
+     * {@link SpawnerType#LONE}
+     *
+     * @param ID The ID of the SpawnerType.
+     * @return A SpawnerType matching the given ID.
+     */
+    @Nonnull
+    public static SpawnerType getFromID( String ID ) {
+        for ( SpawnerType spawnerType : values( ) ) {
+            if (spawnerType.getSerializedName( ).equals( ID )) {
+                return spawnerType;
+            }
+        }
+        return LONE;
+    }
     
     @Override
-    public String toString() { return getSerializedName(); }
+    public String toString() { return getSerializedName( ); }
     
     public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return CONFIG_FUNCTION.apply( dimConfigs ); }
     
