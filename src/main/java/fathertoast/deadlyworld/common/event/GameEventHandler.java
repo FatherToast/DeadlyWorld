@@ -26,7 +26,7 @@ public final class GameEventHandler {
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onServerStarting( FMLServerStartingEvent event ) {
-        Config.initializeDynamic();
+        Config.initializeDynamic( event.getServer() );
     }
     
     /**

@@ -4,13 +4,15 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.field.AbstractConfigField;
 import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
 import fathertoast.deadlyworld.common.core.config.file.TomlHelper;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,16 +64,16 @@ public class Config {
     }
     
     /** Performs loading of configs in this mod that depend on dynamic registries. */
-    public static void initializeDynamic() {
+    public static void initializeDynamic( MinecraftServer server ) {
         AbstractConfigField.loadingCategory = null;
         
         //TODO Actually register dimensions dynamically - DynamicRegistries.builtin().dimensionTypes()?
         //  - Note; should make sure overworld is loaded no matter what, and maybe store a reference to it to use as a default in case of issues
-        //
-        // TODO NOTE - We have it figured out! RegistryKey<World> represents a specific world. Vanilla has 3 worlds;
-        //  - The End, Overworld and The Nether. They all have their own dimension type, but if we had 3 worlds
-        //  - with the overworld dimension type we would still want a separate config for each world, right?
-        final List<RegistryKey<World>> temp = Arrays.asList( World.OVERWORLD, World.NETHER );
+
+        final List<RegistryKey<World>> temp = new ArrayList<>(server.levelKeys());
+
+        // bogos binted?
+        temp.forEach(DeadlyWorld.LOG::info);
         
         // Keep track of opened files so we can close any we don't need
         final HashMap<RegistryKey<World>, DimensionConfigGroup> previousDims = DIMENSIONS;
@@ -88,7 +90,7 @@ public class Config {
             dimConfigs.initialize();
             DIMENSIONS.put( dimension, dimConfigs );
         }
-        if( OVERWORLD_CONFIGS == null ) { OVERWORLD_CONFIGS = DIMENSIONS.get( DimensionType.OVERWORLD_LOCATION ); }
+        if( OVERWORLD_CONFIGS == null ) { OVERWORLD_CONFIGS = DIMENSIONS.get( World.OVERWORLD ); }
         
         // Close any configs no longer being used
         if( previousDims != null && !previousDims.isEmpty() ) {
