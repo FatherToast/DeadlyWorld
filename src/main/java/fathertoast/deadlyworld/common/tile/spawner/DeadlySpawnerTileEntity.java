@@ -8,8 +8,10 @@ import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.config.util.WeightedEntityList;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.OnClient;
+import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SpawnerBlock;
 import net.minecraft.entity.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -73,7 +75,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     private WeightedSpawnerEntity entityToSpawn = new WeightedSpawnerEntity();
 
     
-    /** Whether or not this spawner is active. Reduces the number of times we need to iterate over the player list. */
+    /** Whether this spawner is active. Reduces the number of times we need to iterate over the player list. */
     private boolean activated;
     /** Countdown until the next activation check. */
     private int activationDelay;
@@ -122,7 +124,6 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     public void setEntityToSpawn( EntityType<? extends Entity> entityType ) {
         this.entityToSpawn.getTag().putString("id", Objects.requireNonNull(entityType.getRegistryName()).toString());
-        this.cachedEntity = EntityType.loadEntityRecursive(this.entityToSpawn.getTag(), this.level, Function.identity());
     }
     
     private SpawnerType getSpawnerType() {
@@ -144,13 +145,12 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         else {
             activationDelay = 4;
-            //TODO
-            activated = false;//TrapHelper.isValidPlayerInRange( this.level, this.worldPosition, activationRange, false, false );
+            activated = TrapHelper.isValidPlayerInRange( this.level, this.worldPosition, activationRange, false, false );
         }
         
-        if( !(level instanceof ServerWorld) ) {
+        if(this.level.isClientSide) {
             // Run client-side effects
-            if( activated ) {
+            if(activated) {
                 final World world = level;
                 final double xP = worldPosition.getX() + world.random.nextDouble();
                 final double yP = worldPosition.getY() + world.random.nextDouble();
@@ -167,7 +167,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         else {
             // Run server-side logic
-            if( activated ) {
+            if(activated) {
                 
                 if( spawnDelay < 0 ) {
                     resetTimer( false );
@@ -179,7 +179,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 }
                 //TODO
                 else if( checkSight /*&& !TrapHelper.isValidPlayerInRange( level, worldPosition, activationRange, true, false )*/ ) {
-                    // Failed sight check; impose a small delay so we don't spam ray traces
+                    // Failed sight check; impose a small delay, so we don't spam ray traces
                     spawnDelay = 6 + level.random.nextInt( 10 );
                 }
                 else {
@@ -347,8 +347,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         compound.putFloat( TAG_ACTIVATION_RANGE, activationRange );
         
         compound.putInt( TAG_DELAY_MIN, minSpawnDelay );
-        
-        // Logic TODO
+
         compound.put( TAG_SPAWN_ENTITY, entityToSpawn.getTag() );
         compound.putInt( TAG_DELAY, spawnDelay );
         
@@ -400,22 +399,8 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         
         // Logic
-        if( tag.contains( TAG_SPAWN_ENTITY, Constants.NBT.TAG_STRING ) ) {
-            String line = tag.getString( TAG_SPAWN_ENTITY );
-            if( line.isEmpty() ) {
-                entityToSpawn = new WeightedSpawnerEntity();
-                cachedEntity = null;
-            }
-            else {
-                EntityType<?> entityType = EntityType.PIG;
-                ResourceLocation entityRegName = ResourceLocation.tryParse( line );
+        this.setSpawnEntityFromTag(tag);
 
-                if (entityRegName != null && ForgeRegistries.ENTITIES.containsKey( entityRegName )) {
-                    entityType = ForgeRegistries.ENTITIES.getValue( entityRegName );
-                }
-                setEntityToSpawn( entityType );
-            }
-        }
         if( tag.contains( TAG_DELAY, Constants.NBT.TAG_ANY_NUMERIC ) ) {
             spawnDelay = tag.getInt( TAG_DELAY );
         }
@@ -436,12 +421,35 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     }
     
     @Override
-    public void onDataPacket( NetworkManager net, SUpdateTileEntityPacket pkt ) {
-        if( this.level.isClientSide ) {
-            super.handleUpdateTag( this.getBlockState(), pkt.getTag( ) );
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        if(this.level.isClientSide) {
+            super.handleUpdateTag(this.getBlockState(), pkt.getTag());
+
+            CompoundNBT tag = pkt.getTag();
+            this.setSpawnEntityFromTag(tag);
         }
     }
-    
+
+    private void setSpawnEntityFromTag(CompoundNBT tag) {
+        if(tag.contains(TAG_SPAWN_ENTITY, Constants.NBT.TAG_STRING)) {
+            String line = tag.getString(TAG_SPAWN_ENTITY);
+
+            if (line.isEmpty()) {
+                entityToSpawn = new WeightedSpawnerEntity();
+                cachedEntity = null;
+            }
+            else {
+                EntityType<?> entityType = EntityType.PIG;
+                ResourceLocation entityRegName = ResourceLocation.tryParse(line);
+
+                if (entityRegName != null && ForgeRegistries.ENTITIES.containsKey(entityRegName)) {
+                    entityType = ForgeRegistries.ENTITIES.getValue(entityRegName);
+                }
+                setEntityToSpawn(entityType);
+            }
+        }
+    }
+
     @Override
     public boolean triggerEvent( int id, int type ) {
 

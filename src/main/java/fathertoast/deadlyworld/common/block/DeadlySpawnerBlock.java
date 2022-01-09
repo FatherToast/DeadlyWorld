@@ -1,10 +1,10 @@
 package fathertoast.deadlyworld.common.block;
 
-import fathertoast.deadlyworld.common.core.config.Config;
-import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.tile.spawner.DeadlySpawnerTileEntity;
+import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,35 +44,6 @@ public class DeadlySpawnerBlock extends ContainerBlock {
 
 		setDefaultState( blockState.getBaseState( ).withProperty( EnumSpawnerType.PROPERTY, EnumSpawnerType.LONE ) );
          */
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public ActionResultType use( BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult traceResult ) {
-
-        ItemStack heldStack = player.getItemInHand( hand );
-
-        if ( heldStack.getItem( ) instanceof SpawnEggItem ) {
-            if ( world.isClientSide ) {
-                return ActionResultType.SUCCESS;
-            }
-            else {
-                TileEntity tileEntity = world.getBlockEntity( pos );
-
-                if (tileEntity instanceof DeadlySpawnerTileEntity) {
-                    SpawnEggItem spawnEgg = (SpawnEggItem) heldStack.getItem( );
-
-                    CompoundNBT tag = heldStack.getOrCreateTag( );
-                    EntityType<?> entityType = spawnEgg.getType( tag );
-
-                    ((DeadlySpawnerTileEntity) tileEntity).setEntityToSpawn( entityType );
-                }
-            }
-            return ActionResultType.CONSUME;
-        }
-        else {
-            return super.use( state, world, pos, player, hand, traceResult );
-        }
     }
     
     @Nullable
