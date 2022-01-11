@@ -1,21 +1,11 @@
 package fathertoast.deadlyworld.common.core;
 
-import fathertoast.deadlyworld.common.event.GameEventHandler;
-import fathertoast.deadlyworld.common.event.ModEventHandler;
-import fathertoast.deadlyworld.common.registry.DWBlocks;
-import fathertoast.deadlyworld.common.registry.DWFeatures;
-import fathertoast.deadlyworld.common.registry.DWItems;
-import fathertoast.deadlyworld.common.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.network.PacketHandler;
+import fathertoast.deadlyworld.common.registry.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,10 +61,15 @@ public class DeadlyWorld {
     
     /** The logger used by this mod. */
     public static final Logger LOG = LogManager.getLogger( MOD_ID );
+
+    /** Packet handler instance */
+    public PacketHandler packetHandler = new PacketHandler();
     
     
     public DeadlyWorld() {
         IEventBus eventBus = FMLJavaModLoadingContext.get( ).getModEventBus( );
+
+        this.packetHandler.registerMessages();
 
         DWBlocks.BLOCKS.register( eventBus );
         DWItems.ITEMS.register( eventBus );
