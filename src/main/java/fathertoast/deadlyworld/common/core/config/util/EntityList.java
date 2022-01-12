@@ -74,6 +74,16 @@ public class EntityList implements IStringArray {
         }
         return false;
     }
+
+    /** @return True if this list contains no entries. */
+    public boolean isEmpty() {
+        return ENTRIES.length == 0;
+    }
+
+    /** @return All entity entries in this entity list. */
+    public EntityEntry[] getAllEntries() {
+        return this.ENTRIES;
+    }
     
     /**
      * @param entity The entity to retrieve values for.

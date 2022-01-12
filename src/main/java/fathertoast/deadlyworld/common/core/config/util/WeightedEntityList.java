@@ -3,7 +3,13 @@ package fathertoast.deadlyworld.common.core.config.util;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -33,6 +39,70 @@ public class WeightedEntityList extends EntityList {
         // Use the direct super setters to avoid throwing UnsupportedOperationException
         super.setMultiValue( 1 );
         super.setRange( 0.0, Double.POSITIVE_INFINITY );
+    }
+
+    // TODO - Sorry for messing around with your config classes Toast,
+    //        feel free to remove or change anything I do in these waters
+    //        at any given time.
+    /**
+     * Tries to create a new entity list from the given Compound tag.
+     *
+     * @param compoundNBT The Compound tag to try and load entity entries from.
+     *
+     * @return A new WeightedEntityList if any entries were successfully loaded
+     *         from the Compound tag. Returns null if not.
+     */
+    @Nullable
+    public static WeightedEntityList loadFromNBT(@Nonnull CompoundNBT compoundNBT) {
+        List<EntityEntry> entries = new ArrayList<>();
+
+        for (String key : compoundNBT.getAllKeys()) {
+            if (compoundNBT.contains(key, Constants.NBT.TAG_STRING)) {
+                // Assuming the entity ID and the weight is split by a space.
+                // If not... :biglist:
+                String[] entry = compoundNBT.getString(key).split(" ");
+
+                if (entry.length == 0 || entry.length > 2) {
+                    DeadlyWorld.LOG.error("Failed to read weighted entity list entry; should only contain an entity ID and a numeric weight. Malformed entry: \"{}\"", (Object) entry);
+                    return null;
+                }
+                else {
+                    try {
+                        // Assuming the first index contains the entity ID
+                        // and the second index contains the weight.
+                        ResourceLocation entityId = ResourceLocation.tryParse(entry[0]);
+                        double weight = Double.parseDouble(entry[1]);
+
+                        if (entityId == null) {
+                            DeadlyWorld.LOG.error("Failed to read entity ID for weighted entity list entry (entity ID is malformed or invalid): \"{}\"", (Object) entry);
+                        }
+                        else {
+                            // VVV THIS IS WHERE THE ENTRIES GET ADDED VVV
+                            if (ForgeRegistries.ENTITIES.containsKey(entityId)) {
+                                EntityType<?> entityType = ForgeRegistries.ENTITIES.getValue(entityId);
+                                entries.add(new EntityEntry(entityType, weight));
+                            }
+                            else {
+                                DeadlyWorld.LOG.error("Failed to read entity ID for weighted entity list entry (entity ID doesn't exist in the registry): \"{}\"", (Object) entry);
+                            }
+                        }
+                    }
+                    catch (NumberFormatException e) {
+                        DeadlyWorld.LOG.error("Failed to read weight value for weighted entity list entry (value could not be parsed as a double): \"{}\"", (Object) entry);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        if (entries.isEmpty()) {
+            return null;
+        }
+        else {
+            // SUCCESS                                                                                                                 :biglist:
+            WeightedEntityList entityList = new WeightedEntityList(entries);
+            entityList.calculateTotalWeight();
+            return entityList;
+        }
     }
     
     /** @return A list of strings that will represent this object when written to a toml file. */

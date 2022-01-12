@@ -5,6 +5,7 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
+import fathertoast.deadlyworld.common.core.config.util.EntityEntry;
 import fathertoast.deadlyworld.common.core.config.util.WeightedEntityList;
 import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
@@ -30,6 +31,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.Function;
@@ -58,6 +60,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     private static final String TAG_DELAY_BUILDUP = "DelayBuildup";
     
     // Attributes
+    @Nullable
     private WeightedEntityList dynamicSpawnList;
     
     private float activationRange;
@@ -146,18 +149,18 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         else {
             activationDelay = 4;
-            activated = TrapHelper.isValidPlayerInRange(this.level, this.worldPosition, activationRange, false, false);
+            activated = TrapHelper.isValidPlayerInRange(this.level, this.worldPosition, activationRange, false,false);
         }
         
         if(this.level.isClientSide) {
             // Run client-side effects
             if(activated) {
                 final World world = level;
-                final double xP = worldPosition.getX() + world.random.nextDouble();
-                final double yP = worldPosition.getY() + world.random.nextDouble();
-                final double zP = worldPosition.getZ() + world.random.nextDouble();
-                world.addParticle( ParticleTypes.SMOKE, xP, yP, zP, 0.0, 0.0, 0.0 );
-                world.addParticle( ParticleTypes.FLAME, xP, yP, zP, 0.0, 0.0, 0.0 );
+                final double xPos = worldPosition.getX() + world.random.nextDouble();
+                final double yPos = worldPosition.getY() + world.random.nextDouble();
+                final double zPos = worldPosition.getZ() + world.random.nextDouble();
+                world.addParticle(ParticleTypes.SMOKE, xPos, yPos, zPos, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FLAME, xPos, yPos, zPos, 0.0, 0.0, 0.0);
                 
                 if( spawnDelay > 0 ) {
                     spawnDelay--;
@@ -170,18 +173,18 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             // Run server-side logic
             if(activated) {
                 
-                if( spawnDelay < 0 ) {
+                if(spawnDelay < 0) {
                     resetTimer( false );
                 }
                 
-                if( spawnDelay > 0 ) {
+                if(spawnDelay > 0) {
                     // Spawner is on cooldown
                     spawnDelay--;
                 }
-                //TODO
-                else if(checkSight && !TrapHelper.isValidPlayerInRange( level, worldPosition, activationRange, true, false )) {
+
+                else if(checkSight && !TrapHelper.isValidPlayerInRange( level, worldPosition, activationRange, true, false)) {
                     // Failed sight check; impose a small delay, so we don't spam ray traces
-                    spawnDelay = 6 + level.random.nextInt( 10 );
+                    spawnDelay = 6 + level.random.nextInt(10);
                 }
                 else {
                     // Attempt spawning
@@ -202,7 +205,6 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         ServerWorld world = (ServerWorld) this.level;
         BlockPos pos = this.worldPosition;
 
-        final DifficultyInstance difficultyInstance = world.getCurrentDifficultyAt( pos );
         final DimensionConfigGroup dimConfig = Config.getDimensionConfigs( world );
         final SpawnerType spawnerType = this.getSpawnerType();
 
@@ -249,7 +251,8 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                     continue;
                 }
                 if (livingEntity instanceof MobEntity) {
-                    ((MobEntity) entity).finalizeSpawn((ServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.SPAWNER, null, null);
+                    final DifficultyInstance difficultyInstance = world.getCurrentDifficultyAt(pos);
+                    ((MobEntity) entity).finalizeSpawn((ServerWorld) this.level, difficultyInstance, SpawnReason.SPAWNER, null, null);
                 }
                 spawnerType.initEntity( livingEntity, dimConfig, world, pos );
             }
@@ -310,12 +313,19 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                     );
                 }
             }
-            
-            if( dynamicSpawnList != null ) {
-                setEntityToSpawn( dynamicSpawnList.next(world.random ));
 
-                final BlockState block = world.getBlockState( worldPosition);
-                world.sendBlockUpdated(worldPosition, block, block, 4);
+            if(this.dynamicSpawnList != null && !this.dynamicSpawnList.isEmpty()) {
+                EntityType<?> nextType = this.dynamicSpawnList.next(world.random);
+
+                if (nextType == null) {
+                    DeadlyWorld.LOG.warn("Failed to fetch next random entity entry in a weighted entity list. Could the total weight be 0?");
+                }
+                else {
+                    setEntityToSpawn(nextType);
+
+                    final BlockState block = world.getBlockState(worldPosition);
+                    world.sendBlockUpdated(worldPosition, block, block, 4);
+                }
             }
             world.blockEvent(worldPosition, this.getBlockState().getBlock(), EVENT_TIMER_RESET, 0);
         }
@@ -326,7 +336,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         super.save(compound);
         
         // Attributes
-        compound.putString( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList == null ? "" : dynamicSpawnList.toString());
+        //compound.put( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList == null ? "" : dynamicSpawnList.toStringList());
         
         compound.putBoolean( TAG_CHECK_SIGHT, checkSight );
         
@@ -336,6 +346,21 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         
         compound.putInt( TAG_SPAWN_COUNT, spawnCount );
         compound.putFloat( TAG_SPAWN_RANGE, spawnRange );
+
+        // >8)
+        if (this.dynamicSpawnList != null && !this.dynamicSpawnList.isEmpty()) {
+            CompoundNBT spawnListTag = new CompoundNBT();
+            int tagIndex = 0;
+
+            for (EntityEntry entry : this.dynamicSpawnList.getAllEntries()) {
+                // Assuming the first index of the
+                // entry's value set is the weight.
+                String stringEntry = entry.TYPE.getRegistryName().toString() + " " + entry.VALUES[0];
+                spawnListTag.putString(String.valueOf(tagIndex), stringEntry);
+                ++tagIndex;
+            }
+            compound.put(TAG_DYNAMIC_SPAWN_LIST, spawnListTag);
+        }
         
         // Logic
         compound.putDouble( TAG_DELAY_BUILDUP, spawnDelayBuildup );
@@ -356,20 +381,14 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     }
     
     @Override
-    public void load( BlockState state, CompoundNBT tag ) {
-        super.load( state, tag );
+    public void load(BlockState state, CompoundNBT tag) {
+        super.load(state, tag);
         
         // Attributes
-        if( tag.contains( TAG_DYNAMIC_SPAWN_LIST, Constants.NBT.TAG_STRING ) ) {
-            String line = tag.getString( TAG_DYNAMIC_SPAWN_LIST );
+        if(tag.contains(TAG_DYNAMIC_SPAWN_LIST, Constants.NBT.TAG_COMPOUND)) {
+            CompoundNBT spawnListTag = tag.getCompound(TAG_DYNAMIC_SPAWN_LIST);
 
-            if( line.isEmpty() ) {
-                dynamicSpawnList = null;
-            }
-            else {
-                //TODO
-                dynamicSpawnList = null;//new WeightedRandomConfig( line );
-            }
+            this.dynamicSpawnList = WeightedEntityList.loadFromNBT(spawnListTag);
         }
         
         if( tag.contains( TAG_ACTIVATION_RANGE, Constants.NBT.TAG_ANY_NUMERIC ) ) {
@@ -378,7 +397,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         if( tag.contains( TAG_CHECK_SIGHT, Constants.NBT.TAG_ANY_NUMERIC ) ) {
             checkSight = tag.getBoolean( TAG_CHECK_SIGHT );
         }
-        
+
         if( tag.contains( TAG_DELAY_MIN, Constants.NBT.TAG_ANY_NUMERIC ) ) {
             minSpawnDelay = tag.getInt( TAG_DELAY_MIN );
         }
