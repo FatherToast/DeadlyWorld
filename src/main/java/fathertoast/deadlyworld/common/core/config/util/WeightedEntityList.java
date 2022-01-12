@@ -89,7 +89,6 @@ public class WeightedEntityList extends EntityList {
                     }
                     catch (NumberFormatException e) {
                         DeadlyWorld.LOG.error("Failed to read weight value for weighted entity list entry (value could not be parsed as a double): \"{}\"", (Object) entry);
-                        e.printStackTrace();
                     }
                 }
             }
