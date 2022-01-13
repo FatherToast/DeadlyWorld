@@ -10,9 +10,12 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.loot.LootTableManager;
+import net.minecraft.loot.LootTables;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -42,28 +45,34 @@ public enum SpawnerType implements IStringSerializable {
             }
         }
     },
-    NEST( "nest", "silverfish nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST );
+    NEST( "nest", "silverfish_nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST );
     
     /** The unique id for this spawner type. This is used to save and load from disk. */
-    final String ID;
+    final String id;
     /** A human-readable name for this spawner type. Used in config descriptions, usually followed by " spawner" or " spawners". */
-    public final String NAME;
-    
+    public final String name;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
-    final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> CONFIG_FUNCTION;
+    final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction;
+    /** The loot tale ID for this spawner type's chest loot. */
+    final ResourceLocation lootTable;
     
-    SpawnerType( String idName, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> featureConfigFunc ) {
-        this( idName, idName, featureConfigFunc );
+    SpawnerType(String idName, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction) {
+        this(idName, idName, configFunction);
     }
     
-    SpawnerType( String id, String name, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
-        ID = id;
-        NAME = name;
-        CONFIG_FUNCTION = configFunction;
+    SpawnerType(String id, String name, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction) {
+        this.id = id;
+        this.name = name;
+        this.configFunction = configFunction;
+        this.lootTable = DeadlyWorld.resourceLoc("spawners/" + name);
     }
     
     @Override
-    public String getSerializedName() { return ID; }
+    public String getSerializedName() { return id; }
+
+    public ResourceLocation getLootTableId() {
+        return this.lootTable;
+    }
 
     /**
      * Returns a SpawnerType from ID.
@@ -87,7 +96,7 @@ public enum SpawnerType implements IStringSerializable {
     @Override
     public String toString() { return getSerializedName( ); }
     
-    public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return CONFIG_FUNCTION.apply( dimConfigs ); }
+    public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
     
     /* TODO - Move decoration to the Feature itself
     public abstract
@@ -119,7 +128,7 @@ public enum SpawnerType implements IStringSerializable {
             ModifiableAttributeInstance attributeInstance = entity.getAttribute( attribute );
             if( attributeInstance != null ) {
                 attributeInstance.addPermanentModifier(
-                        new AttributeModifier( DeadlyWorld.MOD_ID + ":" + ID + " spawner bonus", value, operation ) );
+                        new AttributeModifier( DeadlyWorld.MOD_ID + ":" + this.id + " spawner bonus", value, operation ) );
             }
         }
     }

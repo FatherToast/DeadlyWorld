@@ -1,13 +1,16 @@
 package fathertoast.deadlyworld.common.util;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -53,6 +56,15 @@ public class TrapHelper {
                         (result.getBlockPos( ).equals( pos ) || result.getBlockPos( ).equals( pos.offset( 0, 1, 0 ) ));
     }
 
+    public static boolean isSolidBlock(ISeedReader world, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
+
+        for (Direction direction : Direction.values()) {
+            if (!state.isFaceSturdy(world, pos, direction))
+                return false;
+        }
+        return true;
+    }
 
     // Utility class, instantiating not needed
     private TrapHelper() {}

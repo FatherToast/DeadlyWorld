@@ -8,6 +8,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
@@ -59,10 +61,18 @@ public class Config {
     /** Performs initial loading of configs in this mod. */
     public static void initialize() {
         AbstractConfigField.loadingCategory = null;
-        
+
         GENERAL.SPEC.initialize();
+
+        // Loading overworld config before the
+        // others to prevent our world gen features
+        // from exploding the universe with anger
+        OVERWORLD_CONFIGS = new DimensionConfigGroup(CONFIG_DIR, World.OVERWORLD);
+        OVERWORLD_CONFIGS.initialize();
+        DIMENSIONS = new HashMap<>();
+        DIMENSIONS.put(World.OVERWORLD, OVERWORLD_CONFIGS);
     }
-    
+
     /** Performs loading of configs in this mod that depend on dynamic registries. */
     public static void initializeDynamic( MinecraftServer server ) {
         AbstractConfigField.loadingCategory = null;
@@ -71,15 +81,13 @@ public class Config {
         //  - Note; should make sure overworld is loaded no matter what, and maybe store a reference to it to use as a default in case of issues
 
         final List<RegistryKey<World>> temp = new ArrayList<>(server.levelKeys());
-
-        // bogos binted?
-        temp.forEach(DeadlyWorld.LOG::info);
         
         // Keep track of opened files so we can close any we don't need
         final HashMap<RegistryKey<World>, DimensionConfigGroup> previousDims = DIMENSIONS;
         
         // Load dimension configs
         DIMENSIONS = new HashMap<>();
+
         for( RegistryKey<World> dimension : temp ) {
             // Use previously opened config if available and remove to prevent it from being closed
             final DimensionConfigGroup dimConfigs = previousDims != null && previousDims.containsKey( dimension ) ?

@@ -92,7 +92,7 @@ public class SpawnerConfig extends FeatureConfig {
         SpawnerTypeCategory( ToastConfigSpec parent, FeatureConfig feature, SpawnerType type,
                              double placements, int minHeight, int maxHeight, double chestCh, double activationRng, boolean sightCheck,
                              int minDelay, int maxDelay, int delayPrgr, int spawnCnt, double spawnRng, double dynamicCh ) {
-            super( parent, feature, type.NAME, placements, minHeight, maxHeight );
+            super( parent, feature, type.getSerializedName(), placements, minHeight, maxHeight );
             
             SPEC.newLine();
             
