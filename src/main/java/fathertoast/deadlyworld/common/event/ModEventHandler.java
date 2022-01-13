@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.event;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.Config;
+import fathertoast.deadlyworld.common.feature.DWConfiguredFeatures;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,5 +23,6 @@ public final class ModEventHandler {
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void setup( FMLCommonSetupEvent event ) {
         Config.initialize();
+        DWConfiguredFeatures.register();
     }
 }

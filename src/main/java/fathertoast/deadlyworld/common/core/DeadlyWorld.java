@@ -77,18 +77,12 @@ public class DeadlyWorld {
 
         MinecraftForge.EVENT_BUS.register(new BiomeEvents());
 
-        eventBus.addListener(this::onCommonSetup);
-
         DWBlocks.BLOCKS.register( eventBus );
         DWItems.ITEMS.register( eventBus );
         DWTileEntities.TILE_ENTITIES.register( eventBus );
         DWFeatures.FEATURES.register( eventBus );
     }
 
-    public void onCommonSetup(FMLCommonSetupEvent event) {
-        DWConfiguredFeatures.register();
-    }
-    
     /** @return A ResourceLocation with the mod's namespace. */
     public static ResourceLocation resourceLoc( String path ) { return new ResourceLocation( MOD_ID, path ); }
     
