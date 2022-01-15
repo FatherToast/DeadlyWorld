@@ -87,14 +87,15 @@ class TargetBlock
 	}
 	
 	static
-	Block getStringAsBlock( String id )
+	Block parseBlock( String id )
 	{
 		Block block = Block.REGISTRY.getObject( new ResourceLocation( id ) );
 		if( block == Blocks.AIR ) {
 			try {
 				block = Block.getBlockById( Integer.parseInt( id ) );
 				if( block != Blocks.AIR ) {
-					Config.log.warn( "Usage of numerical block id! ({})", id );
+					Config.log.warn( "Usage of numerical block id! ({}) Use '{}' instead to avoid future issues.",
+					                 block.getRegistryName( ), id );
 				}
 			}
 			catch( NumberFormatException numberformatexception ) {
@@ -157,8 +158,8 @@ class TargetBlock
 	{
 		String[] pair = line.split( "\\[", 2 );
 		
-		BLOCK = getStringAsBlock( pair[ 0 ] );
-		if( BLOCK == Blocks.AIR || pair.length < 2 ) {
+		BLOCK = parseBlock( pair[ 0 ] );
+		if( BLOCK == Blocks.AIR || pair.length < 2 || pair[ 1 ].equalsIgnoreCase( "normal]" ) || pair[ 1 ].equalsIgnoreCase( "default]" ) ) {
 			return;
 		}
 		if( !pair[ 1 ].endsWith( "]" ) ) {

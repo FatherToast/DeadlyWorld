@@ -16,7 +16,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -25,64 +24,62 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
 public
-class BlockDeadlySpawner extends BlockContainer
+class BlockFloorTrap extends BlockContainer
 {
-	public static final String ID = "deadly_spawner";
+	public static final String ID = "floor_trap";
 	
 	public
-	BlockDeadlySpawner( )
+	BlockFloorTrap( )
 	{
-		super( Material.IRON, MapColor.STONE );
-		setSoundType( SoundType.METAL );
+		super( Material.ROCK, MapColor.STONE );
+		setSoundType( SoundType.STONE );
 		
-		setHardness( Config.get( ).GENERAL.SPAWNER_HARDNESS );
-		setResistance( Config.get( ).GENERAL.SPAWNER_RESISTANCE );
-		setHarvestLevel( ModObjects.TOOL_NAME_PICKAXE, Config.get( ).GENERAL.SPAWNER_HARVEST_LEVEL );
+		setHardness( Config.get( ).GENERAL.FLOOR_TRAP_HARDNESS );
+		setResistance( Config.get( ).GENERAL.FLOOR_TRAP_RESISTANCE );
+		setHarvestLevel( ModObjects.TOOL_NAME_PICKAXE, Config.get( ).GENERAL.FLOOR_TRAP_HARVEST_LEVEL );
 		
-		setDefaultState( blockState.getBaseState( ).withProperty( EnumSpawnerType.PROPERTY, EnumSpawnerType.DEFAULT ) );
+		setDefaultState( blockState.getBaseState( ).withProperty( EnumFloorTrapType.PROPERTY, EnumFloorTrapType.TNT ) );
 	}
 	
 	public
 	void initTileEntity( World world, BlockPos pos, IBlockState state, Config dimConfig, Random random )
 	{
 		TileEntity spawnerData = world.getTileEntity( pos );
-		if( spawnerData instanceof TileEntityDeadlySpawner ) {
-			((TileEntityDeadlySpawner) spawnerData).initializeSpawner( state.getValue( EnumSpawnerType.PROPERTY ), dimConfig, random );
+		if( spawnerData instanceof TileEntityFloorTrap ) {
+			((TileEntityFloorTrap) spawnerData).initializeFloorTrap( state.getValue( EnumFloorTrapType.PROPERTY ), dimConfig, random );
 		}
 		else {
-			DeadlyWorldMod.log( ).error( "Failed to fetch mob spawner tile entity at [{}]!", pos );
+			DeadlyWorldMod.log( ).error( "Failed to fetch trap tile entity at [{}]!", pos );
 		}
 	}
 	
 	@Override
 	public
-	TileEntity createNewTileEntity( World world, int meta ) { return new TileEntityDeadlySpawner( ); }
+	TileEntity createNewTileEntity( World world, int meta ) { return new TileEntityFloorTrap( ); }
 	
 	@Override
 	protected
-	BlockStateContainer createBlockState( ) { return new BlockStateContainer( this, EnumSpawnerType.PROPERTY ); }
+	BlockStateContainer createBlockState( ) { return new BlockStateContainer( this, EnumFloorTrapType.PROPERTY ); }
 	
 	// Will be removed in 1.13
 	@SuppressWarnings( "deprecation" )
 	@Override
 	public
-	IBlockState getStateFromMeta( int meta ) { return getDefaultState( ).withProperty( EnumSpawnerType.PROPERTY, EnumSpawnerType.byMetadata( meta ) ); }
+	IBlockState getStateFromMeta( int meta ) { return getDefaultState( ).withProperty( EnumFloorTrapType.PROPERTY, EnumFloorTrapType.byMetadata( meta ) ); }
 	
 	@Override
 	public
-	int getMetaFromState( IBlockState state ) { return state.getValue( EnumSpawnerType.PROPERTY ).getMetadata( ); }
+	int getMetaFromState( IBlockState state ) { return state.getValue( EnumFloorTrapType.PROPERTY ).getMetadata( ); }
 	
 	@Override
 	public
 	void getSubBlocks( CreativeTabs tab, NonNullList< ItemStack > items )
 	{
-		for( EnumSpawnerType type : EnumSpawnerType.values( ) ) {
+		for( EnumFloorTrapType type : EnumFloorTrapType.values( ) ) {
 			items.add( new ItemStack( this, 1, type.getMetadata( ) ) );
 		}
 	}
@@ -111,7 +108,7 @@ class BlockDeadlySpawner extends BlockContainer
 	
 	@Override
 	public
-	int damageDropped( IBlockState state ) { return state.getValue( EnumSpawnerType.PROPERTY ).getMetadata( ); }
+	int damageDropped( IBlockState state ) { return state.getValue( EnumFloorTrapType.PROPERTY ).getMetadata( ); }
 	
 	@Override
 	public
@@ -124,7 +121,7 @@ class BlockDeadlySpawner extends BlockContainer
 		if( !(blockAccess instanceof WorldServer) )
 			return;
 		WorldServer world = (WorldServer) blockAccess;
-		LootTable   loot  = world.getLootTableManager( ).getLootTableFromLocation( state.getValue( EnumSpawnerType.PROPERTY ).LOOT_TABLE_BLOCK );
+		LootTable   loot  = world.getLootTableManager( ).getLootTableFromLocation( state.getValue( EnumFloorTrapType.PROPERTY ).LOOT_TABLE_BLOCK );
 		
 		LootContext.Builder lootContext = new LootContext.Builder( world );
 		if( harvesters.get( ) != null ) {
@@ -135,16 +132,6 @@ class BlockDeadlySpawner extends BlockContainer
 	}
 	
 	@Override
-	@SuppressWarnings( "deprecation" )
-	public
-	boolean isOpaqueCube( IBlockState state ) { return false; }
-	
-	@Override
 	public
 	EnumBlockRenderType getRenderType( IBlockState state ) { return EnumBlockRenderType.MODEL; }
-	
-	@Override
-	@SideOnly( Side.CLIENT )
-	public
-	BlockRenderLayer getBlockLayer( ) { return BlockRenderLayer.CUTOUT; }
 }

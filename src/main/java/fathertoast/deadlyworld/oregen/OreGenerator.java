@@ -6,7 +6,9 @@ import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -22,23 +24,23 @@ class OreGenerator
 	private static final IBlockState ANDESITE = Blocks.STONE.getDefaultState( ).withProperty( BlockStone.VARIANT, BlockStone.EnumType.ANDESITE );
 	
 	// The same generators are used for each dimension; only their driving-configs are swapped.
-	private WorldGenDeadlyMinable genLava       = new WorldGenDeadlyMinable( ).setFill( Blocks.LAVA.getDefaultState( ) ).setCovered( );
-	private WorldGenDeadlyMinable genWater      = new WorldGenDeadlyMinable( ).setFill( Blocks.WATER.getDefaultState( ) ).setCovered( );
-	// Silverfish veins will get better logic at some point, to handle more block disguises.
-	private WorldGenDeadlyMinable genSilverfish = new WorldGenDeadlyMinable( ).setFill( Blocks.MONSTER_EGG.getDefaultState( ) );
+	private WorldGenDeadlyMinable genLava  = new WorldGenDeadlyMinable( ).setFill( Blocks.LAVA.getDefaultState( ) ).setCovered( );
+	private WorldGenDeadlyMinable genWater = new WorldGenDeadlyMinable( ).setFill( Blocks.WATER.getDefaultState( ) ).setCovered( );
+	
+	private WorldGenDeadlyMinable genSilverfish = new WorldGenDeadlySilverfish( ).setFill( ModObjects.INFESTED_COBBLE.getDefaultState( ) );
 	
 	private WorldGenDeadlyMinable genUserDefinedOre = new WorldGenDeadlyMinable( );
 	private WorldGenDeadlyMinable genExtraOre       = new WorldGenDeadlyMinable( );
 	
-	@SubscribeEvent( priority = EventPriority.LOWEST )
+	@SubscribeEvent( priority = EventPriority.NORMAL )
 	public
-	void preOreGen( OreGenEvent.Pre event )
+	void preOreGen( DecorateBiomeEvent.Pre event )
 	{
 		World  world  = event.getWorld( );
 		Config config = Config.get( world );
 		if( config != null ) {
 			Random   random         = event.getRand( );
-			BlockPos chunkCenterPos = event.getPos( ).add( 8, 0, 8 );
+			BlockPos chunkCenterPos = event.getChunkPos( ).getBlock( 8, 0, 8 );
 			
 			generateOre( config, config.VEIN_LAVA, genLava, world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_WATER, genWater, world, random, chunkCenterPos );
@@ -50,26 +52,15 @@ class OreGenerator
 				             world, random, chunkCenterPos );
 			}
 			
+			// Soil variants
 			generateOre( config, config.VEIN_DIRT, genExtraOre.setFill( Blocks.DIRT.getDefaultState( ) ), world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_GRAVEL, genExtraOre.setFill( Blocks.GRAVEL.getDefaultState( ) ), world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_SAND, genExtraOre.setFill( Blocks.SAND.getDefaultState( ) ), world, random, chunkCenterPos );
-			
+			// Stone variants
 			generateOre( config, config.VEIN_DIORITE, genExtraOre.setFill( DIORITE ), world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_GRANITE, genExtraOre.setFill( GRANITE ), world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_ANDESITE, genExtraOre.setFill( ANDESITE ), world, random, chunkCenterPos );
-		}
-	}
-	
-	@SubscribeEvent( priority = EventPriority.HIGHEST )
-	public
-	void postOreGen( OreGenEvent.Post event )
-	{
-		World  world  = event.getWorld( );
-		Config config = Config.get( world );
-		if( config != null ) {
-			Random   random         = event.getRand( );
-			BlockPos chunkCenterPos = event.getPos( ).add( 8, 0, 8 );
-			
+			// Ores
 			generateOre( config, config.VEIN_COAL, genExtraOre.setFill( Blocks.COAL_ORE.getDefaultState( ) ), world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_QUARTZ, genExtraOre.setFill( Blocks.QUARTZ_ORE.getDefaultState( ) ), world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_IRON, genExtraOre.setFill( Blocks.IRON_ORE.getDefaultState( ) ), world, random, chunkCenterPos );
@@ -78,6 +69,18 @@ class OreGenerator
 			generateOre( config, config.VEIN_DIAMOND, genExtraOre.setFill( Blocks.DIAMOND_ORE.getDefaultState( ) ), world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_LAPIS, genExtraOre.setFill( Blocks.LAPIS_ORE.getDefaultState( ) ), world, random, chunkCenterPos );
 			generateOre( config, config.VEIN_EMERALD, genExtraOre.setFill( Blocks.EMERALD_ORE.getDefaultState( ) ), world, random, chunkCenterPos );
+		}
+	}
+	
+	@SubscribeEvent( priority = EventPriority.LOWEST )
+	public
+	void postOreGen( DecorateBiomeEvent.Post event )
+	{
+		World  world  = event.getWorld( );
+		Config config = Config.get( world );
+		if( config != null ) {
+			Random   random         = event.getRand( );
+			BlockPos chunkCenterPos = event.getChunkPos( ).getBlock( 8, 0, 8 );
 			
 			generateOre( config, config.VEIN_SILVERFISH, genSilverfish, world, random, chunkCenterPos );
 		}
@@ -87,6 +90,7 @@ class OreGenerator
 	public
 	void oreGen( OreGenEvent.GenerateMinable event )
 	{
+		// Note: Vanilla lava veins are not part of this event - see FeatureGenerator
 		World  world  = event.getWorld( );
 		Config config = Config.get( world );
 		if( config != null ) {
@@ -152,9 +156,9 @@ class OreGenerator
 	}
 	
 	private
-	void generateOre( Config config, Config.Vein veinConfig, WorldGenDeadlyMinable generator, World world, Random random, BlockPos chunkCenterPos )
+	void generateOre( Config config, Config.VeinConfig veinConfig, WorldGenDeadlyMinable generator, World world, Random random, BlockPos chunkCenterPos )
 	{
-		for( double count = veinConfig.PLACEMENTS; count >= 1.0 || count > 0.0 && count > random.nextDouble( ); count-- ) {
+		for( float count = veinConfig.getPlacements( world, chunkCenterPos ); count >= 1.0F || count > 0.0F && count > random.nextFloat( ); count-- ) {
 			BlockPos veinPos = chunkCenterPos.add( random.nextInt( 16 ), nextHeight( veinConfig, random ), random.nextInt( 16 ) );
 			
 			boolean gen = generator.generate( nextSize( veinConfig, random ), config.TERRAIN.REPLACEABLE_BLOCKS, world, random, veinPos );
@@ -166,7 +170,7 @@ class OreGenerator
 	}
 	
 	private static
-	int nextSize( Config.Vein veinConfig, Random random )
+	int nextSize( Config.VeinConfig veinConfig, Random random )
 	{
 		if( veinConfig.SIZES[ 0 ] >= veinConfig.SIZES[ 1 ] )
 			return veinConfig.SIZES[ 0 ];
@@ -174,7 +178,7 @@ class OreGenerator
 	}
 	
 	private static
-	int nextHeight( Config.Vein veinConfig, Random random )
+	int nextHeight( Config.VeinConfig veinConfig, Random random )
 	{
 		if( veinConfig.HEIGHTS[ 0 ] >= veinConfig.HEIGHTS[ 1 ] )
 			return veinConfig.HEIGHTS[ 0 ];

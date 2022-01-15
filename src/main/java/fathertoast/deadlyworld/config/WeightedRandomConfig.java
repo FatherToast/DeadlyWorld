@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@SuppressWarnings( { "WeakerAccess", "unused" } )
 public
 class WeightedRandomConfig
 {
@@ -25,24 +24,29 @@ class WeightedRandomConfig
 	WeightedRandomConfig( String[] list )
 	{
 		for( String item : list ) {
-			String[] pair = item.split( " ", 2 );
+			String entry;
+			int    weight;
 			
-			int weight;
-			if( pair.length > 1 ) {
+			int i = item.lastIndexOf( ' ' );
+			if( i < 0 ) {
+				Config.log.error( "No weight specified for entry '{}' (Format must be 'registry_name weight')", item );
+				entry = item;
+				weight = 0;
+			}
+			else {
+				entry = item.substring( 0, i ).trim( );
+				
+				String weightString = item.substring( i + 1 ).trim( );
 				try {
-					weight = Integer.parseInt( pair[ 1 ].trim( ) );
+					weight = Integer.parseInt( weightString );
 				}
 				catch( NumberFormatException ex ) {
-					Config.log.error( "Invalid weight for config entry 'registry_name={},weight={}'", pair[ 0 ], pair[ 1 ] );
+					Config.log.error( "Invalid weight for config entry 'registry_name={},weight={}'", entry, weightString );
 					weight = 0;
 				}
 			}
-			else {
-				Config.log.error( "No weight specified for entry '{}' (Format must be 'registry_name weight')", item );
-				weight = 0;
-			}
 			
-			ITEMS.add( new Item( new ResourceLocation( pair[ 0 ].trim( ) ), weight ) );
+			ITEMS.add( new Item( new ResourceLocation( entry ), weight ) );
 		}
 		TOTAL_WEIGHT = WeightedRandom.getTotalWeight( ITEMS );
 	}

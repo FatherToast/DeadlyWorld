@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld;
 
 import fathertoast.deadlyworld.block.*;
+import fathertoast.deadlyworld.block.state.*;
 import fathertoast.deadlyworld.config.*;
 import fathertoast.deadlyworld.item.*;
 import fathertoast.deadlyworld.tileentity.*;
@@ -35,15 +36,31 @@ import java.util.Map;
 public
 class ModObjects
 {
-	public static final BlockDeadlySpawner DEADLY_SPAWNER = addInfo( "deadly_spawner", CreativeTabs.DECORATIONS, new BlockDeadlySpawner( ) );
+	public static final String BLOCK_LOOT_TABLE_PATH = "blocks/";
 	
-	public static final Item FEATURE_TESTER = addInfo( "feature_tester", CreativeTabs.MISC, new ItemFeatureTester( ) );
+	public static final String TOOL_NAME_PICKAXE = "pickaxe";
+	
+	public static final BlockDeadlySpawner  DEADLY_SPAWNER  = addInfo( BlockDeadlySpawner.ID, CreativeTabs.DECORATIONS, new BlockDeadlySpawner( ) );
+	public static final BlockFloorTrap      FLOOR_TRAP      = addInfo( BlockFloorTrap.ID, CreativeTabs.DECORATIONS, new BlockFloorTrap( ) );
+	public static final BlockTowerDispenser TOWER_DISPENSER = addInfo( BlockTowerDispenser.ID, CreativeTabs.DECORATIONS, new BlockTowerDispenser( ) );
+	
+	public static BlockDeadlySilverfish INFESTED_COBBLE;
+	
+	public static final ItemDeadlyEvent   EVENT_ITEM     = addInfo( ItemDeadlyEvent.ID, CreativeTabs.MISC, new ItemDeadlyEvent( ) );
+	public static final ItemFeatureTester FEATURE_TESTER = addInfo( ItemFeatureTester.ID, CreativeTabs.MISC, new ItemFeatureTester( ) );
 	
 	private static final List< BlockDeadlySilverfish >       SILVERFISH_ORDERED = new ArrayList<>( );
 	private static final Map< Block, BlockDeadlySilverfish > SILVERFISH_LOOKUP  = new HashMap<>( );
 	
 	public static
 	BlockDeadlySilverfish getInfestedVersion( Block block ) { return SILVERFISH_LOOKUP.get( block ); }
+	
+	public static
+	IBlockState infest( IBlockState state )
+	{
+		IBlockState infestedState = getInfestedVersion( state );
+		return infestedState == null ? state : infestedState;
+	}
 	
 	public static
 	IBlockState getInfestedVersion( IBlockState state )
@@ -90,7 +107,7 @@ class ModObjects
 		BlockDeadlySilverfish infestedBlock = BlockDeadlySilverfish.buildFor( block );
 		ResourceLocation infestedRegName = new ResourceLocation(
 			DeadlyWorldMod.MOD_ID,
-			"infested_" + disguiseRegName.getResourceDomain( ) + "_" + disguiseRegName.getResourcePath( )
+			BlockDeadlySilverfish.ID + "_" + disguiseRegName.getResourceDomain( ) + "_" + disguiseRegName.getResourcePath( )
 		);
 		infestedBlock.setRegistryName( infestedRegName ).setUnlocalizedName( block.getUnlocalizedName( ).substring( "tile.".length( ) ) )
 			.setCreativeTab( CreativeTabs.DECORATIONS );
@@ -110,8 +127,9 @@ class ModObjects
 	public static
 	void registerTileEntities( )
 	{
-		GameRegistry.registerTileEntity( TileEntityDeadlySpawner.class, new ResourceLocation( DeadlyWorldMod.MOD_ID, "deadly_spawner" ) );
-		GameRegistry.registerTileEntity( TileEntityDeadlyTrap.class, new ResourceLocation( DeadlyWorldMod.MOD_ID, "deadly_trap" ) );
+		GameRegistry.registerTileEntity( TileEntityDeadlySpawner.class, new ResourceLocation( DeadlyWorldMod.MOD_ID, BlockDeadlySpawner.ID ) );
+		GameRegistry.registerTileEntity( TileEntityFloorTrap.class, new ResourceLocation( DeadlyWorldMod.MOD_ID, BlockFloorTrap.ID ) );
+		GameRegistry.registerTileEntity( TileEntityTowerDispenser.class, new ResourceLocation( DeadlyWorldMod.MOD_ID, BlockTowerDispenser.ID ) );
 	}
 	
 	@SubscribeEvent( priority = EventPriority.NORMAL )
@@ -119,7 +137,9 @@ class ModObjects
 	void registerBlocks( RegistryEvent.Register< Block > event )
 	{
 		event.getRegistry( ).registerAll(
-			DEADLY_SPAWNER
+			DEADLY_SPAWNER,
+			FLOOR_TRAP,
+			TOWER_DISPENSER
 		);
 	}
 	
@@ -130,14 +150,24 @@ class ModObjects
 		SILVERFISH_ORDERED.clear( );
 		SILVERFISH_LOOKUP.clear( );
 		
+		// Silverfish blocks needed for feature generation
 		buildSilverfishBlock( Blocks.COBBLESTONE );
-		buildSilverfishBlock( Blocks.MOSSY_COBBLESTONE );
+		/*
+		List< Config > enabledConfigs = Config.getAllEnabled( );
+		for( Config dimConfig : enabledConfigs ) {
+			buildSilverfishBlock( dimConfig.TERRAIN.BLOCK_FILL.getBlock( ) );
+			buildSilverfishBlock( dimConfig.TERRAIN.BLOCK_VARIANT.getBlock( ) );
+		}*/
+		
+		// Silverfish blocks used for silverfish veins
 		if( Config.get( ).GENERAL.SILVERFISH_AUTOGEN ) {
 			List< Block > disguiseBlocks = Config.get( ).GENERAL.SILVERFISH_REPLACEABLE.getSortedBlocks( );
 			for( Block block : disguiseBlocks ) {
 				buildSilverfishBlock( block );
 			}
 		}
+		
+		INFESTED_COBBLE = getInfestedVersion( Blocks.COBBLESTONE );
 		
 		event.getRegistry( ).registerAll(
 			SILVERFISH_ORDERED.toArray( new BlockDeadlySilverfish[ 0 ] )
@@ -148,13 +178,22 @@ class ModObjects
 	public
 	void registerItems( RegistryEvent.Register< Item > event )
 	{
+		// Register non-block items
+		event.getRegistry( ).register( EVENT_ITEM );
+		
+		// Register block items
 		event.getRegistry( ).registerAll(
-			itemForBlock( DEADLY_SPAWNER, itemStack -> EnumSpawnerType.byMetadata( itemStack.getMetadata( ) ).getName( ) )
+			itemForBlock( DEADLY_SPAWNER, itemStack -> EnumSpawnerType.byMetadata( itemStack.getMetadata( ) ).getName( ) ),
+			itemForBlock( FLOOR_TRAP, itemStack -> EnumFloorTrapType.byMetadata( itemStack.getMetadata( ) ).getName( ) ),
+			itemForBlock( TOWER_DISPENSER, itemStack -> EnumTowerType.byMetadata( itemStack.getMetadata( ) ).getName( ) )
 		);
+		
+		// Register optional non-block items
 		if( Config.get( ).GENERAL.FEATURE_TESTER ) {
 			event.getRegistry( ).register( FEATURE_TESTER );
 		}
 		
+		// Register optional block items
 		for( BlockDeadlySilverfish infestedBlock : SILVERFISH_ORDERED ) {
 			event.getRegistry( ).register( new ItemBlockDeadlySilverfish( infestedBlock ).setRegistryName( infestedBlock.getRegistryName( ) ) );
 		}

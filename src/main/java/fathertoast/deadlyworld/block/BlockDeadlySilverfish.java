@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.block;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import fathertoast.deadlyworld.block.state.*;
 import fathertoast.deadlyworld.config.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -35,6 +36,8 @@ import java.util.Random;
 public
 class BlockDeadlySilverfish extends Block
 {
+	public static final String ID = "infested";
+	
 	private static Block                 builderDisguise;
 	private static PropertyDisguiseBlock builderProperty;
 	
@@ -80,7 +83,7 @@ class BlockDeadlySilverfish extends Block
 		slipperiness = DISGUISE.slipperiness;
 		fullBlock = state.isOpaqueCube( );
 		lightOpacity = DISGUISE.getLightOpacity( state );
-		translucent = DISGUISE.isTranslucent( state );
+		//translucent = DISGUISE.isTranslucent( state ); Client side method, also not important for this application
 	}
 	
 	@Override
@@ -124,13 +127,6 @@ class BlockDeadlySilverfish extends Block
 	
 	@Override
 	public
-	int getExpDrop( IBlockState state, IBlockAccess world, BlockPos pos, int fortune )
-	{
-		return 15 + RANDOM.nextInt( 15 ) + RANDOM.nextInt( 15 );
-	}
-	
-	@Override
-	public
 	void harvestBlock( World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity tileEntity, ItemStack stack )
 	{
 		if( canSilkHarvest( world, pos, state, player ) && EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH, stack ) > 0 ) {
@@ -156,7 +152,13 @@ class BlockDeadlySilverfish extends Block
 			if( silverfish.getRNG( ).nextFloat( ) < Config.getOrDefault( world ).TERRAIN.SILVERFISH_AGGRO_CHANCE ) {
 				// Immediately start calling for reinforcements if it can find a player
 				if( silverfish.getAttackTarget( ) == null ) {
-					double range = silverfish.getEntityAttribute( SharedMonsterAttributes.FOLLOW_RANGE ).getAttributeValue( );
+					double range;
+					try {
+						range = silverfish.getEntityAttribute( SharedMonsterAttributes.FOLLOW_RANGE ).getAttributeValue( );
+					}
+					catch( Exception ex ) {
+						range = 16.0; // Default follow range
+					}
 					List< EntityPlayer > nearbyPlayers = world.getEntitiesWithinAABB(
 						EntityPlayer.class, silverfish.getEntityBoundingBox( ).expand( range, range / 2.0, range )
 					);

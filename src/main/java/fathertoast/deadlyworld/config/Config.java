@@ -1,11 +1,16 @@
 package fathertoast.deadlyworld.config;
 
-import fathertoast.deadlyworld.block.*;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockStone;
+import fathertoast.deadlyworld.block.state.*;
+import fathertoast.deadlyworld.featuregen.*;
+import fathertoast.deadlyworld.item.*;
+import fathertoast.deadlyworld.tileentity.*;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.monster.*;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
@@ -17,6 +22,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -49,6 +55,18 @@ class Config
 	{
 		Config dimConfig = get( world );
 		return dimConfig != null ? dimConfig : get( );
+	}
+	
+	/** @return A list of all configs that are enabled. */
+	public static
+	List< Config > getAllEnabled( )
+	{
+		List< Config > configs = new ArrayList<>( );
+		if( Config.ENABLED_FOR_MAIN_DIM ) {
+			configs.add( Config.INSTANCE );
+		}
+		configs.addAll( Config.DIMENSION_INSTANCES.values( ) );
+		return configs;
 	}
 	
 	/** @return The most readable dimension name corresponding to the passed world, as it would appear when used in the config itself. */
@@ -185,7 +203,7 @@ class Config
 	private
 	Config( ) { }
 	
-	// General category is specific to the main config (dimension 0).
+	// General category applies to all dimensions.
 	public final GENERAL GENERAL = Config.dimensionLoading == MAIN_DIM.getId( ) ? new GENERAL( ) : null;
 	
 	public
@@ -216,6 +234,52 @@ class Config
 			"dimension_name, dimension_id"
 		);
 		
+		public final float FLOOR_TRAP_HARDNESS      = prop(
+			"block_hardness_floor_trap", 5.0F,
+			"How long it takes to break floor traps."
+		);
+		public final int   FLOOR_TRAP_HARVEST_LEVEL = prop(
+			"block_harvest_level_floor_trap", 1,
+			"The level of pickaxe required to break floor traps in a reasonable time.\n" +
+			"For vanilla: Wood/Gold = 0, Stone = 1, Iron = 2, Diamond = 3."
+		);
+		public final float FLOOR_TRAP_RESISTANCE    = prop(
+			"block_resistance_floor_trap", 25.0F,
+			"How resistant floor traps are to being destroyed by explosions.\n" +
+			"Typical explosion resistance is 5 times the hardness."
+		);
+		
+		public final float SPAWNER_HARDNESS      = prop(
+			"block_hardness_spawners", 10.0F,
+			"How long it takes to break Deadly World spawners.\n" +
+			"The default hardness is the same as vanilla mob spawners."
+		);
+		public final int   SPAWNER_HARVEST_LEVEL = prop(
+			"block_harvest_level_spawners", 2,
+			"The level of pickaxe required to break Deadly World spawners in a reasonable time.\n" +
+			"For vanilla: Wood/Gold = 0, Stone = 1, Iron = 2, Diamond = 3."
+		);
+		public final float SPAWNER_RESISTANCE    = prop(
+			"block_resistance_spawners", 2000.0F,
+			"How resistant Deadly World spawners are to being destroyed by explosions.\n" +
+			"The default explosion resistance is the same as vanilla obsidian."
+		);
+		
+		public final float TOWER_DISPENSER_HARDNESS      = prop(
+			"block_hardness_tower_dispenser", 10.0F,
+			"How long it takes to break tower dispensers."
+		);
+		public final int   TOWER_DISPENSER_HARVEST_LEVEL = prop(
+			"block_harvest_level_tower_dispenser", 2,
+			"The level of pickaxe required to break tower dispensers in a reasonable time.\n" +
+			"For vanilla: Wood/Gold = 0, Stone = 1, Iron = 2, Diamond = 3."
+		);
+		public final float TOWER_DISPENSER_RESISTANCE    = prop(
+			"block_resistance_tower_dispenser", 50.0F,
+			"How resistant tower dispensers are to being destroyed by explosions.\n" +
+			"Typical explosion resistance is 5 times the hardness."
+		);
+		
 		public final boolean FEATURE_TESTER = prop(
 			"item_feature_tester", true,
 			"Set this to false to disable the \'Feature Tester\' item."
@@ -224,14 +288,9 @@ class Config
 		public final boolean SILVERFISH_AUTOGEN = prop(
 			"silverfish_blocks", true,
 			"Set this to false to disable the blocks automatically built and registered to disguise themselves\n" +
-			"as the blocks defined as \"replaceable\" below.\n" +
-			"Does not disable the infested variants of cobblestone and mossy cobblestone (for use in various features)."
-		);
-		
-		public final boolean SILVERFISH_DISGUISE_MOD = prop(
-			"silverfish_blocks_disguise_mod", true,
-			"When true, silverfish blocks will be considered \'added by\' the mod of the block they are disguised as.\n" +
-			"Not much of an effect outside of tooltips (notably, block tooltips that would give away the block)."
+			"as the blocks defined as \'replaceable\' below.\n" +
+			"Does not disable the infested variants of cobblestone or the dungeon fill/variant blocks you have set in\n" +
+			"the \"_terrain\" category of each dimension."
 		);
 		
 		public final TargetBlock.TargetMap SILVERFISH_REPLACEABLE = prop(
@@ -252,26 +311,12 @@ class Config
 				new TargetBlock( Blocks.END_STONE ), new TargetBlock( Blocks.PURPUR_BLOCK ), new TargetBlock( Blocks.PURPUR_PILLAR ),
 				new TargetBlock( Blocks.END_BRICKS )
 			},
-			"List of blockstates that can be replaced by silverfish blocks. Each block defined here will have a\n" +
-			"corresponding infested version generated and registered. All valid blockstates of any block here will\n" +
-			"function and appear in the creative menu (plus cobblestone and mossy cobblestone), but the generator will\n" +
-			"only replace blocks matching the state definitions in this list.\n" +
+			"List of blockstates that can be replaced by silverfish blocks in ALL dimensions. Each block defined here\n" +
+			"will have a corresponding infested version generated and registered. All valid blockstates of these blocks\n" +
+			"can function and will appear in the creative menu (plus cobblestone and all dungeon fill/variant blocks), but\n" +
+			"the generator will only replace blocks matching the state definitions in this list.\n" +
 			" * Note that only full-cube blocks are supported. There is no reason this shouldn\'t work with any full-cube\n" +
-			"blocks used in world generation from other mods. If it doesn\'t, try to get the author of the incompatible\n" +
-			"mod in contact with me so I can help them fix it.\n" +
-			"This mod\'s silverfish blocks must be enabled for this to have any effect."
-		);
-		
-		public final float SPAWNER_HARDNESS = prop(
-			"spawner_hardness", 5.0F,
-			"How long it takes to break Deadly World spawners.\n" +
-			"The default hardness is the same as vanilla mob spawners."
-		);
-		
-		public final float SPAWNER_RESISTANCE = prop(
-			"spawner_explosion_resist", 2000.0F,
-			"How resistant Deadly World spawners are to being destroyed by explosions.\n" +
-			"The default explosion resistance is the same as vanilla obsidian."
+			"blocks used in world generation from other mods."
 		);
 		
 		public final double PROGRESSIVE_RECOVERY = prop(
@@ -314,10 +359,78 @@ class Config
 		);
 		
 		public final float SILVERFISH_AGGRO_CHANCE = prop(
-			"silverfish_aggressive_chance", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? 0.15F : 0.3F,
+			"silverfish_aggressive_chance", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? 0.1F : 0.3F,
 			"The chance for silverfish emerging from this mod's silverfish blocks in this dimension to spawn\n" +
-			"already calling for reinforcements, if any players are within eyesight."
+			"already calling for reinforcements, if any players are within eyesight. Be warned this can cascade.",
+			R_FLT_ONE
 		);
+		
+		public final WeightedBlockConfig.BlockList FLOOR_TRAP_COVERS = prop(
+			"floor_trap_covers", makeDefaultFloorTrapCovers( ),
+			"A weighted list of blocks to pick from when covering a floor trap in this dimension."
+		);
+		
+		private
+		WeightedBlockConfig[] makeDefaultFloorTrapCovers( )
+		{
+			if( Config.dimensionLoading == DimensionType.NETHER.getId( ) ) {
+				return new WeightedBlockConfig[] {
+					// Carpets
+					new WeightedBlockConfig( Blocks.CARPET.getDefaultState( ).withProperty( BlockColored.COLOR, EnumDyeColor.BROWN ), 50 ),
+					new WeightedBlockConfig( Blocks.CARPET.getDefaultState( ).withProperty( BlockColored.COLOR, EnumDyeColor.RED ), 50 ),
+					new WeightedBlockConfig( Blocks.CARPET.getDefaultState( ).withProperty( BlockColored.COLOR, EnumDyeColor.ORANGE ), 50 ),
+					// Slabs
+					new WeightedBlockConfig( Blocks.STONE_SLAB.getDefaultState( ).withProperty(
+						BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.NETHERBRICK ), 150 ),
+					// Decor
+					new WeightedBlockConfig( Blocks.PUMPKIN.getDefaultState( ).withProperty( BlockHorizontal.FACING, EnumFacing.NORTH ), 10 ),
+					new WeightedBlockConfig( Blocks.PUMPKIN.getDefaultState( ).withProperty( BlockHorizontal.FACING, EnumFacing.SOUTH ), 10 ),
+					new WeightedBlockConfig( Blocks.PUMPKIN.getDefaultState( ).withProperty( BlockHorizontal.FACING, EnumFacing.EAST ), 10 ),
+					new WeightedBlockConfig( Blocks.PUMPKIN.getDefaultState( ).withProperty( BlockHorizontal.FACING, EnumFacing.WEST ), 10 ),
+					new WeightedBlockConfig( Blocks.RED_MUSHROOM, 50 ),
+					new WeightedBlockConfig( Blocks.BROWN_MUSHROOM, 50 ),
+					// Ores
+					new WeightedBlockConfig( Blocks.QUARTZ_ORE, 20 ),
+					// Other
+					new WeightedBlockConfig( Blocks.CAKE, 1 )
+				};
+			}
+			if( Config.dimensionLoading == DimensionType.THE_END.getId( ) ) {
+				return new WeightedBlockConfig[] {
+					// Pressure plates
+					new WeightedBlockConfig( Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, 100 ),
+					// Slabs
+					new WeightedBlockConfig( Blocks.STONE_SLAB.getDefaultState( ).withProperty(
+						BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.SAND ), 200 ),
+					// Other
+					new WeightedBlockConfig( Blocks.END_BRICKS, 100 ),
+					new WeightedBlockConfig( Blocks.CAKE, 1 )
+				};
+			}
+			// For the overworld, as well as any dimensions added by mods
+			return new WeightedBlockConfig[] {
+				// Pressure plates
+				new WeightedBlockConfig( Blocks.STONE_PRESSURE_PLATE, 100 ),
+				// Carpets
+				new WeightedBlockConfig( Blocks.CARPET.getDefaultState( ).withProperty( BlockColored.COLOR, EnumDyeColor.SILVER ), 34 ),
+				new WeightedBlockConfig( Blocks.CARPET.getDefaultState( ).withProperty( BlockColored.COLOR, EnumDyeColor.GRAY ), 33 ),
+				new WeightedBlockConfig( Blocks.CARPET.getDefaultState( ).withProperty( BlockColored.COLOR, EnumDyeColor.BROWN ), 33 ),
+				// Slabs
+				new WeightedBlockConfig( Blocks.STONE_SLAB.getDefaultState( ).withProperty(
+					BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.STONE ), 34 ),
+				new WeightedBlockConfig( Blocks.STONE_SLAB.getDefaultState( ).withProperty(
+					BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.SMOOTHBRICK ), 33 ),
+				new WeightedBlockConfig( Blocks.STONE_SLAB.getDefaultState( ).withProperty(
+					BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.COBBLESTONE ), 33 ),
+				// Decor
+				new WeightedBlockConfig( Blocks.RED_MUSHROOM, 20 ),
+				new WeightedBlockConfig( Blocks.BROWN_MUSHROOM, 20 ),
+				// Ores
+				new WeightedBlockConfig( Blocks.GOLD_ORE, 10 ),
+				// Other
+				new WeightedBlockConfig( Blocks.CAKE, 1 )
+			};
+		}
 		
 		private
 		TargetBlock[] buildNaturalStoneTargets( )
@@ -331,6 +444,8 @@ class Config
 			return naturalStone.toArray( new TargetBlock[ 0 ] );
 		}
 	}
+	
+	//////// Ore Generation ////////
 	
 	public final VEINS VEINS = new VEINS( );
 	
@@ -446,42 +561,49 @@ class Config
 			"Suppresses silverfish vein generation events when set to true.\n" +
 			"Does not disable generation added by this mod."
 		);
+		
+		public final boolean DISABLE_LAVA_VEINS = prop(
+			"disable_lava_veins", true,
+			"Suppresses lava vein generation events when set to true.\n" +
+			"Does not disable generation added by this mod."
+		);
 	}
 	
-	public final Vein VEIN_LAVA       = new Vein(
-		"lava", 4.0,
-		0, 32, 3
+	public final VeinConfig VEIN_LAVA       = new VeinConfig(
+		"lava", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? 4.0F : 16.0F,
+		0, Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? 32 : 128, 3
 	);
-	public final Vein VEIN_SAND       = new Vein(
-		"sand", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? 0.25 : 0.0,
+	public final VeinConfig VEIN_SAND       = new VeinConfig(
+		"sand", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? 0.25F : 0.0F,
 		0, 62, 33
 	);
-	public final Vein VEIN_SILVERFISH = new Vein(
-		"silverfish", 10.0,
-		5, 255, 25
+	public final VeinConfig VEIN_SILVERFISH = new VeinConfig(
+		"silverfish", 10.0F,
+		5, 256, 25
 	);
-	public final Vein VEIN_WATER      = new Vein(
-		"water", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? 6.0 : 0.0,
+	public final VeinConfig VEIN_WATER      = new VeinConfig(
+		"water", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? 6.0F : 0.0F,
 		0, 62, 7
 	);
 	
-	public final Vein VEIN_DIRT     = new VeinReplacement( "dirt", 0, 256, 33 );
-	public final Vein VEIN_GRAVEL   = new VeinReplacement( "gravel", 0, 256, 33 );
-	public final Vein VEIN_DIORITE  = new VeinReplacement( "diorite", 0, 80, 33 );
-	public final Vein VEIN_GRANITE  = new VeinReplacement( "granite", 0, 80, 33 );
-	public final Vein VEIN_ANDESITE = new VeinReplacement( "andesite", 0, 80, 33 );
+	public final VeinConfig VEIN_DIRT     = new VeinReplacement( "dirt", 10, 0, 256, 33 );
+	public final VeinConfig VEIN_GRAVEL   = new VeinReplacement( "gravel", 8, 0, 256, 33 );
+	public final VeinConfig VEIN_DIORITE  = new VeinReplacement( "diorite", 10, 0, 80, 33 );
+	public final VeinConfig VEIN_GRANITE  = new VeinReplacement( "granite", 10, 0, 80, 33 );
+	public final VeinConfig VEIN_ANDESITE = new VeinReplacement( "andesite", 10, 0, 80, 33 );
 	
-	public final Vein VEIN_COAL     = new VeinReplacement( "coal", 0, 128, 17 );
-	public final Vein VEIN_QUARTZ   = new VeinReplacement( "quartz", 10, 118, 14 );
-	public final Vein VEIN_IRON     = new VeinReplacement( "iron", 0, 64, 9 );
-	public final Vein VEIN_GOLD     = new VeinReplacement( "gold", 0, 32, 9 );
-	public final Vein VEIN_REDSTONE = new VeinReplacement( "redstone", 0, 16, 8 );
-	public final Vein VEIN_DIAMOND  = new VeinReplacement( "diamond", 0, 16, 8 );
-	public final Vein VEIN_LAPIS    = new VeinReplacement( "lapis", 0, 32, 7 );
-	public final Vein VEIN_EMERALD  = new VeinReplacement( "emerald", 4, 32, 1 );
+	public final VeinConfig VEIN_COAL     = new VeinReplacement( "coal", 20, 0, 128, 17 );
+	public final VeinConfig VEIN_QUARTZ   = new VeinReplacement( "quartz", 16, 10, 118, 14 );
+	public final VeinConfig VEIN_IRON     = new VeinReplacement( "iron", 20, 0, 64, 9 );
+	public final VeinConfig VEIN_GOLD     = new VeinReplacement( "gold", 2, 0, 32, 9 );
+	public final VeinConfig VEIN_REDSTONE = new VeinReplacement( "redstone", 8, 0, 16, 8 );
+	public final VeinConfig VEIN_DIAMOND  = new VeinReplacement( "diamond", 1, 0, 16, 8 );
+	public final VeinConfig VEIN_LAPIS    = new VeinReplacement( "lapis", 1, 0, 32, 7 );
+	public final VeinConfig VEIN_EMERALD  = new VeinReplacement( "emerald", 4, 4, 32, 1 );
 	
+	// Contains the properties common to all veins.
 	public static
-	class Vein extends PropertyCategory
+	class VeinConfig extends PropertyCategory
 	{
 		@Override
 		String name( ) { return "veins_" + KEY; }
@@ -492,17 +614,20 @@ class Config
 			return "Options related to " + KEY + " 'vein' generation.";
 		}
 		
-		public final double  PLACEMENTS;
+		private final float                 PLACEMENTS;
+		private final EnvironmentListConfig PLACEMENTS_EXCEPTIONS;
+		
+		
 		public final int[]   HEIGHTS;
 		public final int[]   SIZES;
 		public final boolean DEBUG_MARKER;
 		
-		Vein( String key, double placements, int minHeight, int maxHeight, int size )
+		VeinConfig( String key, float placements, int minHeight, int maxHeight, int size )
 		{
 			this( key, placements, minHeight, maxHeight, size, size );
 		}
 		
-		Vein( String key, double placements, int minHeight, int maxHeight, int minSize, int maxSize )
+		VeinConfig( String key, float placements, int minHeight, int maxHeight, int minSize, int maxSize )
 		{
 			super( key );
 			
@@ -511,6 +636,12 @@ class Config
 				"The number of placement attempts for this vein type.\n" +
 				"A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt)."
 			);
+			PLACEMENTS_EXCEPTIONS = prop(
+				"_count_exceptions", new TargetEnvironment[ 0 ],
+				"The number of placement attempts when generating in particular locations.\n" +
+				"More specific locations take priority over others (biome < biome* < global setting)."
+			);
+			
 			HEIGHTS = new int[] {
 				prop(
 					"height_min", minHeight,
@@ -538,11 +669,19 @@ class Config
 				"Consider using a tool to strip away all stone/dirt/etc. for more intensive testing."
 			);
 		}
+		
+		public
+		float getPlacements( World world, BlockPos pos )
+		{
+			return PLACEMENTS_EXCEPTIONS.getValueForLocation( world, pos, PLACEMENTS );
+		}
 	}
 	
 	public static
-	class VeinReplacement extends Vein
+	class VeinReplacement extends VeinConfig
 	{
+		private final int VANILLA_PLACEMENTS;
+		
 		@Override
 		String name( ) { return "veins_xtra_" + KEY; }
 		
@@ -550,17 +689,19 @@ class Config
 		String comment( )
 		{
 			return "Options related to additional " + KEY + " vein generation.\n" +
-			       "This ignores the 'disabled' vein settings, allowing you to replace normal vein generation.";
+			       "This ignores the 'disabled' vein settings, allowing you to replace normal vein generation.\n" +
+			       "Defaults are equivalent to the vanilla values except for count (vanilla count is " + VANILLA_PLACEMENTS + ").";
 		}
 		
-		VeinReplacement( String key, int minHeight, int maxHeight, int size )
+		VeinReplacement( String key, int vanillaCount, int minHeight, int maxHeight, int size )
 		{
-			super( key, 0.0, minHeight, maxHeight, size );
+			super( key, 0.0F, minHeight, maxHeight, size );
+			VANILLA_PLACEMENTS = vanillaCount;
 		}
 	}
 	
 	public static
-	class VeinUserDefined extends Vein
+	class VeinUserDefined extends VeinConfig
 	{
 		@Override
 		String name( ) { return "veins_xtra_userdefined_" + KEY; }
@@ -574,7 +715,7 @@ class Config
 		
 		VeinUserDefined( int index )
 		{
-			super( String.valueOf( index ), 0.0, 0, 62, 9 );
+			super( String.valueOf( index ), 0.0F, 0, 62, 9 );
 		}
 		
 		public final IBlockState FILL_BLOCK = prop(
@@ -589,51 +730,439 @@ class Config
 		);
 	}
 	
-	public final FeatureChest FEATURE_CHEST = new FeatureChest( "lone", 0.1, 12, 52 );
+	//////// Feature - Dungeons ////////
+	
+	public final DUNGEONS DUNGEONS = new DUNGEONS( "dungeons", 8.0F, 0, 256 );
 	
 	public static
-	class FeatureChest extends FeatureConfig
+	class DUNGEONS extends FeatureMulti
 	{
-		private static final String SUBKEY = "_chests";
+		public final WeightedBlockConfig.BlockList WALL_BLOCKS;
+		public final WeightedBlockConfig.BlockList FLOOR_BLOCKS;
+		
+		DUNGEONS( String key, float placements, int minHeight, int maxHeight )
+		{
+			super( key, placements, minHeight, maxHeight );
+			
+			final WeightedBlockConfig[] wallBlocks;
+			final WeightedBlockConfig[] floorBlocks;
+			if( Config.dimensionLoading == DimensionType.NETHER.getId( ) ) {
+				wallBlocks = new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.NETHER_BRICK, 100 ),
+					new WeightedBlockConfig( Blocks.RED_NETHER_BRICK, 30 )
+				};
+				floorBlocks = new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.NETHER_BRICK, 100 ),
+					new WeightedBlockConfig( Blocks.RED_NETHER_BRICK, 100 )
+				};
+			}
+			else if( Config.dimensionLoading == DimensionType.THE_END.getId( ) ) {
+				wallBlocks = new WeightedBlockConfig[] { new WeightedBlockConfig( Blocks.END_BRICKS, 70457 ) };
+				floorBlocks = new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.END_BRICKS, 100 ),
+					new WeightedBlockConfig( Blocks.END_STONE, 50 )
+				};
+			}
+			else {
+				// Overworld and mod-added dimensions
+				wallBlocks = new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.COBBLESTONE, 100 ),
+					new WeightedBlockConfig( Blocks.MOSSY_COBBLESTONE, 35 )
+				};
+				floorBlocks = new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.COBBLESTONE, 100 ),
+					new WeightedBlockConfig( Blocks.MOSSY_COBBLESTONE, 70 )
+				};
+			}
+			
+			WALL_BLOCKS = prop(
+				"_wall_blocks", wallBlocks,
+				"A weighted list of blocks to pick from when generating the walls of dungeons.\n" +
+				"For a vanilla dungeon look, set this to only cobblestone."
+			);
+			FLOOR_BLOCKS = prop(
+				"_floor_blocks", floorBlocks,
+				"A weighted list of blocks to pick from when generating the floor of dungeons.\n" +
+				"For a vanilla dungeon look, set cobblestone to 150 and mossy cobblestone to 50."
+			);
+		}
+		
+		public final boolean DISABLE_VANILLA_DUNGEONS = prop(
+			"_disable_vanilla_dungeons", true,
+			"Suppresses dungeon generation events when set to true.\n" +
+			"Does not disable generation added by this mod."
+		);
+		
+		public final float SILVERFISH_CHANCE = prop(
+			"_silverfish_chance", 0.2F,
+			"The chance for each wall and floor block in the dungeon to be infested with silverfish.\n" +
+			"For this to function, both the fill and variant blocks must be silverfish replaceable and silverfish autogen must be enabled.\n" +
+			"Vanilla dungeons do not generate any silverfish blocks.",
+			R_FLT_ONE
+		);
+		
+		public final int CHESTS_MIN = prop(
+			"_chest_count_min", 2,
+			"The minimum number of chests to generate in each dungeon.\n" +
+			"Note that occasionally chests will fail to generate, resulting in fewer chests than the minimum.\n" +
+			"Chests are more likely to fail in vanilla dungeons, so maybe set this to 1 for a more vanilla experience."
+		);
+		public final int CHESTS_VARIANCE = Math.max( prop(
+			"_chest_count_max", 2,
+			"The maximum number of chests to generate in each dungeon. The default is the same as vanilla."
+		) - CHESTS_MIN + 1, 1 ); // Convert from max to just the random interval
+		
+		public final int OPEN_WALLS_MIN = prop(
+			"_open_walls_min", 1,
+			"The minimum number of open wall spaces a prospective spawn attempt must have to not be canceled.\n" +
+			"The default is the same as vanilla. Setting this to 0 allows dungeons to generate completely unconnected to any caves, ravines, etc."
+		);
+		public final int OPEN_WALLS_MAX = prop(
+			"_open_walls_max", 10,
+			"The maximum number of open wall spaces a prospective spawn attempt can have without being canceled.\n" +
+			"Loosening open wall restrictions allows more dungeons to spawn in the world, and affects how open/closed-off they feel.\n" +
+			"For vanilla dungeons, this value is 5."
+		);
+		
+		// Note these are actually half-width (pseudo radius)
+		public final int WIDTH_MIN      = prop(
+			"_width_min", 5,
+			"The minimum width of dungeons. This refers to the open space, not including walls or anything inside.\n" +
+			"Note that dungeons can only generate in odd widths, and each axis is rolled separately. The default is the same as vanilla.",
+			3, Integer.MAX_VALUE
+		) >> 1; // Convert to half-width, note this effectively rounds up to the nearest odd number
+		public final int WIDTH_VARIANCE = Math.max( (prop(
+			"_width_max", 11,
+			"The maximum width of dungeons. This refers to the open space, not including walls or anything inside.\n" +
+			"Note that dungeons can only generate in odd widths, and each axis is rolled separately. Vanilla dungeons are max 7 wide.",
+			3, Integer.MAX_VALUE
+		) >> 1) - WIDTH_MIN + 1, 1 ); // Convert from max to just the random interval
+		
+		public final WeightedEnumConfig< EnumDungeonSubfeature > SUBFEATURE_LIST = prop(
+			"subfeature_weight", EnumDungeonSubfeature.values( ),
+			"Weight for the ", " to be generated in dungeons."
+		);
+	}
+	
+	public final SPAWNER_DUNGEON SPAWNER_DUNGEON = new SPAWNER_DUNGEON(
+		EnumSpawnerType.DUNGEON, 16.0F, false, 200, 800, 40, 4, 4.0F
+	);
+	
+	public static
+	class SPAWNER_DUNGEON extends FeatureSpawner implements ISubgenFeature
+	{
+		@Override
+		String name( ) { return "features_dungeons_spawner"; }
 		
 		@Override
 		String comment( )
 		{
-			return "Options related to the generation of " + KEY.substring( 0, KEY.length( ) - SUBKEY.length( ) ) + " chests.";
+			return "Options related to the generation of dungeon spawners. These are only generated as a subfeature of dungeons.";
 		}
 		
-		FeatureChest( String key, double placement, int minHeight, int maxHeight )
+		SPAWNER_DUNGEON( EnumSpawnerType type,
+		                float actRange, boolean checkSight, int minDelay, int maxDelay, int prgrDelay, int spawnCount, float spawnRange )
 		{
-			super( key + SUBKEY, placement, minHeight, maxHeight );
+			super( type, 0.0F, 0.0F, 0, 0, actRange, checkSight, minDelay, maxDelay, prgrDelay, spawnCount, spawnRange, null );
 		}
 	}
 	
-	public final FeatureSpawner SPAWNER_LONE = new FeatureSpawner(
-		EnumSpawnerType.LONE, 0.3F, 0.16, 12, 52
+	//////// Feature - Chests ////////
+	
+	private static final float PLACEMENTS_CHESTS_COMMON = 0.1F;
+	private static final float PLACEMENTS_CHESTS_UNCOMMON = 0.04F;
+	private static final float PLACEMENTS_CHESTS_RARE = 0.02F;
+	
+	public final FeatureChest CHEST_DEFAULT = new FeatureChest(
+		EnumChestType.DEFAULT, PLACEMENTS_CHESTS_COMMON, 12, 52, 0.1F
+	);
+	
+	public final CHEST_VALUABLE CHEST_VALUABLE = new CHEST_VALUABLE(
+		EnumChestType.VALUABLE, PLACEMENTS_CHESTS_RARE, 12, 32, 0.0F
+	);
+	
+	public final FeatureChest CHEST_TRAPPED = new FeatureChest(
+		EnumChestType.TRAPPED, 0.0F, 12, 52, Float.NaN
+	);
+	
+	public final FeatureChest CHEST_TNT_FLOOR_TRAP = new FeatureChest(
+		EnumChestType.TNT_FLOOR_TRAP, PLACEMENTS_CHESTS_UNCOMMON, 12, 52, 0.0F
+	);
+	
+	public final CHEST_INFESTED CHEST_INFESTED = new CHEST_INFESTED(
+		EnumChestType.INFESTED, PLACEMENTS_CHESTS_UNCOMMON, 12, 60, 1.0F
+	);
+	
+	public final CHEST_SURPRISE CHEST_SURPRISE = new CHEST_SURPRISE(
+		EnumChestType.SURPRISE, PLACEMENTS_CHESTS_UNCOMMON, 12, 52, 1.0F
+	);
+	
+	public final CHEST_MIMIC CHEST_MIMIC = new CHEST_MIMIC(
+		EnumChestType.MIMIC, PLACEMENTS_CHESTS_RARE, 12, 52, 0.1F
+	);
+	
+	public static
+	class CHEST_VALUABLE extends FeatureChest
+	{
+		CHEST_VALUABLE( EnumChestType type, float placements, int minHeight, int maxHeight, float trappedChance )
+		{
+			super( type, placements, minHeight, maxHeight, trappedChance );
+		}
+		
+		public WeightedBlockConfig.BlockList COVER_BLOCKS = prop(
+			"cover_block_list", makeDefaultCoverMaterials( ),
+			"A weighted list of blocks to pick from to make up the blocks that surround this chest."
+		);
+		
+		private
+		WeightedBlockConfig[] makeDefaultCoverMaterials( )
+		{
+			if( Config.dimensionLoading == DimensionType.NETHER.getId( ) ) {
+				return new WeightedBlockConfig[] {
+					// Nethery
+					new WeightedBlockConfig( Blocks.MAGMA, 100 ),
+					new WeightedBlockConfig( Blocks.NETHER_BRICK, 100 ),
+					new WeightedBlockConfig( Blocks.RED_NETHER_BRICK, 100 ),
+					new WeightedBlockConfig( Blocks.SOUL_SAND, 50 ),
+					new WeightedBlockConfig( Blocks.GLOWSTONE, 50 ),
+					new WeightedBlockConfig( Blocks.NETHERRACK, 10 ),
+					// Other
+					new WeightedBlockConfig( Blocks.GRAVEL, 50 ),
+					new WeightedBlockConfig( Blocks.OBSIDIAN, 20 )
+				};
+			}
+			if( Config.dimensionLoading == DimensionType.THE_END.getId( ) ) {
+				return new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.OBSIDIAN, 100 ),
+					new WeightedBlockConfig( Blocks.END_STONE, 20 )
+				};
+			}
+			// For the overworld, as well as any dimensions added by mods
+			return new WeightedBlockConfig[] {
+				// Stones
+				new WeightedBlockConfig( Blocks.COBBLESTONE, 50 ),
+				new WeightedBlockConfig( Blocks.MOSSY_COBBLESTONE, 20 ),
+				new WeightedBlockConfig( Blocks.STONE, 20 ),
+				new WeightedBlockConfig( Blocks.STONE.getDefaultState( ).withProperty( BlockStone.VARIANT, BlockStone.EnumType.ANDESITE ), 50 ),
+				new WeightedBlockConfig( Blocks.STONE.getDefaultState( ).withProperty( BlockStone.VARIANT, BlockStone.EnumType.ANDESITE_SMOOTH ), 50 ),
+				// Soils
+				new WeightedBlockConfig( Blocks.DIRT, 50 ),
+				new WeightedBlockConfig( Blocks.DIRT.getDefaultState().withProperty( BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT ), 50 ),
+				new WeightedBlockConfig( Blocks.CLAY, 50 ),
+				new WeightedBlockConfig( Blocks.GRAVEL, 20 ),
+				// Other
+				new WeightedBlockConfig( Blocks.WOOL.getDefaultState().withProperty( BlockColored.COLOR, EnumDyeColor.SILVER ), 50 ),
+				new WeightedBlockConfig( Blocks.OBSIDIAN, 20 )
+			};
+		}
+	}
+	
+	public static
+	class CHEST_INFESTED extends FeatureChest
+	{
+		CHEST_INFESTED( EnumChestType type, float placements, int minHeight, int maxHeight, float trappedChance )
+		{
+			super( type, placements, minHeight, maxHeight, trappedChance );
+		}
+		
+		public final float LAUNCH_SPEED = prop(
+			"launch_speed", 0.2F,
+			"The maximum horizontal speed spawned silverfish are launched at."
+		);
+		
+		public final int SILVERFISH_COUNT = prop(
+			"silverfish_count", 6,
+			"The number of silverfish spawned when the silverfish event triggers."
+		);
+	}
+	
+	public static
+	class CHEST_SURPRISE extends FeatureChest
+	{
+		CHEST_SURPRISE( EnumChestType type, float placements, int minHeight, int maxHeight, float trappedChance )
+		{
+			super( type, placements, minHeight, maxHeight, trappedChance );
+		}
+		
+		public final int TNT_FUSE_TIME_MIN = prop(
+			"tnt_fuse_time_min", 40,
+			"The minimum delay before spawned tnt explodes, in ticks. (20 ticks = 1 second)"
+		);
+		public final int TNT_FUSE_TIME_MAX = prop(
+			"tnt_fuse_time_max", 60,
+			"The maximum delay before spawned tnt explodes, in ticks. (20 ticks = 1 second)"
+		);
+		
+		public final float TNT_LAUNCH_SPEED = prop(
+			"tnt_launch_speed", 0.0F,
+			"The maximum horizontal speed spawned tnt is launched at."
+		) / 0.02F; // Divide out tnt's base speed
+		
+		public final int TNT_COUNT = prop(
+			"tnt_count", 1,
+			"The number of primed tnt spawned when the tnt event triggers.\n" +
+			"If you make this more than 1, all items in the chest will probably get destroyed when the tnt goes off."
+		);
+		
+		public final int GAS_DURATION_DELAY = prop(
+			"gas_delay", 20,
+			"The delay before the poison gas cloud starts spreading, in ticks. (20 ticks = 1 second)"
+		);
+		public final int GAS_DURATION = prop(
+			"gas_duration", 40,
+			"The duration (after its initial delay) until the poison gas cloud reaches max size and disappears, in ticks."
+		);
+		
+		public final float GAS_MAX_RADIUS = prop(
+			"gas_max_radius", 12.0F,
+			"The maximum distance, in blocks, the poison gas cloud spreads from its origin.\n" +
+			"Note the cloud starts at 0.5 radius and linearly increases to max radius at exactly its max duration."
+		);
+		
+		public final int GAS_POISON_DURATION = prop(
+			"gas_type_poison_duration", 200,
+			"Duration of the poison effect applied by poison gas clouds, in ticks."
+		);
+		public final int GAS_POISON_POTENCY  = prop(
+			"gas_type_poison_potency", 0,
+			"Potency of the poison effect applied by poison gas clouds."
+		);
+		
+		public final int GAS_WITHER_DURATION = prop(
+			"gas_type_wither_duration", 200,
+			"Duration of the wither effect applied by \"poison\" gas clouds, in ticks."
+		);
+		public final int GAS_WITHER_POTENCY  = prop(
+			"gas_type_wither_potency", 0,
+			"Potency of the wither effect applied by \"poison\" gas clouds."
+		);
+		
+		public final int GAS_HARM_POTENCY = prop(
+			"gas_type_harm_potency", 1,
+			"Potency of the instant damage effect applied by \"poison\" gas clouds."
+		);
+		
+		public final WeightedEnumConfig< EnumPotionCloudType > GAS_POTION_TYPE_LIST = prop(
+			"gas_type_weight", EnumPotionCloudType.values( ),
+			"Weight for the ", " potion type to be used for \"poison\" gas."
+		);
+		
+		public final WeightedEnumConfig< EnumSurpriseChestType > SURPRISE_TYPE_LIST = prop(
+			"_event_type_weight", EnumSurpriseChestType.values( ),
+			"Weight for the ", " surprise event type."
+		);
+	}
+	
+	public static
+	class CHEST_MIMIC extends FeatureChest
+	{
+		CHEST_MIMIC( EnumChestType type, float placements, int minHeight, int maxHeight, float trappedChance )
+		{
+			super( type, placements, minHeight, maxHeight, trappedChance );
+		}
+		
+		public final float MULTIPLIER_DAMAGE = prop(
+			"attrib_mult_damage", 2.0F,
+			"Multiplier applied to the spawned mimic\'s base damage attribute."
+		);
+		public final float MULTIPLIER_HEALTH = prop(
+			"attrib_mult_health", 2.0F,
+			"Multiplier applied to the spawned mimic\'s base health attribute."
+		);
+		public final float MULTIPLIER_SPEED  = prop(
+			"attrib_mult_speed", 1.1F,
+			"Multiplier applied to the spawned mimic\'s base movement speed attribute."
+		);
+		
+		public final float BABY_CHANCE = prop(
+			"baby_chance", 1.0F,
+			"Chance for the spawned mimic to be a baby (only works for Zombies, Pig Zombies, and Animals).",
+			R_FLT_ONE
+		);
+		
+		public final WeightedRandomConfig SPAWN_LIST = prop(
+			"spawn_list", makeDefaultSpawnList( ),
+			"Weighted list of mobs that can be spawned as \"mimics\". One of these is chosen\n" +
+			"at random when the spawn mimic event is triggered."
+		);
+		
+		private
+		WeightedRandomConfig.Item[] makeDefaultSpawnList( )
+		{
+			return new WeightedRandomConfig.Item[] { new WeightedRandomConfig.Item( EntityZombie.class, 70457 ) };
+		}
+	}
+	
+	public static
+	class FeatureChest extends FeatureSubtyped
+	{
+		@Override
+		String subKey( ) { return "chests"; }
+		
+		public final float TRAPPED_CHANCE;
+		
+		FeatureChest( EnumChestType type, float placements, int minHeight, int maxHeight, float trappedChance )
+		{
+			super( type.getName( ), placements, minHeight, maxHeight );
+			
+			TRAPPED_CHANCE = type == EnumChestType.TRAPPED ? 1.0F : prop(
+				"_trapped_chance", trappedChance,
+				"The chance for " + type.DISPLAY_NAME + " to use the \'trapped chest\' block instead of a normal chest block.\n" +
+				"For reference, the loot table for these chests is \'" + type.LOOT_TABLE_CHEST.toString( ) + "\'.",
+				R_FLT_ONE
+			);
+			
+		}
+	}
+	
+	//////// Feature - Spawners ////////
+	
+	private static final float PLACEMENTS_SPAWNERS_COMMON = 0.16F;
+	private static final float PLACEMENTS_SPAWNERS_UNCOMMON = 0.04F;
+	private static final float PLACEMENTS_SPAWNERS_RARE = 0.02F;
+	
+	public final FeatureSpawner SPAWNER_DEFAULT = new FeatureSpawner(
+		EnumSpawnerType.DEFAULT, 0.33F, PLACEMENTS_SPAWNERS_COMMON, 12, 52,
+		16.0F, false, 200, 800, 40, 4, 4.0F, null
 	);
 	
 	public final FeatureSpawner SPAWNER_STREAM = new FeatureSpawner(
-		EnumSpawnerType.STREAM, 1.0F, 0.04, 12, 42,
-		16.0F, true, 0, 400, 10, 1, 2.0F
+		EnumSpawnerType.STREAM, 1.0F, PLACEMENTS_SPAWNERS_UNCOMMON, 12, 42,
+		16.0F, true, 0, 400, 10, 1, 2.0F,
+		Blocks.RED_SANDSTONE.getDefaultState( ).withProperty( BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.CHISELED )
 	);
 	
 	public final FeatureSpawner SPAWNER_SWARM = new FeatureSpawner(
-		EnumSpawnerType.SWARM, 1.0F, 0.04, 12, 32,
-		20.0F, true, 400, 2400, 100, 12, 8.0F
+		EnumSpawnerType.SWARM, 1.0F, PLACEMENTS_SPAWNERS_RARE, 12, 32,
+		20.0F, true, 400, 2400, 100, 12, 8.0F,
+		Blocks.SANDSTONE.getDefaultState( ).withProperty( BlockSandStone.TYPE, BlockSandStone.EnumType.CHISELED )
 	);
 	
-	public final SPAWNER_BRUTAL SPAWNER_BRUTAL = new SPAWNER_BRUTAL( );
+	public final SPAWNER_BRUTAL SPAWNER_BRUTAL = new SPAWNER_BRUTAL(
+		EnumSpawnerType.BRUTAL, 1.0F, PLACEMENTS_SPAWNERS_RARE, 12, 32,
+		16.0F, true, 200, 800, 100, 2, 3.0F,
+		Blocks.STONEBRICK.getDefaultState( ).withProperty( BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED )
+	);
+	
+	public final SILVERFISH_NEST SILVERFISH_NEST = new SILVERFISH_NEST(
+		EnumSpawnerType.SILVERFISH_NEST, 0.33F, PLACEMENTS_SPAWNERS_COMMON, 12, 62,
+		16.0F, false, 100, 400, 20, 6, 6.0F
+	);
 	
 	public static
 	class SPAWNER_BRUTAL extends FeatureSpawner
 	{
-		SPAWNER_BRUTAL( )
+		SPAWNER_BRUTAL( EnumSpawnerType type, float chestChance, float placements, int minHeight, int maxHeight,
+		                float actRange, boolean checkSight, int minDelay, int maxDelay, int prgrDelay, int spawnCount, float spawnRange,
+		                IBlockState topperBlock)
 		{
-			super(
-				EnumSpawnerType.BRUTAL, 1.0F, 0.04, 12, 32,
-				16.0F, true, 200, 800, 100, 2, 3.0F
-			);
+			super( type, chestChance, placements, minHeight, maxHeight, actRange, checkSight, minDelay, maxDelay, prgrDelay, spawnCount, spawnRange, topperBlock );
 		}
+		
+		public final float VINES_CHANCE = prop(
+			"vines_chance", 0.4F,
+			"Chance to place a vines block for decoration in each adjacent air block."
+		);
 		
 		public final boolean AMBIENT_FX      = prop(
 			"brutal_ambient_fx", false,
@@ -649,45 +1178,65 @@ class Config
 		);
 	}
 	
-	public final SPAWNER_SILVERFISH_NEST SPAWNER_SILVERFISH_NEST = new SPAWNER_SILVERFISH_NEST( );
-	
 	public static
-	class SPAWNER_SILVERFISH_NEST extends FeatureSpawner
+	class SILVERFISH_NEST extends FeatureSpawner
 	{
-		SPAWNER_SILVERFISH_NEST( )
+		SILVERFISH_NEST( EnumSpawnerType type, float chestChance, float placements, int minHeight, int maxHeight,
+		                      float actRange, boolean checkSight, int minDelay, int maxDelay, int prgrDelay, int spawnCount, float spawnRange )
 		{
-			super(
-				EnumSpawnerType.SILVERFISH_NEST, 0.3F, 0.16, 12, 62,
-				16.0F, false, 100, 400, 20, 6, 6.0F
-			);
+			super( type, chestChance, placements, minHeight, maxHeight, actRange, checkSight, minDelay, maxDelay, prgrDelay, spawnCount, spawnRange, null );
 		}
+		
+		public WeightedBlockConfig.BlockList NEST_BLOCKS = prop(
+			"nest_block_list", makeDefaultNestMaterials( ),
+			"A weighted list of blocks to pick from to make up the entire nest. All blocks will be replaced with\n" +
+			"silverfish-infested versions, limited by your silverfish replaceable/autogen settings."
+		);
 		
 		@Override
 		protected
 		WeightedRandomConfig.Item[] makeDefaultSpawnList( )
 		{
-			return new WeightedRandomConfig.Item[] { new WeightedRandomConfig.Item( EntitySilverfish.class, 100 ) };
+			return new WeightedRandomConfig.Item[] { new WeightedRandomConfig.Item( EntitySilverfish.class, 70457 ) };
+		}
+		
+		private
+		WeightedBlockConfig[] makeDefaultNestMaterials( )
+		{
+			if( Config.dimensionLoading == DimensionType.NETHER.getId( ) ) {
+				return new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.SOUL_SAND, 100 ),
+					new WeightedBlockConfig( Blocks.QUARTZ_ORE, 10 )
+				};
+			}
+			if( Config.dimensionLoading == DimensionType.THE_END.getId( ) ) {
+				return new WeightedBlockConfig[] { new WeightedBlockConfig( Blocks.OBSIDIAN, 70457 ) };
+			}
+			// For the overworld, as well as any dimensions added by mods
+			return new WeightedBlockConfig[] {
+				// Building blocks
+				new WeightedBlockConfig( Blocks.COBBLESTONE, 300 ),
+				new WeightedBlockConfig( Blocks.MOSSY_COBBLESTONE, 20 ),
+				new WeightedBlockConfig( Blocks.CLAY, 20 ),
+				// Ores
+				new WeightedBlockConfig( Blocks.GOLD_ORE, 5 ),
+				new WeightedBlockConfig( Blocks.LAPIS_ORE, 5 ),
+				new WeightedBlockConfig( Blocks.DIAMOND_ORE, 5 ),
+				new WeightedBlockConfig( Blocks.EMERALD_ORE, 5 )
+			};
 		}
 	}
 	
 	public static
-	class FeatureSpawner extends FeatureConfig
+	class FeatureSpawner extends FeatureTrap
 	{
-		private static final String SUBKEY = "_spawners";
-		
 		@Override
-		String comment( )
-		{
-			return "Options related to the generation of " + KEY.substring( 0, KEY.length( ) - SUBKEY.length( ) ) + " spawners.";
-		}
+		String subKey( ) { return "spawners"; }
 		
 		public final float CHEST_CHANCE;
 		
 		public final float                DYNAMIC_CHANCE;
 		public final WeightedRandomConfig SPAWN_LIST;
-		
-		public final float   ACTIVATION_RANGE;
-		public final boolean CHECK_SIGHT;
 		
 		public final int DELAY_MIN;
 		public final int DELAY_MAX;
@@ -703,48 +1252,32 @@ class Config
 		public final int   SPAWN_COUNT;
 		public final float SPAWN_RANGE;
 		
-		FeatureSpawner( EnumSpawnerType type, float chestChance, double placement, int minHeight, int maxHeight )
-		{
-			this(
-				type, chestChance, placement, minHeight, maxHeight,
-				16.0F, false, 200, 800, 40, 4, 4.0F
-			);
-		}
+		public final WeightedBlockConfig.BlockList TOPPER_BLOCKS;
 		
-		FeatureSpawner( EnumSpawnerType type, float chestChance, double placement, int minHeight, int maxHeight,
-		                float actRange, boolean checkSight, int minDelay, int maxDelay, int prgrDelay, int spawnCount, float spawnRange )
+		FeatureSpawner( EnumSpawnerType type, float chestChance, float placements, int minHeight, int maxHeight,
+		                float actRange, boolean checkSight, int minDelay, int maxDelay, int prgrDelay, int spawnCount, float spawnRange,
+		                IBlockState topper )
 		{
-			super( type.getName( ) + SUBKEY, placement, minHeight, maxHeight );
+			super( type.getName( ), type.DISPLAY_NAME, placements, minHeight, maxHeight, actRange, checkSight );
 			
-			CHEST_CHANCE = prop(
+			CHEST_CHANCE = this instanceof ISubgenFeature ? 0.0F : prop(
 				"_chest_chance", chestChance,
-				"The chance for a chest to generate beneath " + type.displayName + " spawners.\n" +
-				"For reference, the loot table for these chests is \'" + type.lootTable.toString( ) + "\'.",
+				"The chance for a chest to generate beneath " + type.DISPLAY_NAME + ".\n" +
+				"For reference, the loot table for these chests is \'" + type.LOOT_TABLE_CHEST.toString( ) + "\'.",
 				R_FLT_ONE
 			);
 			
 			DYNAMIC_CHANCE = prop(
-				"_dynamic_chance", type == EnumSpawnerType.STREAM ? 1.0F : type == EnumSpawnerType.SILVERFISH_NEST ? 0.0F : 0.2F,
-				"The chance for a " + type.displayName + " to generate as \'dynamic\'.\n" +
+				"_dynamic_chance", type == EnumSpawnerType.STREAM ? 1.0F : type == EnumSpawnerType.SILVERFISH_NEST ? 0.0F : 0.08F,
+				"The chance for " + type.DISPLAY_NAME + " to generate as \'dynamic\'.\n" +
 				"Dynamic spawners pick a new mob to spawn after each spawn.",
 				R_FLT_ONE
 			);
 			SPAWN_LIST = prop(
 				"_spawn_list", makeDefaultSpawnList( ),
-				"Weighted list of mobs that can be spawned by " + type.displayName + "s. One of these is chosen\n" +
+				"Weighted list of mobs that can be spawned by " + type.DISPLAY_NAME + ". One of these is chosen\n" +
 				"at random when the spawner is generated. Spawners that are generated as \'dynamic\' will pick again\n" +
 				"between each spawn."
-			);
-			
-			ACTIVATION_RANGE = prop(
-				"activation_range", actRange,
-				"The spawner is active as long as a player is within this distance (spherical distance)."
-			);
-			CHECK_SIGHT = prop(
-				"activation_sight_check", checkSight,
-				"When the sight check is enabled, " + type.displayName + " will only spawn when they have direct\n" +
-				"line-of-sight to a player within activation range. The spawner\'s delay will continue to tick down,\n" +
-				"but it will wait to actually spawn until it has line-of-sight."
 			);
 			
 			DELAY_MIN = prop(
@@ -764,32 +1297,32 @@ class Config
 			);
 			
 			ADDED_ARMOR = prop(
-				"attrib_add_armor", type == EnumSpawnerType.BRUTAL ? 15.0F : 0.0F,
-				"Bonus added to spawned entites\' base armor attribute.",
+				"attrib_add_armor", type == EnumSpawnerType.BRUTAL || type == EnumSpawnerType.DUNGEON ? 15.0F : 0.0F,
+				"Bonus added to spawned entities\' base armor attributes.",
 				0.0F, 30.0F
 			);
 			ADDED_ARMOR_TOUGHNESS = prop(
-				"attrib_add_armor_toughness", type == EnumSpawnerType.BRUTAL ? 8.0F : 0.0F,
-				"Bonus added to spawned entites\' base armor toughness attribute.",
+				"attrib_add_armor_toughness", type == EnumSpawnerType.BRUTAL || type == EnumSpawnerType.DUNGEON ? 8.0F : 0.0F,
+				"Bonus added to spawned entities\' base armor toughness attributes.",
 				0.0F, 20.0F
 			);
 			ADDED_KNOCKBACK_RESIST = prop(
 				"attrib_add_knockback_resist", type == EnumSpawnerType.BRUTAL ? 0.2F : 0.0F,
-				"Bonus added to spawned entites\' base knockback resistance attribute (1.00 = 100% chance to resist).",
+				"Bonus added to spawned entities\' base knockback resistance attributes (1.00 = 100% chance to resist).",
 				R_FLT_ONE
 			);
 			
 			MULTIPLIER_DAMAGE = prop(
-				"attrib_mult_damage", type == EnumSpawnerType.BRUTAL ? 1.5F : 1.0F,
-				"Multiplier applied to spawned entites\' base attack damage attribute."
+				"attrib_mult_damage", type == EnumSpawnerType.BRUTAL || type == EnumSpawnerType.DUNGEON ? 1.5F : 1.0F,
+				"Multiplier applied to spawned entities\' base attack damage attributes."
 			);
 			MULTIPLIER_HEALTH = prop(
 				"attrib_mult_health", type == EnumSpawnerType.BRUTAL ? 1.5F : 1.0F,
-				"Multiplier applied to spawned entites\' base health attribute."
+				"Multiplier applied to spawned entities\' base health attributes."
 			);
 			MULTIPLIER_SPEED = prop(
 				"attrib_mult_speed", type == EnumSpawnerType.BRUTAL ? 1.2F : 1.0F,
-				"Multiplier applied to spawned entites\' base movement speed attribute."
+				"Multiplier applied to spawned entities\' base movement speed attributes."
 			);
 			
 			SPAWN_COUNT = prop(
@@ -799,6 +1332,37 @@ class Config
 			SPAWN_RANGE = prop(
 				"spawn_range", spawnRange,
 				"The maximum horizontal range to spawn mobs in."
+			);
+			
+			final WeightedBlockConfig[] topperBlocks;
+			if( type == EnumSpawnerType.DEFAULT ) {
+				if( Config.dimensionLoading == DimensionType.NETHER.getId( ) ) {
+					topperBlocks = new WeightedBlockConfig[] {
+						new WeightedBlockConfig( Blocks.NETHER_BRICK, 100 ),
+						new WeightedBlockConfig( Blocks.RED_NETHER_BRICK, 100 )
+					};
+				}
+				else if( Config.dimensionLoading == DimensionType.THE_END.getId( ) ) {
+					topperBlocks = new WeightedBlockConfig[] { new WeightedBlockConfig( Blocks.END_BRICKS, 70457 ) };
+				}
+				else {
+					// Overworld and mod-added dimensions
+					topperBlocks = new WeightedBlockConfig[] {
+						new WeightedBlockConfig( Blocks.COBBLESTONE, 100 ),
+						new WeightedBlockConfig( Blocks.MOSSY_COBBLESTONE, 100 )
+					};
+				}
+			}
+			else if( topper == null ) {
+				topperBlocks = null;
+			}
+			else {
+				topperBlocks = new WeightedBlockConfig[] { new WeightedBlockConfig( topper, 70457 ) };
+			}
+			
+			TOPPER_BLOCKS = topperBlocks == null ? null : prop(
+				"topper_blocks", topperBlocks,
+				"A weighted list of blocks to pick from when placing the decoration block on top of " + type.DISPLAY_NAME + "."
 			);
 		}
 		
@@ -835,6 +1399,470 @@ class Config
 		}
 	}
 	
+	//////// Feature - Floor Traps ////////
+	
+	private static final float PLACEMENTS_FLOOR_TRAPS_COMMON = 0.2F;
+	private static final float PLACEMENTS_FLOOR_TRAPS_UNCOMMON = 0.1F;
+	
+	public final FLOOR_TRAP_TNT FLOOR_TRAP_TNT = new FLOOR_TRAP_TNT(
+		EnumFloorTrapType.TNT, PLACEMENTS_FLOOR_TRAPS_COMMON, 12, 60
+	);
+	
+	public final FLOOR_TRAP_TNT_MOB FLOOR_TRAP_TNT_MOB = new FLOOR_TRAP_TNT_MOB(
+		EnumFloorTrapType.TNT_MOB, PLACEMENTS_FLOOR_TRAPS_UNCOMMON, 12, 60
+	);
+	
+	public final FLOOR_TRAP_POTION FLOOR_TRAP_POTION = new FLOOR_TRAP_POTION(
+		EnumFloorTrapType.POTION, PLACEMENTS_FLOOR_TRAPS_COMMON, 12, 60
+	);
+	
+	public static
+	class FLOOR_TRAP_TNT extends FeatureFloorTrap
+	{
+		FLOOR_TRAP_TNT( EnumFloorTrapType type, float placement, int minHeight, int maxHeight )
+		{
+			super( type, placement, minHeight, maxHeight );
+		}
+		
+		public final int FUSE_TIME_MIN = prop(
+			"fuse_time_min", 40,
+			"The minimum delay before spawned tnt explodes, in ticks. (20 ticks = 1 second)"
+		);
+		public final int FUSE_TIME_MAX = prop(
+			"fuse_time_max", 50,
+			"The maximum delay before spawned tnt explodes, in ticks. (20 ticks = 1 second)"
+		);
+		
+		public final float LAUNCH_SPEED = prop(
+			"launch_speed", 0.3F,
+			"The maximum horizontal speed spawned tnt is launched at."
+		) / 0.02F; // Divide out tnt's base speed
+		
+		public final int TNT_COUNT = prop(
+			"tnt_count", 4,
+			"The number of primed tnt spawned when the trap triggers."
+		);
+	}
+	
+	public static
+	class FLOOR_TRAP_TNT_MOB extends FeatureFloorTrap
+	{
+		FLOOR_TRAP_TNT_MOB( EnumFloorTrapType type, float placement, int minHeight, int maxHeight )
+		{
+			super( type, placement, minHeight, maxHeight );
+		}
+		
+		public final float MULTIPLIER_HEALTH = prop(
+			"attrib_mult_health", 0.5F,
+			"Multiplier applied to the spawned entity\'s base health attribute."
+		);
+		public final float MULTIPLIER_SPEED  = prop(
+			"attrib_mult_speed", 1.3F,
+			"Multiplier applied to the spawned entity\'s base movement speed attribute."
+		);
+		
+		public final int FUSE_TIME_MIN = prop(
+			"fuse_time_min", 70,
+			"The minimum delay before the tnt \"hat\" explodes, in ticks. (20 ticks = 1 second)"
+		);
+		public final int FUSE_TIME_MAX = prop(
+			"fuse_time_max", 80,
+			"The maximum delay before the tnt \"hat\" explodes, in ticks. (20 ticks = 1 second)"
+		);
+		
+		public final WeightedRandomConfig SPAWN_LIST = prop(
+			"spawn_list", makeDefaultSpawnList( ),
+			"Weighted list of mobs that can be spawned by tnt mob traps. One of these is chosen\n" +
+			"at random when the trap is triggered."
+		);
+		
+		private
+		WeightedRandomConfig.Item[] makeDefaultSpawnList( )
+		{
+			if( Config.dimensionLoading == DimensionType.NETHER.getId( ) ) {
+				return new WeightedRandomConfig.Item[] {
+					new WeightedRandomConfig.Item( EntityWitherSkeleton.class, 200 ),
+					new WeightedRandomConfig.Item( EntityHusk.class, 100 ),
+					new WeightedRandomConfig.Item( EntityBlaze.class, 100 ),
+					new WeightedRandomConfig.Item( EntityCaveSpider.class, 10 ),
+					new WeightedRandomConfig.Item( EntityMagmaCube.class, 10 )
+				};
+			}
+			if( Config.dimensionLoading == DimensionType.THE_END.getId( ) ) {
+				return new WeightedRandomConfig.Item[] {
+					new WeightedRandomConfig.Item( EntityEnderman.class, 200 )
+				};
+			}
+			// For the overworld, as well as any dimensions added by mods
+			return new WeightedRandomConfig.Item[] {
+				// Vanilla dungeon mobs
+				new WeightedRandomConfig.Item( EntityZombie.class, 200 ),
+				new WeightedRandomConfig.Item( EntitySkeleton.class, 100 ),
+				new WeightedRandomConfig.Item( EntitySpider.class, 100 ),
+				// Extras
+				new WeightedRandomConfig.Item( EntityCaveSpider.class, 10 ),
+				new WeightedRandomConfig.Item( EntitySilverfish.class, 10 )
+			};
+		}
+	}
+	
+	public static
+	class FLOOR_TRAP_POTION extends FeatureFloorTrap
+	{
+		FLOOR_TRAP_POTION( EnumFloorTrapType type, float placement, int minHeight, int maxHeight )
+		{
+			super( type, placement, minHeight, maxHeight );
+		}
+		
+		public final int RESET_TIME_MIN = prop(
+			"reset_time_min", 20,
+			"The minimum delay before potion traps can be tripped again, in ticks. (20 ticks = 1 second)"
+		);
+		public final int RESET_TIME_MAX = prop(
+			"reset_time_max", 40,
+			"The maximum delay before potion traps can be tripped again, in ticks. (20 ticks = 1 second)"
+		);
+		
+		public final int HARM_POTENCY = prop(
+			"type_harm_potency", 1,
+			"Potency of the instant damage effect applied by harm potion traps."
+		);
+		
+		public final int POISON_DURATION = prop(
+			"type_poison_duration", 1600,
+			"Duration of the poison effect applied by poison potion traps, in ticks (affected by proximity to the splash)."
+		);
+		public final int POISON_POTENCY  = prop(
+			"type_poison_potency", 0,
+			"Potency of the poison effect applied by poison potion traps."
+		);
+		
+		public final int HUNGER_DURATION = prop(
+			"type_hunger_duration", 2000,
+			"Duration of the hunger effect applied by hunger potion traps, in ticks (affected by proximity to the splash)."
+		);
+		public final int HUNGER_POTENCY  = prop(
+			"type_hunger_potency", 0,
+			"Potency of the hunger effect applied by hunger potion traps."
+		);
+		
+		public final int DAZE_DURATION = prop(
+			"type_daze_duration", 2000,
+			"Duration of the effects applied by daze potion traps, in ticks (affected by proximity to the splash)."
+		);
+		public final int DAZE_POTENCY  = prop(
+			"type_daze_potency", 0,
+			"Potency of the weakness, fatigue, and slowness effects applied by daze potion traps."
+		);
+		
+		public final int LEVITATION_DURATION = prop(
+			"type_levitation_duration", 200,
+			"Duration of the levitation effect applied by levitation potion traps, in ticks (affected by proximity to the splash)."
+		);
+		public final int LEVITATION_POTENCY  = prop(
+			"type_levitation_potency", 1,
+			"Potency of the levitation effect applied by levitation potion traps."
+		);
+		
+		public final WeightedEnumConfig< EnumPotionTrapType > POTION_TYPE_LIST = prop(
+			"type_weight", EnumPotionTrapType.values( ),
+			"Weight for the ", " potion trap type."
+		);
+	}
+	
+	public static
+	class FeatureFloorTrap extends FeatureTrap
+	{
+		@Override
+		String subKey( ) { return "floor_traps"; }
+		
+		public final float COVER_CHANCE;
+		
+		@Override
+		String comment( )
+		{
+			return "Options related to the generation of " + KEY + " traps in floors.";
+		}
+		
+		FeatureFloorTrap( EnumFloorTrapType type, float placement, int minHeight, int maxHeight )
+		{
+			this( type, placement, minHeight, maxHeight, 3.3F, true );
+		}
+		
+		FeatureFloorTrap( EnumFloorTrapType type, float placement, int minHeight, int maxHeight, float actRange, boolean checkSight )
+		{
+			super( type.NAME, type.DISPLAY_NAME, placement, minHeight, maxHeight, actRange, checkSight );
+			
+			COVER_CHANCE = prop(
+				"_cover_chance", 0.5F,
+				"The chance for " + type.DISPLAY_NAME + " to generate with a \'cover\' block placed on top.\n" +
+				"The possible cover blocks are determined in the dimension\'s terrain config section.",
+				R_FLT_ONE
+			);
+		}
+	}
+	
+	//////// Feature - Towers ////////
+	
+	private static final float PLACEMENTS_TOWERS_COMMON = 0.16F;
+	private static final float PLACEMENTS_TOWERS_UNCOMMON = 0.04F;
+	private static final float PLACEMENTS_TOWERS_RARE = 0.02F;
+	
+	public final FeatureTower TOWER_DEFAULT = new FeatureTower(
+		EnumTowerType.DEFAULT, PLACEMENTS_TOWERS_COMMON, 12, 60,
+		8.0F, 1.5F, 6.0F, 20, 60
+	);
+	
+	public final FeatureTower TOWER_FIRE = new FeatureTower(
+		EnumTowerType.FIRE, PLACEMENTS_TOWERS_UNCOMMON, 12, 52,
+		6.0F, 1.5F, 6.0F, 20, 60
+	);
+	
+	public final TOWER_POTION TOWER_POTION = new TOWER_POTION(
+		EnumTowerType.POTION, PLACEMENTS_TOWERS_UNCOMMON, 12, 42,
+		6.0F, 1.0F, 6.0F, 20, 60
+	);
+	
+	public final FeatureTower TOWER_GATLING = new FeatureTower(
+		EnumTowerType.GATLING, PLACEMENTS_TOWERS_RARE, 12, 32,
+		4.0F, 1.0F, 18.0F, 11, 22
+	);
+	
+	public final FeatureTower TOWER_FIREBALL = new FeatureTower(
+		EnumTowerType.FIREBALL, PLACEMENTS_TOWERS_RARE, 12, 32,
+		3.0F, 1.0F, 8.0F, 20, 40
+	);
+	
+	public static
+	class TOWER_POTION extends FeatureTower
+	{
+		TOWER_POTION( EnumTowerType type, float placement, int minHeight, int maxHeight,
+		              float damage, float projSpeed, float projVariance, int minDelay, int maxDelay )
+		{
+			super( type, placement, minHeight, maxHeight, damage, projSpeed, projVariance, minDelay, maxDelay );
+		}
+		
+		public final int SLOWNESS_DURATION = prop(
+			"type_slowness_duration", 600,
+			"Duration of the slowness effect applied by slowness arrows, in ticks. Default is equivalent to stray skeleton arrows."
+		);
+		public final int SLOWNESS_POTENCY  = prop(
+			"type_slowness_potency", 0,
+			"Potency of the slowness effect applied by slowness arrows. Default is equivalent to stray skeleton arrows."
+		);
+		
+		public final int POISON_DURATION = prop(
+			"type_poison_duration", 200,
+			"Duration of the poison effect applied by poison arrows, in ticks."
+		);
+		public final int POISON_POTENCY  = prop(
+			"type_poison_potency", 0,
+			"Potency of the poison effect applied by poison arrows."
+		);
+		
+		public final int WITHER_DURATION = prop(
+			"type_wither_duration", 200,
+			"Duration of the wither effect applied by wither arrows, in ticks."
+		);
+		public final int WITHER_POTENCY  = prop(
+			"type_wither_potency", 0,
+			"Potency of the wither effect applied by wither arrows."
+		);
+		
+		public final int HARM_POTENCY = prop(
+			"type_harm_potency", 1,
+			"Potency of the instant damage effect applied by harm arrows."
+		);
+		
+		public final int HUNGER_DURATION = prop(
+			"type_hunger_duration", 400,
+			"Duration of the hunger effect applied by hunger arrows, in ticks."
+		);
+		public final int HUNGER_POTENCY  = prop(
+			"type_hunger_potency", 0,
+			"Potency of the hunger effect applied by hunger arrows."
+		);
+		
+		public final int BLINDNESS_DURATION = prop(
+			"type_blindness_duration", 400,
+			"Duration of the blindness effect applied by blindness arrows, in ticks."
+		);
+		
+		public final int WEAKNESS_DURATION = prop(
+			"type_weakness_duration", 600,
+			"Duration of the weakness and fatigue effects applied by weakness arrows, in ticks."
+		);
+		public final int WEAKNESS_POTENCY  = prop(
+			"type_weakness_potency", 0,
+			"Potency of the weakness and fatigue effects applied by weakness arrows."
+		);
+		
+		public final int LEVITATION_DURATION = prop(
+			"type_levitation_duration", 100,
+			"Duration of the levitation effect applied by levitation arrows, in ticks."
+		);
+		public final int LEVITATION_POTENCY  = prop(
+			"type_levitation_potency", 1,
+			"Potency of the levitation effect applied by levitation arrows."
+		);
+		
+		public final WeightedEnumConfig< EnumPotionArrowType > POTION_TYPE_LIST = prop(
+			"type_weight", EnumPotionArrowType.values( ),
+			"Weight for the ", " potion arrow type."
+		);
+	}
+	
+	public static
+	class FeatureTower extends FeatureTrap
+	{
+		public final float ATTACK_DAMAGE;
+		
+		public final float PROJECTILE_SPEED;
+		public final float PROJECTILE_VARIANCE;
+		
+		public final int DELAY_MIN;
+		public final int DELAY_MAX;
+		
+		public final int MAX_TOWER_HEIGHT;
+		
+		public final WeightedBlockConfig.BlockList PILLAR_BLOCKS;
+		
+		@Override
+		String subKey( ) { return "towers"; }
+		
+		@Override
+		String comment( )
+		{
+			return "Options related to the generation of " + KEY + " tower traps.";
+		}
+		
+		FeatureTower( EnumTowerType type, float placement, int minHeight, int maxHeight,
+		              float damage, float projSpeed, float projVariance, int minDelay, int maxDelay )
+		{
+			this( type, placement, minHeight, maxHeight, damage, projSpeed, projVariance, minDelay, maxDelay, 10.0F, true );
+		}
+		
+		FeatureTower( EnumTowerType type, float placement, int minHeight, int maxHeight,
+		              float damage, float projSpeed, float projVariance, int minDelay, int maxDelay, float actRange, boolean checkSight )
+		{
+			super( type.NAME, type.DISPLAY_NAME, placement, minHeight, maxHeight, actRange, checkSight );
+			
+			ATTACK_DAMAGE = type != EnumTowerType.FIREBALL ? prop(
+				"attack_damage", damage,
+				"Damage dealt by " + type.DISPLAY_NAME + "\' attacks. This translates roughly into half-hearts of damage."
+			) :
+			prop(
+				"attack_shots", damage,
+				"Number of fireballs shot by " + type.DISPLAY_NAME + "\' attacks. Fireballs deal a fixed 5 damage (half-hearts)."
+			);
+			
+			PROJECTILE_SPEED = prop(
+				"projectile_speed", projSpeed,
+				"Multiplier for how fast projectiles fired by " + type.DISPLAY_NAME + " move through the air."
+			);
+			PROJECTILE_VARIANCE = prop(
+				"projectile_variance", projVariance,
+				"The higher this value, the less accurate projectiles fired by " + type.DISPLAY_NAME + " are."
+			);
+			
+			DELAY_MIN = prop(
+				"attack_delay_min", minDelay,
+				"The minimum delay between attacks, in ticks. (20 ticks = 1 second)"
+			);
+			DELAY_MAX = prop(
+				"attack_delay_max", maxDelay,
+				"The maximumm delay between attack, in ticks. (20 ticks = 1 second)"
+			);
+			
+			MAX_TOWER_HEIGHT = prop(
+				"max_tower_height", Config.dimensionLoading == DimensionType.NETHER.getId( ) ? 2 : 4,
+				"The maximum height the tower can generate to reach out of non-solid blocks (like lava).\n" +
+				"Note that this allows the tower to stretch above the \"_" + KEY + "_height_max\" setting."
+			);
+			
+			final WeightedBlockConfig[] pillarBlocks;
+			if( Config.dimensionLoading == DimensionType.NETHER.getId( ) ) {
+				pillarBlocks = new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.NETHER_BRICK, 100 ),
+					new WeightedBlockConfig( Blocks.RED_NETHER_BRICK, 60 )
+				};
+			}
+			else if( Config.dimensionLoading == DimensionType.THE_END.getId( ) ) {
+				pillarBlocks = new WeightedBlockConfig[] { new WeightedBlockConfig( Blocks.OBSIDIAN, 70457 ) };
+			}
+			else {
+				// Overworld and mod-added dimensions
+				pillarBlocks = new WeightedBlockConfig[] {
+					new WeightedBlockConfig( Blocks.COBBLESTONE, 100 ),
+					new WeightedBlockConfig( Blocks.MOSSY_COBBLESTONE, 50 )
+				};
+			}
+			
+			PILLAR_BLOCKS = prop(
+				"pillar_blocks", pillarBlocks,
+				"A weighted list of blocks to pick from when generating the bottom portion of " + type.DISPLAY_NAME + "."
+			);
+		}
+	}
+	
+	// Properties for a subtyped world feature that has an activation range (optionally checking line of sight).
+	public static abstract
+	class FeatureTrap extends FeatureSubtyped
+	{
+		public final float   ACTIVATION_RANGE;
+		public final boolean CHECK_SIGHT;
+		
+		FeatureTrap( String key, String displayName, float placement, int minHeight, int maxHeight, float actRange, boolean checkSight )
+		{
+			super( key, placement, minHeight, maxHeight );
+			
+			ACTIVATION_RANGE = prop(
+				"activation_range", actRange,
+				"The trap will be triggered once a player comes within this distance (spherical distance)."
+			);
+			CHECK_SIGHT = prop(
+				"activation_sight_check", checkSight,
+				"When the sight check is enabled, " + displayName + " will only trigger when they have direct\n" +
+				"line-of-sight to a player within activation range."
+			);
+		}
+	}
+	
+	// Properties for a world feature that has subtypes.
+	@SuppressWarnings( { "WeakerAccess" } )
+	public static abstract
+	class FeatureSubtyped extends FeatureConfig
+	{
+		abstract
+		String subKey( );
+		
+		String typeKey( ) { return subKey( ) + "_" + KEY; }
+		
+		@Override
+		String name( ) { return "features_" + typeKey( ); }
+		
+		@Override
+		String comment( )
+		{
+			return "Options related to the generation of " + KEY + " " + subKey( ) + ".";
+		}
+		
+		FeatureSubtyped( String key, float placement, int minHeight, int maxHeight )
+		{
+			super( key, placement, minHeight, maxHeight );
+		}
+	}
+	
+	// Properties for a world feature that has subtypes.
+	public static abstract
+	class FeatureMulti extends FeatureConfig
+	{
+		FeatureMulti( String key, float placement, int minHeight, int maxHeight )
+		{
+			super( key, placement, minHeight, maxHeight );
+		}
+	}
+	
 	// Contains the properties common to all world features.
 	public static abstract
 	class FeatureConfig extends PropertyCategory
@@ -842,28 +1870,67 @@ class Config
 		@Override
 		String name( ) { return "features_" + KEY; }
 		
-		public final double  PLACEMENT_CHANCE;
+		@Override
+		String comment( )
+		{
+			return "Options related to the generation of " + KEY + ".";
+		}
+		
+		private final float                 PLACEMENT_CHANCE;
+		private final EnvironmentListConfig PLACEMENT_CHANCE_EXCEPTIONS;
+		
 		public final int[]   HEIGHTS;
 		public final boolean DEBUG_MARKER;
 		
-		FeatureConfig( String key, double placement, int minHeight, int maxHeight )
+		FeatureConfig( String key, float placement, int minHeight, int maxHeight )
 		{
 			super( key );
 			
-			PLACEMENT_CHANCE = prop(
-				"_" + KEY + "_chance", placement,
-				"The ratio of chunks to place this feature in.\n" +
-				"This represents a chance for a placement attempt in each chunk from 0 to 1\n" +
-				"(e.g., 0.1 means 10% chance per chunk).",
-				PropertyCategory.R_DBL_ONE
-			);
+			if( this instanceof ISubgenFeature ) {
+				// Feature does not naturally generate, these config options apply
+				PLACEMENT_CHANCE = 0.0F;
+				PLACEMENT_CHANCE_EXCEPTIONS = null;
+				HEIGHTS = new int[2];
+				DEBUG_MARKER = false;
+				return;
+			}
+			
+			if( this instanceof FeatureMulti ) {
+				// Feature allows a placement count instead of a single chance
+				PLACEMENT_CHANCE = prop(
+					"_" + KEY + "_count", placement,
+					"The number of placement attempts for this feature type.\n" +
+					"A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt)."
+				);
+				PLACEMENT_CHANCE_EXCEPTIONS = prop(
+					"_" + KEY + "_count_exceptions", new TargetEnvironment[ 0 ],
+					"The number of placement attempts when generating in particular locations.\n" +
+					"More specific locations take priority over others (biome < biome* < global setting)."
+				);
+			}
+			else {
+				// Normal feature behavior
+				PLACEMENT_CHANCE = prop(
+					"_" + KEY + "_chance", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? placement : placement * 0.5F,
+					"The ratio of chunks to place this feature in.\n" +
+					"This represents a chance for a placement attempt in each chunk from 0 to 1\n" +
+					"(e.g., 0.1 means 10% chance per chunk).",
+					PropertyCategory.R_FLT_ONE
+				);
+				PLACEMENT_CHANCE_EXCEPTIONS = prop(
+					"_" + KEY + "_chance_exceptions", new TargetEnvironment[ 0 ],
+					"The chance for a placement attempt when generating in particular locations.\n" +
+					"More specific locations take priority over others (biome < biome* < global setting)."
+				);
+			}
+			
 			HEIGHTS = new int[] {
 				prop(
-					"_" + KEY + "_height_min", minHeight,
+					"_" + KEY + "_height_min", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? minHeight : 10,
 					"The minimum height to generate this feature at."
 				),
 				prop(
-					"_" + KEY + "_height_max", Config.dimensionLoading == DimensionType.NETHER.getId( ) ? 100 : maxHeight,
+					"_" + KEY + "_height_max", Config.dimensionLoading == DimensionType.OVERWORLD.getId( ) ? maxHeight : 100,
 					"The maximum height to generate this feature at."
 				)
 			};
@@ -874,11 +1941,21 @@ class Config
 				"Consider using a tool to strip away all stone/dirt/etc. for more intensive testing."
 			);
 		}
+		
+		public
+		float getPlacementChance( World world, BlockPos pos )
+		{
+			return PLACEMENT_CHANCE_EXCEPTIONS.getValueForLocation( world, pos, PLACEMENT_CHANCE );
+		}
 	}
+	
+	// Used to denote features that are strictly generated as part of another feature.
+	// Implementing this causes all placement-related options to be ignored in the config.
+	interface ISubgenFeature { }
 	
 	// Contains basic implementations for all config option types, along with some useful constants.
 	@SuppressWarnings( { "SameParameterValue", "unused", "WeakerAccess" } )
-	private static abstract
+	static abstract
 	class PropertyCategory
 	{
 		/** Range: { -INF, INF } */
@@ -960,6 +2037,20 @@ class Config
 			return Config.configLoading.get( name( ), key, defaultIds, comment );
 		}
 		
+		< T extends Enum< T > & WeightedEnumConfig.Meta > WeightedEnumConfig< T > prop( String key, T[] validValues, String commentPart1, String commentPart2 )
+		{
+			List< WeightedEnumConfig.Item< T > > items = new ArrayList<>( );
+			for( T value : validValues ) {
+				String name = value.toString( ).toLowerCase( );
+				items.add( new WeightedEnumConfig.Item<>( value, prop(
+					key + "_" + name, value.defaultWeight( ),
+					commentPart1 + name.replace( "_", " " ) + commentPart2,
+					R_INT_POS0
+				) ) );
+			}
+			return new WeightedEnumConfig<>( items );
+		}
+		
 		IBlockState prop( String key, IBlockState defaultValue, String comment )
 		{
 			String      target     = cprop( key, defaultValue, comment ).getString( );
@@ -969,7 +2060,7 @@ class Config
 			if( blockState.getBlock( ) == Blocks.AIR ) {
 				String[] pair = target.split( " ", 2 );
 				if( pair.length > 1 ) {
-					Block block = TargetBlock.getStringAsBlock( pair[ 0 ] );
+					Block block = TargetBlock.parseBlock( pair[ 0 ] );
 					//noinspection deprecation // Meta will be replaced by block states in the future. Ignore this for now.
 					return block.getStateFromMeta( Integer.parseInt( pair[ 1 ].trim( ) ) );
 				}
@@ -979,9 +2070,8 @@ class Config
 		
 		Property cprop( String key, IBlockState defaultValue, String comment )
 		{
-			String defaultId = Block.REGISTRY.getNameForObject( defaultValue.getBlock( ) ).toString( )
-			                   + " " + defaultValue.getBlock( ).getMetaFromState( defaultValue );
-			comment = amendComment( comment, "Block", defaultId, "mod_id:block_id, mod_id:block_id[<properties>], mod_id:block_id meta" );
+			String defaultId = new TargetBlock( defaultValue ).toString( );
+			comment = amendComment( comment, "Block", defaultId, "mod_id:block_id, mod_id:block_id[<properties>]" );
 			return Config.configLoading.get( name( ), key, defaultId, comment );
 		}
 		
@@ -996,7 +2086,22 @@ class Config
 			for( int i = 0; i < defaultIds.length; i++ ) {
 				defaultIds[ i ] = defaultValues[ i ].toString( );
 			}
-			comment = amendComment( comment, "Block_Array", defaultIds, "mod_id:block_id, mod_id:block_id[<properties>], mod_id:*" );
+			comment = amendComment( comment, "Target_Block_Array", defaultIds, "mod_id:block_id, mod_id:block_id[<properties>], mod_id:*" );
+			return Config.configLoading.get( name( ), key, defaultIds, comment );
+		}
+		
+		WeightedBlockConfig.BlockList prop( String key, WeightedBlockConfig[] defaultValues, String comment )
+		{
+			return WeightedBlockConfig.newTargetDefinition( cprop( key, defaultValues, comment ).getStringList( ) );
+		}
+		
+		Property cprop( String key, WeightedBlockConfig[] defaultValues, String comment )
+		{
+			String[] defaultIds = new String[ defaultValues.length ];
+			for( int i = 0; i < defaultIds.length; i++ ) {
+				defaultIds[ i ] = defaultValues[ i ].toString( );
+			}
+			comment = amendComment( comment, "Block_Array", defaultIds, "mod_id:block_id <value>, mod_id:block_id[<properties>] <value>" );
 			return Config.configLoading.get( name( ), key, defaultIds, comment );
 		}
 		
@@ -1011,7 +2116,22 @@ class Config
 			for( int i = 0; i < defaultIds.length; i++ ) {
 				defaultIds[ i ] = defaultValues[ i ].toString( );
 			}
-			comment = amendComment( comment, "Entity_Array", defaultIds, "mod_id:entity_id <extra_data>, ~mod_id:entity_id <extra_data>" );
+			comment = amendComment( comment, "Entity_Array", defaultIds, "mod_id:entity_id <value>, ~mod_id:entity_id <value>" );
+			return Config.configLoading.get( name( ), key, defaultIds, comment );
+		}
+		
+		EnvironmentListConfig prop( String key, TargetEnvironment[] defaultValues, String comment )
+		{
+			return new EnvironmentListConfig( cprop( key, defaultValues, comment ).getStringList( ) );
+		}
+		
+		Property cprop( String key, TargetEnvironment[] defaultValues, String comment )
+		{
+			String[] defaultIds = new String[ defaultValues.length ];
+			for( int i = 0; i < defaultIds.length; i++ ) {
+				defaultIds[ i ] = defaultValues[ i ].toString( );
+			}
+			comment = amendComment( comment, "Environment_Array", defaultIds, "biome/mod_id:biome_id=value, biome/mod_id:prefix*=value" );
 			return Config.configLoading.get( name( ), key, defaultIds, comment );
 		}
 		

@@ -8,8 +8,9 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 public abstract
-class WorldGenFloorFeature extends WorldGenDeadlyFeature
+class WorldGenFloorFeature extends WorldGenDeadlyWorldFeature
 {
+	@SuppressWarnings( "WeakerAccess" )
 	public
 	WorldGenFloorFeature( String name ) { super( name ); }
 	
@@ -27,7 +28,7 @@ class WorldGenFloorFeature extends WorldGenDeadlyFeature
 			if( block.isFullCube( ) ) {
 				if( !inWall ) {
 					// Just hit a floor block, check if the spot is valid for placement
-					if( canBePlaced( world, random, currentPos ) ) {
+					if( canBePlaced( dimConfig, world, currentPos ) ) {
 						return placeFeature( dimConfig, replaceableBlocks, world, random, currentPos );
 					}
 					inWall = true;

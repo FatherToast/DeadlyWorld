@@ -1,7 +1,6 @@
 package fathertoast.deadlyworld.item;
 
 import fathertoast.deadlyworld.block.*;
-import fathertoast.deadlyworld.config.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -71,16 +70,13 @@ class ItemBlockDeadlySilverfish extends ItemBlock
 	public
 	String getCreatorModId( ItemStack stack )
 	{
-		if( Config.get( ).GENERAL.SILVERFISH_DISGUISE_MOD ) {
-			try {
-				return DISGUISE.getCreatorModId( stack );
-			}
-			catch( Exception ex ) {
-				// In case they don't like the stack having the infested item
-				return DISGUISE.getCreatorModId( copyToDisguise( stack ) );
-			}
+		try {
+			return DISGUISE.getCreatorModId( stack );
 		}
-		return super.getCreatorModId( stack );
+		catch( Exception ex ) {
+			// In case they don't like the stack having the infested item
+			return DISGUISE.getCreatorModId( copyToDisguise( stack ) );
+		}
 	}
 	
 	@Override

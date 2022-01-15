@@ -21,7 +21,7 @@ class StateMapperDeadlySilverfish extends StateMapperBase
 		IBlockState      disguiseState = ((BlockDeadlySilverfish) state.getBlock( )).toDisguise( state );
 		ResourceLocation regName       = Block.REGISTRY.getNameForObject( disguiseState.getBlock( ) );
 		return new ModelResourceLocation(
-			new ResourceLocation( DeadlyWorldMod.MOD_ID, ModelLoaderDeadlySilverfish.PREFIX + regName.toString( ) ),
+			new ResourceLocation( ModelLoaderDeadlySilverfish.PREFIX + regName.toString( ) ),
 			getPropertyString( disguiseState.getProperties( ) )
 		);
 	}

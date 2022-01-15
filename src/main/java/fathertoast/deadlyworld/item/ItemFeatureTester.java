@@ -16,6 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,6 +27,8 @@ import java.util.List;
 public
 class ItemFeatureTester extends Item
 {
+	public static final String ID = "feature_tester";
+	
 	private static final String TAG_FEATURE_NAME = "DWFeatureName";
 	
 	public
@@ -45,11 +48,11 @@ class ItemFeatureTester extends Item
 	}
 	
 	private
-	WorldGenDeadlyFeature getFeature( ItemStack stack )
+	WorldGenDeadlyWorldFeature getFeature( ItemStack stack )
 	{
 		String featureName = getFeatureName( stack );
 		if( !featureName.isEmpty( ) ) {
-			for( WorldGenDeadlyFeature feature : FeatureGenerator.FEATURE_LIST ) {
+			for( WorldGenDeadlyWorldFeature feature : FeatureGenerator.FEATURE_LIST ) {
 				if( feature.NAME.equals( featureName ) ) {
 					return feature;
 				}
@@ -59,7 +62,7 @@ class ItemFeatureTester extends Item
 	}
 	
 	private
-	ItemStack setFeature( ItemStack stack, WorldGenDeadlyFeature feature )
+	ItemStack setFeature( ItemStack stack, WorldGenDeadlyWorldFeature feature )
 	{
 		NBTTagCompound tag = stack.getTagCompound( );
 		if( tag == null ) {
@@ -70,7 +73,7 @@ class ItemFeatureTester extends Item
 	}
 	
 	private
-	ItemStack createFeatureTester( WorldGenDeadlyFeature feature )
+	ItemStack createFeatureTester( WorldGenDeadlyWorldFeature feature )
 	{
 		return setFeature( new ItemStack( this ), feature );
 	}
@@ -80,18 +83,23 @@ class ItemFeatureTester extends Item
 	void getSubItems( CreativeTabs tab, NonNullList< ItemStack > items )
 	{
 		if( isInCreativeTab( tab ) ) {
-			for( WorldGenDeadlyFeature feature : FeatureGenerator.FEATURE_LIST ) {
+			for( WorldGenDeadlyWorldFeature feature : FeatureGenerator.FEATURE_LIST ) {
 				items.add( createFeatureTester( feature ) );
 			}
 		}
 	}
+	
+	private static final String LANG_KEY = "tile." + DeadlyWorldMod.LANG_KEY + ID + ".tooltip";
 	
 	@Override
 	@SideOnly( Side.CLIENT )
 	public
 	void addInformation( ItemStack stack, World world, List< String > tooltip, ITooltipFlag flag )
 	{
-		tooltip.add( TextFormatting.AQUA.toString( ) + "Feature: \"" + getFeatureName( stack ) + "\"" );
+		tooltip.add(
+			TextFormatting.AQUA.toString( ) + I18n.translateToLocal( LANG_KEY ) +
+			" \"" + I18n.translateToLocal( LANG_KEY + "." + getFeatureName( stack ) ) + "\""
+		);
 	}
 	
 	@Override
@@ -100,7 +108,7 @@ class ItemFeatureTester extends Item
 	{
 		ItemStack stack = player.getHeldItem( hand );
 		if( !world.isRemote && !stack.isEmpty( ) ) {
-			WorldGenDeadlyFeature feature = getFeature( stack );
+			WorldGenDeadlyWorldFeature feature = getFeature( stack );
 			if( feature != null ) {
 				// Generate the feature
 				String dimension = Config.getDimensionKey( world );

@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.tileentity;
 
 import fathertoast.deadlyworld.*;
-import fathertoast.deadlyworld.block.*;
+import fathertoast.deadlyworld.block.state.*;
 import fathertoast.deadlyworld.config.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -21,6 +21,8 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Random;
 
 public
 class TileEntityDeadlySpawner extends TileEntity implements ITickable
@@ -80,12 +82,12 @@ class TileEntityDeadlySpawner extends TileEntity implements ITickable
 	private double prevMobRotation;
 	
 	public
-	void initializeSpawner( EnumSpawnerType spawnerType, Config dimConfig )
+	void initializeSpawner( EnumSpawnerType spawnerType, Config dimConfig, Random random )
 	{
 		Config.FeatureSpawner spawnerConfig = spawnerType.getFeatureConfig( dimConfig );
 		
 		// Set attributes from the config
-		if( world.rand.nextFloat( ) < spawnerConfig.DYNAMIC_CHANCE ) {
+		if( random.nextFloat( ) < spawnerConfig.DYNAMIC_CHANCE ) {
 			dynamicSpawnList = spawnerConfig.SPAWN_LIST;
 		}
 		else {
@@ -103,8 +105,7 @@ class TileEntityDeadlySpawner extends TileEntity implements ITickable
 		spawnRange = spawnerConfig.SPAWN_RANGE;
 		
 		// Initialize logic
-		setEntityToSpawn( spawnerConfig.SPAWN_LIST.nextItem( world.rand ) );
-		
+		setEntityToSpawn( spawnerConfig.SPAWN_LIST.nextItem( random ) );
 	}
 	
 	private
@@ -131,7 +132,7 @@ class TileEntityDeadlySpawner extends TileEntity implements ITickable
 				return block.getValue( EnumSpawnerType.PROPERTY );
 			}
 		}
-		return EnumSpawnerType.LONE;
+		return EnumSpawnerType.DEFAULT;
 	}
 	
 	@Override
@@ -437,7 +438,6 @@ class TileEntityDeadlySpawner extends TileEntity implements ITickable
 	boolean receiveClientEvent( int id, int type )
 	{
 		if( world.isRemote ) {
-			DeadlyWorldMod.log( ).warn( "Getting client event '{}:{}'", id, type );
 			if( id == EVENT_TIMER_RESET ) {
 				spawnDelay = minSpawnDelay;
 				return true;

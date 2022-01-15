@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.featuregen;
 
 import fathertoast.deadlyworld.*;
-import fathertoast.deadlyworld.block.*;
+import fathertoast.deadlyworld.block.state.*;
 import fathertoast.deadlyworld.config.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -18,7 +18,7 @@ class WorldGenSpawner extends WorldGenFloorFeature
 	public
 	WorldGenSpawner( EnumSpawnerType spawnerType )
 	{
-		super( spawnerType.displayName );
+		super( "spawner." + spawnerType.NAME );
 		TYPE = spawnerType;
 		BLOCK_STATE = ModObjects.DEADLY_SPAWNER.getDefaultState( ).withProperty( EnumSpawnerType.PROPERTY, spawnerType );
 	}
@@ -31,8 +31,8 @@ class WorldGenSpawner extends WorldGenFloorFeature
 	public
 	BlockPos placeFeature( Config dimConfig, TargetBlock.TargetMap replaceableBlocks, World world, Random random, BlockPos position )
 	{
-		if( world.rand.nextFloat( ) < getFeatureConfig( dimConfig ).CHEST_CHANCE ) {
-			FeatureGenerator.placeChest( position, world, random, TYPE.lootTable );
+		if( random.nextFloat( ) < getFeatureConfig( dimConfig ).CHEST_CHANCE ) {
+			FeatureGenerator.placeChest( position, world, random, TYPE.LOOT_TABLE_CHEST, false );
 		}
 		BlockPos spawnerPos = position.add( 0, 1, 0 );
 		placeSpawner( spawnerPos, dimConfig, world, random );
@@ -42,16 +42,15 @@ class WorldGenSpawner extends WorldGenFloorFeature
 	
 	@Override
 	public
-	boolean canBePlaced( World world, Random random, BlockPos position )
+	boolean canBePlaced( Config dimConfig, World world, BlockPos position )
 	{
-		return !world.getBlockState( position.add( 0, 2, 0 ) ).isFullCube( )
-		       && world.getBlockState( position.add( 0, -1, 0 ) ).isFullCube( );
+		return TYPE.canTypeBePlaced( world, position );
 	}
 	
 	private
 	void placeSpawner( BlockPos pos, Config dimConfig, World world, Random random )
 	{
-		setBlock( world, random, pos, BLOCK_STATE );
-		ModObjects.DEADLY_SPAWNER.initTileEntity( world, pos, BLOCK_STATE, dimConfig );
+		setBlock( dimConfig, world, random, pos, BLOCK_STATE );
+		ModObjects.DEADLY_SPAWNER.initTileEntity( world, pos, BLOCK_STATE, dimConfig, random );
 	}
 }

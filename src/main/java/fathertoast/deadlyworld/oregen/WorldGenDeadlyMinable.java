@@ -100,7 +100,7 @@ class WorldGenDeadlyMinable
 		return generated > 0;
 	}
 	
-	private
+	protected
 	boolean setBlock( World world, Random random, BlockPos position, IBlockState blockToReplace )
 	{
 		if( veinCovered ) {
