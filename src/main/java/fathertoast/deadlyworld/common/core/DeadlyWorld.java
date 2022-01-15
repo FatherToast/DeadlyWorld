@@ -22,42 +22,91 @@ import javax.annotation.Nullable;
 @Mod( DeadlyWorld.MOD_ID )
 public class DeadlyWorld {
     /* TODO LIST:
-     *  - everything
-     *  - veins
-     *  - features
-     *  - silverfish block
-     *  - FUNNIE STORM DRAIN TRAP #FunnyTrolling #MustSee
+     *  - finish all features; see features list
      *
-     * Primary features:
-     *  - chests
-     *      + mimic 2.0 (custom entity)
-     *      + cave-in (via surprise or combo)
-     *  - water traps
+     * Features list:
+     * (KEY: - = complete in current version, o = incomplete feature from previous version,
+     *       + = incomplete new feature, ? = feature to consider adding)
+     *  o general
+     *      o feature tester item
+     *      o procedurally generated silverfish blocks
+     *      o dimension-based configs
+     *      o biome-based configs
+     *  o veins
+     *      o silverfish
+     *      o lava
+     *      o water
+     *      o sand
+     *      o vanilla vein disables
+     *      o vanilla vein replacements
+     *      o user-defined veins
+     *      ? new vein gen styles
+     *  o dungeons
+     *      o spawner
+     *      ? tower
+     *      ? other special dungeon types
+     *      o vanilla dungeon disable
+     *  o chests
+     *      o default
+     *      o valuable
+     *      o trapped (default disabled)
+     *      o tnt floor trap
+     *      o infested
+     *      o surprise
+     *      o mimic
+     *      + cave-in (via surprise or combo w/ ceiling trap)
+     *      ? mimic 2.0 (custom entity)
+     *  o spawners
+     *      o default
+     *      o stream
+     *      o swarm
+     *      o brutal
+     *      o silverfish nest
+     *      ? spider (combo)
+     *      ? undead (combo)
+     *      ? creeper (combo)
+     *      ? fire immunity (combo)
+     *  o towers
+     *      o default
+     *      o fire
+     *      o potion
+     *      o gatling
+     *      o fireball
+     *      ? fish hook (combo)
+     *      ? splash poison (combo)
+     *      ? splash harm (combo)
+     *      ? lightning (combo)
+     *      ? allow towers to generate on ceilings and/or walls
+     *  o floor traps
+     *      o tnt
+     *      o tnt mob
+     *      o potion
+     *      + fire (from pre-1.12.2 version)
+     *  + water traps
      *      + vortex
-     *  - floor traps
-     *      + fire
-     *  - ceiling traps
+     *      ? need more than just one!
+     *  + ceiling traps
      *      + cave-in
      *      + lava
-     *  - combo traps
-     *      + spider spawner & splash poison dispenser
-     *      + undead spawner & splash harm dispenser
-     *      ? any spawner & fish hook dispenser (custom entity)
-     *      ? any floor trap & fish hook dispenser (custom entity)
+     *      ? more would be nice
+     *  ? combo features
+     *      ? spider spawner & splash poison dispenser
+     *      ? undead spawner & splash harm dispenser
+     *      ? any spawner & fish hook dispenser
+     *      ? any floor trap & fish hook dispenser
      *      ? fire immune spawner & fireball dispenser
      *      ? creeper spawner & lightning dispenser
-     *  ? support for custom potions in towers/floor traps/events
+     *  ? new monsters - maybe these belong in a different mod?
+     *      + water monsters
+     *      + lava monsters
      *  ? wall traps
      *      + arrow traps
-     *  - config tweaks
-     *      ? option to allow floor traps to trigger vs creative mode players, and vice-versa for other traps
      *
-     * Utility features:
-     *  TODO - Note that vanilla structures are saved as NBT files and only so much can be changed.
-     *   - For instance, we may do post processing, but we cannot change anything before the structure has
-     *   - been generated
-     *  - modify vanilla structures?
-     *  ? add chance to fail replacing blocks in config (notably per silverfish replaceable block and per vein)
+     * Possible future additions:
+     *  - option to allow floor traps to trigger vs creative mode players, and vice-versa for other traps
+     *  - modify vanilla structures - if possible
+     *  - add chance to fail replacing blocks in config (notably per silverfish replaceable block and per vein)
+     *  - support for custom potions in towers/floor traps/events
      */
     
     /** The mod id and namespace used by this mod. */
