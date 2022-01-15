@@ -1,0 +1,23 @@
+{
+  "pools": [
+    {
+      "name": "Event: spawn silverfish",
+      "entries": [
+        {
+          "entryName": "events.spawn_silverfish",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "tag": "{DWEvent:\"spawn_silverfish\"}",
+              "function": "minecraft:set_nbt"
+            }
+          ],
+          "name": "deadlyworld:event_item"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

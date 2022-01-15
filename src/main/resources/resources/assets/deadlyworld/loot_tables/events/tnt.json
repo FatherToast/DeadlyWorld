@@ -1,0 +1,23 @@
+{
+  "pools": [
+    {
+      "name": "Event: tnt",
+      "entries": [
+        {
+          "entryName": "events.tnt",
+          "weight": 1,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "tag": "{DWEvent:\"tnt\"}",
+              "function": "minecraft:set_nbt"
+            }
+          ],
+          "name": "deadlyworld:event_item"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

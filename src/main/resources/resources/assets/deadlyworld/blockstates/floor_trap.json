@@ -1,0 +1,14 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:dropper_vertical",
+    "uvlock": true
+  },
+  "variants": {
+    "type": {
+      "tnt": {},
+      "tnt_mob": {},
+      "potion": {}
+    }
+  }
+}
