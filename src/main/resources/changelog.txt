@@ -1,0 +1,14 @@
+1.1.1
+    - Fixed a crash occurring on dedicated servers.
+1.1.0
+    - Implemented most of the features from pre-1.12 versions. Some new features.
+    - Overhauled old mob spawners, arrow spawners (now tower traps), and floor traps.
+    - Added an item that generates features (for testing purposes).
+    - Now adds silverfish blocks as disguises for any blocks you mark as replaceable by silverfish.
+    - Configs are now in their own folder. The configs have also been reworked fairly majorly.
+    - Vein and feature counts can now be configured by biome.
+1.0.0
+    - Rewritten for 1.12.2.
+    - Added per-dimension configs.
+    - Added options for customizing ore gen.
+    - Many features not yet implemented.

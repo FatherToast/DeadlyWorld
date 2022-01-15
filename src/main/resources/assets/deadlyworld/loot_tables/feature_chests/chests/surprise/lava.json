@@ -1,0 +1,212 @@
+{
+  "pools": [
+    {
+      "name": "surprise",
+      "entries": [
+        {
+          "entryName": "Event",
+          "weight": 1,
+          "quality": 0,
+          "type": "loot_table",
+          "name": "deadlyworld:events/lava"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "name": "fiery",
+      "entries": [
+        {
+          "entryName": "Flame Bow",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "enchantments": [
+                "minecraft:flame"
+              ],
+              "function": "minecraft:enchant_randomly"
+            }
+          ],
+          "name": "minecraft:bow"
+        },
+        {
+          "entryName": "Arrow",
+          "weight": 15,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:arrow"
+        },
+        {
+          "entryName": "Fire Sword",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "enchantments": [
+                "minecraft:fire_aspect"
+              ],
+              "function": "minecraft:enchant_randomly"
+            }
+          ],
+          "name": "minecraft:iron_sword"
+        },
+        {
+          "entryName": "Torch",
+          "weight": 15,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:torch"
+        },
+        {
+          "entryName": "Fire Charge",
+          "weight": 15,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:fire_charge"
+        },
+        {
+          "entryName": "Flint \u0026 Steel",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:flint_and_steel"
+        },
+        {
+          "entryName": "Lava Bucket",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "name": "minecraft:lava_bucket"
+        },
+        {
+          "entryName": "Magma",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:magma"
+        },
+        {
+          "entryName": "Glowstone Dust",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:glowstone_dust"
+        },
+        {
+          "entryName": "Blaze Powder",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:blaze_powder"
+        },
+        {
+          "entryName": "Magma Cream",
+          "weight": 10,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:magma_cream"
+        },
+        {
+          "entryName": "Enchanted Book",
+          "weight": 5,
+          "quality": 0,
+          "type": "item",
+          "functions": [
+            {
+              "enchantments": [
+                "minecraft:fire_protection",
+                "minecraft:fire_aspect",
+                "minecraft:flame"
+              ],
+              "function": "minecraft:enchant_randomly"
+            }
+          ],
+          "name": "minecraft:book"
+        }
+      ],
+      "rolls": {
+        "min": 1.0,
+        "max": 3.0
+      }
+    },
+    {
+      "name": "base",
+      "entries": [
+        {
+          "entryName": "Vanilla Chest",
+          "weight": 1,
+          "quality": 0,
+          "type": "loot_table",
+          "name": "minecraft:chests/simple_dungeon"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}
