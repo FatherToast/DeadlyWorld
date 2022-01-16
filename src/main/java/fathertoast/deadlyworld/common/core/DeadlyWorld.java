@@ -1,6 +1,8 @@
 package fathertoast.deadlyworld.common.core;
 
+import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.event.BiomeEvents;
+import fathertoast.deadlyworld.common.feature.DWConfiguredFeatures;
 import fathertoast.deadlyworld.common.network.PacketHandler;
 import fathertoast.deadlyworld.common.registry.DWBlocks;
 import fathertoast.deadlyworld.common.registry.DWFeatures;
@@ -11,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
@@ -24,42 +27,107 @@ import javax.annotation.Nullable;
 @Mod( DeadlyWorld.MOD_ID )
 public class DeadlyWorld {
     /* TODO LIST:
-     *  - everything
-     *  - veins
-     *  - features
-     *  - silverfish block
-     *  - FUNNIE STORM DRAIN TRAP #FunnyTrolling #MustSee
+     *  - finish all features; see features list
      *
-     * Primary features:
-     *  - chests
-     *      + mimic 2.0 (custom entity)
-     *      + cave-in (via surprise or combo)
-     *  - water traps
+     * Features list:
+     * (KEY: - = complete in current version, o = incomplete feature from previous version,
+     *       + = incomplete new feature, ? = feature to consider adding)
+     *  o general
+     *      o dimension-based configs
+     *      o biome-based configs
+     *      + bounding box renderer
+     *  o blocks
+     *      o procedurally generated silverfish blocks
+     *      o deadly spawner
+     *      o floor trap
+     *      o tower dispenser
+     *      ? water trap - actual impl TBD
+     *      + ceiling trap
+     *      ? wall trap
+     *  o items
+     *      o feature tester
+     *      o event
+     *  ? entities
+     *      ? mimic
+     *      ? dispenser fish hook
+     *  o vein world gen
+     *      o silverfish
+     *      o lava
+     *      o water
+     *      o sand
+     *      o vanilla vein disables
+     *      o vanilla vein replacements
+     *      o user-defined veins
+     *      ? new vein gen styles
+     *  o dungeon world gen
+     *      o spawner
+     *      ? tower
+     *      ? other special dungeon types
+     *      o vanilla dungeon disable
+     *  o chest world gen
+     *      o default
+     *      o valuable
+     *      o trapped (default disabled)
+     *      o tnt floor trap
+     *      o infested
+     *      o surprise
+     *      o mimic
+     *      + cave-in (via surprise or combo w/ ceiling trap)
+     *      ? mimic 2.0 (custom entity)
+     *  o spawner world gen
+     *      o default
+     *      o stream
+     *      o swarm
+     *      o brutal
+     *      o silverfish nest
+     *      o dungeon-only version
+     *      ? spider (combo)
+     *      ? undead (combo)
+     *      ? creeper (combo)
+     *      ? fire immunity (combo)
+     *  o tower world gen
+     *      o default
+     *      o fire
+     *      o potion
+     *      o gatling
+     *      o fireball
+     *      ? splash potion
+     *      ? fish hook (combo, custom entity)
+     *      ? splash poison (combo)
+     *      ? splash harm (combo)
+     *      ? lightning (combo)
+     *      ? allow towers to generate on ceilings and/or walls
+     *  o floor trap world gen
+     *      o tnt
+     *      o tnt mob
+     *      o potion
+     *      + fire (from pre-1.12.2 version)
+     *  + water trap world gen
      *      + vortex
-     *  - floor traps
-     *      + fire
-     *  - ceiling traps
+     *      ? need more than just one!
+     *  + ceiling trap world gen
      *      + cave-in
      *      + lava
-     *  - combo traps
-     *      + spider spawner & splash poison dispenser
-     *      + undead spawner & splash harm dispenser
-     *      ? any spawner & fish hook dispenser (custom entity)
-     *      ? any floor trap & fish hook dispenser (custom entity)
+     *      ? more would be nice
+     *  ? combo feature world gen
+     *      ? spider spawner & splash poison dispenser
+     *      ? undead spawner & splash harm dispenser
+     *      ? any spawner & fish hook dispenser
+     *      ? any floor trap & fish hook dispenser
      *      ? fire immune spawner & fireball dispenser
      *      ? creeper spawner & lightning dispenser
-     *  ? support for custom potions in towers/floor traps/events
-     *  ? wall traps
-     *      + arrow traps
-     *  - config tweaks
-     *      ? option to allow floor traps to trigger vs creative mode players, and vice-versa for other traps
+     *  ? new monsters - maybe these belong in a different mod?
+     *      ? water monsters
+     *      ? lava monsters
+     *  ? wall trap world gen
+     *      ? arrow traps
      *
-     * Utility features:
-     *  TODO - Note that vanilla structures are saved as NBT files and only so much can be changed.
-     *   - For instance, we may do post processing, but we cannot change anything before the structure has
-     *   - been generated
-     *  - modify vanilla structures?
-     *  ? add chance to fail replacing blocks in config (notably per silverfish replaceable block and per vein)
+     * Possible future additions:
+     *  - option to allow floor traps to trigger vs creative mode players, and vice-versa for other traps
+     *  - modify vanilla structures - if possible
+     *  - add chance to fail replacing blocks in config (notably per silverfish replaceable block and per vein)
+     *  - support for custom potions in towers/floor traps/events
+     *  - allow vanilla dispensers to fire the custom fish hook entity when activating a fishing rod
      */
     
     /** The mod id and namespace used by this mod. */
@@ -80,10 +148,12 @@ public class DeadlyWorld {
 
         MinecraftForge.EVENT_BUS.register(new BiomeEvents());
 
-        DWBlocks.BLOCKS.register( eventBus );
+        DWBlocks.REGISTRY.register( eventBus );
         DWItems.ITEMS.register( eventBus );
         DWTileEntities.TILE_ENTITIES.register( eventBus );
         DWFeatures.FEATURES.register( eventBus );
+
+        Config.preInitialize();
     }
 
     /** @return A ResourceLocation with the mod's namespace. */

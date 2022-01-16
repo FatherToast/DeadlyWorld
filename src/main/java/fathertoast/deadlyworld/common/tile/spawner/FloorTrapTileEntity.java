@@ -4,14 +4,14 @@ import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class DeadlyTrapTileEntity extends TileEntity implements ITickableTileEntity {
-
-    public DeadlyTrapTileEntity() {
-        super(DWTileEntities.DEADLY_TRAP.get());
+public class FloorTrapTileEntity extends TileEntity implements ITickableTileEntity {
+    
+    public FloorTrapTileEntity() {
+        super( DWTileEntities.FLOOR_TRAP.get() );
     }
-
+    
     @Override
     public void tick() {
-
+    
     }
 }

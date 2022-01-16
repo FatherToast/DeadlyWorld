@@ -19,8 +19,9 @@ public class SpawnerConfig extends FeatureConfig {
     public final SpawnerTypeCategory LONE;
     public final SpawnerTypeCategory STREAM;
     public final SpawnerTypeCategory SWARM;
-    public final SpawnerTypeCategory NEST;
     public final BrutalSpawnerCategory BRUTAL;
+    public final SpawnerTypeCategory NEST;
+    public final SpawnerTypeCategory DUNGEON;
     
     /** Builds the config spec that should be used for this config. */
     SpawnerConfig( File dir, DimensionConfigGroup dimConfigs ) {
@@ -45,7 +46,7 @@ public class SpawnerConfig extends FeatureConfig {
                 "    generated and can then be overwritten for individual spawners by nbt editing."
         );
         
-        LONE = new SpawnerTypeCategory( SPEC, this, SpawnerType.LONE, 0.16, 12, 52, 0.3,
+        LONE = new SpawnerTypeCategory( SPEC, this, SpawnerType.DEFAULT, 0.16, 12, 52, 0.3,
                 16.0, false, 200, 800, 40, 4, 4.0, 0.1 );
         
         STREAM = new SpawnerTypeCategory( SPEC, this, SpawnerType.STREAM, 0.04, 12, 42, 1.0,
@@ -59,6 +60,9 @@ public class SpawnerConfig extends FeatureConfig {
         
         NEST = new NestSpawnerCategory( SPEC, this, SpawnerType.NEST, 0.16, 12, 62, 0.3,
                 16.0, false, 100, 400, 20, 6, 6.0, 0.0 );
+        
+        DUNGEON = new SpawnerTypeCategory( SPEC, this, SpawnerType.DUNGEON, 0.0, 0, 0, 0.0,
+                16.0, false, 200, 800, 40, 4, 4.0, 0.1 );
     }
     
     public static class SpawnerTypeCategory extends FeatureTypeCategory {
@@ -97,7 +101,7 @@ public class SpawnerConfig extends FeatureConfig {
             SPEC.newLine();
             
             chestChance = SPEC.define( new DoubleField( "chest_chance", chestCh, DoubleField.Range.PERCENT,
-                    "The chance for a chest to generate beneath " + FEATURE_TYPE_NAME + "s.",
+                    "The chance for a chest to generate beneath " + FEATURE_TYPE_NAME + ".",
                     //TODO
                     "For reference, the loot table for these chests is '" + "<TBD>"/*DeadlyWorld.toString( type.LOOT_TABLE )*/ + "'." ) );
             
@@ -106,7 +110,7 @@ public class SpawnerConfig extends FeatureConfig {
             activationRange = SPEC.define( new DoubleField( "activation_range", activationRng, DoubleField.Range.POSITIVE,
                     "The spawner is active as long as a player is within this distance (spherical distance)." ) );
             checkSight = SPEC.define( new BooleanField( "activation_sight_check", sightCheck,
-                    "When the sight check is enabled, " + FEATURE_TYPE_NAME + "s will only spawn when they have direct",
+                    "When the sight check is enabled, " + FEATURE_TYPE_NAME + " will only spawn when they have direct",
                     "line-of-sight to a player within activation range. The spawner's delay will continue to tick down,",
                     "but it will wait to actually spawn until it has line-of-sight." ) );
             
@@ -150,16 +154,16 @@ public class SpawnerConfig extends FeatureConfig {
                     "Modifiers are disabled if their value is set to 0.",
                     "Added modifiers use the 'addition' operation and increased modifiers use the 'multiply base' operation.",
                     TomlHelper.multiFieldInfo( DoubleField.Range.ANY ) );
-            addedFollowRange = SPEC.define( new DoubleField( "modifier.added_follow_range", 0.0, (String[]) null ) );
-            addedMaxHealth = SPEC.define( new DoubleField( "modifier.added_max_health", brutal ? 5.0 : 0.0, (String[]) null ) );
-            increasedMaxHealth = SPEC.define( new DoubleField( "modifier.increased_max_health", brutal ? 0.2 : 0.0, (String[]) null ) );
-            addedKnockbackResist = SPEC.define( new DoubleField( "modifier.added_knockback_resistance", brutal ? 0.5 : 0.0, (String[]) null ) );
-            addedArmor = SPEC.define( new DoubleField( "modifier.added_armor", brutal ? 12.0 : 0.0, (String[]) null ) );
-            addedArmorToughness = SPEC.define( new DoubleField( "modifier.added_armor_toughness", brutal ? 8.0 : 0.0, (String[]) null ) );
-            addedDamage = SPEC.define( new DoubleField( "modifier.added_damage", brutal ? 1.0 : 0.0, (String[]) null ) );
-            increasedDamage = SPEC.define( new DoubleField( "modifier.increased_damage", brutal ? 0.2 : 0.0, (String[]) null ) );
-            addedKnockback = SPEC.define( new DoubleField( "modifier.added_knockback", brutal ? 2.0 : 0.0, (String[]) null ) );
-            increasedSpeed = SPEC.define( new DoubleField( "modifier.increased_speed", brutal ? 0.1 : 0.0, (String[]) null ) );
+            addedFollowRange = SPEC.define( new DoubleField( "modifier.added_follow_range", 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            addedMaxHealth = SPEC.define( new DoubleField( "modifier.added_max_health", brutal ? 5.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            increasedMaxHealth = SPEC.define( new DoubleField( "modifier.increased_max_health", brutal ? 0.2 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            addedKnockbackResist = SPEC.define( new DoubleField( "modifier.added_knockback_resistance", brutal ? 0.5 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            addedArmor = SPEC.define( new DoubleField( "modifier.added_armor", brutal ? 12.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            addedArmorToughness = SPEC.define( new DoubleField( "modifier.added_armor_toughness", brutal ? 8.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            addedDamage = SPEC.define( new DoubleField( "modifier.added_damage", brutal ? 1.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            increasedDamage = SPEC.define( new DoubleField( "modifier.increased_damage", brutal ? 0.2 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            addedKnockback = SPEC.define( new DoubleField( "modifier.added_knockback", brutal ? 2.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            increasedSpeed = SPEC.define( new DoubleField( "modifier.increased_speed", brutal ? 0.1 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */

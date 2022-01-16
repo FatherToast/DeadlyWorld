@@ -6,7 +6,7 @@ issueTrackerURL = "https://github.com/FatherToast/DeadlyWorld/issues/"
 [[mods]]
 logoFile = "banner.png"
 authors = "Father Toast"
-credits = "Mother Toast & Baby Toast"
+credits = "Sarinsa :yeeeestretch:, Mother Toast & Baby Toast"
 version = "${file.jarVersion}"
 displayName = "Deadly World"
 modId = "deadlyworld"

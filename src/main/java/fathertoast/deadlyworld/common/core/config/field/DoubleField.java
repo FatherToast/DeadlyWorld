@@ -22,11 +22,6 @@ public class DoubleField extends AbstractConfigField {
     /** The underlying field value. */
     private double value;
     
-    /** Creates a new field that accepts any value. */
-    public DoubleField( String key, double defaultValue, String... description ) {
-        this( key, defaultValue, Range.ANY, description );
-    }
-    
     /** Creates a new field that accepts a common range of values. */
     public DoubleField( String key, double defaultValue, Range range, String... description ) {
         this( key, defaultValue, range.MIN, range.MAX, description );
