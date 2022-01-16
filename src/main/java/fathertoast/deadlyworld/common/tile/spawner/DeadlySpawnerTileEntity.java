@@ -138,7 +138,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                 return ((DeadlySpawnerBlock) block).getSpawnerType( );
             }
         }
-        return SpawnerType.LONE;
+        return SpawnerType.DEFAULT;
     }
     
     @Override

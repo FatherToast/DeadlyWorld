@@ -10,11 +10,6 @@ public class SqrDoubleField extends DoubleField {
     /** The underlying field value, squared. */
     private double valueSqr;
     
-    /** Creates a new field that accepts any value. */
-    public SqrDoubleField( String key, double defaultValue, String... description ) {
-        super( key, defaultValue, description );
-    }
-    
     /** Creates a new field that accepts a common range of values. */
     public SqrDoubleField( String key, double defaultValue, Range range, String... description ) {
         super( key, defaultValue, range, description );

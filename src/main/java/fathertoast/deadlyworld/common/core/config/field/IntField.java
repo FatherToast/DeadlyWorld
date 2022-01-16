@@ -22,11 +22,6 @@ public class IntField extends AbstractConfigField {
     /** The underlying field value. */
     private int value;
     
-    /** Creates a new field that accepts any value. */
-    public IntField( String key, int defaultValue, String... description ) {
-        this( key, defaultValue, Range.ANY, description );
-    }
-    
     /** Creates a new field that accepts a common range of values. */
     public IntField( String key, int defaultValue, Range range, String... description ) {
         this( key, defaultValue, range.MIN, range.MAX, description );

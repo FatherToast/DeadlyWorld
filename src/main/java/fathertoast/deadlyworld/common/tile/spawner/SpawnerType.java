@@ -10,8 +10,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.loot.LootTableManager;
-import net.minecraft.loot.LootTables;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.IStringSerializable;
@@ -25,7 +23,7 @@ import java.util.function.Function;
 @MethodsReturnNonnullByDefault
 public enum SpawnerType implements IStringSerializable {
     
-    LONE( "lone", ( dimConfigs ) -> dimConfigs.SPAWNERS.LONE ),
+    DEFAULT( "simple", ( dimConfigs ) -> dimConfigs.SPAWNERS.LONE ),
     STREAM( "stream", ( dimConfigs ) -> dimConfigs.SPAWNERS.STREAM ),
     SWARM( "swarm", ( dimConfigs ) -> dimConfigs.SPAWNERS.SWARM ),
     BRUTAL( "brutal", ( dimConfigs ) -> dimConfigs.SPAWNERS.BRUTAL ) {
@@ -45,56 +43,57 @@ public enum SpawnerType implements IStringSerializable {
             }
         }
     },
-    NEST( "nest", "silverfish_nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST );
+    NEST( "nest", "silverfish nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST ),
+    DUNGEON( "dungeon", ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON );
+    
+    public static final String CATEGORY = "spawner";
     
     /** The unique id for this spawner type. This is used to save and load from disk. */
-    final String id;
+    private final String id;
     /** A human-readable name for this spawner type. Used in config descriptions, usually followed by " spawner" or " spawners". */
-    public final String name;
+    public final String displayName;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
-    final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction;
+    private final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction;
     /** The loot tale ID for this spawner type's chest loot. */
-    final ResourceLocation lootTable;
+    private final ResourceLocation chestLootTable;
     
-    SpawnerType(String idName, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction) {
-        this(idName, idName, configFunction);
+    SpawnerType( String name, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
+        this( name, name.replace( "_", " " ) + " spawner", configFunction );
     }
     
-    SpawnerType(String id, String name, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction) {
-        this.id = id;
-        this.name = name;
+    SpawnerType( String name, String prettyName, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
+        this.id = name;
+        this.displayName = prettyName;
         this.configFunction = configFunction;
-        this.lootTable = DeadlyWorld.resourceLoc("spawners/" + name);
+        this.chestLootTable = DeadlyWorld.resourceLoc( "feature_chests/deadly_spawners/" + id );
     }
     
     @Override
     public String getSerializedName() { return id; }
-
-    public ResourceLocation getLootTableId() {
-        return this.lootTable;
-    }
-
+    
+    public ResourceLocation getLootTableId() { return this.chestLootTable; }
+    
     /**
      * Returns a SpawnerType from ID.
      * If there exists no SpawnerType
      * with the given ID, default to
-     * {@link SpawnerType#LONE}
+     * {@link SpawnerType#DEFAULT}
      *
      * @param ID The ID of the SpawnerType.
      * @return A SpawnerType matching the given ID.
      */
     @Nonnull
     public static SpawnerType getFromID( String ID ) {
-        for ( SpawnerType spawnerType : values( ) ) {
-            if (spawnerType.getSerializedName( ).equals( ID )) {
+        for( SpawnerType spawnerType : values() ) {
+            if( spawnerType.getSerializedName().equals( ID ) ) {
                 return spawnerType;
             }
         }
-        return LONE;
+        return DEFAULT;
     }
     
     @Override
-    public String toString() { return getSerializedName( ); }
+    public String toString() { return getSerializedName(); }
     
     public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
     
@@ -136,7 +135,7 @@ public enum SpawnerType implements IStringSerializable {
     public static SpawnerType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {
             DeadlyWorld.LOG.warn( "Attempted to load invalid spawner type from index '{}'", index );
-            return LONE;
+            return DEFAULT;
         }
         return values()[index];
     }

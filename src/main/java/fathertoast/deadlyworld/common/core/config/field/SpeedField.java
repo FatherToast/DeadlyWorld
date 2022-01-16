@@ -13,11 +13,6 @@ public class SpeedField extends DoubleField {
     /** The underlying field value, squared. */
     private double valueConverted;
     
-    /** Creates a new field that accepts any value. */
-    public SpeedField( String key, double defaultValue, String... description ) {
-        super( key, defaultValue, description );
-    }
-    
     /** Creates a new field that accepts a common range of values. */
     public SpeedField( String key, double defaultValue, Range range, String... description ) {
         super( key, defaultValue, range, description );

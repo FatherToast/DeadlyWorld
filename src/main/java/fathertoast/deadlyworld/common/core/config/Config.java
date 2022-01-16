@@ -28,6 +28,7 @@ public class Config {
     /** The root folder for config files in this mod. */
     public static final File CONFIG_DIR = new File( FMLPaths.CONFIGDIR.get().toFile(), "FatherToast/" + DeadlyWorld.MOD_ID + "/" );
     
+    public static final BlocksConfig BLOCKS = new BlocksConfig( CONFIG_DIR, "blocks" );
     public static final GeneralConfig GENERAL = new GeneralConfig( CONFIG_DIR, "general" );
     
     /** Mapping of each dimension type to its config. */
@@ -58,36 +59,43 @@ public class Config {
         return configs == null ? OVERWORLD_CONFIGS : configs;
     }
     
+    /** Performs initial loading of configs in this mod that need to be loaded immediately. */
+    public static void preInitialize() {
+        AbstractConfigField.loadingCategory = null;
+        
+        BLOCKS.SPEC.initialize();
+    }
+    
     /** Performs initial loading of configs in this mod. */
     public static void initialize() {
         AbstractConfigField.loadingCategory = null;
-
+        
         GENERAL.SPEC.initialize();
-
+        
         // Loading overworld config before the
         // others to prevent our world gen features
         // from exploding the universe with anger
-        OVERWORLD_CONFIGS = new DimensionConfigGroup(CONFIG_DIR, World.OVERWORLD);
+        OVERWORLD_CONFIGS = new DimensionConfigGroup( CONFIG_DIR, World.OVERWORLD );
         OVERWORLD_CONFIGS.initialize();
         DIMENSIONS = new HashMap<>();
-        DIMENSIONS.put(World.OVERWORLD, OVERWORLD_CONFIGS);
+        DIMENSIONS.put( World.OVERWORLD, OVERWORLD_CONFIGS );
     }
-
+    
     /** Performs loading of configs in this mod that depend on dynamic registries. */
     public static void initializeDynamic( MinecraftServer server ) {
         AbstractConfigField.loadingCategory = null;
         
         //TODO Actually register dimensions dynamically - DynamicRegistries.builtin().dimensionTypes()?
         //  - Note; should make sure overworld is loaded no matter what, and maybe store a reference to it to use as a default in case of issues
-
-        final List<RegistryKey<World>> temp = new ArrayList<>(server.levelKeys());
+        
+        final List<RegistryKey<World>> temp = new ArrayList<>( server.levelKeys() );
         
         // Keep track of opened files so we can close any we don't need
         final HashMap<RegistryKey<World>, DimensionConfigGroup> previousDims = DIMENSIONS;
         
         // Load dimension configs
         DIMENSIONS = new HashMap<>();
-
+        
         for( RegistryKey<World> dimension : temp ) {
             // Use previously opened config if available and remove to prevent it from being closed
             final DimensionConfigGroup dimConfigs = previousDims != null && previousDims.containsKey( dimension ) ?
