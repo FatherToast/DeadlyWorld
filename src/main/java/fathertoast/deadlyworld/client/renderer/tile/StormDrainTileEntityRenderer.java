@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 public class StormDrainTileEntityRenderer extends TileEntityRenderer<StormDrainTileEntity> {
 
@@ -24,6 +25,8 @@ public class StormDrainTileEntityRenderer extends TileEntityRenderer<StormDrainT
 
             if (rendererManager.shouldRenderHitBoxes() && !Minecraft.getInstance().showOnlyReducedInfo()) {
                 AxisAlignedBB suctionBox = stormDrainTile.getSuctionBox();
+                BlockPos pos = stormDrainTile.getBlockPos();
+                suctionBox.move(-pos.getX(), -pos.getY(), -pos.getZ());
                 WorldRenderer.renderLineBox(matrixStack, buffer.getBuffer(RenderType.lines()), suctionBox, 0.0F, 1.0F, 1.0F, 1.0F);
             }
         }

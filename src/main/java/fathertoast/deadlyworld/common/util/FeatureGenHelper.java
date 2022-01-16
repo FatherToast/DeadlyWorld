@@ -16,7 +16,7 @@ public class FeatureGenHelper {
 
 
     public static void placeChest(BlockPos chestPos, ISeedReader world, Random random, ResourceLocation lootTable) {
-        world.setBlock(chestPos, Blocks.CHEST.defaultBlockState(), UPDATE_FLAGS);
+        world.setBlock(chestPos, Blocks.CHEST.defaultBlockState(), 4);
         TileEntity chestInventory = world.getBlockEntity(chestPos);
 
         if(chestInventory instanceof ChestTileEntity) {

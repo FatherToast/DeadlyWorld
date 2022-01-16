@@ -30,6 +30,7 @@ public class DeadlySpawnerBlock extends ContainerBlock {
         );
         spawnerType = type;
 
+        // TODO - Yes, this is no longer needed. Each spawner comes with its own block that stores the spawner type.
         /* These are all separate blocks now, right?  Is this needed?
 		setDefaultState( blockState.getBaseState( ).withProperty( EnumSpawnerType.PROPERTY, EnumSpawnerType.LONE ) );
          */
@@ -42,8 +43,11 @@ public class DeadlySpawnerBlock extends ContainerBlock {
     public SpawnerType getSpawnerType() { return spawnerType; }
     
     public static void initTileEntity( ISeedReader world, SpawnerType spawnerType, BlockPos pos, DimensionConfigGroup dimConfigs ) {
+        if ( !world.isAreaLoaded( pos, 1 )) {
+            DeadlyWorld.LOG.error( "Tried to initialize spawner tile entity in an unloaded chunk: \"{}\"", pos.toString() );
+            return;
+        }
         TileEntity spawner = world.getBlockEntity( pos );
-        
         
         if( spawner instanceof DeadlySpawnerTileEntity ) {
             ((DeadlySpawnerTileEntity) spawner).initializeSpawner( spawnerType, dimConfigs );

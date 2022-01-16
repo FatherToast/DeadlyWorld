@@ -8,6 +8,7 @@ import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.FluidTags;
@@ -17,6 +18,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -70,10 +72,11 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
                     if (count > 6)
                         break;
 
-                    boolean isPlayer = livingEntity instanceof PlayerEntity;
-                    this.pullEntity(livingEntity, isPlayer);
-                    this.onCollidingTop(livingEntity, isPlayer);
-
+                    if (livingEntity.isInWater()) {
+                        boolean isPlayer = livingEntity instanceof PlayerEntity;
+                        this.pullEntity(livingEntity, isPlayer);
+                        this.onCollidingTop(livingEntity, isPlayer);
+                    }
                     ++count;
                 }
                 if (this.level.isClientSide) {
@@ -93,15 +96,15 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
     private void updateSuctionBox() {
         BlockPos tilePos = this.getBlockPos();
         BlockPos lowerCorner = tilePos.above().south(3).east(3).immutable();
-        BlockPos upperCorner = tilePos.above(3).north(3).west(3).immutable();
+        BlockPos upperCorner = tilePos.above(4).north(3).west(3).immutable();
 
         for (BlockPos pos : BlockPos.betweenClosed(lowerCorner, upperCorner)) {
-            if (this.level.getBlockState(pos).getFluidState().is(FluidTags.WATER)) {
-                this.suctionBox = new AxisAlignedBB(lowerCorner, upperCorner);
+            if (!this.level.getBlockState(pos).getFluidState().is(FluidTags.WATER)) {
+                this.suctionBox = null;
                 return;
             }
         }
-        this.suctionBox = null;
+        this.suctionBox = new AxisAlignedBB(lowerCorner, upperCorner).move(0.5D, 0.0D, 0.5D);
     }
 
     private void pullEntity(Entity entity, boolean isPlayer) {
@@ -110,11 +113,17 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
         }
         BlockPos pos = this.getBlockPos();
         double xMotion = (pos.getX() + 0.5D) - entity.getX();
-        double yMotion = (pos.getY() + 1.2D) - entity.getY();
+        double yMotion = (pos.getY() + 1.1D) - entity.getY();
         double zMotion = (pos.getZ() + 0.5D) - entity.getZ();
+        Vector3d deltaMovement = new Vector3d(xMotion, yMotion, zMotion);
 
-        entity.setDeltaMovement(xMotion * 0.2, yMotion * 0.2, zMotion * 0.2);
-        entity.fallDistance = 0.0F;
+        double lengthSqr = deltaMovement.lengthSqr();
+
+        if (lengthSqr < 64.0D) {
+            double scale = 1.0D - Math.sqrt(lengthSqr) / 8.0D;
+            entity.setDeltaMovement(entity.getDeltaMovement().add(deltaMovement.normalize().scale(scale * scale * 0.1D)));
+            entity.fallDistance = 0.0F;
+        }
     }
 
     private void onCollidingTop(LivingEntity livingEntity, boolean isPlayer) {
@@ -132,7 +141,7 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
         double z = pos.getZ();
 
         // TODO - Figure out some cool shit
-        world.addAlwaysVisibleParticle(ParticleTypes.CURRENT_DOWN, x + 0.5D, y + 0.8D, z + 0.5D, 0.0D, 0.0D, 0.0D);
+        world.addAlwaysVisibleParticle(ParticleTypes.CURRENT_DOWN, x + 0.5D, y + 1.0D, z + 0.5D, 0.0D, 0.0D, 0.0D);
         if (random.nextInt(200) == 0) {
             world.playLocalSound(x, y, z, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, SoundCategory.BLOCKS, 0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
         }
