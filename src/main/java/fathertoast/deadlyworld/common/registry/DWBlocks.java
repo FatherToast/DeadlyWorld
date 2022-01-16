@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.registry;
 
 import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.block.StormDrainBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import net.minecraft.block.Block;
@@ -23,6 +24,7 @@ public class DWBlocks {
     public static final RegistryObject<DeadlySpawnerBlock> STREAM_DEADLY_SPAWNER = registerSpawner( SpawnerType.STREAM );
     public static final RegistryObject<DeadlySpawnerBlock> SWARM_DEADLY_SPAWNER = registerSpawner( SpawnerType.SWARM );
 
+    public static final RegistryObject<Block> STORM_DRAIN = registerBlock("storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC);
 
 
     /**

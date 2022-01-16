@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.registry;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.tile.spawner.DeadlySpawnerTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.DeadlyTrapTileEntity;
+import fathertoast.deadlyworld.common.tile.spawner.StormDrainTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -22,6 +23,8 @@ public class DWTileEntities {
             () -> TileEntityType.Builder.of(DeadlySpawnerTileEntity::new, DWTileEntities.SPAWNER_BLOCKS.get()).build(null));
     public static final RegistryObject<TileEntityType<DeadlyTrapTileEntity>> DEADLY_TRAP = register("deadly_trap",
             () -> TileEntityType.Builder.of(DeadlyTrapTileEntity::new, DWTileEntities.DEADLY_TRAP_BLOCKS.get()).build(null));
+    public static final RegistryObject<TileEntityType<StormDrainTileEntity>> STORM_DRAIN = register("storm_drain",
+            () -> TileEntityType.Builder.of(StormDrainTileEntity::new, DWTileEntities.STORM_DRAIN_BLOCKS.get()).build(null));
     
     
     private static <T extends TileEntity> RegistryObject<TileEntityType<T>> register( String name, Supplier<TileEntityType<T>> tileEntityTypeSupplier ) {
@@ -39,5 +42,9 @@ public class DWTileEntities {
 
     private static final Supplier<Block[]> DEADLY_TRAP_BLOCKS = () -> new Block[] {
 
+    };
+
+    private static final Supplier<Block[]> STORM_DRAIN_BLOCKS = () -> new Block[] {
+        DWBlocks.STORM_DRAIN.get()
     };
 }

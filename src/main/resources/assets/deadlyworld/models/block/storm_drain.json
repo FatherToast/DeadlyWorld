@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "minecraft:block/smooth_stone",
+    "up": "deadlyworld:block/storm_drain_top",
+    "north": "minecraft:block/smooth_stone",
+    "south": "minecraft:block/smooth_stone",
+    "west": "minecraft:block/smooth_stone",
+    "east": "minecraft:block/smooth_stone",
+    "particle": "minecraft:block/smooth_stone"
+  }
+}

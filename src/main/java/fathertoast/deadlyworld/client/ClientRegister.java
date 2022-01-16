@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.client;
 
 import fathertoast.deadlyworld.client.renderer.tile.DeadlySpawnerTileEntityRenderer;
+import fathertoast.deadlyworld.client.renderer.tile.StormDrainTileEntityRenderer;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.registry.DWBlocks;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
@@ -33,6 +34,7 @@ public class ClientRegister {
     }
     
     private static void registerTileRenderers() {
-        ClientRegistry.bindTileEntityRenderer( DWTileEntities.DEADLY_SPAWNER.get( ), DeadlySpawnerTileEntityRenderer::new );
+        ClientRegistry.bindTileEntityRenderer(DWTileEntities.DEADLY_SPAWNER.get(), DeadlySpawnerTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(DWTileEntities.STORM_DRAIN.get(), StormDrainTileEntityRenderer::new);
     }
 }

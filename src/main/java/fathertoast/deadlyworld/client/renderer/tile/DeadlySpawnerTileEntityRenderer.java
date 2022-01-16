@@ -16,7 +16,7 @@ public class DeadlySpawnerTileEntityRenderer extends TileEntityRenderer<DeadlySp
     }
 
     @Override
-    public void render( DeadlySpawnerTileEntity spawner, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_ ) {
+    public void render( DeadlySpawnerTileEntity spawner, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight, int overlayTexture ) {
         matrixStack.pushPose( );
         matrixStack.translate( 0.5D, 0.0D, 0.5D );
 
@@ -35,7 +35,7 @@ public class DeadlySpawnerTileEntityRenderer extends TileEntityRenderer<DeadlySp
             matrixStack.translate( 0.0D, -0.2D, 0.0D );
             matrixStack.mulPose( Vector3f.XP.rotationDegrees( -30.0F ) );
             matrixStack.scale( scale, scale, scale );
-            Minecraft.getInstance( ).getEntityRenderDispatcher( ).render( entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTick, matrixStack, buffer, p_225616_5_ );
+            Minecraft.getInstance( ).getEntityRenderDispatcher( ).render( entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTick, matrixStack, buffer, packedLight );
         }
         matrixStack.popPose( );
     }

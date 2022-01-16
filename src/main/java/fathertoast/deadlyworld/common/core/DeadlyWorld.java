@@ -1,14 +1,16 @@
 package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.event.BiomeEvents;
-import fathertoast.deadlyworld.common.feature.DWConfiguredFeatures;
 import fathertoast.deadlyworld.common.network.PacketHandler;
-import fathertoast.deadlyworld.common.registry.*;
+import fathertoast.deadlyworld.common.registry.DWBlocks;
+import fathertoast.deadlyworld.common.registry.DWFeatures;
+import fathertoast.deadlyworld.common.registry.DWItems;
+import fathertoast.deadlyworld.common.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.util.DWDamageSources;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
@@ -73,6 +75,7 @@ public class DeadlyWorld {
     public DeadlyWorld() {
         IEventBus eventBus = FMLJavaModLoadingContext.get( ).getModEventBus( );
 
+        DWDamageSources.init();
         this.packetHandler.registerMessages();
 
         MinecraftForge.EVENT_BUS.register(new BiomeEvents());

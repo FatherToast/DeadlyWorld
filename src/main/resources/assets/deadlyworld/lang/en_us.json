@@ -12,6 +12,7 @@
   "block.deadlyworld.floor_trap.tnt": "Exploding Floor Trap",
   "block.deadlyworld.floor_trap.tnt_mob": "Exploding Monster Floor Trap",
   "block.deadlyworld.floor_trap.potion": "Potion Floor Trap",
+  "block.deadlyworld.storm_drain": "Storm Drain Trap",
 
   "block.deadlyworld.tower_dispenser": "Broken Tower Dispenser",
   "block.deadlyworld.tower_dispenser.simple": "Arrow Tower Dispenser",
@@ -56,5 +57,8 @@
   "block.deadlyworld.feature_tester.tooltip.tower.fire": "Fire Arrow Tower",
   "block.deadlyworld.feature_tester.tooltip.tower.potion": "Potion Arrow Tower",
   "block.deadlyworld.feature_tester.tooltip.tower.fireball": "Fireball Tower",
-  "block.deadlyworld.feature_tester.tooltip.tower.gatling": "Gatling Arrow Tower"
+  "block.deadlyworld.feature_tester.tooltip.tower.gatling": "Gatling Arrow Tower",
+
+  "death.attack.deadlyworld.vortex": "%1$s was swooshed by a vortex",
+  "death.attack.deadlyworld.vortex.player": "%1$s got swooshed by a vortex while fighting %2$s"
 }
