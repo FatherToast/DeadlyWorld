@@ -9,6 +9,7 @@ import fathertoast.deadlyworld.common.registry.DWFeatures;
 import fathertoast.deadlyworld.common.registry.DWItems;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
+import fathertoast.deadlyworld.datagen.DataGatherer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -147,6 +148,8 @@ public class DeadlyWorld {
         this.packetHandler.registerMessages();
 
         MinecraftForge.EVENT_BUS.register(new BiomeEvents());
+
+        eventBus.addListener(DataGatherer::onGatherData);
 
         DWBlocks.REGISTRY.register( eventBus );
         DWItems.ITEMS.register( eventBus );
