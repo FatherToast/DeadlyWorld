@@ -7,15 +7,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
-@Mod.EventBusSubscriber(modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@SuppressWarnings( "unused" )
+@Mod.EventBusSubscriber( modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD )
 public class DataGatherer {
-
+    
     @SubscribeEvent
-    public void onGatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-
-        if (event.includeServer()) {
-            generator.addProvider(new DWLootTableProvider(generator));
+    public void onGatherData( GatherDataEvent event ) {
+        final DataGenerator generator = event.getGenerator();
+        
+        if( event.includeServer() ) {
+            generator.addProvider( new DWLootTableProvider( generator ) );
         }
     }
 }
