@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.tile.spawner;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
+import fathertoast.deadlyworld.common.util.References;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -27,6 +28,7 @@ public enum SpawnerType implements IStringSerializable {
     STREAM( "stream", ( dimConfigs ) -> dimConfigs.SPAWNERS.STREAM ),
     SWARM( "swarm", ( dimConfigs ) -> dimConfigs.SPAWNERS.SWARM ),
     BRUTAL( "brutal", ( dimConfigs ) -> dimConfigs.SPAWNERS.BRUTAL ) {
+        /** Applies any additional modifiers to entities spawned by spawners of this type. */
         @Override
         public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, World world, BlockPos pos ) {
             super.initEntity( entity, dimConfigs, world, pos );
@@ -44,7 +46,14 @@ public enum SpawnerType implements IStringSerializable {
         }
     },
     NEST( "nest", "silverfish nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST ),
-    DUNGEON( "dungeon", ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON );
+    DUNGEON( "dungeon", ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON ) {
+        /** @return True if this type is a subfeature; false if it is a standalone feature. */
+        @Override
+        public boolean isSubfeature() { return true; }
+    };
+    
+    /** The path for loot tables associated with these types. */
+    public static final String LOOT_TABLE_PATH = "deadly_spawners/";
     
     public static final String CATEGORY = "spawner";
     
@@ -54,8 +63,6 @@ public enum SpawnerType implements IStringSerializable {
     public final String displayName;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
     private final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction;
-    /** The loot tale ID for this spawner type's chest loot. */
-    private final ResourceLocation chestLootTable;
     
     SpawnerType( String name, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
         this( name, name.replace( "_", " " ) + " spawner", configFunction );
@@ -65,13 +72,13 @@ public enum SpawnerType implements IStringSerializable {
         this.id = name;
         this.displayName = prettyName;
         this.configFunction = configFunction;
-        this.chestLootTable = DeadlyWorld.resourceLoc( "feature_chests/deadly_spawners/" + id );
     }
     
     @Override
     public String getSerializedName() { return id; }
     
-    public ResourceLocation getLootTableId() { return this.chestLootTable; }
+    /** @return True if this type is a subfeature; false if it is a standalone feature. */
+    public boolean isSubfeature() { return false; }
     
     /**
      * Returns a SpawnerType from ID.
@@ -95,6 +102,10 @@ public enum SpawnerType implements IStringSerializable {
     @Override
     public String toString() { return getSerializedName(); }
     
+    public ResourceLocation getChestLootTable() {
+        return DeadlyWorld.resourceLoc( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
+    }
+    
     public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
     
     /* TODO - Move decoration to the Feature itself
@@ -102,6 +113,7 @@ public enum SpawnerType implements IStringSerializable {
     void decorateSpawner( WorldGenSpawner generator, BlockPos spawnerPos, DimensionConfig dimConfig, World world, Random random );
     */
     
+    /** Applies any additional modifiers to entities spawned by spawners of this type. */
     public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, World world, BlockPos pos ) {
         final SpawnerConfig.SpawnerTypeCategory config = getFeatureConfig( dimConfigs );
         
