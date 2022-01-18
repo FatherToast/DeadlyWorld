@@ -110,13 +110,37 @@ public class LootPoolBuilder {
         return add( new ItemLootEntryBuilder( Items.BOOK, weight ).enchant( levelMin, levelMax, treasure ) );
     }
     
+    /** Adds a standard treasure map. */
+    public LootPoolBuilder addExplorerMapBuriedTreasure( int weight ) {
+        return addExplorerMap( weight, Structure.BURIED_TREASURE, MapDecoration.Type.RED_X,
+                1, 50, false );
+    }
+    
+    /** Adds a standard woodland mansion explorer map. */
+    public LootPoolBuilder addExplorerMapMansion( int weight ) {
+        return addExplorerMap( weight, Structure.WOODLAND_MANSION, MapDecoration.Type.MANSION,
+                2, 100, true );
+    }
+    
+    /** Adds a standard ocean monument explorer map. */
+    public LootPoolBuilder addExplorerMapMonument( int weight ) {
+        return addExplorerMap( weight, Structure.OCEAN_MONUMENT, MapDecoration.Type.MONUMENT,
+                2, 100, true );
+    }
+    
     /**
      * Adds an explorer map.
-     * Note: TARGET_X (white X) and TARGET_POINT (red triangle) are unused. RED_X is used for buried treasure.
+     * Notes: TARGET_X (white X) and TARGET_POINT (red triangle) are unused. RED_X is used for buried treasure.
+     * <p>
+     * When you use anything other than buried treasure, woodland mansion, or ocean monument, you need to add i18n support!
+     * Due to the localization issue, making this method internal use only for now.
      */
-    public LootPoolBuilder addExplorerMap( int weight, Structure<?> target, MapDecoration.Type marker ) {
-        return add( new ItemLootEntryBuilder( Items.MAP, weight ).addFunction( ExplorationMap.makeExplorationMap()
-                .setDestination( target ).setMapDecoration( marker ).setZoom( (byte) 1 ).setSkipKnownStructures( false ) ) );
+    private LootPoolBuilder addExplorerMap( int weight, Structure<?> target, MapDecoration.Type marker,
+                                            int zoom, int searchRadius, boolean skipLoadedChunks ) {
+        final ExplorationMap.Builder builder = ExplorationMap.makeExplorationMap().setDestination( target )
+                .setMapDecoration( marker ).setZoom( (byte) zoom ).setSkipKnownStructures( skipLoadedChunks );
+        builder.searchRadius = searchRadius; // this is in the builder with no method to access it for some reason
+        return add( new ItemLootEntryBuilder( Items.MAP, weight ).addFunction( builder ) );
     }
     
     /** Adds a loot table as a drop. */

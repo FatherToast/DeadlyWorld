@@ -2,19 +2,16 @@ package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.event.BiomeEvents;
-import fathertoast.deadlyworld.common.feature.DWConfiguredFeatures;
 import fathertoast.deadlyworld.common.network.PacketHandler;
 import fathertoast.deadlyworld.common.registry.DWBlocks;
 import fathertoast.deadlyworld.common.registry.DWFeatures;
 import fathertoast.deadlyworld.common.registry.DWItems;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
-import fathertoast.deadlyworld.datagen.DataGatherer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
@@ -136,29 +133,27 @@ public class DeadlyWorld {
     
     /** The logger used by this mod. */
     public static final Logger LOG = LogManager.getLogger( MOD_ID );
-
+    
     /** Packet handler instance */
     public PacketHandler packetHandler = new PacketHandler();
     
     
     public DeadlyWorld() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get( ).getModEventBus( );
-
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        
         DWDamageSources.init();
         this.packetHandler.registerMessages();
-
-        MinecraftForge.EVENT_BUS.register(new BiomeEvents());
-
-        eventBus.addListener(DataGatherer::onGatherData);
-
+        
+        MinecraftForge.EVENT_BUS.register( new BiomeEvents() );
+        
         DWBlocks.REGISTRY.register( eventBus );
         DWItems.ITEMS.register( eventBus );
         DWTileEntities.TILE_ENTITIES.register( eventBus );
         DWFeatures.FEATURES.register( eventBus );
-
+        
         Config.preInitialize();
     }
-
+    
     /** @return A ResourceLocation with the mod's namespace. */
     public static ResourceLocation resourceLoc( String path ) { return new ResourceLocation( MOD_ID, path ); }
     

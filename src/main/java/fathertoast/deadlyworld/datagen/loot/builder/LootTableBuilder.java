@@ -128,7 +128,10 @@ public class LootTableBuilder {
                 .addItem( Items.CLOCK, 10 )
                 .addItem( Items.COMPASS, 10 )
                 .addItem( Items.MAP, 10 )
-                .addExplorerMap( 1000, Structure.BURIED_TREASURE, MapDecoration.Type.RED_X )
+                // Explorer maps
+                .addExplorerMapBuriedTreasure( 1 )
+                .addExplorerMapMansion( 1 )
+                .addExplorerMapMonument( 1 )
                 // Enchanted book
                 .addEnchantedBook( 5, 10, 30, true )
         );
@@ -160,6 +163,9 @@ public class LootTableBuilder {
                 .addItem( Items.DIAMOND_CHESTPLATE, 1 )
                 .addItem( Items.DIAMOND_LEGGINGS, 1 )
                 .addItem( Items.DIAMOND_BOOTS, 1 )
+                // Explorer maps
+                .addExplorerMapMansion( 2 )
+                .addExplorerMapMonument( 2 )
                 // Enchanted book
                 .addEnchantedBook( 10, 30, true )
         );
@@ -231,6 +237,8 @@ public class LootTableBuilder {
                 .addItemClusterSmall( Items.BLAZE_POWDER, 5 )
                 .addItemClusterSmall( Items.MAGMA_CREAM, 5 )
                 .addItemClusterSmall( Items.GHAST_TEAR, 5 )
+                // Explorer maps
+                .addExplorerMapMansion( 2 )
                 // Enchanted book
                 .addEnchantedBook( 5, 10, 30, true )
         );
@@ -252,6 +260,8 @@ public class LootTableBuilder {
                 .addItem( Items.DIAMOND, 1 )
                 .addItem( Items.EMERALD, 1 )
                 .addItem( Items.CAKE, 1 )
+                // Explorer maps
+                .addExplorerMapBuriedTreasure( 2 )
                 // Enchanted book
                 .addEnchantedBook( 2,
                         Enchantments.BLOCK_FORTUNE, Enchantments.MOB_LOOTING, Enchantments.FISHING_LUCK,
