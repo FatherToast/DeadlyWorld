@@ -22,11 +22,6 @@ public class DeadlySpawnerBlock extends ContainerBlock {
                 .strength( 5.0F )
         );
         spawnerType = type;
-
-        // TODO - Yes, this is no longer needed. Each spawner comes with its own block that stores the spawner type.
-        /* These are all separate blocks now, right?  Is this needed?
-		setDefaultState( blockState.getBaseState( ).withProperty( EnumSpawnerType.PROPERTY, EnumSpawnerType.LONE ) );
-         */
     }
     
     @Nullable
