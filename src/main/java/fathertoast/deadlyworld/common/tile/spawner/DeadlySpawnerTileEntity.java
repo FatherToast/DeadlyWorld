@@ -97,7 +97,27 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     private double prevMobRotation;
     
     public DeadlySpawnerTileEntity() { super( DWTileEntities.DEADLY_SPAWNER.get() ); }
-    
+
+    // Initializing the tile entity here
+    // when it is safe to do so.
+    @Override
+    public void onLoad() {
+        if (this.getLevel() == null) {
+            DeadlyWorld.LOG.error("Failed to load deadly spawner block entity at \"{}\"", this.getBlockPos());
+            return;
+        }
+        if (this.getBlockState().getBlock() instanceof DeadlySpawnerBlock) {
+            DimensionConfigGroup dimConfigs = Config.getDimensionConfigs(this.level);
+            SpawnerType spawnerType = ((DeadlySpawnerBlock)this.getBlockState().getBlock()).getSpawnerType();
+
+            this.initializeSpawner( spawnerType, dimConfigs );
+        }
+        else {
+            // TODO - Was too tired to use my brain, revisit this
+            DeadlyWorld.LOG.error("Aaaaauughh");
+        }
+    }
+
     public void initializeSpawner( SpawnerType spawnerType, DimensionConfigGroup dimConfigs ) {
         final Random random = level == null ? new Random() : level.random;
         final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( dimConfigs );
@@ -127,7 +147,10 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     public void setEntityToSpawn(EntityType<? extends Entity> entityType) {
         this.entityToSpawn.getTag().putString("id", Objects.requireNonNull(entityType.getRegistryName()).toString());
-        NetworkHelper.updateSpawnerRenderEntity(entityType, this.getBlockPos());
+
+        if ( this.worldPosition != null && this.level != null ) {
+            NetworkHelper.updateSpawnerRenderEntity(entityType, this.getBlockPos());
+        }
     }
     
     private SpawnerType getSpawnerType() {

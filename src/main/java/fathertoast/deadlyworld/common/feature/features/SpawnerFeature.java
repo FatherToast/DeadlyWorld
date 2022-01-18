@@ -14,7 +14,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.WorldGenRegion;
 import net.minecraft.world.gen.feature.BlockBlobFeature;
+import net.minecraft.world.gen.feature.DungeonsFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 
@@ -58,16 +60,19 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
                 DeadlyWorld.LOG.error( "Invalid feature heights configured for spawner type \"{}\"", spawnerType.displayName );
             return false;
         }
-        
+
         for( int i = 0; i < placementCount; i++ ) {
             BlockPos currentPos = this.getFeaturePos( origin, minY, random );
             
             while( currentPos.getY() < maxY ) {
+
                 if( seedReader.getBlockState( currentPos ).isAir( seedReader, currentPos ) ) {
                     // Just hit an air block, check for valid placement position
-                    if( this.canBePlaced( seedReader, random, currentPos ) ) {
+                    BlockPos pos = currentPos.immutable();
+
+                    if( this.canBePlaced( seedReader, random, pos ) ) {
                         //TODO - Still relevant?
-                        this.placeSpawner( dimensionConfig, spawnerConfig/*, replaceableBlocks*/, seedReader, random, currentPos );
+                        this.placeSpawner( dimensionConfig, spawnerConfig/*, replaceableBlocks*/, seedReader, random, pos );
                         return true;
                     }
                 }
@@ -82,27 +87,28 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
         DeadlySpawnerBlock spawnerBlock = this.spawnerBlockSupplier.get();
         BlockState spawnerState = spawnerBlock.defaultBlockState();
         SpawnerType spawnerType = spawnerBlock.getSpawnerType();
-        
+
+        DeadlyWorld.LOG.info("Chunk status at gen pos: {}", seedReader.getChunk(pos).getStatus().toString());
+
         // Generate glass pillar if debug marker is enabled
         if( spawnerConfig.debugMarker.get() ) {
             DeadlyWorld.LOG.info( "Generated spawner at: {}", pos );
-            
+
             BlockPos glassPos = pos.above();
             BlockState glassState = Blocks.GLASS.defaultBlockState();
             
             while( glassPos.getY() < seedReader.getHeight() ) {
-                seedReader.setBlock( glassPos, glassState, 11 );
+                seedReader.setBlock( glassPos, glassState, 18 );
                 glassPos = glassPos.above();
             }
         }
-        // Place and initialize spawner
-        seedReader.setBlock( pos, spawnerState, 11 );
-        DeadlySpawnerBlock.initTileEntity( seedReader, spawnerType, pos, dimConfig );
-        
         // Place loot chest
         if( random.nextFloat() < spawnerConfig.chestChance.get() ) {
             FeatureGenHelper.placeChest( pos.below(), seedReader, random, spawnerType.getChestLootTable() );
         }
+
+        // Place and initialize spawner
+        seedReader.setBlock( pos, spawnerState, 18 );
     }
     
     boolean canBePlaced( ISeedReader world, Random random, BlockPos pos ) {

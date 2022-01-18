@@ -1,0 +1,7 @@
+{
+  "parent": "deadlyworld:block/mini_spawner_template",
+  "textures": {
+    "all": "deadlyworld:block/mini_spawner",
+    "particle": "deadlyworld:block/mini_spawner"
+  }
+}

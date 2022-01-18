@@ -27,12 +27,12 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     private static final VoxelShape[] SHAPES = {
-            Block.box(3.0D, 0.0D, 3.0D, 9.0D, 6.0D, 9.0D), // DOWN
-            Block.box(5.5D, 3.0D, 11.0D, 10.5D, 13.0D, 16.0D), // UP
-            Block.box(5.5D, 3.0D, 11.0D, 10.5D, 13.0D, 16.0D), // NORTH
-            Block.box(5.5D, 3.0D, 0.0D, 10.5D, 13.0D, 5.0D), // SOUTH
-            Block.box(11.0D, 3.0D, 5.5D, 16.0D, 13.0D, 10.5D), // WEST
-            Block.box(0.0D, 3.0D, 5.5D, 5.0D, 13.0D, 10.5D) // EAST
+            Block.box(5.0D, 9.0D, 5.0D, 12.0D, 16.0D, 12.0D), // DOWN
+            Block.box(5.0D, 0.0D, 5.0D, 12.0D, 8.0D, 12.0D), // UP
+            Block.box(5.0D, 4.0D, 9.0D, 10.0D, 12.0D, 16.0D), // NORTH
+            Block.box(5.5D, 4.0D, 0.0D, 10.5D, 12.0D, 5.0D), // SOUTH
+            Block.box(11.0D, 4.0D, 5.5D, 16.0D, 12.0D, 10.5D), // WEST
+            Block.box(0.0D, 4.0D, 5.5D, 5.0D, 12.0D, 10.5D) // EAST
     };
 
 
@@ -50,7 +50,7 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selectionContext) {
-        return SHAPES[state.getValue(FACING).ordinal()];
+        return SHAPES[state.getValue(FACING).get3DDataValue()];
     }
 
     @Nullable
@@ -84,7 +84,7 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext useContext) {
-        return this.defaultBlockState().setValue(FACING, useContext.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, useContext.getClickedFace());
     }
 
     @Override

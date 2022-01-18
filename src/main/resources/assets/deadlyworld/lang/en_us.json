@@ -1,6 +1,4 @@
 {
-  "entity.AreaEffectCloud": "Lingering Potion Cloud",
-
   "block.deadlyworld.lone_deadly_spawner": "Monster Spawner",
   "block.deadlyworld.stream_deadly_spawner": "Monster Stream Spawner",
   "block.deadlyworld.swarm_deadly_spawner": "Monster Spawner of Swarms",
@@ -13,6 +11,7 @@
   "block.deadlyworld.floor_trap.tnt_mob": "Exploding Monster Floor Trap",
   "block.deadlyworld.floor_trap.potion": "Potion Floor Trap",
   "block.deadlyworld.storm_drain": "Storm Drain Trap",
+  "block.deadlyworld.mini_spawner": "Mini Spawner",
 
   "block.deadlyworld.tower_dispenser": "Broken Tower Dispenser",
   "block.deadlyworld.tower_dispenser.simple": "Arrow Tower Dispenser",
