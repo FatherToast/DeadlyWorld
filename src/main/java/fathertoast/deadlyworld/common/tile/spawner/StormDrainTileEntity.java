@@ -5,6 +5,7 @@ import fathertoast.deadlyworld.common.util.DWDamageSources;
 import net.minecraft.block.BubbleColumnBlock;
 import net.minecraft.block.MagmaBlock;
 import net.minecraft.client.gui.IngameGui;
+import net.minecraft.client.particle.CurrentDownParticle;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -38,6 +39,11 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
 
     public StormDrainTileEntity() {
         super(DWTileEntities.STORM_DRAIN.get());
+    }
+
+    @Override
+    public void onLoad() {
+        this.updateSuctionBox();
     }
 
     @Override
@@ -75,7 +81,10 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
                     if (livingEntity.isInWater()) {
                         boolean isPlayer = livingEntity instanceof PlayerEntity;
                         this.pullEntity(livingEntity, isPlayer);
-                        this.onCollidingTop(livingEntity, isPlayer);
+
+                        if (livingEntity.isColliding(this.getBlockPos().above(), this.getBlockState())) {
+                            this.onCollidingTop(livingEntity, isPlayer);
+                        }
                     }
                     ++count;
                 }
@@ -84,12 +93,6 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
                 }
             }
         }
-    }
-
-    @Override
-    public void setLevelAndPosition(World world, BlockPos pos) {
-        super.setLevelAndPosition(world, pos);
-        this.updateSuctionBox();
     }
 
     // TODO - Make this less cursed
@@ -127,7 +130,7 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
     }
 
     private void onCollidingTop(LivingEntity livingEntity, boolean isPlayer) {
-        if (this.damageTimer <= 0 && livingEntity.isColliding(this.getBlockPos().above(), this.getBlockState())) {
+        if (this.damageTimer <= 0) {
             livingEntity.hurt(DWDamageSources.VORTEX, 1);
         }
         if (isPlayer) {
