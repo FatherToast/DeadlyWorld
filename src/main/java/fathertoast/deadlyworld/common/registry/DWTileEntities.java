@@ -15,8 +15,9 @@ import java.util.function.Supplier;
 
 @SuppressWarnings( "ConstantConditions" )
 public class DWTileEntities {
+
     /** The deferred register for this mod's tile entities. */
-    public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create( ForgeRegistries.TILE_ENTITIES, DeadlyWorld.MOD_ID );
+    public static final DeferredRegister<TileEntityType<?>> REGISTRY = DeferredRegister.create( ForgeRegistries.TILE_ENTITIES, DeadlyWorld.MOD_ID );
 
 
     public static final RegistryObject<TileEntityType<DeadlySpawnerTileEntity>> DEADLY_SPAWNER = register( "deadly_spawner",
@@ -35,6 +36,6 @@ public class DWTileEntities {
 
 
     private static <T extends TileEntity> RegistryObject<TileEntityType<T>> register( String name, Supplier<TileEntityType<T>> tileEntityTypeSupplier ) {
-        return TILE_ENTITIES.register( name, tileEntityTypeSupplier );
+        return REGISTRY.register( name, tileEntityTypeSupplier );
     }
 }

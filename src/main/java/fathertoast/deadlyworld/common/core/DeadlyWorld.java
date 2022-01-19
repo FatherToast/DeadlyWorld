@@ -3,10 +3,7 @@ package fathertoast.deadlyworld.common.core;
 import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.event.BiomeEvents;
 import fathertoast.deadlyworld.common.network.PacketHandler;
-import fathertoast.deadlyworld.common.registry.DWBlocks;
-import fathertoast.deadlyworld.common.registry.DWFeatures;
-import fathertoast.deadlyworld.common.registry.DWItems;
-import fathertoast.deadlyworld.common.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.registry.*;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,12 +39,14 @@ public class DeadlyWorld {
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
+     *      + mini spawner
      *  o items
      *      o feature tester
      *      o event
-     *  ? entities
+     *  o entities
      *      ? mimic
      *      ? dispenser fish hook
+     *      + mini mobs
      *  o vein world gen
      *      o silverfish
      *      o lava
@@ -72,6 +71,7 @@ public class DeadlyWorld {
      *      o mimic
      *      + cave-in (via surprise or combo w/ ceiling trap)
      *      ? mimic 2.0 (custom entity)
+     *      ? random cake from cake item tag
      *  o spawner world gen
      *      o default
      *      o stream
@@ -145,11 +145,14 @@ public class DeadlyWorld {
         this.packetHandler.registerMessages();
         
         MinecraftForge.EVENT_BUS.register( new BiomeEvents() );
+
+        eventBus.addListener(DWEntities::createAttributes);
         
         DWBlocks.REGISTRY.register( eventBus );
-        DWItems.ITEMS.register( eventBus );
-        DWTileEntities.TILE_ENTITIES.register( eventBus );
-        DWFeatures.FEATURES.register( eventBus );
+        DWItems.REGISTRY.register( eventBus );
+        DWEntities.REGISTRY.register( eventBus );
+        DWTileEntities.REGISTRY.register( eventBus );
+        DWFeatures.REGISTRY.register( eventBus );
         
         Config.preInitialize();
     }

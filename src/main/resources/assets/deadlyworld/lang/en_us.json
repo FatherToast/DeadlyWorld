@@ -1,5 +1,5 @@
 {
-  "block.deadlyworld.lone_deadly_spawner": "Monster Spawner",
+  "block.deadlyworld.simple_deadly_spawner": "Monster Spawner",
   "block.deadlyworld.stream_deadly_spawner": "Monster Stream Spawner",
   "block.deadlyworld.swarm_deadly_spawner": "Monster Spawner of Swarms",
   "block.deadlyworld.brutal_deadly_spawner": "Monster Spawner of Brutality",
@@ -19,6 +19,10 @@
   "block.deadlyworld.tower_dispenser.potion": "Arrow Tower Dispenser of Magic",
   "block.deadlyworld.tower_dispenser.fireball": "Fireball Tower Dispenser",
   "block.deadlyworld.tower_dispenser.gatling": "Arrow Tower Dispenser of Speed",
+
+
+  "item.deadlyworld.mini_creeper_spawn_egg": "Mini Creeper Spawn Egg",
+
 
   "block.deadlyworld.deadly_silverfish.tooltip": "Infested",
 

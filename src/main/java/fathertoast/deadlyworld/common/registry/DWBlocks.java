@@ -56,7 +56,7 @@ public class DWBlocks {
      */
     private static <T extends Block> RegistryObject<T> registerBlock( String name, Supplier<T> blockSupplier, ItemGroup itemGroup ) {
         RegistryObject<T> blockRegObject = REGISTRY.register( name, blockSupplier );
-        DWItems.ITEMS.register( name, () -> new BlockItem( blockRegObject.get(), new Item.Properties().tab( itemGroup ) ) );
+        DWItems.REGISTRY.register( name, () -> new BlockItem( blockRegObject.get(), new Item.Properties().tab( itemGroup ) ) );
         return blockRegObject;
     }
 
