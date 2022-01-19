@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.event;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.feature.DWConfiguredFeatures;
+import fathertoast.deadlyworld.common.registry.DWEntities;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 @SuppressWarnings( "unused" )
 @Mod.EventBusSubscriber( modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD )
 public final class ModEventHandler {
+
     /**
      * Called after registry events, but before the client- and server-specific setup events.
      *
@@ -24,5 +26,6 @@ public final class ModEventHandler {
     public static void setup( FMLCommonSetupEvent event ) {
         Config.initialize();
         DWConfiguredFeatures.register();
+        DWEntities.registerSpawnPlacements();
     }
 }

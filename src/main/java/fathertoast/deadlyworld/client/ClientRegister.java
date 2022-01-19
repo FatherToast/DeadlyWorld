@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.client;
 
 import fathertoast.deadlyworld.client.renderer.entity.MiniCreeperRenderer;
+import fathertoast.deadlyworld.client.renderer.entity.MiniZombieRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.DeadlySpawnerTileEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.StormDrainTileEntityRenderer;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -43,5 +44,6 @@ public class ClientRegister {
 
     private static void registerEntityRenderers() {
         RenderingRegistry.registerEntityRenderingHandler(DWEntities.MINI_CREEPER.get(), MiniCreeperRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(DWEntities.MINI_ZOMBIE.get(), MiniZombieRenderer::new);
     }
 }

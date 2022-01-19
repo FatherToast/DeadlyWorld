@@ -22,11 +22,10 @@
 
 
   "item.deadlyworld.mini_creeper_spawn_egg": "Mini Creeper Spawn Egg",
-
+  "item.deadlyworld.mini_zombie_spawn_egg": "Mini Zombie Spawn Egg",
+  "item.deadlyworld.event_item": "Deadly World Event Item",
 
   "block.deadlyworld.deadly_silverfish.tooltip": "Infested",
-
-  "item.deadlyworld.event_item": "Deadly World Event Item",
   "block.deadlyworld.event_item.tooltip": "Event:",
 
   "block.deadlyworld.event_item.tooltip.spawn_silverfish": "Spawn Silverfish",
