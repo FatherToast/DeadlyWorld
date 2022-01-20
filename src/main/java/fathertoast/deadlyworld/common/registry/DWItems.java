@@ -23,18 +23,21 @@ public class DWItems {
     
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create( ForgeRegistries.ITEMS, DeadlyWorld.MOD_ID );
 
+    // Spawn eggs
+    public static final RegistryObject<ForgeSpawnEggItem> MIMIC_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MIMIC, 0xAB792D, 0x443C30, false );
+    public static final RegistryObject<ForgeSpawnEggItem> MINI_CREEPER_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MINI_CREEPER, 0xDA70B, 0x000000, true );
+    public static final RegistryObject<ForgeSpawnEggItem> MINI_ZOMBIE_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MINI_ZOMBIE, 44975, 7969893, true );
 
-    public static final RegistryObject<ForgeSpawnEggItem> MINI_CREEPER_SPAWN_EGG = registerSpawnEgg( DWEntities.MINI_CREEPER, 894731, 0, true );
-    public static final RegistryObject<ForgeSpawnEggItem> MINI_ZOMBIE_SPAWN_EGG = registerSpawnEgg( DWEntities.MINI_ZOMBIE, 44975, 7969893, true );
 
-
-
-    protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg(RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor, boolean mini ) {
+    protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg( RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor, boolean mini ) {
         String name = typeRegistryObject.getId().getPath() + "_spawn_egg";
-        RegistryObject<ForgeSpawnEggItem> spawnEgg = REGISTRY.register( name, () -> new ForgeSpawnEggItem(typeRegistryObject, backgroundColor, highlightColor, new Item.Properties().tab(ItemGroup.TAB_MISC)) );
+        RegistryObject<ForgeSpawnEggItem> spawnEgg = REGISTRY.register( name, () -> new ForgeSpawnEggItem( typeRegistryObject, backgroundColor, highlightColor, new Item.Properties().tab( ItemGroup.TAB_MISC) ) );
 
-        if (mini) {
-            MiniSpawnerBlock.ACCEPTED_EGGS.add(spawnEgg);
+        if ( mini ) {
+            MiniSpawnerBlock.ACCEPTED_EGGS.add( spawnEgg );
         }
         return spawnEgg;
     }

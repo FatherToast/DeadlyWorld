@@ -34,19 +34,22 @@ public class DeadlyWorld {
      *  o blocks
      *      o procedurally generated silverfish blocks
      *      o deadly spawner
+     *      + mini spawner
      *      o floor trap
      *      o tower dispenser
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
-     *      + mini spawner
      *  o items
      *      o feature tester
      *      o event
-     *  o entities
+     *  + entities
+     *      + mini creeper
+     *      + mini skeleton
+     *      + mini arrow
+     *      + mini zombie
      *      ? mimic
      *      ? dispenser fish hook
-     *      + mini mobs
      *  o vein world gen
      *      o silverfish
      *      o lava
@@ -58,6 +61,7 @@ public class DeadlyWorld {
      *      ? new vein gen styles
      *  o dungeon world gen
      *      o spawner
+     *      + mini
      *      ? tower
      *      ? other special dungeon types
      *      o vanilla dungeon disable
@@ -78,6 +82,7 @@ public class DeadlyWorld {
      *      o swarm
      *      o brutal
      *      o silverfish nest
+     *      + mini
      *      o dungeon-only version
      *      ? spider (combo)
      *      ? undead (combo)
@@ -145,8 +150,8 @@ public class DeadlyWorld {
         this.packetHandler.registerMessages();
         
         MinecraftForge.EVENT_BUS.register( new BiomeEvents() );
-
-        eventBus.addListener(DWEntities::createAttributes);
+        
+        eventBus.addListener( DWEntities::createAttributes );
         
         DWBlocks.REGISTRY.register( eventBus );
         DWItems.REGISTRY.register( eventBus );

@@ -1,6 +1,9 @@
 package fathertoast.deadlyworld.client;
 
+import fathertoast.deadlyworld.client.renderer.entity.MimicModel;
+import fathertoast.deadlyworld.client.renderer.entity.MimicRenderer;
 import fathertoast.deadlyworld.client.renderer.entity.MiniCreeperRenderer;
+import fathertoast.deadlyworld.client.renderer.entity.MiniZombieRenderer;
 import fathertoast.deadlyworld.client.renderer.entity.MiniZombieRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.DeadlySpawnerTileEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.StormDrainTileEntityRenderer;
@@ -38,12 +41,16 @@ public class ClientRegister {
     }
     
     private static void registerTileRenderers() {
-        ClientRegistry.bindTileEntityRenderer(DWTileEntities.DEADLY_SPAWNER.get(), DeadlySpawnerTileEntityRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(DWTileEntities.STORM_DRAIN.get(), StormDrainTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer( DWTileEntities.DEADLY_SPAWNER.get(), DeadlySpawnerTileEntityRenderer::new );
+        ClientRegistry.bindTileEntityRenderer( DWTileEntities.STORM_DRAIN.get(), StormDrainTileEntityRenderer::new );
     }
 
     private static void registerEntityRenderers() {
-        RenderingRegistry.registerEntityRenderingHandler(DWEntities.MINI_CREEPER.get(), MiniCreeperRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(DWEntities.MINI_ZOMBIE.get(), MiniZombieRenderer::new);
+        // New mobs
+        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MIMIC.get(), MimicRenderer::new );
+
+        // Mini mobs
+        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_CREEPER.get(), MiniCreeperRenderer::new );
+        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_ZOMBIE.get(), MiniZombieRenderer::new );
     }
 }
