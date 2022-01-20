@@ -56,7 +56,7 @@ public class TrapHelper {
                         (result.getBlockPos( ).equals( pos ) || result.getBlockPos( ).equals( pos.offset( 0, 1, 0 ) ));
     }
 
-    public static boolean isSolidBlock(ISeedReader world, BlockPos pos) {
+    public static boolean isSolidBlock( ISeedReader world, BlockPos pos ) {
         BlockState state = world.getBlockState(pos);
 
         for (Direction direction : Direction.values()) {

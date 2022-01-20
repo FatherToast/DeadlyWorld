@@ -1,10 +1,12 @@
 package fathertoast.deadlyworld.common.block;
 
+import fathertoast.deadlyworld.common.tile.spawner.MiniSpawnerTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -17,9 +19,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
 
@@ -34,6 +41,12 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
             Block.box(11.0D, 4.0D, 5.5D, 16.0D, 12.0D, 10.5D), // WEST
             Block.box(0.0D, 4.0D, 5.5D, 5.0D, 12.0D, 10.5D) // EAST
     };
+
+    /**
+     *  A List of spawn eggs that are allowed to
+     * be used to change the spawner's spawn mob.
+     */
+    public static final List<Supplier<ForgeSpawnEggItem>> ACCEPTED_EGGS = new LinkedList<>();
 
 
     public MiniSpawnerBlock() {
@@ -56,7 +69,7 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
     @Nullable
     @Override
     public TileEntity newBlockEntity(IBlockReader world) {
-        return null;
+        return new MiniSpawnerTileEntity();
     }
 
     @Override

@@ -15,10 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.BlockBlobFeature;
-import net.minecraft.world.gen.feature.DungeonsFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.*;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
@@ -36,9 +33,8 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
     
     @Override
     public boolean place( ISeedReader seedReader, ChunkGenerator chunkGenerator, Random random, BlockPos origin, NoFeatureConfig featureConfig ) {
-        DimensionConfigGroup dimensionConfig = this.getDimensionConfig( seedReader );
         SpawnerType spawnerType = this.spawnerBlockSupplier.get().getSpawnerType();
-        SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( dimensionConfig );
+        SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( this.getDimensionConfig(seedReader) );
         double countPerChunk = spawnerConfig.countPerChunk.get();
         
         int placementCount = (int) countPerChunk;
@@ -66,13 +62,13 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
             
             while( currentPos.getY() < maxY ) {
 
-                if( seedReader.getBlockState( currentPos ).isAir( seedReader, currentPos ) ) {
+                if( seedReader.isEmptyBlock( currentPos )) {
                     // Just hit an air block, check for valid placement position
                     BlockPos pos = currentPos.immutable();
 
                     if( this.canBePlaced( seedReader, random, pos ) ) {
                         //TODO - Still relevant?
-                        this.placeSpawner( dimensionConfig, spawnerConfig/*, replaceableBlocks*/, seedReader, random, pos );
+                        this.placeSpawner( spawnerConfig/*, replaceableBlocks*/, seedReader, random, pos );
                         return true;
                     }
                 }
@@ -82,13 +78,12 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
         }
         return false;
     }
-    
-    private void placeSpawner( DimensionConfigGroup dimConfig, SpawnerConfig.SpawnerTypeCategory spawnerConfig, ISeedReader seedReader, Random random, BlockPos pos ) {
+
+    private void placeSpawner( SpawnerConfig.SpawnerTypeCategory spawnerConfig, ISeedReader seedReader, Random random, BlockPos pos ) {
         DeadlySpawnerBlock spawnerBlock = this.spawnerBlockSupplier.get();
         BlockState spawnerState = spawnerBlock.defaultBlockState();
         SpawnerType spawnerType = spawnerBlock.getSpawnerType();
 
-        DeadlyWorld.LOG.info("Chunk status at gen pos: {}", seedReader.getChunk(pos).getStatus().toString());
 
         // Generate glass pillar if debug marker is enabled
         if( spawnerConfig.debugMarker.get() ) {
@@ -112,8 +107,8 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
     }
     
     boolean canBePlaced( ISeedReader world, Random random, BlockPos pos ) {
-        boolean airAbove = world.getBlockState( pos.offset( 0, 2, 0 ) ).isAir( world, pos );
-        boolean solidBelow = TrapHelper.isSolidBlock( world, pos.offset( 0, -1, 0 ) );
+        boolean airAbove = world.isEmptyBlock( pos.offset(0, 2, 0));
+        boolean solidBelow = TrapHelper.isSolidBlock( world, pos.offset( 0, -1, 0 ));
         
         return airAbove && solidBelow;
     }
