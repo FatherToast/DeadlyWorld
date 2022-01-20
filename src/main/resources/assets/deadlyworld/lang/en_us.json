@@ -25,6 +25,10 @@
   "item.deadlyworld.mini_zombie_spawn_egg": "Mini Zombie Spawn Egg",
   "item.deadlyworld.event_item": "Deadly World Event Item",
 
+  "entity.deadlyworld.mimic": "Mimic",
+  "entity.deadlyworld.mini_creeper": "Mini Creeper",
+  "entity.deadlyworld.mini_zombie": "Mini Zombie",
+
   "block.deadlyworld.deadly_silverfish.tooltip": "Infested",
   "block.deadlyworld.event_item.tooltip": "Event:",
 
