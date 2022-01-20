@@ -20,17 +20,18 @@ public class DWItems {
     private static final ItemGroup DEFAULT_TAB = ItemGroup.TAB_DECORATIONS;
     
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create( ForgeRegistries.ITEMS, DeadlyWorld.MOD_ID );
-
-
-    public static final RegistryObject<ForgeSpawnEggItem> MINI_CREEPER_SPAWN_EGG = registerSpawnEgg( DWEntities.MINI_CREEPER, 894731, 0 );
-
-
-
-    protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg(RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor ) {
+    
+    // Spawn eggs
+    public static final RegistryObject<ForgeSpawnEggItem> MIMIC_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MIMIC, 0xAB792D, 0x443C30 );
+    public static final RegistryObject<ForgeSpawnEggItem> MINI_CREEPER_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MINI_CREEPER, 0xDA70B, 0x000000 );
+    
+    protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg( RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor ) {
         String name = typeRegistryObject.getId().getPath() + "_spawn_egg";
-        return REGISTRY.register( name, () -> new ForgeSpawnEggItem(typeRegistryObject, backgroundColor, highlightColor, new Item.Properties().tab(ItemGroup.TAB_MISC)) );
+        return REGISTRY.register( name, () -> new ForgeSpawnEggItem( typeRegistryObject, backgroundColor, highlightColor, new Item.Properties().tab( ItemGroup.TAB_MISC ) ) );
     }
-
+    
     protected static <T extends Block> RegistryObject<BlockItem> registerBlockItem( String name, RegistryObject<T> blockRegistryObject ) {
         return registerBlockItem( name, blockRegistryObject, DEFAULT_TAB );
     }
