@@ -29,8 +29,9 @@ public class DWItems {
     public static final RegistryObject<ForgeSpawnEggItem> MINI_CREEPER_SPAWN_EGG = registerSpawnEgg(
             DWEntities.MINI_CREEPER, 0xDA70B, 0x000000, true );
     public static final RegistryObject<ForgeSpawnEggItem> MINI_ZOMBIE_SPAWN_EGG = registerSpawnEgg(
-            DWEntities.MINI_ZOMBIE, 44975, 7969893, true );
-
+            DWEntities.MINI_ZOMBIE, 0xAFAF, 0x799C65, true );
+    public static final RegistryObject<ForgeSpawnEggItem> MINI_SKELETON_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MINI_SKELETON, 0xC1C1C1, 0x494949, true );
 
     protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg( RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor, boolean mini ) {
         String name = typeRegistryObject.getId().getPath() + "_spawn_egg";

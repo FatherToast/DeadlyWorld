@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.event.BiomeEvents;
+import fathertoast.deadlyworld.common.event.EntityEvents;
 import fathertoast.deadlyworld.common.network.PacketHandler;
 import fathertoast.deadlyworld.common.registry.*;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
@@ -150,6 +151,7 @@ public class DeadlyWorld {
         this.packetHandler.registerMessages();
         
         MinecraftForge.EVENT_BUS.register( new BiomeEvents() );
+        MinecraftForge.EVENT_BUS.register( new EntityEvents() );
         
         eventBus.addListener( DWEntities::createAttributes );
         

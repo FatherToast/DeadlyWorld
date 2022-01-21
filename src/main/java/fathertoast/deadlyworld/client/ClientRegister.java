@@ -1,9 +1,6 @@
 package fathertoast.deadlyworld.client;
 
-import fathertoast.deadlyworld.client.renderer.entity.MimicModel;
-import fathertoast.deadlyworld.client.renderer.entity.MimicRenderer;
-import fathertoast.deadlyworld.client.renderer.entity.MiniCreeperRenderer;
-import fathertoast.deadlyworld.client.renderer.entity.MiniZombieRenderer;
+import fathertoast.deadlyworld.client.renderer.entity.*;
 import fathertoast.deadlyworld.client.renderer.entity.MiniZombieRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.DeadlySpawnerTileEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.StormDrainTileEntityRenderer;
@@ -52,5 +49,9 @@ public class ClientRegister {
         // Mini mobs
         RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_CREEPER.get(), MiniCreeperRenderer::new );
         RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_ZOMBIE.get(), MiniZombieRenderer::new );
+        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_SKELETON.get(), MiniSkeletonRenderer::new);
+
+        // Projectiles
+        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_ARROW.get(), MiniArrowRenderer::new);
     }
 }

@@ -3,8 +3,9 @@ package fathertoast.deadlyworld.common.registry;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.MimicEntity;
 import fathertoast.deadlyworld.common.entity.MiniCreeperEntity;
+import fathertoast.deadlyworld.common.entity.MiniSkeletonEntity;
 import fathertoast.deadlyworld.common.entity.MiniZombieEntity;
-import fathertoast.deadlyworld.common.entity.MiniZombieEntity;
+import fathertoast.deadlyworld.common.entity.MiniArrowEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -27,10 +28,20 @@ public class DWEntities {
 
     public static final RegistryObject<EntityType<MiniCreeperEntity>> MINI_CREEPER = register( "mini_creeper",
             EntityType.Builder.of( MiniCreeperEntity::new, EntityClassification.MONSTER )
-                    .sized( 0.3F, 0.65F ).clientTrackingRange( 8 ) );
+                    .sized( 0.35F, 0.7F ).clientTrackingRange( 8 ) );
 
     public static final RegistryObject<EntityType<MiniZombieEntity>> MINI_ZOMBIE = register("mini_zombie",
-            EntityType.Builder.of(MiniZombieEntity::new, EntityClassification.MONSTER).sized(0.3F, 0.80F).clientTrackingRange(5));
+            EntityType.Builder.of(MiniZombieEntity::new, EntityClassification.MONSTER)
+                    .sized(0.35F, 0.85F).clientTrackingRange(5));
+
+    public static final RegistryObject<EntityType<MiniSkeletonEntity>> MINI_SKELETON = register("mini_skeleton",
+            EntityType.Builder.of(MiniSkeletonEntity::new, EntityClassification.MONSTER)
+                    .sized(0.35F, 0.85F).clientTrackingRange(5));
+
+    public static final RegistryObject<EntityType<MiniArrowEntity>> MINI_ARROW = register("mini_arrow",
+            EntityType.Builder.<MiniArrowEntity>of(MiniArrowEntity::new, EntityClassification.MISC)
+                    .sized(0.1F, 0.1F).clientTrackingRange(5));
+
 
 
     /** Sets the default attributes for entity types, such as max health, attack damage etc. */
@@ -41,6 +52,7 @@ public class DWEntities {
         // Mini mobs
         event.put( MINI_CREEPER.get(), MiniCreeperEntity.createAttributes().build() );
         event.put( MINI_ZOMBIE.get(), MiniZombieEntity.createAttributes().build() );
+        event.put( MINI_SKELETON.get(), MiniSkeletonEntity.createAttributes().build() );
     }
 
 
