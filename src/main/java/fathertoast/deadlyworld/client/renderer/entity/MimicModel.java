@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.client.renderer.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import fathertoast.deadlyworld.common.entity.MimicEntity;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -14,7 +15,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 // Made with Blockbench 4.1.3
 @OnlyIn( Dist.CLIENT )
 @ParametersAreNonnullByDefault
-public class MimicModel<T extends Entity> extends EntityModel<T> {
+public class MimicModel<T extends MimicEntity> extends EntityModel<T> {
     
     private final ModelRenderer bottom;
     private final ModelRenderer teethBottom;
@@ -133,7 +134,7 @@ public class MimicModel<T extends Entity> extends EntityModel<T> {
     }
     
     @Override
-    public void setupAnim( T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch ) {
+    public void setupAnim( T mimic, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch ) {
         resetAllAngles();
         
         // Lid bob

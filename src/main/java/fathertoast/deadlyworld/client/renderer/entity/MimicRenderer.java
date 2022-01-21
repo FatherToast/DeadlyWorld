@@ -14,15 +14,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @OnlyIn( Dist.CLIENT )
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class MimicRenderer extends MobRenderer<MimicEntity, MimicModel<MimicEntity>> {
+public class MimicRenderer<T extends MimicEntity> extends MobRenderer<T, MimicModel<T>> {
+
     private static final ResourceLocation TEXTURE = DeadlyWorld.resourceLoc( "textures/entity/mimic.png" );
-    
+
     public MimicRenderer( EntityRendererManager rendererManager ) {
         super( rendererManager, new MimicModel<>(), 0.5F );
-        // Maybe later we can use layers to copy chest TE texture
-        //addLayer( new CreeperChargeLayer( this ) );
+        this.addLayer( new MimicLayerRenderer<>( this ));
     }
     
     @Override
-    public ResourceLocation getTextureLocation( MimicEntity entity ) { return TEXTURE; }
+    public ResourceLocation getTextureLocation( T mimic ) { return TEXTURE; }
 }
