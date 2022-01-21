@@ -36,7 +36,9 @@ public class DWBlocks {
     }
     
     /** @return The block registry object for a particular spawner type. */
-    public static RegistryObject<DeadlySpawnerBlock> spawner( SpawnerType type ) { return SPAWNERS.get( type.ordinal() ); }
+    public static RegistryObject<DeadlySpawnerBlock> spawner( SpawnerType type ) {
+        return SPAWNERS.get( type.ordinal() );
+    }
 
     /** @return Creates an array of all spawner blocks and returns it. */
     public static Block[] spawnerBlocks() { return blockArray( SPAWNERS ); }

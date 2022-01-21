@@ -52,7 +52,7 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
     public MiniSpawnerBlock() {
         super(AbstractBlock.Properties.of(Material.METAL)
                 .sound(SoundType.METAL)
-                .strength(1.0F)
+                .strength(5.0F)
                 .harvestTool(ToolType.PICKAXE)
                 .noOcclusion()
                 .noDrops()

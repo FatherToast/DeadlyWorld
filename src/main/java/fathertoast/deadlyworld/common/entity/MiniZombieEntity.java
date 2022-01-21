@@ -44,6 +44,6 @@ public class MiniZombieEntity extends ZombieEntity {
 
     @Override
     protected float getStandingEyeHeight(Pose pose, EntitySize entitySize) {
-        return 0.65F;
+        return 0.7F;
     }
 }
