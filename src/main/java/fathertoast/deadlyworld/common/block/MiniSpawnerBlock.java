@@ -42,12 +42,6 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
             Block.box(0.0D, 4.0D, 5.5D, 5.0D, 12.0D, 10.5D) // EAST
     };
 
-    /**
-     *  A List of spawn eggs that are allowed to
-     * be used to change the spawner's spawn mob.
-     */
-    public static final List<Supplier<ForgeSpawnEggItem>> ACCEPTED_EGGS = new LinkedList<>();
-
 
     public MiniSpawnerBlock() {
         super(AbstractBlock.Properties.of(Material.METAL)

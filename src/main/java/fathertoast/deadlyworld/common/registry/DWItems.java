@@ -25,22 +25,17 @@ public class DWItems {
 
     // Spawn eggs
     public static final RegistryObject<ForgeSpawnEggItem> MIMIC_SPAWN_EGG = registerSpawnEgg(
-            DWEntities.MIMIC, 0xAB792D, 0x443C30, false );
+            DWEntities.MIMIC, 0xAB792D, 0x443C30);
     public static final RegistryObject<ForgeSpawnEggItem> MINI_CREEPER_SPAWN_EGG = registerSpawnEgg(
-            DWEntities.MINI_CREEPER, 0xDA70B, 0x000000, true );
+            DWEntities.MINI_CREEPER, 0xDA70B, 0x000000);
     public static final RegistryObject<ForgeSpawnEggItem> MINI_ZOMBIE_SPAWN_EGG = registerSpawnEgg(
-            DWEntities.MINI_ZOMBIE, 0xAFAF, 0x799C65, true );
+            DWEntities.MINI_ZOMBIE, 0xAFAF, 0x799C65);
     public static final RegistryObject<ForgeSpawnEggItem> MINI_SKELETON_SPAWN_EGG = registerSpawnEgg(
-            DWEntities.MINI_SKELETON, 0xC1C1C1, 0x494949, true );
+            DWEntities.MINI_SKELETON, 0xC1C1C1, 0x494949);
 
-    protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg( RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor, boolean mini ) {
+    protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg( RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor) {
         String name = typeRegistryObject.getId().getPath() + "_spawn_egg";
-        RegistryObject<ForgeSpawnEggItem> spawnEgg = REGISTRY.register( name, () -> new ForgeSpawnEggItem( typeRegistryObject, backgroundColor, highlightColor, new Item.Properties().tab( ItemGroup.TAB_MISC) ) );
-
-        if ( mini ) {
-            MiniSpawnerBlock.ACCEPTED_EGGS.add( spawnEgg );
-        }
-        return spawnEgg;
+        return REGISTRY.register( name, () -> new ForgeSpawnEggItem( typeRegistryObject, backgroundColor, highlightColor, new Item.Properties().tab( ItemGroup.TAB_MISC) ) );
     }
 
     protected static <T extends Block> RegistryObject<BlockItem> registerBlockItem( String name, RegistryObject<T> blockRegistryObject ) {
