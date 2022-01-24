@@ -22,6 +22,7 @@ public class SpawnerConfig extends FeatureConfig {
     public final BrutalSpawnerCategory BRUTAL;
     public final SpawnerTypeCategory NEST;
     public final SpawnerTypeCategory DUNGEON;
+    public final SpawnerTypeCategory MINI;
     
     /** Builds the config spec that should be used for this config. */
     SpawnerConfig( File dir, DimensionConfigGroup dimConfigs ) {
@@ -63,6 +64,9 @@ public class SpawnerConfig extends FeatureConfig {
         
         DUNGEON = new SpawnerTypeCategory( SPEC, this, SpawnerType.DUNGEON, 0.0, 0, 0, 0.0,
                 16.0, false, 200, 800, 40, 4, 4.0, 0.1 );
+
+        MINI = new SpawnerTypeCategory( SPEC, this, SpawnerType.MINI, 0.0, 0, 0, 0.0,
+                8.0, false, 200, 400, 40, 6, 4, 0.1 );
     }
     
     public static class SpawnerTypeCategory extends FeatureTypeCategory {
@@ -196,6 +200,12 @@ public class SpawnerConfig extends FeatureConfig {
                     new EntityEntry( EntityType.SILVERFISH, 10 )
             );
         }
+    }
+
+    protected WeightedEntityList makeDefaultMiniSpawnList( ) {
+        return new WeightedEntityList(
+            new EntityEntry()
+        );
     }
     
     public static class BrutalSpawnerCategory extends SpawnerTypeCategory {

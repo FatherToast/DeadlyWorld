@@ -139,7 +139,7 @@ public class WeightedEntityList extends EntityList {
             for( EntityEntry entry : ENTRIES ) {
                 if( entry.VALUES.length > 0 && entry.VALUES[0] > 0 ) {
                     choice -= (int) entry.VALUES[0];
-                    if( choice < 0 ) return entry.TYPE;
+                    if( choice < 0 ) return entry.TYPE_SUPPLIER.get();
                 }
             }
             DeadlyWorld.LOG.error( "Something has gone dramatically wrong with a weighted entity list! Weight={}; List:{}",
