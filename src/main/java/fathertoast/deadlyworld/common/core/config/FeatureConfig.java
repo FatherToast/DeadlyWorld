@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.core.config;
 import fathertoast.deadlyworld.common.core.config.field.*;
 import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 
 import java.io.File;
 
@@ -64,12 +65,12 @@ public abstract class FeatureConfig extends Config.AbstractConfig {
         
         /** @return True if this config is for the Nether dimension. */
         protected boolean isNetherDimension( FeatureConfig feature ) {
-            return DimensionType.NETHER_LOCATION.equals( feature.DIMENSION_CONFIGS.DIMENSION );
+            return World.NETHER.equals( feature.DIMENSION_CONFIGS.DIMENSION );
         }
         
         /** @return True if this config is for the End dimension. */
         protected boolean isEndDimension( FeatureConfig feature ) {
-            return DimensionType.END_LOCATION.equals( feature.DIMENSION_CONFIGS.DIMENSION );
+            return World.END.equals( feature.DIMENSION_CONFIGS.DIMENSION );
         }
     }
 }
