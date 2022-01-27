@@ -19,48 +19,47 @@ import net.minecraftforge.registries.ForgeRegistries;
 import static net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 
 public class DWEntities {
-
+    
     public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create( ForgeRegistries.ENTITIES, DeadlyWorld.MOD_ID );
-
+    
     public static final RegistryObject<EntityType<MimicEntity>> MIMIC = register( "mimic",
             EntityType.Builder.of( MimicEntity::new, EntityClassification.MONSTER )
                     .sized( 0.9375F, 0.9375F ).clientTrackingRange( 8 ) );
-
+    
     public static final RegistryObject<EntityType<MiniCreeperEntity>> MINI_CREEPER = register( "mini_creeper",
             EntityType.Builder.of( MiniCreeperEntity::new, EntityClassification.MONSTER )
                     .sized( 0.35F, 0.7F ).clientTrackingRange( 8 ) );
-
-    public static final RegistryObject<EntityType<MiniZombieEntity>> MINI_ZOMBIE = register("mini_zombie",
-            EntityType.Builder.of(MiniZombieEntity::new, EntityClassification.MONSTER)
-                    .sized(0.35F, 0.85F).clientTrackingRange(5));
-
-    public static final RegistryObject<EntityType<MiniSkeletonEntity>> MINI_SKELETON = register("mini_skeleton",
-            EntityType.Builder.of(MiniSkeletonEntity::new, EntityClassification.MONSTER)
-                    .sized(0.35F, 0.85F).clientTrackingRange(5));
-
-    public static final RegistryObject<EntityType<MiniArrowEntity>> MINI_ARROW = register("mini_arrow",
-            EntityType.Builder.<MiniArrowEntity>of(MiniArrowEntity::new, EntityClassification.MISC)
-                    .sized(0.1F, 0.1F).clientTrackingRange(5));
-
-
-
+    
+    public static final RegistryObject<EntityType<MiniZombieEntity>> MINI_ZOMBIE = register( "mini_zombie",
+            EntityType.Builder.of( MiniZombieEntity::new, EntityClassification.MONSTER )
+                    .sized( 0.35F, 0.85F ).clientTrackingRange( 8 ) );
+    
+    public static final RegistryObject<EntityType<MiniSkeletonEntity>> MINI_SKELETON = register( "mini_skeleton",
+            EntityType.Builder.of( MiniSkeletonEntity::new, EntityClassification.MONSTER )
+                    .sized( 0.35F, 0.85F ).clientTrackingRange( 8 ) );
+    
+    public static final RegistryObject<EntityType<MiniArrowEntity>> MINI_ARROW = register( "mini_arrow",
+            EntityType.Builder.<MiniArrowEntity>of( MiniArrowEntity::new, EntityClassification.MISC )
+                    .sized( 0.1F, 0.1F ).clientTrackingRange( 4 ).updateInterval( 20 ) );
+    
+    
     /** Sets the default attributes for entity types, such as max health, attack damage etc. */
     public static void createAttributes( EntityAttributeCreationEvent event ) {
         // New mobs
         event.put( MIMIC.get(), MimicEntity.createAttributes().build() );
-
+        
         // Mini mobs
         event.put( MINI_CREEPER.get(), MiniCreeperEntity.createAttributes().build() );
         event.put( MINI_ZOMBIE.get(), MiniZombieEntity.createAttributes().build() );
         event.put( MINI_SKELETON.get(), MiniSkeletonEntity.createAttributes().build() );
     }
-
-
+    
+    
     public static void registerSpawnPlacements() {
-        EntitySpawnPlacementRegistry.register(MINI_CREEPER.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MiniZombieEntity::checkMonsterSpawnRules);
-        EntitySpawnPlacementRegistry.register(MINI_ZOMBIE.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MiniZombieEntity::checkMonsterSpawnRules);
+        EntitySpawnPlacementRegistry.register( MINI_CREEPER.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MiniZombieEntity::checkMonsterSpawnRules );
+        EntitySpawnPlacementRegistry.register( MINI_ZOMBIE.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MiniZombieEntity::checkMonsterSpawnRules );
     }
-
+    
     private static <T extends Entity> RegistryObject<EntityType<T>> register( String name, EntityType.Builder<T> builder ) {
         return REGISTRY.register( name, () -> builder.build( name ) );
     }

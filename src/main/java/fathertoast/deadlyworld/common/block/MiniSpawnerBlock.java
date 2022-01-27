@@ -1,12 +1,12 @@
 package fathertoast.deadlyworld.common.block;
 
+import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.tile.spawner.MiniSpawnerTileEntity;
+import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -19,83 +19,67 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
-
+    
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-
+    
     private static final VoxelShape[] SHAPES = {
-            Block.box(5.0D, 9.0D, 5.0D, 12.0D, 16.0D, 12.0D), // DOWN
-            Block.box(5.0D, 0.0D, 5.0D, 12.0D, 8.0D, 12.0D), // UP
-            Block.box(5.0D, 4.0D, 9.0D, 10.0D, 12.0D, 16.0D), // NORTH
-            Block.box(5.5D, 4.0D, 0.0D, 10.5D, 12.0D, 5.0D), // SOUTH
-            Block.box(11.0D, 4.0D, 5.5D, 16.0D, 12.0D, 10.5D), // WEST
-            Block.box(0.0D, 4.0D, 5.5D, 5.0D, 12.0D, 10.5D) // EAST
+            Block.box( 5.0, 9.0, 5.0, 12.0, 16.0, 12.0 ), // DOWN
+            Block.box( 5.0, 0.0, 5.0, 12.0, 8.0, 12.0 ), // UP
+            Block.box( 5.0, 4.0, 9.0, 10.0, 12.0, 16.0 ), // NORTH
+            Block.box( 5.5, 4.0, 0.0, 10.5, 12.0, 5.0 ), // SOUTH
+            Block.box( 11.0, 4.0, 5.5, 16.0, 12.0, 10.5 ), // WEST
+            Block.box( 0.0, 4.0, 5.5, 5.0, 12.0, 10.5 ) // EAST
     };
-
-
+    
+    
     public MiniSpawnerBlock() {
-        super(AbstractBlock.Properties.of(Material.METAL)
-                .sound(SoundType.METAL)
-                .strength(5.0F)
-                .harvestTool(ToolType.PICKAXE)
-                .noOcclusion()
-                .noDrops()
-        );
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.DOWN).setValue(WATERLOGGED, false));
+        super( Config.BLOCKS.get( SpawnerType.MINI ).adjustBlockProperties( AbstractBlock.Properties.copy( Blocks.SPAWNER ) ) );
+        this.registerDefaultState( this.stateDefinition.any().setValue( FACING, Direction.DOWN ).setValue( WATERLOGGED, false ) );
     }
-
+    
     @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selectionContext) {
-        return SHAPES[state.getValue(FACING).get3DDataValue()];
+    @SuppressWarnings( "deprecation" )
+    public VoxelShape getShape( BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selectionContext ) {
+        return SHAPES[state.getValue( FACING ).get3DDataValue()];
     }
-
+    
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader world) {
-        return new MiniSpawnerTileEntity();
-    }
-
+    public TileEntity newBlockEntity( IBlockReader world ) { return new MiniSpawnerTileEntity(); }
+    
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
+    public BlockRenderType getRenderShape( BlockState state ) { return BlockRenderType.MODEL; }
+    
     @Override
-    @SuppressWarnings("deprecation")
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    @SuppressWarnings( "deprecation" )
+    public FluidState getFluidState( BlockState state ) {
+        return state.getValue( WATERLOGGED ) ? Fluids.WATER.getSource( false ) : super.getFluidState( state );
     }
-
+    
     @Override
-    @SuppressWarnings("deprecation")
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    @SuppressWarnings( "deprecation" )
+    public BlockState rotate( BlockState state, Rotation rotation ) {
+        return state.setValue( FACING, rotation.rotate( state.getValue( FACING ) ) );
     }
-
+    
     @Override
-    @SuppressWarnings("deprecation")
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    @SuppressWarnings( "deprecation" )
+    public BlockState mirror( BlockState state, Mirror mirror ) {
+        return state.rotate( mirror.getRotation( state.getValue( FACING ) ) );
     }
-
+    
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext useContext) {
-        return this.defaultBlockState().setValue(FACING, useContext.getClickedFace());
+    public BlockState getStateForPlacement( BlockItemUseContext useContext ) {
+        return this.defaultBlockState().setValue( FACING, useContext.getClickedFace() );
     }
-
+    
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FACING).add(WATERLOGGED);
+    protected void createBlockStateDefinition( StateContainer.Builder<Block, BlockState> stateBuilder ) {
+        stateBuilder.add( FACING ).add( WATERLOGGED );
     }
 }

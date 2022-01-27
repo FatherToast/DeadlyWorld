@@ -76,7 +76,6 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     // Logic
     private WeightedSpawnerEntity entityToSpawn = new WeightedSpawnerEntity();
-
     
     /** Whether this spawner is active. Reduces the number of times we need to iterate over the player list. */
     private boolean activated;
@@ -97,27 +96,27 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     private double prevMobRotation;
     
     public DeadlySpawnerTileEntity() { super( DWTileEntities.DEADLY_SPAWNER.get() ); }
-
+    
     // Initializing the tile entity here
     // when it is safe to do so.
     @Override
     public void onLoad() {
-        if (this.getLevel() == null) {
-            DeadlyWorld.LOG.error("Failed to load deadly spawner block entity at \"{}\"", this.getBlockPos());
+        if( getLevel() == null ) {
+            DeadlyWorld.LOG.error( "Failed to load deadly spawner block entity at \"{}\"", this.getBlockPos() );
             return;
         }
-        if (this.getBlockState().getBlock() instanceof DeadlySpawnerBlock) {
-            DimensionConfigGroup dimConfigs = Config.getDimensionConfigs(this.level);
-            SpawnerType spawnerType = ((DeadlySpawnerBlock)this.getBlockState().getBlock()).getSpawnerType();
-
+        if( getBlockState().getBlock() instanceof DeadlySpawnerBlock ) {
+            DimensionConfigGroup dimConfigs = Config.getDimensionConfigs( getLevel() );
+            SpawnerType spawnerType = ((DeadlySpawnerBlock) getBlockState().getBlock()).getSpawnerType();
+            
             this.initializeSpawner( spawnerType, dimConfigs );
         }
         else {
             // TODO - Was too tired to use my brain, revisit this
-            DeadlyWorld.LOG.error("Aaaaauughh");
+            DeadlyWorld.LOG.error( "Aaaaauughh" );
         }
     }
-
+    
     public void initializeSpawner( SpawnerType spawnerType, DimensionConfigGroup dimConfigs ) {
         final Random random = level == null ? new Random() : level.random;
         final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( dimConfigs );
@@ -142,23 +141,23 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         spawnRange = (float) spawnerConfig.spawnRange.get();
         
         // Initialize logic
-        this.setEntityToSpawn(spawnerConfig.spawnList.get().next(random));
+        this.setEntityToSpawn( spawnerConfig.spawnList.get().next( random ) );
     }
     
-    public void setEntityToSpawn(EntityType<? extends Entity> entityType) {
-        this.entityToSpawn.getTag().putString("id", Objects.requireNonNull(entityType.getRegistryName()).toString());
-
-        if ( this.worldPosition != null && this.level != null ) {
-            NetworkHelper.updateSpawnerRenderEntity(entityType, this.getBlockPos());
+    public void setEntityToSpawn( EntityType<? extends Entity> entityType ) {
+        this.entityToSpawn.getTag().putString( "id", Objects.requireNonNull( entityType.getRegistryName() ).toString() );
+        
+        if( this.worldPosition != null && this.level != null ) {
+            NetworkHelper.updateSpawnerRenderEntity( entityType, this.getBlockPos() );
         }
     }
     
     private SpawnerType getSpawnerType() {
         if( this.worldPosition != null && this.level != null ) {
-            Block block = this.level.getBlockState( this.worldPosition ).getBlock( );
+            Block block = this.level.getBlockState( this.worldPosition ).getBlock();
             
             if( block instanceof DeadlySpawnerBlock ) {
-                return ((DeadlySpawnerBlock) block).getSpawnerType( );
+                return ((DeadlySpawnerBlock) block).getSpawnerType();
             }
         }
         return SpawnerType.DEFAULT;
@@ -172,18 +171,18 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         else {
             activationDelay = 4;
-            activated = TrapHelper.isValidPlayerInRange(this.level, this.worldPosition, activationRange, false,false);
+            activated = TrapHelper.isValidPlayerInRange( this.level, this.worldPosition, activationRange, false, false );
         }
         
-        if(this.level.isClientSide) {
+        if( this.level.isClientSide ) {
             // Run client-side effects
-            if(activated) {
+            if( activated ) {
                 final World world = level;
                 final double xPos = worldPosition.getX() + world.random.nextDouble();
                 final double yPos = worldPosition.getY() + world.random.nextDouble();
                 final double zPos = worldPosition.getZ() + world.random.nextDouble();
-                world.addParticle(ParticleTypes.SMOKE, xPos, yPos, zPos, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FLAME, xPos, yPos, zPos, 0.0, 0.0, 0.0);
+                world.addParticle( ParticleTypes.SMOKE, xPos, yPos, zPos, 0.0, 0.0, 0.0 );
+                world.addParticle( ParticleTypes.FLAME, xPos, yPos, zPos, 0.0, 0.0, 0.0 );
                 
                 if( spawnDelay > 0 ) {
                     spawnDelay--;
@@ -194,20 +193,20 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         else {
             // Run server-side logic
-            if(activated) {
+            if( activated ) {
                 
-                if(spawnDelay < 0) {
+                if( spawnDelay < 0 ) {
                     resetTimer( false );
                 }
                 
-                if(spawnDelay > 0) {
+                if( spawnDelay > 0 ) {
                     // Spawner is on cooldown
                     spawnDelay--;
                 }
-
-                else if(checkSight && !TrapHelper.isValidPlayerInRange( level, worldPosition, activationRange, true, false)) {
+                
+                else if( checkSight && !TrapHelper.isValidPlayerInRange( level, worldPosition, activationRange, true, false ) ) {
                     // Failed sight check; impose a small delay, so we don't spam ray traces
-                    spawnDelay = 6 + level.random.nextInt(10);
+                    spawnDelay = 6 + level.random.nextInt( 10 );
                 }
                 else {
                     // Attempt spawning
@@ -223,91 +222,91 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     private void doSpawn() {
         // Should only be called server side anyways
-        if(level == null || level.isClientSide) return;
-
+        if( level == null || level.isClientSide ) return;
+        
         ServerWorld world = (ServerWorld) this.level;
         BlockPos pos = this.worldPosition;
-
+        
         final DimensionConfigGroup dimConfig = Config.getDimensionConfigs( world );
         final SpawnerType spawnerType = this.getSpawnerType();
-
+        
         boolean success = false;
-
+        
         for( int i = 0; i < this.spawnCount; i++ ) {
             double xSpawn = pos.getX() + 0.5 + (world.random.nextDouble() - world.random.nextDouble()) * this.spawnRange;
             double ySpawn = pos.getY() + world.random.nextInt( 3 ) - 1;
             double zSpawn = pos.getZ() + 0.5 + (world.random.nextDouble() - world.random.nextDouble()) * this.spawnRange;
-
+            
             // Try to create the entity to spawn
             final Entity entity;
-
+            
             try {
-                entity = EntityType.loadEntityRecursive(this.entityToSpawn.getTag(), world, (spawnedEntity) -> {
-                    spawnedEntity.moveTo(xSpawn, ySpawn, zSpawn, spawnedEntity.yRot, spawnedEntity.xRot);
+                entity = EntityType.loadEntityRecursive( this.entityToSpawn.getTag(), world, ( spawnedEntity ) -> {
+                    spawnedEntity.moveTo( xSpawn, ySpawn, zSpawn, spawnedEntity.yRot, spawnedEntity.xRot );
                     return spawnedEntity;
-                });
+                } );
             }
-            catch(Exception ex) {
-                DeadlyWorld.LOG.error("Encountered exception while constructing entity '{}'", this.entityToSpawn, ex);
+            catch( Exception ex ) {
+                DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", this.entityToSpawn, ex );
                 break;
             }
-
+            
             // Do max nearby entities check
             int nearbyEntities = world.getEntitiesOfClass(
                     entity.getClass(),
                     new AxisAlignedBB(
                             pos.getX(), pos.getY(), pos.getZ(),
                             pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1
-                    ).inflate(this.spawnRange)
+                    ).inflate( this.spawnRange )
             ).size();
-            if(nearbyEntities >= this.spawnCount * 2) {
+            if( nearbyEntities >= this.spawnCount * 2 ) {
                 break;
             }
-
+            
             // Initialize the entity
-            entity.moveTo(entity.getX(), entity.getY(), entity.getZ(), world.random.nextFloat() * 360.0F, 0.0F);
-
-            if(entity instanceof LivingEntity) {
+            entity.moveTo( entity.getX(), entity.getY(), entity.getZ(), world.random.nextFloat() * 360.0F, 0.0F );
+            
+            if( entity instanceof LivingEntity ) {
                 LivingEntity livingEntity = (LivingEntity) entity;
-
-                if(!canSpawnNearLocation(livingEntity, xSpawn, ySpawn, zSpawn)) {
+                
+                if( !canSpawnNearLocation( livingEntity, xSpawn, ySpawn, zSpawn ) ) {
                     continue;
                 }
-                if (livingEntity instanceof MobEntity) {
-                    final DifficultyInstance difficultyInstance = world.getCurrentDifficultyAt(pos);
-                    ((MobEntity) entity).finalizeSpawn((ServerWorld) this.level, difficultyInstance, SpawnReason.SPAWNER, null, null);
+                if( livingEntity instanceof MobEntity ) {
+                    final DifficultyInstance difficultyInstance = world.getCurrentDifficultyAt( pos );
+                    ((MobEntity) entity).finalizeSpawn( (ServerWorld) this.level, difficultyInstance, SpawnReason.SPAWNER, null, null );
                 }
                 spawnerType.initEntity( livingEntity, dimConfig, world, pos );
             }
-            world.addFreshEntity(entity);
+            world.addFreshEntity( entity );
             world.levelEvent( 2004, pos, 0 );
             success = true;
-
-            if(entity instanceof MobEntity) {
+            
+            if( entity instanceof MobEntity ) {
                 ((MobEntity) entity).spawnAnim();
             }
         }
-        this.resetTimer(success);
+        this.resetTimer( success );
     }
     
-    private boolean canSpawnNearLocation(LivingEntity entity, final double x, final double y, final double z) {
-        return entity.level.noCollision(entity) ||
-                trySpawnOffsets(entity, x, y, z, Direction.UP, Direction.DOWN ) ||
-                trySpawnOffsets(entity, x, y, z, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH) || trySpawnOffsets(entity, x, y + 1, z, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH);
+    private boolean canSpawnNearLocation( LivingEntity entity, final double x, final double y, final double z ) {
+        return entity.level.noCollision( entity ) ||
+                trySpawnOffsets( entity, x, y, z, Direction.UP, Direction.DOWN ) ||
+                trySpawnOffsets( entity, x, y, z, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH ) || trySpawnOffsets( entity, x, y + 1, z, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH );
     }
     
-    private boolean trySpawnOffsets(LivingEntity entity, final double x, final double y, final double z, Direction... facings) {
+    private boolean trySpawnOffsets( LivingEntity entity, final double x, final double y, final double z, Direction... facings ) {
         for( Direction direction : facings ) {
-            entity.setPos(x + direction.getStepX(), y + direction.getStepY(), z + direction.getStepZ());
-            if(entity.level.noCollision(entity)) {
+            entity.setPos( x + direction.getStepX(), y + direction.getStepY(), z + direction.getStepZ() );
+            if( entity.level.noCollision( entity ) ) {
                 return true;
             }
         }
         return false;
     }
     
-    private void resetTimer(boolean incrProgressiveDelay) {
-        if(level == null)
+    private void resetTimer( boolean incrProgressiveDelay ) {
+        if( level == null )
             return;
         
         final World world = level;
@@ -336,27 +335,27 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                     );
                 }
             }
-
-            if(this.dynamicSpawnList != null && !this.dynamicSpawnList.isEmpty()) {
-                EntityType<?> nextType = this.dynamicSpawnList.next(world.random);
-
-                if (nextType == null) {
-                    DeadlyWorld.LOG.warn("Failed to fetch next random entity entry in a weighted entity list. Could the total weight be 0?");
+            
+            if( this.dynamicSpawnList != null && !this.dynamicSpawnList.isEmpty() ) {
+                EntityType<?> nextType = this.dynamicSpawnList.next( world.random );
+                
+                if( nextType == null ) {
+                    DeadlyWorld.LOG.warn( "Failed to fetch next random entity entry in a weighted entity list. Could the total weight be 0?" );
                 }
                 else {
-                    setEntityToSpawn(nextType);
-
-                    final BlockState block = world.getBlockState(worldPosition);
-                    world.sendBlockUpdated(worldPosition, block, block, 4);
+                    setEntityToSpawn( nextType );
+                    
+                    final BlockState block = world.getBlockState( worldPosition );
+                    world.sendBlockUpdated( worldPosition, block, block, 4 );
                 }
             }
-            world.blockEvent(worldPosition, this.getBlockState().getBlock(), EVENT_TIMER_RESET, 0);
+            world.blockEvent( worldPosition, this.getBlockState().getBlock(), EVENT_TIMER_RESET, 0 );
         }
     }
     
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        super.save(compound);
+    public CompoundNBT save( CompoundNBT compound ) {
+        super.save( compound );
         
         // Attributes
         //compound.put( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList == null ? "" : dynamicSpawnList.toStringList());
@@ -369,20 +368,20 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         
         compound.putInt( TAG_SPAWN_COUNT, spawnCount );
         compound.putFloat( TAG_SPAWN_RANGE, spawnRange );
-
+        
         // >8)
-        if (this.dynamicSpawnList != null && !this.dynamicSpawnList.isEmpty()) {
+        if( this.dynamicSpawnList != null && !this.dynamicSpawnList.isEmpty() ) {
             CompoundNBT spawnListTag = new CompoundNBT();
             int tagIndex = 0;
-
-            for (EntityEntry entry : this.dynamicSpawnList.getAllEntries()) {
+            
+            for( EntityEntry entry : this.dynamicSpawnList.getAllEntries() ) {
                 // Assuming the first index of the
                 // entry's value set is the weight.
                 String stringEntry = entry.TYPE.getRegistryName().toString() + " " + entry.VALUES[0];
-                spawnListTag.putString(String.valueOf(tagIndex), stringEntry);
+                spawnListTag.putString( String.valueOf( tagIndex ), stringEntry );
                 ++tagIndex;
             }
-            compound.put(TAG_DYNAMIC_SPAWN_LIST, spawnListTag);
+            compound.put( TAG_DYNAMIC_SPAWN_LIST, spawnListTag );
         }
         
         // Logic
@@ -396,7 +395,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         compound.putFloat( TAG_ACTIVATION_RANGE, activationRange );
         
         compound.putInt( TAG_DELAY_MIN, minSpawnDelay );
-
+        
         compound.put( TAG_SPAWN_ENTITY, entityToSpawn.getTag() );
         compound.putInt( TAG_DELAY, spawnDelay );
         
@@ -404,14 +403,14 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     }
     
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        super.load(state, tag);
+    public void load( BlockState state, CompoundNBT tag ) {
+        super.load( state, tag );
         
         // Attributes
-        if(tag.contains(TAG_DYNAMIC_SPAWN_LIST, Constants.NBT.TAG_COMPOUND)) {
-            CompoundNBT spawnListTag = tag.getCompound(TAG_DYNAMIC_SPAWN_LIST);
-
-            this.dynamicSpawnList = WeightedEntityList.loadFromNBT(spawnListTag);
+        if( tag.contains( TAG_DYNAMIC_SPAWN_LIST, Constants.NBT.TAG_COMPOUND ) ) {
+            CompoundNBT spawnListTag = tag.getCompound( TAG_DYNAMIC_SPAWN_LIST );
+            
+            this.dynamicSpawnList = WeightedEntityList.loadFromNBT( spawnListTag );
         }
         
         if( tag.contains( TAG_ACTIVATION_RANGE, Constants.NBT.TAG_ANY_NUMERIC ) ) {
@@ -420,7 +419,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         if( tag.contains( TAG_CHECK_SIGHT, Constants.NBT.TAG_ANY_NUMERIC ) ) {
             checkSight = tag.getBoolean( TAG_CHECK_SIGHT );
         }
-
+        
         if( tag.contains( TAG_DELAY_MIN, Constants.NBT.TAG_ANY_NUMERIC ) ) {
             minSpawnDelay = tag.getInt( TAG_DELAY_MIN );
         }
@@ -442,8 +441,8 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         
         // Logic
-        this.setSpawnEntityFromTag(tag);
-
+        this.setSpawnEntityFromTag( tag );
+        
         if( tag.contains( TAG_DELAY, Constants.NBT.TAG_ANY_NUMERIC ) ) {
             spawnDelay = tag.getInt( TAG_DELAY );
         }
@@ -454,53 +453,54 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket( this.worldPosition, 0, this.getUpdateTag() );
     }
     
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+        return this.save( new CompoundNBT() );
     }
     
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if(this.level.isClientSide) {
-            super.handleUpdateTag(this.getBlockState(), pkt.getTag());
-
+    public void onDataPacket( NetworkManager net, SUpdateTileEntityPacket pkt ) {
+        if( this.level.isClientSide ) {
+            super.handleUpdateTag( this.getBlockState(), pkt.getTag() );
+            
             CompoundNBT tag = pkt.getTag();
-            this.setSpawnEntityFromTag(tag);
+            this.setSpawnEntityFromTag( tag );
         }
     }
-
-    private void setSpawnEntityFromTag(CompoundNBT tag) {
-        if(tag.contains(TAG_SPAWN_ENTITY, Constants.NBT.TAG_COMPOUND)) {
-            CompoundNBT spawnEntityTag = tag.getCompound(TAG_SPAWN_ENTITY);
-
-            if (spawnEntityTag.contains("id", Constants.NBT.TAG_STRING)) {
-
-                String line = spawnEntityTag.getString("id");
-
-                if (line.isEmpty()) {
+    
+    private void setSpawnEntityFromTag( CompoundNBT tag ) {
+        if( tag.contains( TAG_SPAWN_ENTITY, Constants.NBT.TAG_COMPOUND ) ) {
+            CompoundNBT spawnEntityTag = tag.getCompound( TAG_SPAWN_ENTITY );
+            
+            if( spawnEntityTag.contains( "id", Constants.NBT.TAG_STRING ) ) {
+                
+                String line = spawnEntityTag.getString( "id" );
+                
+                if( line.isEmpty() ) {
                     entityToSpawn = new WeightedSpawnerEntity();
                     cachedEntity = null;
-                } else {
+                }
+                else {
                     EntityType<?> entityType = EntityType.PIG;
-                    ResourceLocation entityRegName = ResourceLocation.tryParse(line);
-
-                    if (entityRegName != null && ForgeRegistries.ENTITIES.containsKey(entityRegName)) {
-                        entityType = ForgeRegistries.ENTITIES.getValue(entityRegName);
+                    ResourceLocation entityRegName = ResourceLocation.tryParse( line );
+                    
+                    if( entityRegName != null && ForgeRegistries.ENTITIES.containsKey( entityRegName ) ) {
+                        entityType = ForgeRegistries.ENTITIES.getValue( entityRegName );
                     }
-                    setEntityToSpawn(entityType);
+                    setEntityToSpawn( entityType );
                 }
             }
         }
     }
-
+    
     @Override
     public boolean triggerEvent( int id, int type ) {
-        if(this.level.isClientSide) {
+        if( this.level.isClientSide ) {
             DeadlyWorld.LOG.warn( "Getting client event '{}:{}'", id, type );
-
+            
             if( id == EVENT_TIMER_RESET ) {
                 this.spawnDelay = this.minSpawnDelay;
                 return true;
@@ -513,16 +513,16 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     public boolean onlyOpCanSetNbt() {
         return true;
     }
-
+    
     @OnClient
-    public void setRenderEntity(EntityType<?> entityType) {
-        this.cachedEntity = entityType.create(this.level);
+    public void setRenderEntity( EntityType<?> entityType ) {
+        this.cachedEntity = entityType.create( this.level );
     }
     
     @OnClient
     public Entity getRenderEntity() {
-        if (this.cachedEntity == null) {
-            this.cachedEntity = EntityType.loadEntityRecursive(this.entityToSpawn.getTag(), this.level, Function.identity());
+        if( this.cachedEntity == null ) {
+            this.cachedEntity = EntityType.loadEntityRecursive( this.entityToSpawn.getTag(), this.level, Function.identity() );
         }
         return this.cachedEntity;
     }
