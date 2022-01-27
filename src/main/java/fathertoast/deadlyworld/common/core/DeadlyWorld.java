@@ -31,8 +31,9 @@ public class DeadlyWorld {
      *  o general
      *      o dimension-based configs
      *      o biome-based configs
-     *      + bounding box renderer
+     *      + F3+B bounding box renderer for tile entities
      *  o blocks
+     *      - configurable physical properties
      *      o procedurally generated silverfish blocks
      *      o deadly spawner
      *      + mini spawner
@@ -45,10 +46,11 @@ public class DeadlyWorld {
      *      o feature tester
      *      o event
      *  + entities
-     *      + mini creeper
-     *      + mini skeleton
+     *      ? configurable base attributes & stats
+     *      - mini creeper
+     *      - mini skeleton
      *      + mini arrow
-     *      + mini zombie
+     *      - mini zombie
      *      + mimic
      *      ? dispenser fish hook
      *  o vein world gen
