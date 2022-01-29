@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.core.config;
 
+import fathertoast.deadlyworld.common.registry.DWEntities;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.config.field.BooleanField;
 import fathertoast.deadlyworld.common.core.config.field.DoubleField;
@@ -146,7 +147,7 @@ public class SpawnerConfig extends FeatureConfig {
             dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
                     "The chance for a " + FEATURE_TYPE_NAME + " to generate as 'dynamic'.",
                     "Dynamic spawners pick a new mob to spawn after each spawn." ) );
-            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( feature ),
+            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", type == SpawnerType.MINI ? makeDefaultMiniSpawnList() : makeDefaultSpawnList( feature ),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + "s. One of these is chosen",
                     "at random when the spawner is generated. Spawners that are generated as 'dynamic' will pick again",
                     "between each spawn." ) );
@@ -202,9 +203,11 @@ public class SpawnerConfig extends FeatureConfig {
         }
     }
 
-    protected WeightedEntityList makeDefaultMiniSpawnList( ) {
+    protected static WeightedEntityList makeDefaultMiniSpawnList( ) {
         return new WeightedEntityList(
-            new EntityEntry()
+                new EntityEntry( DWEntities.MINI_CREEPER, 10.0D ),
+                new EntityEntry( DWEntities.MINI_ZOMBIE, 10.0D ),
+                new EntityEntry( DWEntities.MINI_SKELETON, 10.0D )
         );
     }
     

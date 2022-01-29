@@ -359,8 +359,6 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         super.save(compound);
         
         // Attributes
-        //compound.put( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList == null ? "" : dynamicSpawnList.toStringList());
-        
         compound.putBoolean( TAG_CHECK_SIGHT, checkSight );
         
         compound.putInt( TAG_DELAY_MAX, maxSpawnDelay );
@@ -370,7 +368,6 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         compound.putInt( TAG_SPAWN_COUNT, spawnCount );
         compound.putFloat( TAG_SPAWN_RANGE, spawnRange );
 
-        // >8)
         if (this.dynamicSpawnList != null && !this.dynamicSpawnList.isEmpty()) {
             CompoundNBT spawnListTag = new CompoundNBT();
             int tagIndex = 0;
@@ -378,7 +375,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             for (EntityEntry entry : this.dynamicSpawnList.getAllEntries()) {
                 // Assuming the first index of the
                 // entry's value set is the weight.
-                String stringEntry = entry.TYPE.getRegistryName().toString() + " " + entry.VALUES[0];
+                String stringEntry = entry.TYPE.get().getRegistryName().toString() + " " + entry.VALUES[0];
                 spawnListTag.putString(String.valueOf(tagIndex), stringEntry);
                 ++tagIndex;
             }

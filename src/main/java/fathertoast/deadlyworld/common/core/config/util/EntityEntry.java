@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
@@ -16,7 +17,7 @@ import java.util.function.Supplier;
 @SuppressWarnings( "unused" )
 public class EntityEntry {
     /** The entity type this entry is defined for. If this is null, then this entry will match any entity. */
-    public final Supplier<EntityType<?>> TYPE_SUPPLIER;
+    public final Supplier<? extends EntityType<?>> TYPE;
     /** True if this should check for instanceof the entity class (as opposed to equals). */
     public final boolean EXTEND;
     /** The values given to this entry. Null for comparison objects. */
@@ -27,7 +28,7 @@ public class EntityEntry {
     
     /** Creates an entry used to compare entity classes internally with the entries in an entity list. */
     EntityEntry( Entity entity ) {
-        TYPE_SUPPLIER = entity::getType;
+        TYPE = entity::getType;
         EXTEND = false;
         VALUES = null;
         entityClass = entity.getClass();
@@ -35,50 +36,46 @@ public class EntityEntry {
     
     /** Creates an entry with the specified values that acts as a default matching all entity types. Used for creating default configs. */
     public EntityEntry( double... values ) {
-        this( (EntityType<?>) null, true, values );
+        this( () -> null, true, values );
     }
-    
+
     /** Creates an extendable entry with the specified values. Used for creating default configs. */
-    public EntityEntry( Supplier<EntityType<?>> entityType, double... values ) {
+    public EntityEntry( Supplier<? extends EntityType<?>> entityType, double... values ) {
         this( entityType, true, values );
     }
-    
+
     /** Creates an entry with the specified values. Used for creating default configs. */
-    public EntityEntry( Supplier<EntityType<?>> entityType, boolean extend, double... values ) {
-        TYPE_SUPPLIER = entityType;
+    public EntityEntry( Supplier<? extends EntityType<?>> entityType, boolean extend, double... values ) {
+        TYPE = entityType;
         EXTEND = extend;
         VALUES = values;
     }
 
-    /** Creates an extendable entry with the specified values. Used for creating default configs. */
+    /** Delegates to the constructor taking a supplier. Used for vanilla entity types. */
     public EntityEntry( EntityType<?> entityType, double... values ) {
         this( () -> entityType, true, values );
     }
 
-    /** Creates an entry with the specified values. Used for creating default configs. */
+    /** Delegates to the constructor taking a supplier. Used for vanilla entity types. */
     public EntityEntry( EntityType<?> entityType, boolean extend, double... values ) {
-        TYPE_SUPPLIER = () -> entityType;
+        TYPE = () -> entityType;
         EXTEND = extend;
         VALUES = values;
     }
-    
+
     /** Called on this entry before using it to check if the entity class has been determined, and loads the class if it has not been. */
     void checkClass( World world ) {
-        if( TYPE_SUPPLIER != null && entityClass == null ) {
+        if( TYPE != null && entityClass == null ) {
             try {
-                EntityType<?> type = TYPE_SUPPLIER.get();
+                final Entity entity = TYPE.get().create(world);
 
-                if (type != null) {
-                    final Entity entity = type.create(world);
-
-                    if (entity != null) {
-                        entityClass = entity.getClass();
-                        entity.remove();
-                    }
+                if (entity != null) {
+                    entityClass = entity.getClass();
+                    entity.remove();
                 }
             }
             catch( Exception ex ) {
-                DeadlyWorld.LOG.warn( "Failed to load class of entity type {}!", TYPE_SUPPLIER );
+                DeadlyWorld.LOG.warn( "Failed to load class of entity type {}!", TYPE );
                 ex.printStackTrace();
             }
         }
@@ -92,8 +89,8 @@ public class EntityEntry {
      */
     public boolean contains( EntityEntry entry ) {
         // Handle default entries
-        if(TYPE_SUPPLIER.get() == null ) return true;
-        if( entry.TYPE_SUPPLIER == null ) return false;
+        if(TYPE == null ) return true;
+        if( entry.TYPE == null ) return false;
         // Same entity, but non-extendable is more specific
         if( entityClass == entry.entityClass ) return !entry.EXTEND;
         // Extendable entry, check if the other is for a subclass
@@ -117,7 +114,7 @@ public class EntityEntry {
      */
     public String toString( boolean castToInt ) {
         // Start with the entity type registry key
-        ResourceLocation resource = TYPE_SUPPLIER.get() == null ? null : ForgeRegistries.ENTITIES.getKey( TYPE_SUPPLIER.get() );
+        ResourceLocation resource = TYPE == null ? null : ForgeRegistries.ENTITIES.getKey( TYPE.get() );
         StringBuilder str = new StringBuilder( resource == null ? EntityListField.REG_KEY_DEFAULT : resource.toString() );
         // Insert "specific" prefix if not extendable
         if( !EXTEND ) {
