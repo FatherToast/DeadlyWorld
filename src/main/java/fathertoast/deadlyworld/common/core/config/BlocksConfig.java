@@ -27,9 +27,13 @@ public class BlocksConfig extends Config.AbstractConfig {
             LOOKUP.put( toKey( SpawnerType.CATEGORY, type.toString() ), new BlockCategory( SPEC, SpawnerType.CATEGORY, type.toString(),
                     5.0, 1200.0, 2 ) );
         }
+        
+        //TODO add storm drain; will possibly include in a "water traps" category
     }
     
-    public BlockCategory get( String category, String type ) { return LOOKUP.get( toKey( category, type ) ); }
+    public BlockCategory get( SpawnerType type ) { return get( SpawnerType.CATEGORY, type.toString() ); }
+    
+    private BlockCategory get( String category, String type ) { return LOOKUP.get( toKey( category, type ) ); }
     
     private static String toKey( String category, String type ) { return category + "." + type; }
     

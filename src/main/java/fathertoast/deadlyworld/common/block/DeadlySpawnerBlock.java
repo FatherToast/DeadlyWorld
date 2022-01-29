@@ -17,10 +17,7 @@ public class DeadlySpawnerBlock extends ContainerBlock {
     private final SpawnerType spawnerType;
     
     public DeadlySpawnerBlock( @Nonnull SpawnerType type ) {
-        super( Config.BLOCKS.get( SpawnerType.CATEGORY, type.toString() ).adjustBlockProperties( AbstractBlock.Properties.copy( Blocks.SPAWNER ) )
-                .requiresCorrectToolForDrops()
-                .strength( 5.0F )
-        );
+        super( Config.BLOCKS.get( type ).adjustBlockProperties( AbstractBlock.Properties.copy( Blocks.SPAWNER ) ) );
         spawnerType = type;
     }
     

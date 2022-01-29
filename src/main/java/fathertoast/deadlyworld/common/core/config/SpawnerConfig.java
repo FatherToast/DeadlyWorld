@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.core.config;
 
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.registry.DWEntities;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.config.field.BooleanField;
@@ -22,8 +23,9 @@ public class SpawnerConfig extends FeatureConfig {
     public final SpawnerTypeCategory SWARM;
     public final BrutalSpawnerCategory BRUTAL;
     public final SpawnerTypeCategory NEST;
-    public final SpawnerTypeCategory DUNGEON;
     public final SpawnerTypeCategory MINI;
+    
+    public final SpawnerTypeCategory DUNGEON;
     
     /** Builds the config spec that should be used for this config. */
     SpawnerConfig( File dir, DimensionConfigGroup dimConfigs ) {
@@ -63,11 +65,11 @@ public class SpawnerConfig extends FeatureConfig {
         NEST = new NestSpawnerCategory( SPEC, this, SpawnerType.NEST, 0.16, 12, 62, 0.3,
                 16.0, false, 100, 400, 20, 6, 6.0, 0.0 );
         
+        MINI = new MiniSpawnerCategory( SPEC, this, SpawnerType.MINI, 0.01, 12, 52, 0.3,
+                16.0, false, 100, 400, 20, 6, 4.0, 0.1 );
+        
         DUNGEON = new SpawnerTypeCategory( SPEC, this, SpawnerType.DUNGEON, 0.0, 0, 0, 0.0,
                 16.0, false, 200, 800, 40, 4, 4.0, 0.1 );
-
-        MINI = new SpawnerTypeCategory( SPEC, this, SpawnerType.MINI, 0.0, 0, 0, 0.0,
-                8.0, false, 200, 400, 40, 6, 4, 0.1 );
     }
     
     public static class SpawnerTypeCategory extends FeatureTypeCategory {
@@ -103,14 +105,18 @@ public class SpawnerConfig extends FeatureConfig {
                              int minDelay, int maxDelay, int delayPrgr, int spawnCnt, double spawnRng, double dynamicCh ) {
             super( parent, feature, type.getSerializedName(), placements, minHeight, maxHeight );
             
-            SPEC.newLine();
-            
-            chestChance = SPEC.define( new DoubleField( "chest_chance", chestCh, DoubleField.Range.PERCENT,
-                    "The chance for a chest to generate beneath " + FEATURE_TYPE_NAME + ".",
-                    //TODO
-                    "For reference, the loot table for these chests is '" + "<TBD>"/*DeadlyWorld.toString( type.LOOT_TABLE )*/ + "'." ) );
-            
-            SPEC.newLine();
+            if( isSubfeature() ) {
+                chestChance = null;
+            }
+            else {
+                SPEC.newLine();
+                
+                chestChance = SPEC.define( new DoubleField( "chest_chance", chestCh, DoubleField.Range.PERCENT,
+                        "The chance for a chest to generate beneath " + FEATURE_TYPE_NAME + ".",
+                        "For reference, the loot table for these chests is '" + DeadlyWorld.toString( type.getChestLootTable() ) + "'." ) );
+                
+                SPEC.newLine();
+            }
             
             activationRange = SPEC.define( new DoubleField( "activation_range", activationRng, DoubleField.Range.POSITIVE,
                     "The spawner is active as long as a player is within this distance (spherical distance)." ) );
@@ -147,7 +153,7 @@ public class SpawnerConfig extends FeatureConfig {
             dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
                     "The chance for a " + FEATURE_TYPE_NAME + " to generate as 'dynamic'.",
                     "Dynamic spawners pick a new mob to spawn after each spawn." ) );
-            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", type == SpawnerType.MINI ? makeDefaultMiniSpawnList() : makeDefaultSpawnList( feature ),
+            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( feature ),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + "s. One of these is chosen",
                     "at random when the spawner is generated. Spawners that are generated as 'dynamic' will pick again",
                     "between each spawn." ) );
@@ -202,13 +208,14 @@ public class SpawnerConfig extends FeatureConfig {
             );
         }
     }
-
-    protected static WeightedEntityList makeDefaultMiniSpawnList( ) {
-        return new WeightedEntityList(
-                new EntityEntry( DWEntities.MINI_CREEPER, 10.0D ),
-                new EntityEntry( DWEntities.MINI_ZOMBIE, 10.0D ),
-                new EntityEntry( DWEntities.MINI_SKELETON, 10.0D )
-        );
+    
+    public static class SubfeatureSpawnerCategory extends SpawnerTypeCategory implements SubfeatureCategory {
+        SubfeatureSpawnerCategory( ToastConfigSpec parent, FeatureConfig feature, SpawnerType type,
+                                   double activationRng, boolean sightCheck,
+                                   int minDelay, int maxDelay, int delayPrgr, int spawnCnt, double spawnRng, double dynamicCh ) {
+            super( parent, feature, type, 0.0, 0, 0, 0.0, activationRng, sightCheck,
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+        }
     }
     
     public static class BrutalSpawnerCategory extends SpawnerTypeCategory {
@@ -248,6 +255,25 @@ public class SpawnerConfig extends FeatureConfig {
         @Override
         protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
             return new WeightedEntityList( new EntityEntry( EntityType.SILVERFISH, 100 ) );
+        }
+    }
+    
+    public static class MiniSpawnerCategory extends SpawnerTypeCategory {
+        MiniSpawnerCategory( ToastConfigSpec parent, FeatureConfig feature, SpawnerType type,
+                             double placements, int minHeight, int maxHeight, double chestCh, double activationRng, boolean sightCheck,
+                             int minDelay, int maxDelay, int delayPrgr, int spawnCnt, double spawnRng, double dynamicCh ) {
+            super( parent, feature, type, placements, minHeight, maxHeight, chestCh, activationRng, sightCheck,
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+        }
+        
+        /** @return The default spawn list to use for this spawner type and dimension. */
+        @Override
+        protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
+            return new WeightedEntityList(
+                    new EntityEntry( DWEntities.MINI_ZOMBIE.get(), 200 ),
+                    new EntityEntry( DWEntities.MINI_SKELETON.get(), 100 ),
+                    new EntityEntry( DWEntities.MINI_CREEPER.get(), 100 )
+            );
         }
     }
 }

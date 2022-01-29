@@ -24,6 +24,7 @@ import java.util.function.Function;
 @MethodsReturnNonnullByDefault
 public enum SpawnerType implements IStringSerializable {
     
+    // Standalone features
     DEFAULT( "simple", ( dimConfigs ) -> dimConfigs.SPAWNERS.LONE ),
     STREAM( "stream", ( dimConfigs ) -> dimConfigs.SPAWNERS.STREAM ),
     SWARM( "swarm", ( dimConfigs ) -> dimConfigs.SPAWNERS.SWARM ),
@@ -46,11 +47,14 @@ public enum SpawnerType implements IStringSerializable {
         }
     },
     NEST( "nest", "silverfish nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST ),
-    DUNGEON( "dungeon", ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON ) {
-        /** @return True if this type is a subfeature; false if it is a standalone feature. */
+    MINI( "mini", ( dimConfigs ) -> dimConfigs.SPAWNERS.MINI ) {
+        /** @return True if this type uses the standard deadly spawner block and tile entity. */
         @Override
-        public boolean isSubfeature() { return true; }
-    };
+        public boolean usesStandardBlock() { return false; }
+    },
+    
+    // Subfeatures
+    DUNGEON( "dungeon", true, ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON );
     
     /** The path for loot tables associated with these types. */
     public static final String LOOT_TABLE_PATH = "deadly_spawners/";
@@ -64,27 +68,40 @@ public enum SpawnerType implements IStringSerializable {
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
     private final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction;
     
+    /** True if this spawner type is used as part of another feature. */
+    private final boolean subfeature;
+    
     SpawnerType( String name, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
-        this( name, name.replace( "_", " " ) + " spawner", configFunction );
+        this( name, false, configFunction );
+    }
+    
+    SpawnerType( String name, boolean sub, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
+        this( name, name.replace( "_", " " ) + " spawner", sub, configFunction );
     }
     
     SpawnerType( String name, String prettyName, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
+        this( name, prettyName, false, configFunction );
+    }
+    
+    SpawnerType( String name, String prettyName, boolean sub, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
         this.id = name;
         this.displayName = prettyName;
         this.configFunction = configFunction;
+        this.subfeature = sub;
     }
     
     @Override
     public String getSerializedName() { return id; }
     
     /** @return True if this type is a subfeature; false if it is a standalone feature. */
-    public boolean isSubfeature() { return false; }
+    public final boolean isSubfeature() { return subfeature; }
+    
+    /** @return True if this type uses the standard deadly spawner block and tile entity. */
+    public boolean usesStandardBlock() { return true; }
     
     /**
      * Returns a SpawnerType from ID.
-     * If there exists no SpawnerType
-     * with the given ID, default to
-     * {@link SpawnerType#DEFAULT}
+     * If there exists no SpawnerType with the given ID, default to {@link SpawnerType#DEFAULT}
      *
      * @param ID The ID of the SpawnerType.
      * @return A SpawnerType matching the given ID.
