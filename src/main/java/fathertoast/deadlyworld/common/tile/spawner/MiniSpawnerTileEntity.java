@@ -6,11 +6,13 @@ import fathertoast.deadlyworld.common.registry.DWBlocks;
 import fathertoast.deadlyworld.common.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.OnClient;
 import net.minecraft.block.BlockState;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.World;
 
 import java.util.Map;
 
@@ -46,6 +48,24 @@ public class MiniSpawnerTileEntity extends DeadlySpawnerTileEntity {
 
         if (state.getBlock() instanceof MiniSpawnerBlock) {
             this.facing = this.getBlockState().getValue(BlockStateProperties.FACING);
+        }
+    }
+
+    @Override
+    protected void effectTick() {
+        if( activated ) {
+            final World world = level;
+            final double xPos = worldPosition.getX() + world.random.nextDouble();
+            final double yPos = worldPosition.getY() + world.random.nextDouble();
+            final double zPos = worldPosition.getZ() + world.random.nextDouble();
+            world.addParticle( ParticleTypes.SMOKE, xPos, yPos, zPos, 0.0, 0.0, 0.0 );
+            world.addParticle( ParticleTypes.FLAME, xPos, yPos, zPos, 0.0, 0.0, 0.0 );
+
+            if( spawnDelay > 0 ) {
+                spawnDelay--;
+            }
+            prevMobRotation = mobRotation;
+            mobRotation = (mobRotation + 1000.0F / (spawnDelay + 200.0F)) % 360.0;
         }
     }
 

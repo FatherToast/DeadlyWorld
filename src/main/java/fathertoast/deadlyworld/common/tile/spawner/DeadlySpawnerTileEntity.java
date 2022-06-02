@@ -62,39 +62,39 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     
     // Attributes
     @Nullable
-    private WeightedEntityList dynamicSpawnList;
-    
-    private float activationRange;
-    private boolean checkSight;
-    
-    private int minSpawnDelay;
-    private int maxSpawnDelay;
-    private int spawnDelayProgression;
-    private float spawnDelayRecovery;
-    
-    private int spawnCount;
-    private float spawnRange;
+    protected WeightedEntityList dynamicSpawnList;
+
+    protected float activationRange;
+    protected boolean checkSight;
+
+    protected int minSpawnDelay;
+    protected int maxSpawnDelay;
+    protected int spawnDelayProgression;
+    protected float spawnDelayRecovery;
+
+    protected int spawnCount;
+    protected float spawnRange;
     
     // Logic
     private WeightedSpawnerEntity entityToSpawn = new WeightedSpawnerEntity();
     
     /** Whether this spawner is active. Reduces the number of times we need to iterate over the player list. */
-    private boolean activated;
+    protected boolean activated;
     /** Countdown until the next activation check. */
-    private int activationDelay;
+    protected int activationDelay;
     
     /** Countdown until the next spawn attempt. If this is set below 0, the countdown is reset without attempting to spawn. */
-    private int spawnDelay = 10;
+    protected int spawnDelay = 10;
     /** The spawn delay previously set; the core of the progressive delay logic. */
-    private double spawnDelayBuildup;
+    protected double spawnDelayBuildup;
     
     // Client logic
     /** Cached instance of the entity to render inside the spawner. */
-    private Entity cachedEntity;
+    protected Entity cachedEntity;
     /** The rotation of the mob inside the mob spawner */
-    private double mobRotation;
+    protected double mobRotation;
     /** the previous rotation of the mob inside the mob spawner */
-    private double prevMobRotation;
+    protected double prevMobRotation;
     
     public DeadlySpawnerTileEntity() { super( DWTileEntities.DEADLY_SPAWNER.get() ); }
 
@@ -167,6 +167,23 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         return SpawnerType.DEFAULT;
     }
+
+    protected void effectTick() {
+        if( activated ) {
+            final World world = level;
+            final double xPos = worldPosition.getX() + world.random.nextDouble();
+            final double yPos = worldPosition.getY() + world.random.nextDouble();
+            final double zPos = worldPosition.getZ() + world.random.nextDouble();
+            world.addParticle( ParticleTypes.SMOKE, xPos, yPos, zPos, 0.0, 0.0, 0.0 );
+            world.addParticle( ParticleTypes.FLAME, xPos, yPos, zPos, 0.0, 0.0, 0.0 );
+
+            if( spawnDelay > 0 ) {
+                spawnDelay--;
+            }
+            prevMobRotation = mobRotation;
+            mobRotation = (mobRotation + 1000.0F / (spawnDelay + 200.0F)) % 360.0;
+        }
+    }
     
     @Override
     public void tick() {
@@ -181,20 +198,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         
         if( this.level.isClientSide ) {
             // Run client-side effects
-            if( activated ) {
-                final World world = level;
-                final double xPos = worldPosition.getX() + world.random.nextDouble();
-                final double yPos = worldPosition.getY() + world.random.nextDouble();
-                final double zPos = worldPosition.getZ() + world.random.nextDouble();
-                world.addParticle( ParticleTypes.SMOKE, xPos, yPos, zPos, 0.0, 0.0, 0.0 );
-                world.addParticle( ParticleTypes.FLAME, xPos, yPos, zPos, 0.0, 0.0, 0.0 );
-                
-                if( spawnDelay > 0 ) {
-                    spawnDelay--;
-                }
-                prevMobRotation = mobRotation;
-                mobRotation = (mobRotation + 1000.0F / (spawnDelay + 200.0F)) % 360.0;
-            }
+            this.effectTick();
         }
         else {
             // Run server-side logic
