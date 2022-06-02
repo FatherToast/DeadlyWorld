@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.client;
 import fathertoast.deadlyworld.client.renderer.entity.*;
 import fathertoast.deadlyworld.client.renderer.entity.MiniZombieRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.DeadlySpawnerTileEntityRenderer;
+import fathertoast.deadlyworld.client.renderer.tile.MiniSpawnerTileEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.StormDrainTileEntityRenderer;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.registry.DWBlocks;
@@ -30,15 +31,14 @@ public class ClientRegister {
     
     /** Sets the right render type for the given blocks. */
     private static void setBlockRenderTypes() {
-        for( Block spawnerBlock : DWBlocks.spawnerBlocks() ) {
+        for(Block spawnerBlock : DWBlocks.spawnerBlocks()) {
             RenderTypeLookup.setRenderLayer( spawnerBlock, RenderType.cutout() );
         }
-
-        RenderTypeLookup.setRenderLayer( DWBlocks.MINI_SPAWNER.get(), RenderType.cutout() );
     }
     
     private static void registerTileRenderers() {
         ClientRegistry.bindTileEntityRenderer( DWTileEntities.DEADLY_SPAWNER.get(), DeadlySpawnerTileEntityRenderer::new );
+        ClientRegistry.bindTileEntityRenderer( DWTileEntities.MINI_SPAWNER.get(), MiniSpawnerTileEntityRenderer::new );
         ClientRegistry.bindTileEntityRenderer( DWTileEntities.STORM_DRAIN.get(), StormDrainTileEntityRenderer::new );
     }
 

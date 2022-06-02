@@ -1,10 +1,13 @@
 package fathertoast.deadlyworld.common.tile.spawner;
 
+import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.block.MiniSpawnerBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.util.References;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.Block;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -20,6 +23,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @MethodsReturnNonnullByDefault
 public enum SpawnerType implements IStringSerializable {
@@ -48,9 +52,10 @@ public enum SpawnerType implements IStringSerializable {
     },
     NEST( "nest", "silverfish nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST ),
     MINI( "mini", ( dimConfigs ) -> dimConfigs.SPAWNERS.MINI ) {
-        /** @return True if this type uses the standard deadly spawner block and tile entity. */
         @Override
-        public boolean usesStandardBlock() { return false; }
+        public Supplier<DeadlySpawnerBlock> getBlock() {
+            return MiniSpawnerBlock::new;
+        }
     },
     
     // Subfeatures
@@ -96,9 +101,9 @@ public enum SpawnerType implements IStringSerializable {
     /** @return True if this type is a subfeature; false if it is a standalone feature. */
     public final boolean isSubfeature() { return subfeature; }
     
-    /** @return True if this type uses the standard deadly spawner block and tile entity. */
-    public boolean usesStandardBlock() { return true; }
-    
+    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
+    public Supplier<DeadlySpawnerBlock> getBlock() { return () -> new DeadlySpawnerBlock(this); }
+
     /**
      * Returns a SpawnerType from ID.
      * If there exists no SpawnerType with the given ID, default to {@link SpawnerType#DEFAULT}

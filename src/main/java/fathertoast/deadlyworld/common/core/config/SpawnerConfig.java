@@ -270,9 +270,9 @@ public class SpawnerConfig extends FeatureConfig {
         @Override
         protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
             return new WeightedEntityList(
-                    new EntityEntry( DWEntities.MINI_ZOMBIE.get(), 200 ),
-                    new EntityEntry( DWEntities.MINI_SKELETON.get(), 100 ),
-                    new EntityEntry( DWEntities.MINI_CREEPER.get(), 100 )
+                    new EntityEntry( DWEntities.MINI_ZOMBIE, 200 ),
+                    new EntityEntry( DWEntities.MINI_SKELETON, 100 ),
+                    new EntityEntry( DWEntities.MINI_CREEPER, 100 )
             );
         }
     }

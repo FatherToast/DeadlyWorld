@@ -20,6 +20,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedSpawnerEntity;
@@ -96,6 +97,10 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
     private double prevMobRotation;
     
     public DeadlySpawnerTileEntity() { super( DWTileEntities.DEADLY_SPAWNER.get() ); }
+
+    public DeadlySpawnerTileEntity(TileEntityType<?> type) {
+        super(type);
+    }
     
     // Initializing the tile entity here
     // when it is safe to do so.
@@ -377,7 +382,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             for( EntityEntry entry : this.dynamicSpawnList.getAllEntries() ) {
                 // Assuming the first index of the
                 // entry's value set is the weight.
-                String stringEntry = entry.TYPE.getRegistryName().toString() + " " + entry.VALUES[0];
+                String stringEntry = entry.TYPE.get().getRegistryName().toString() + " " + entry.VALUES[0];
                 spawnListTag.putString( String.valueOf( tagIndex ), stringEntry );
                 ++tagIndex;
             }

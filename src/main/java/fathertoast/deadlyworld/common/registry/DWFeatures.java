@@ -17,9 +17,22 @@ public class DWFeatures {
     public static final DeferredRegister<Feature<?>> REGISTRY = DeferredRegister.create( ForgeRegistries.FEATURES, DeadlyWorld.MOD_ID );
     
     // TEMP
-    public static final RegistryObject<Feature<NoFeatureConfig>> SPAWNER =
-            register( "spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner( SpawnerType.DEFAULT ) ) );
-    
+    public static final RegistryObject<Feature<NoFeatureConfig>> DEFAULT_SPAWNER =
+            register( "default_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.DEFAULT)));
+    public static final RegistryObject<Feature<NoFeatureConfig>> DUNGEON_SPAWNER =
+            register( "dungeon_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.DUNGEON)));
+    public static final RegistryObject<Feature<NoFeatureConfig>> SWARM_SPAWNER =
+            register( "swarm_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.SWARM)));
+    public static final RegistryObject<Feature<NoFeatureConfig>> BRUTAL_SPAWNER =
+            register( "brutal_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.BRUTAL)));
+    public static final RegistryObject<Feature<NoFeatureConfig>> NEST_SPAWNER =
+            register( "nest_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.NEST)));
+    public static final RegistryObject<Feature<NoFeatureConfig>> STREAM_SPAWNER =
+            register( "stream_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.STREAM)));
+    public static final RegistryObject<Feature<NoFeatureConfig>> MINI_SPAWNER =
+            register( "mini_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.STREAM)));
+
+
     private static <FC extends IFeatureConfig, T extends Feature<FC>> RegistryObject<T> register( String name, Supplier<T> featureSupplier ) {
         return REGISTRY.register( name, featureSupplier );
     }

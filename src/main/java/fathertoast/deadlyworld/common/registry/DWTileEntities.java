@@ -28,7 +28,7 @@ public class DWTileEntities {
             () -> TileEntityType.Builder.of( FloorTrapTileEntity::new, DWBlocks.floorTrapBlocks() ).build( null ));
 
     public static final RegistryObject<TileEntityType<MiniSpawnerTileEntity>> MINI_SPAWNER = register( "mini_spawner",
-            () -> TileEntityType.Builder.of( MiniSpawnerTileEntity::new, DWBlocks.MINI_SPAWNER.get() ).build( null ));
+            () -> TileEntityType.Builder.of( MiniSpawnerTileEntity::new, DWBlocks.spawnerBlocks()).build( null ));
 
     public static final RegistryObject<TileEntityType<StormDrainTileEntity>> STORM_DRAIN = register( "storm_drain",
             () -> TileEntityType.Builder.of( StormDrainTileEntity::new, DWBlocks.STORM_DRAIN.get() ).build( null ));

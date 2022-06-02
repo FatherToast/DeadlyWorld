@@ -10,11 +10,23 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 
 public class DWConfiguredFeatures {
 
-    public static ConfiguredFeature<NoFeatureConfig, ?> SPAWNER;
+    public static ConfiguredFeature<NoFeatureConfig, ?> DEFAULT_SPAWNER;
+    public static ConfiguredFeature<NoFeatureConfig, ?> DUNGEON_SPAWNER;
+    public static ConfiguredFeature<NoFeatureConfig, ?> SWARM_SPAWNER;
+    public static ConfiguredFeature<NoFeatureConfig, ?> NEST_SPAWNER;
+    public static ConfiguredFeature<NoFeatureConfig, ?> BRUTAL_SPAWNER;
+    public static ConfiguredFeature<NoFeatureConfig, ?> STREAM_SPAWNER;
+    public static ConfiguredFeature<NoFeatureConfig, ?> MINI_SPAWNER;
+
 
     public static void register() {
-
-        SPAWNER = register("spawner", DWFeatures.SPAWNER.get().configured(IFeatureConfig.NONE));
+        DEFAULT_SPAWNER = register("default_spawner", DWFeatures.DEFAULT_SPAWNER.get().configured(IFeatureConfig.NONE));
+        DUNGEON_SPAWNER = register("dungeon_spawner", DWFeatures.DUNGEON_SPAWNER.get().configured(IFeatureConfig.NONE));
+        SWARM_SPAWNER = register("swarm_spawner", DWFeatures.SWARM_SPAWNER.get().configured(IFeatureConfig.NONE));
+        NEST_SPAWNER = register("nest_spawner", DWFeatures.NEST_SPAWNER.get().configured(IFeatureConfig.NONE));
+        BRUTAL_SPAWNER = register("brutal_spawner", DWFeatures.BRUTAL_SPAWNER.get().configured(IFeatureConfig.NONE));
+        STREAM_SPAWNER = register("stream_spawner", DWFeatures.STREAM_SPAWNER.get().configured(IFeatureConfig.NONE));
+        MINI_SPAWNER = register("mini_spawner", DWFeatures.MINI_SPAWNER.get().configured(IFeatureConfig.NONE));
     }
 
     private static <C extends IFeatureConfig> ConfiguredFeature<C, ?> register(String key, ConfiguredFeature<C, ?> configuredFeature) {

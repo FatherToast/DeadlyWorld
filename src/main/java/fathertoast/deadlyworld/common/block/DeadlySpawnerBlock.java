@@ -12,20 +12,27 @@ import net.minecraft.world.IWorldReader;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class DeadlySpawnerBlock extends ContainerBlock {
-    
+public class DeadlySpawnerBlock extends Block {
+
     private final SpawnerType spawnerType;
     
     public DeadlySpawnerBlock( @Nonnull SpawnerType type ) {
         super( Config.BLOCKS.get( type ).adjustBlockProperties( AbstractBlock.Properties.copy( Blocks.SPAWNER ) ) );
         spawnerType = type;
     }
-    
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
     @Nullable
     @Override
-    public TileEntity newBlockEntity( IBlockReader world ) { return new DeadlySpawnerTileEntity(); }
-    
-    public SpawnerType getSpawnerType() { return spawnerType; }
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new DeadlySpawnerTileEntity();
+    }
+
+    public final SpawnerType getSpawnerType() { return spawnerType; }
     
     @Override
     public int getExpDrop( BlockState state, IWorldReader reader, BlockPos pos, int fortune, int silkTouch ) {

@@ -1,9 +1,11 @@
 package fathertoast.deadlyworld.common.block;
 
-import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.tile.spawner.MiniSpawnerTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -22,7 +24,7 @@ import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
-public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
+public class MiniSpawnerBlock extends DeadlySpawnerBlock implements IWaterLoggable {
     
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -38,8 +40,8 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
     
     
     public MiniSpawnerBlock() {
-        super( Config.BLOCKS.get( SpawnerType.MINI ).adjustBlockProperties( AbstractBlock.Properties.copy( Blocks.SPAWNER ) ) );
-        this.registerDefaultState( this.stateDefinition.any().setValue( FACING, Direction.DOWN ).setValue( WATERLOGGED, false ) );
+        super(SpawnerType.MINI);
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.DOWN).setValue(WATERLOGGED, false));
     }
     
     @Override
@@ -50,7 +52,7 @@ public class MiniSpawnerBlock extends ContainerBlock implements IWaterLoggable {
     
     @Nullable
     @Override
-    public TileEntity newBlockEntity( IBlockReader world ) { return new MiniSpawnerTileEntity(); }
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) { return new MiniSpawnerTileEntity(); }
     
     @Override
     public BlockRenderType getRenderShape( BlockState state ) { return BlockRenderType.MODEL; }
