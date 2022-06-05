@@ -141,6 +141,7 @@ public class MimicModel<T extends MimicEntity> extends EntityModel<T> {
         top.xRot -= MathHelper.sin( ageInTicks * 0.067F ) * 0.11F + 0.11F;
         
         // Lid animation
+        //TODO hold lid up when near target, snap shut briefly on attack
         
         // Walk animation
         final float swingPhaseL = limbSwing * 0.6662F;
