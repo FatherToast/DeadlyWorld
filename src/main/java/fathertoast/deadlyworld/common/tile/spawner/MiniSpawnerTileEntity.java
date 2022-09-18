@@ -39,7 +39,9 @@ public class MiniSpawnerTileEntity extends DeadlySpawnerTileEntity {
     public MiniSpawnerTileEntity() {
         super(DWTileEntities.MINI_SPAWNER.get());
     }
-    
+
+    // Initializing the tile entity here
+    // when it is safe to do so.
     @Override
     public void onLoad() {
         super.onLoad();

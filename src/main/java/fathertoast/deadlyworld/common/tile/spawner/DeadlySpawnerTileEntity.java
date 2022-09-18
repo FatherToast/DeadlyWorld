@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -367,8 +368,6 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         super.save( compound );
         
         // Attributes
-        //compound.put( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList == null ? "" : dynamicSpawnList.toStringList());
-        
         compound.putBoolean( TAG_CHECK_SIGHT, checkSight );
         
         compound.putInt( TAG_DELAY_MAX, maxSpawnDelay );

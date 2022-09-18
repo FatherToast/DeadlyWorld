@@ -22,9 +22,7 @@ public class MiniCreeperRenderer extends CreeperRenderer {
         float coolness = 1.0F + MathHelper.sin( swelling * 100.0F ) * swelling * 0.01F;
         
         swelling = MathHelper.clamp( swelling, 0.0F, 1.0F );
-        swelling *= swelling;
-        swelling *= swelling;
-        
+
         float widthScale = (1.0F + swelling * 0.4F) * coolness;
         float heightScale = (1.0F + swelling * 0.1F) / coolness;
         matrixStack.scale( widthScale * 0.4F, heightScale * 0.4F, widthScale * 0.4F );

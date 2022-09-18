@@ -20,14 +20,14 @@ public class StormDrainTileEntityRenderer extends TileEntityRenderer<StormDrainT
 
     @Override
     public void render(StormDrainTileEntity stormDrainTile, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight, int overlayTexture) {
+
         if (stormDrainTile.getSuctionBox() != null) {
             EntityRendererManager rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
 
             if (rendererManager.shouldRenderHitBoxes() && !Minecraft.getInstance().showOnlyReducedInfo()) {
-                AxisAlignedBB suctionBox = stormDrainTile.getSuctionBox();
                 BlockPos pos = stormDrainTile.getBlockPos();
-                suctionBox.move(-pos.getX(), -pos.getY(), -pos.getZ());
-                WorldRenderer.renderLineBox(matrixStack, buffer.getBuffer(RenderType.lines()), suctionBox, 0.0F, 1.0F, 1.0F, 1.0F);
+                AxisAlignedBB box = stormDrainTile.getSuctionBox().move(-pos.getX(), -pos.getY(), -pos.getZ());
+                WorldRenderer.renderLineBox(matrixStack, buffer.getBuffer(RenderType.lines()), box, 0.0F, 1.0F, 0.0F, 1.0F);
             }
         }
     }

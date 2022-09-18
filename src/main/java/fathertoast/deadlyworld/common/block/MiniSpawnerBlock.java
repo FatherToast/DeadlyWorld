@@ -25,7 +25,7 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nullable;
 
 public class MiniSpawnerBlock extends DeadlySpawnerBlock implements IWaterLoggable {
-    
+
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     
@@ -37,8 +37,7 @@ public class MiniSpawnerBlock extends DeadlySpawnerBlock implements IWaterLoggab
             Block.box( 11.0, 4.0, 5.5, 16.0, 12.0, 10.5 ), // WEST
             Block.box( 0.0, 4.0, 5.5, 5.0, 12.0, 10.5 ) // EAST
     };
-    
-    
+
     public MiniSpawnerBlock() {
         super(SpawnerType.MINI);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.DOWN).setValue(WATERLOGGED, false));

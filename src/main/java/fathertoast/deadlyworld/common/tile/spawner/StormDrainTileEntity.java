@@ -54,10 +54,7 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
             return;
 
         // Update the suction box bounds
-        if (this.timeSuctionBoxUpdate > 0) {
-            --this.timeSuctionBoxUpdate;
-        }
-        else {
+        if (--timeSuctionBoxUpdate <= 0) {
             this.updateSuctionBox();
             this.timeSuctionBoxUpdate = MAX_TIME_SUCTION_BOX_UPDATE;
         }
