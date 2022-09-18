@@ -10,6 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -54,6 +56,15 @@ public class DWEntities {
         event.put( MINI_SKELETON.get(), MiniSkeletonEntity.createAttributes().build() );
     }
     
+    public static AttributeModifierMap.MutableAttribute standardMiniAttributes( AttributeModifierMap.MutableAttribute builder, double baseSpeed ) {
+        return standardMiniAttributes( builder, baseSpeed, Attributes.MAX_HEALTH.getDefaultValue() );
+    }
+    
+    public static AttributeModifierMap.MutableAttribute standardMiniAttributes( AttributeModifierMap.MutableAttribute builder, double baseSpeed, double baseHealth ) {
+        return builder
+                .add( Attributes.MOVEMENT_SPEED, baseSpeed * 1.3 )
+                .add( Attributes.MAX_HEALTH, baseHealth / 2.0 );
+    }
     
     public static void registerSpawnPlacements() {
         EntitySpawnPlacementRegistry.register( MINI_CREEPER.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MiniZombieEntity::checkMonsterSpawnRules );
