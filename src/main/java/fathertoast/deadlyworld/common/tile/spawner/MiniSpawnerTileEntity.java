@@ -17,20 +17,14 @@ import net.minecraft.world.World;
 import java.util.Map;
 
 public class MiniSpawnerTileEntity extends DeadlySpawnerTileEntity {
-    
-    //TODO Maybe we can make this inherit almost everything from the base deadly spawner TE?
-    //  I think the only differences are cosmetic, right? In this class, we can just offset (& shrink?) the particle effects by block state,
-    //  and the smaller & offset spinning entity will be handled in the TE renderer.
 
-    // TODO - The plan here is to store coordinate offsets for each direction the
-    //        spawner is "facing" to use for particle effects and whatnot.
-    private static final Map<Direction, Vector3d> EFFECT_OFFSETS = new ImmutableMap.Builder<Direction, Vector3d>()
-            .put(Direction.UP, new Vector3d(0, 0.5D, 0))
-            .put(Direction.DOWN, new Vector3d(0, -0.5D, 0))
-            .put(Direction.NORTH, new Vector3d(0, 0, 0))
-            .put(Direction.WEST, new Vector3d(0, 0, 0))
-            .put(Direction.EAST, new Vector3d(0, 0, 0))
-            .put(Direction.SOUTH, new Vector3d(0, 0, 0))
+    private static final Map<Direction, Vector3d> effectOffsets = new ImmutableMap.Builder<Direction, Vector3d>()
+            .put(Direction.UP, new Vector3d(0.0D, 0.15D, 0.0D))
+            .put(Direction.DOWN, new Vector3d(0.0D, 0.60, 0.0D))
+            .put(Direction.NORTH, new Vector3d(0.0D, 0.4D, 0.25D))
+            .put(Direction.WEST, new Vector3d(0.25D, 0.4D, 0.0D))
+            .put(Direction.EAST, new Vector3d(-0.25D, 0.4D, 0.0D))
+            .put(Direction.SOUTH, new Vector3d(0.0D, 0.4D, -0.25D))
             .build();
 
     private Direction facing = Direction.NORTH;
@@ -74,5 +68,10 @@ public class MiniSpawnerTileEntity extends DeadlySpawnerTileEntity {
     @OnClient
     public Direction getFacing() {
         return this.facing;
+    }
+
+    @OnClient
+    public Vector3d getEntityRenderOffset() {
+        return effectOffsets.get(getFacing());
     }
 }

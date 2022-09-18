@@ -2,11 +2,13 @@ package fathertoast.deadlyworld.client.renderer.tile;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import fathertoast.deadlyworld.common.tile.spawner.DeadlySpawnerTileEntity;
+import fathertoast.deadlyworld.common.tile.spawner.MiniSpawnerTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 
 public class MiniSpawnerTileEntityRenderer extends TileEntityRenderer<DeadlySpawnerTileEntity> {
@@ -30,9 +32,9 @@ public class MiniSpawnerTileEntityRenderer extends TileEntityRenderer<DeadlySpaw
                 scale /= entityGirth;
             }
 
-            matrixStack.translate( 0.0D, 0.4D, 0.0D );
+            Vector3d offset = ((MiniSpawnerTileEntity)spawner).getEntityRenderOffset();
+            matrixStack.translate(offset.x, offset.y, offset.z);
             matrixStack.mulPose( Vector3f.YP.rotationDegrees( spawner.getRenderEntityRotation( partialTick ) * 10.0F ) );
-            matrixStack.translate( 0.0D, -0.2D, 0.0D );
             matrixStack.mulPose( Vector3f.XP.rotationDegrees( -30.0F ) );
             matrixStack.scale( scale, scale, scale );
             Minecraft.getInstance( ).getEntityRenderDispatcher( ).render( entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTick, matrixStack, buffer, packedLight );
