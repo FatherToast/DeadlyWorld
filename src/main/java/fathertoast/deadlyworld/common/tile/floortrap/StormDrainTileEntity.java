@@ -1,7 +1,8 @@
-package fathertoast.deadlyworld.common.tile.spawner;
+package fathertoast.deadlyworld.common.tile.floortrap;
 
 import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
+import net.minecraft.block.BubbleColumnBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +26,7 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
     private static final int MAX_TIME_SUCTION_BOX_UPDATE = 50;
     private static final int MAX_DAMAGE_TIMER = 20;
 
-    private int timeSuctionBoxUpdate = MAX_TIME_SUCTION_BOX_UPDATE;
+    private int timeSuctionBoxUpdate;
     private int damageTimer = MAX_DAMAGE_TIMER;
 
     @Nullable
@@ -35,10 +36,6 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
         super(DWTileEntities.STORM_DRAIN.get());
     }
 
-    @Override
-    public void onLoad() {
-        this.updateSuctionBox();
-    }
 
     @Override
     public void tick() {
@@ -86,11 +83,16 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
         }
     }
 
-    // TODO - Make this less cursed
     private void updateSuctionBox() {
+        final int maxHeight = 8;
         BlockPos tilePos = this.getBlockPos();
         BlockPos lowerCorner = tilePos.above().south(3).east(3).immutable();
-        BlockPos upperCorner = tilePos.above(4).north(3).west(3).immutable();
+        BlockPos upperCorner = tilePos.above(2).north(3).west(3).immutable();
+
+        if (suctionBox != null) {
+            boolean canGrow = suctionBox.getYsize() < maxHeight;
+            upperCorner = canGrow ? upperCorner.above((int) suctionBox.getYsize()) : upperCorner.above((int) suctionBox.getYsize() - 1);
+        }
 
         for (BlockPos pos : BlockPos.betweenClosed(lowerCorner, upperCorner)) {
             if (!this.level.getBlockState(pos).getFluidState().is(FluidTags.WATER)) {
@@ -135,7 +137,7 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
         double z = pos.getZ();
 
         // TODO - Figure out some cool shit
-        world.addAlwaysVisibleParticle(ParticleTypes.CURRENT_DOWN, x + 0.5D, y + 1.0D, z + 0.5D, 0.0D, 0.0D, 0.0D);
+        world.addAlwaysVisibleParticle(ParticleTypes.CURRENT_DOWN, x + 0.5D, y + 2.0D, z + 0.5D, 0.0D, 0.0D, 0.0D);
         if (random.nextInt(200) == 0) {
             world.playLocalSound(x, y, z, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, SoundCategory.BLOCKS, 0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
         }

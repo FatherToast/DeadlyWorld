@@ -53,7 +53,7 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
         
         if( minY >= maxY ) {
             if( spawnerConfig.debugMarker.get() )
-                DeadlyWorld.LOG.error( "Invalid feature heights configured for spawner type \"{}\"", spawnerType.displayName );
+                DeadlyWorld.LOG.error( "Invalid feature heights configured for spawner type \"{}\"", spawnerType.getDisplayName() );
             return false;
         }
 

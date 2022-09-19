@@ -4,7 +4,7 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.DeadlySpawnerTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.MiniSpawnerTileEntity;
-import fathertoast.deadlyworld.common.tile.spawner.StormDrainTileEntity;
+import fathertoast.deadlyworld.common.tile.floortrap.StormDrainTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;

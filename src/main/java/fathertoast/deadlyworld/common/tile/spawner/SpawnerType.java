@@ -69,7 +69,7 @@ public enum SpawnerType implements IStringSerializable {
     /** The unique id for this spawner type. This is used to save and load from disk. */
     private final String id;
     /** A human-readable name for this spawner type. Used in config descriptions, usually followed by " spawner" or " spawners". */
-    public final String displayName;
+    private final String displayName;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
     private final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction;
     
@@ -97,6 +97,10 @@ public enum SpawnerType implements IStringSerializable {
     
     @Override
     public String getSerializedName() { return id; }
+
+    public String getDisplayName() {
+        return displayName;
+    }
     
     /** @return True if this type is a subfeature; false if it is a standalone feature. */
     public final boolean isSubfeature() { return subfeature; }

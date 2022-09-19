@@ -1,10 +1,8 @@
 package fathertoast.deadlyworld.common.block;
 
-import fathertoast.deadlyworld.common.tile.spawner.StormDrainTileEntity;
+import fathertoast.deadlyworld.common.tile.floortrap.StormDrainTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.BeaconTileEntity;
-import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;

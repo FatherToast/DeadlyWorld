@@ -34,6 +34,10 @@ public class ClientRegister {
         for(Block spawnerBlock : DWBlocks.spawnerBlocks()) {
             RenderTypeLookup.setRenderLayer( spawnerBlock, RenderType.cutout() );
         }
+
+        for (Block floorTrapBlock : DWBlocks.floorTrapBlocks()) {
+            RenderTypeLookup.setRenderLayer(floorTrapBlock, RenderType.cutout());
+        }
     }
     
     private static void registerTileRenderers() {
