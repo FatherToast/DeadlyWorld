@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.common.entity;
 
-import fathertoast.deadlyworld.common.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;

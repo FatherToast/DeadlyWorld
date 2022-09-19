@@ -15,6 +15,7 @@ public class DimensionConfigGroup extends ConfigGroup {
     
     public final MainDimensionConfig MAIN;
     public final SpawnerConfig SPAWNERS;
+    public final FloorTrapConfig FLOOR_TRAPS;
     
     DimensionConfigGroup( File dir, RegistryKey<World> dimension ) {
         DIMENSION = dimension;
@@ -23,6 +24,7 @@ public class DimensionConfigGroup extends ConfigGroup {
         
         MAIN = group( new MainDimensionConfig( dimensionDir, this ) );
         SPAWNERS = group( new SpawnerConfig( dimensionDir, this ) );
+        FLOOR_TRAPS = group( new FloorTrapConfig( dimensionDir, this ) );
     }
     
     /** @return The short name for this dimension (e.g. "'the_nether' dimension"). */

@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.entity;
 
 import fathertoast.deadlyworld.common.entity.ai.MiniCreeperSwellGoal;
-import fathertoast.deadlyworld.common.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;

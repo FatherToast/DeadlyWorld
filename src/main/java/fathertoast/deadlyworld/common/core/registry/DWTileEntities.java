@@ -1,11 +1,10 @@
-package fathertoast.deadlyworld.common.registry;
+package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.DeadlySpawnerTileEntity;
-import fathertoast.deadlyworld.common.tile.spawner.FloorTrapTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.MiniSpawnerTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.StormDrainTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;

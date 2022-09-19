@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.core.config;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.config.field.BooleanField;
 import fathertoast.deadlyworld.common.core.config.field.DoubleField;

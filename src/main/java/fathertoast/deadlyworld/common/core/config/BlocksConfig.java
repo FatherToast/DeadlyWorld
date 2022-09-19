@@ -5,6 +5,7 @@ import fathertoast.deadlyworld.common.core.config.field.DoubleField;
 import fathertoast.deadlyworld.common.core.config.field.IntField;
 import fathertoast.deadlyworld.common.core.config.field.ToolTypeField;
 import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
+import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import net.minecraft.block.AbstractBlock;
 import net.minecraftforge.common.ToolType;
@@ -22,17 +23,28 @@ public class BlocksConfig extends Config.AbstractConfig {
         super( dir, fileName,
                 "This config contains options to control the physical properties of the blocks added by this mod."
         );
-        
+
+        // Spawners
         for( SpawnerType type : SpawnerType.values() ) {
             LOOKUP.put( toKey( SpawnerType.CATEGORY, type.toString() ), new BlockCategory( SPEC, SpawnerType.CATEGORY, type.toString(),
                     5.0, 1200.0, 2 ) );
+        }
+
+        // Floor Traps
+        for (FloorTrapType type : FloorTrapType.values()) {
+            LOOKUP.put(toKey(FloorTrapType.CATEGORY, type.toString()), new BlockCategory( SPEC, FloorTrapType.CATEGORY, type.toString(),
+                    5.0, 1200.0, 1));
         }
         
         //TODO add storm drain; will possibly include in a "water traps" category
     }
     
     public BlockCategory get( SpawnerType type ) { return get( SpawnerType.CATEGORY, type.toString() ); }
-    
+
+    public BlockCategory get(FloorTrapType type) {
+        return get( FloorTrapType.CATEGORY, type.toString());
+    }
+
     private BlockCategory get( String category, String type ) { return LOOKUP.get( toKey( category, type ) ); }
     
     private static String toKey( String category, String type ) { return category + "." + type; }

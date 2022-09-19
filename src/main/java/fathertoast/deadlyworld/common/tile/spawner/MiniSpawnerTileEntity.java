@@ -2,14 +2,11 @@ package fathertoast.deadlyworld.common.tile.spawner;
 
 import com.google.common.collect.ImmutableMap;
 import fathertoast.deadlyworld.common.block.MiniSpawnerBlock;
-import fathertoast.deadlyworld.common.registry.DWBlocks;
-import fathertoast.deadlyworld.common.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.OnClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;

@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.registry;
+package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.feature.features.SpawnerFeature;

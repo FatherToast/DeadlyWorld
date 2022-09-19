@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.feature;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.registry.DWFeatures;
+import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.ConfiguredFeature;

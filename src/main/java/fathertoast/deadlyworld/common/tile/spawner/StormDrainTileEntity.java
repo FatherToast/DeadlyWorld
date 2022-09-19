@@ -1,15 +1,9 @@
 package fathertoast.deadlyworld.common.tile.spawner;
 
-import fathertoast.deadlyworld.common.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
-import net.minecraft.block.BubbleColumnBlock;
-import net.minecraft.block.MagmaBlock;
-import net.minecraft.client.gui.IngameGui;
-import net.minecraft.client.particle.CurrentDownParticle;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.FluidTags;

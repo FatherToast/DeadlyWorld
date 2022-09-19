@@ -6,9 +6,9 @@ import fathertoast.deadlyworld.client.renderer.tile.DeadlySpawnerTileEntityRende
 import fathertoast.deadlyworld.client.renderer.tile.MiniSpawnerTileEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.tile.StormDrainTileEntityRenderer;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.registry.DWBlocks;
-import fathertoast.deadlyworld.common.registry.DWEntities;
-import fathertoast.deadlyworld.common.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.core.registry.DWBlocks;
+import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;

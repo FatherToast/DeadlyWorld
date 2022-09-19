@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.common.entity;
 
-import fathertoast.deadlyworld.common.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;

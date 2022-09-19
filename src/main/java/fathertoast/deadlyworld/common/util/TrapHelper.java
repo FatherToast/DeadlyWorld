@@ -39,6 +39,28 @@ public class TrapHelper {
         return false;
     }
 
+    public static PlayerEntity getNearestValidPlayerInRange( World world, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
+        double x = pos.getX() + 0.5D;
+        double y = pos.getY();
+        double z = pos.getZ() + 0.5D;
+
+        double rangeSq = range * range;
+        PlayerEntity closestPlayer = null;
+        double closestDistSq = Double.POSITIVE_INFINITY;
+
+        for (PlayerEntity player : world.players()) {
+            double distSq = player.distanceToSqr( x, y, z );
+
+            if( isValidTarget( player, requireVulnerable ) &&
+                    distSq <= rangeSq && distSq < closestDistSq &&
+                    (!checkSight || canEntitySeeBlock( world, pos, player ))) {
+                closestPlayer = player;
+                closestDistSq = distSq;
+            }
+        }
+        return closestPlayer;
+    }
+
     public static boolean isValidTarget( Entity entity, boolean requireVulnerable ) {
         return requireVulnerable ? EntityPredicates.ATTACK_ALLOWED.test( entity ) : EntityPredicates.NO_SPECTATORS.test( entity );
     }
