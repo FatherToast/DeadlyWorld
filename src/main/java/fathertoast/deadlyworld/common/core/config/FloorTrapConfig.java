@@ -18,6 +18,7 @@ public class FloorTrapConfig extends FeatureConfig {
     public final FloorTrapConfig.TntTrapTypeCategory TNT;
     public final FloorTrapConfig.TntMobTrapTypeCategory TNT_MOB;
     public final FloorTrapConfig.PotionTrapTypeCategory POTION;
+    public final FloorTrapConfig.FloorTrapTypeCategory LAVA;
 
     /** Builds the config spec that should be used for this config. */
     FloorTrapConfig( File dir, DimensionConfigGroup dimConfigs ) {
@@ -31,14 +32,17 @@ public class FloorTrapConfig extends FeatureConfig {
                 "woah"
         );
 
-        TNT = new FloorTrapConfig.TntTrapTypeCategory( SPEC, this, FloorTrapType.TNT, 0.16, 12, 52, 0.3,
+        TNT = new TntTrapTypeCategory( SPEC, this, FloorTrapType.TNT, 0.16, 12, 52, 0.3,
                 6.0,true, 60, 20, 180, 80, 3, 2.0D );
 
-        TNT_MOB = new FloorTrapConfig.TntMobTrapTypeCategory( SPEC, this, FloorTrapType.TNT_MOB, 0.16, 12, 52, 0.3,
+        TNT_MOB = new TntMobTrapTypeCategory( SPEC, this, FloorTrapType.TNT_MOB, 0.16, 12, 52, 0.3,
                 5.0, true, 60, 20, 180, 80, 3, 2);
 
-        POTION = new FloorTrapConfig.PotionTrapTypeCategory( SPEC, this, FloorTrapType.POTION, 0.16, 12, 52, 0.3,
+        POTION = new PotionTrapTypeCategory( SPEC, this, FloorTrapType.POTION, 0.16, 12, 52, 0.3,
                 5.0, true, 60, 20);
+
+        LAVA = new FloorTrapTypeCategory( SPEC, this, FloorTrapType.LAVA, 0.16, 12, 52, 0.3,
+                4.0, true, 60, 20);
     }
 
     public static class FloorTrapTypeCategory extends FeatureTypeCategory {

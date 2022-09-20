@@ -7,6 +7,7 @@ import fathertoast.deadlyworld.common.core.config.FloorTrapConfig;
 import fathertoast.deadlyworld.common.core.config.util.EntityList;
 import fathertoast.deadlyworld.common.util.References;
 import fathertoast.deadlyworld.common.util.TrapHelper;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +15,8 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.projectile.PotionEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.LavaFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IStringSerializable;
@@ -22,6 +25,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -143,9 +147,9 @@ public enum FloorTrapType implements IStringSerializable {
 
             World world = trapEntity.getLevel();
 
-            double x = trapEntity.getBlockPos().getX( ) + 0.5;
-            double y = trapEntity.getBlockPos().getY( ) + 1.1;
-            double z = trapEntity.getBlockPos().getZ( ) + 0.5;
+            double x = trapEntity.getBlockPos().getX() + 0.5;
+            double y = trapEntity.getBlockPos().getY() + 1.1;
+            double z = trapEntity.getBlockPos().getZ() + 0.5;
 
             int resetRange = config.maxResetTime.get() - config.minResetTime.get();
             if( resetRange <= 0 ) {
@@ -163,6 +167,34 @@ public enum FloorTrapType implements IStringSerializable {
             world.addFreshEntity( potionEntity );
 
             world.playSound( null, x, y, z, SoundEvents.DISPENSER_LAUNCH, SoundCategory.BLOCKS, 1.0F, 1.0F );
+        }
+    },
+
+    LAVA( "lava", (dimConfig) -> dimConfig.FLOOR_TRAPS.LAVA) {
+        @Override
+        public void triggerTrap(DimensionConfigGroup dimConfig, FloorTrapTileEntity trapEntity) {
+            FloorTrapConfig.FloorTrapTypeCategory config = dimConfig.FLOOR_TRAPS.LAVA;
+
+            World world = trapEntity.getLevel();
+            BlockPos pos = trapEntity.getBlockPos();
+
+            int resetRange = config.maxResetTime.get() - config.minResetTime.get();
+            if( resetRange <= 0 ) {
+                resetRange = 1;
+            }
+            trapEntity.disableTrap( config.minResetTime.get() + world.random.nextInt( resetRange ));
+
+            boolean placedLava = false;
+
+            for (int i = 0; i < 2; ++i) {
+                if (world.getBlockState(pos.above()).canBeReplaced(Fluids.LAVA)) {
+                    world.setBlock(pos.above(i), Blocks.LAVA.defaultBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+                    placedLava = true;
+                }
+            }
+            if (placedLava) {
+                world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_LAVA, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            }
         }
     };
 
