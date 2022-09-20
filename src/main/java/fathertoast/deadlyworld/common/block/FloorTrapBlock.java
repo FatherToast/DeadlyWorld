@@ -18,7 +18,7 @@ public class FloorTrapBlock extends Block {
 
     public FloorTrapBlock( @Nonnull FloorTrapType trapType ) {
         super( Config.BLOCKS.get( trapType ).adjustBlockProperties( AbstractBlock.Properties.copy( Blocks.SPAWNER ) ) );
-        this.trapType = trapType;
+        this.trapType = trapType;;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class FloorTrapBlock extends Block {
 
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state ) { return BlockRenderType.MODEL; }
+    public BlockRenderType getRenderShape(BlockState state ) { return BlockRenderType.INVISIBLE; }
 
     public final FloorTrapType getTrapType() {
         return trapType;

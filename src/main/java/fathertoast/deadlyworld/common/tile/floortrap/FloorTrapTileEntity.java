@@ -7,26 +7,34 @@ import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.FloorTrapConfig;
 import fathertoast.deadlyworld.common.core.config.util.WeightedPotionList;
 import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.util.OnClient;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.DropperBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -34,6 +42,7 @@ import java.util.Random;
 public class FloorTrapTileEntity extends TileEntity implements ITickableTileEntity {
 
     // Attribute tags
+    private static final String TAG_CAMO_STATE = "CamoState";
     private static final String TAG_RESET_TIME = "ResetTime";
     private static final String TAG_MAX_TRIGGER_DELAY = "MaxTriggerDelay";
     private static final String TAG_ACTIVATION_RANGE = "ActivationRange";
@@ -44,6 +53,8 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
     private static final String TAG_DELAY = "Delay";
 
     // Attributes
+    @Nullable
+    private BlockState camoState;
     private double activationRange;
     private boolean checkSight;
     private FloorTrapType trapType;
@@ -53,6 +64,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
     private ItemStack potionStack;
 
     // Logic
+    private boolean pickedCamo = true;
     private int maxTriggerDelay;
     /** Count until the trap triggers after being tripped. -1 if the trap has not been tripped. */
     private int triggerDelay = -1;
@@ -75,7 +87,6 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
 
     @Override
     public void onLoad() {
-        super.onLoad();
         if( getLevel() == null ) {
             DeadlyWorld.LOG.error( "Failed to load floor trap block entity at \"{}\"", this.getBlockPos() );
             return;
@@ -99,8 +110,8 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
         // Set attributes from the config
         activationRange = trapConfig.activationRange.get();
         checkSight = trapConfig.checkSight.get();
-        // Give each trap a unique trigger delay for funzies. What could it possible be?? Chill trap? Ultra no-chill TNT barrage trap???????
         maxTriggerDelay = 10;
+        // Give each trap a partially random reset time. What could it be??? Slow lad or mega TNT barrage insane sicko mode???
         resetTime = trapConfig.minResetTime.get() + random.nextInt(trapConfig.maxResetTime.get() - trapConfig.minResetTime.get());
 
         // Set the potion effect if we are a potion trap
@@ -128,6 +139,12 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
         return FloorTrapType.TNT;
     }
 
+    @OnClient
+    @Nullable
+    public BlockState getCamoState() {
+        return camoState;
+    }
+
     public PlayerEntity getTarget( ) {
         return TrapHelper.getNearestValidPlayerInRange( level, getBlockPos().above( ), activationRange, checkSight, true );
     }
@@ -144,6 +161,11 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
 
     @Override
     public void tick( ) {
+        if (pickedCamo && camoState == null) {
+            pickCamoState();
+            pickedCamo = false;
+        }
+
         if( !level.isClientSide ) {
             // Run server-side logic
             if( triggerDelay == -1 ) {
@@ -166,6 +188,23 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
         }
     }
 
+    private void pickCamoState() {
+        World world = getLevel();
+        List<Direction> directions = Arrays.asList(Direction.WEST, Direction.EAST, Direction.SOUTH, Direction.NORTH);
+        Collections.shuffle(directions);
+
+        for (Direction dir : directions) {
+            BlockPos neighbor = getBlockPos().relative(dir);
+            BlockState neighborState = world.getBlockState(neighbor);
+
+            if (neighborState.isSolidRender(world, neighbor) && neighborState.isCollisionShapeFullBlock(world, neighbor)) {
+                camoState = neighborState;
+                return;
+            }
+        }
+        camoState = Blocks.DROPPER.defaultBlockState().setValue(DropperBlock.FACING, Direction.UP);;
+    }
+
     private void triggerTrap( ) {
         final DimensionConfigGroup dimConfig = Config.getDimensionConfigs(level);
         final FloorTrapType trapType = getTrapType( );
@@ -179,6 +218,9 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
         super.save( tag );
 
         // Attributes
+        if (camoState != null) {
+            tag.put(TAG_CAMO_STATE, NBTUtil.writeBlockState(camoState));
+        }
         tag.putInt( TAG_RESET_TIME, resetTime );
         tag.putInt( TAG_MAX_TRIGGER_DELAY, maxTriggerDelay );
         tag.putDouble( TAG_ACTIVATION_RANGE, activationRange );
@@ -200,6 +242,14 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
         super.load( state, tag );
 
         // Attributes
+        if ( tag.contains( TAG_CAMO_STATE, tag.getId() )) {
+            BlockState readState = NBTUtil.readBlockState( tag.getCompound( TAG_CAMO_STATE ));
+
+            // Air likely means no valid state could be read from the tag
+            if (readState.is(Blocks.AIR))
+                readState = Blocks.DROPPER.defaultBlockState().setValue(DropperBlock.FACING, Direction.UP);;
+                camoState = readState;
+        }
         if ( tag.contains( TAG_RESET_TIME, TrapHelper.NBT_TYPE_PRIMITIVE )) {
             resetTime = tag.getInt( TAG_RESET_TIME );
         }

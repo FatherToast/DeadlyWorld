@@ -1,22 +1,17 @@
 package fathertoast.deadlyworld.common.feature.features;
 
 import com.mojang.serialization.Codec;
-import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.FloorTrapBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.FloorTrapConfig;
-import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
-import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.util.FeatureGenHelper;
-import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -50,7 +45,6 @@ public class FloorTrapFeature extends Feature<NoFeatureConfig> {
             return false;
 
         final int minY = trapConfig.heights.getMin();
-        // TODO - This needs adjusting if anything is to be placed above the spawner block
         final int maxY = Math.min( trapConfig.heights.getMax(), seedReader.getHeight() );
 
         if( minY >= maxY ) {
