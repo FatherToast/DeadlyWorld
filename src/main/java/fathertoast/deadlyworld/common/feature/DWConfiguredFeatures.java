@@ -18,6 +18,11 @@ public class DWConfiguredFeatures {
     public static ConfiguredFeature<NoFeatureConfig, ?> STREAM_SPAWNER;
     public static ConfiguredFeature<NoFeatureConfig, ?> MINI_SPAWNER;
 
+    public static ConfiguredFeature<NoFeatureConfig, ?> TNT_FLOOR_TRAP;
+    public static ConfiguredFeature<NoFeatureConfig, ?> TNT_MOB_FLOOR_TRAP;
+    public static ConfiguredFeature<NoFeatureConfig, ?> POTION_FLOOR_TRAP;
+
+
 
     public static void register() {
         DEFAULT_SPAWNER = register("default_spawner", DWFeatures.DEFAULT_SPAWNER.get().configured(IFeatureConfig.NONE));
@@ -27,6 +32,10 @@ public class DWConfiguredFeatures {
         BRUTAL_SPAWNER = register("brutal_spawner", DWFeatures.BRUTAL_SPAWNER.get().configured(IFeatureConfig.NONE));
         STREAM_SPAWNER = register("stream_spawner", DWFeatures.STREAM_SPAWNER.get().configured(IFeatureConfig.NONE));
         MINI_SPAWNER = register("mini_spawner", DWFeatures.MINI_SPAWNER.get().configured(IFeatureConfig.NONE));
+
+        TNT_FLOOR_TRAP = register("tnt_floor_trap", DWFeatures.TNT_FLOOR_TRAP.get().configured(IFeatureConfig.NONE));
+        TNT_MOB_FLOOR_TRAP = register("tnt_mob_floor_trap", DWFeatures.TNT_MOB_FLOOR_TRAP.get().configured(IFeatureConfig.NONE));
+        POTION_FLOOR_TRAP = register("potion_floor_trap", DWFeatures.POTION_FLOOR_TRAP.get().configured(IFeatureConfig.NONE));
     }
 
     private static <C extends IFeatureConfig> ConfiguredFeature<C, ?> register(String key, ConfiguredFeature<C, ?> configuredFeature) {

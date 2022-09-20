@@ -205,16 +205,6 @@ public enum FloorTrapType implements IStringSerializable {
 
     public final FloorTrapConfig.FloorTrapTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
 
-    public boolean canTypeBePlaced( World world, BlockPos position ) {
-        BlockPos above = position.above();
-        BlockPos below = position.below();
-        BlockPos veryAbove = position.offset(0, 2, 0);
-
-        return !world.getBlockState( veryAbove ).isCollisionShapeFullBlock( world, veryAbove ) &&
-                world.getBlockState( above ).isAir( world, above ) &&
-                world.getBlockState( below ).isCollisionShapeFullBlock( world, below );
-    }
-
     public abstract void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapTileEntity trapEntity );
 
     @Override

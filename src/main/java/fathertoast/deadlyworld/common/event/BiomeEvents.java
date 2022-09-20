@@ -22,5 +22,9 @@ public class BiomeEvents {
         generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.NEST_SPAWNER);
         generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.STREAM_SPAWNER);
         generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.MINI_SPAWNER);
+
+        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.TNT_FLOOR_TRAP);
+        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.TNT_MOB_FLOOR_TRAP);
+        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.POTION_FLOOR_TRAP);
     }
 }
