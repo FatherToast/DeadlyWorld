@@ -83,6 +83,10 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
         }
     }
 
+    // TODO - Rework this completely; use a small box to suck
+    //        entities to the center, while using custom
+    //        bubble column blocks to suck entities down
+    //        from far up heights.
     private void updateSuctionBox() {
         final int maxHeight = 8;
         BlockPos tilePos = this.getBlockPos();

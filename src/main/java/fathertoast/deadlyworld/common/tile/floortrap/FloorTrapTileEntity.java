@@ -159,7 +159,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
                 triggerDelay++;
 
                 // Trigger trap
-                if( triggerDelay == maxTriggerDelay ) {
+                if( triggerDelay >= maxTriggerDelay ) {
                     triggerTrap( );
                 }
             }
@@ -171,7 +171,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
         final FloorTrapType trapType = getTrapType( );
 
         trapType.triggerTrap( dimConfig, this );
-        disableTrap(-resetTime);
+        disableTrap(resetTime);
     }
 
     @Override
