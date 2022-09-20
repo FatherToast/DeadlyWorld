@@ -7,16 +7,20 @@ import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.FloorTrapConfig;
 import fathertoast.deadlyworld.common.core.config.util.WeightedPotionList;
 import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.util.NBTHelper;
 import fathertoast.deadlyworld.common.util.OnClient;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DropperBlock;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -64,7 +68,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
     private ItemStack potionStack;
 
     // Logic
-    private boolean pickedCamo = true;
+    private boolean pickedCamo = false;
     private int maxTriggerDelay;
     /** Count until the trap triggers after being tripped. -1 if the trap has not been tripped. */
     private int triggerDelay = -1;
@@ -161,9 +165,11 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
 
     @Override
     public void tick( ) {
-        if (pickedCamo && camoState == null) {
-            pickCamoState();
-            pickedCamo = false;
+        if (!pickedCamo) {
+            if (camoState == null) {
+                pickCamoState();
+            }
+            pickedCamo = true;
         }
 
         if( !level.isClientSide ) {
@@ -219,7 +225,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
 
         // Attributes
         if (camoState != null) {
-            tag.put(TAG_CAMO_STATE, NBTUtil.writeBlockState(camoState));
+            tag.put( TAG_CAMO_STATE, NBTHelper.writeBlockState(camoState) );
         }
         tag.putInt( TAG_RESET_TIME, resetTime );
         tag.putInt( TAG_MAX_TRIGGER_DELAY, maxTriggerDelay );
@@ -242,14 +248,8 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
         super.load( state, tag );
 
         // Attributes
-        if ( tag.contains( TAG_CAMO_STATE, tag.getId() )) {
-            BlockState readState = NBTUtil.readBlockState( tag.getCompound( TAG_CAMO_STATE ));
+        setCamoFromTag( tag );
 
-            // Air likely means no valid state could be read from the tag
-            if (readState.is(Blocks.AIR))
-                readState = Blocks.DROPPER.defaultBlockState().setValue(DropperBlock.FACING, Direction.UP);;
-                camoState = readState;
-        }
         if ( tag.contains( TAG_RESET_TIME, TrapHelper.NBT_TYPE_PRIMITIVE )) {
             resetTime = tag.getInt( TAG_RESET_TIME );
         }
@@ -274,6 +274,36 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
         // Logic
         if( tag.contains( TAG_DELAY, TrapHelper.NBT_TYPE_PRIMITIVE ) ) {
             triggerDelay = tag.getInt( TAG_DELAY );
+        }
+    }
+
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket( this.worldPosition, 0, this.getUpdateTag() );
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return this.save( new CompoundNBT() );
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt ) {
+        if( this.level.isClientSide ) {
+            super.handleUpdateTag( this.getBlockState(), pkt.getTag() );
+
+            CompoundNBT tag = pkt.getTag();
+            this.setCamoFromTag( tag );
+        }
+    }
+
+    private void setCamoFromTag( CompoundNBT compoundNBT ) {
+        if ( compoundNBT.contains( TAG_CAMO_STATE, compoundNBT.getId() )) {
+            BlockState readState = NBTHelper.readBlockState( compoundNBT.getCompound( TAG_CAMO_STATE ));
+
+            camoState = readState == null
+                    ? Blocks.DROPPER.defaultBlockState().setValue(DropperBlock.FACING, Direction.UP)
+                    : readState;
         }
     }
 
