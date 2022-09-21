@@ -12,8 +12,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class MiniZombieEntity extends ZombieEntity {
     
     public MiniZombieEntity( EntityType<? extends ZombieEntity> entityType, World world ) {
@@ -23,7 +21,7 @@ public class MiniZombieEntity extends ZombieEntity {
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return DWEntities.standardMiniAttributes( ZombieEntity.createAttributes(), 0.23 )
                 .add( Attributes.FOLLOW_RANGE, 25.0 )
-                .add( Attributes.ATTACK_DAMAGE, 3.0 / 2.0 );
+                .add( Attributes.ATTACK_DAMAGE, 1.5 );
     }
     
     /** Do not allow for mini baby zombies to exist. */
@@ -36,6 +34,9 @@ public class MiniZombieEntity extends ZombieEntity {
     // Should we consider mini drowned?
     @Override
     protected boolean convertsInWater() { return false; }
+
+    @Override
+    public int getMaxAirSupply() { return 100; }
     
     @Override
     protected float getStandingEyeHeight( Pose pose, EntitySize entitySize ) {

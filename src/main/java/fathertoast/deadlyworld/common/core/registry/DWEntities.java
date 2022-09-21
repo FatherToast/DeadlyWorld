@@ -1,11 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.entity.MimicEntity;
-import fathertoast.deadlyworld.common.entity.MiniCreeperEntity;
-import fathertoast.deadlyworld.common.entity.MiniSkeletonEntity;
-import fathertoast.deadlyworld.common.entity.MiniZombieEntity;
-import fathertoast.deadlyworld.common.entity.MiniArrowEntity;
+import fathertoast.deadlyworld.common.entity.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -39,6 +35,10 @@ public class DWEntities {
     public static final RegistryObject<EntityType<MiniSkeletonEntity>> MINI_SKELETON = register( "mini_skeleton",
             EntityType.Builder.of( MiniSkeletonEntity::new, EntityClassification.MONSTER )
                     .sized( 0.35F, 0.85F ).clientTrackingRange( 8 ) );
+
+    public static final RegistryObject<EntityType<MiniSpiderEntity>> MINI_SPIDER = register( "mini_spider",
+            EntityType.Builder.of( MiniSpiderEntity::new, EntityClassification.MONSTER )
+                    .sized( 0.35F, 0.35F ).clientTrackingRange( 8 ) );
     
     public static final RegistryObject<EntityType<MiniArrowEntity>> MINI_ARROW = register( "mini_arrow",
             EntityType.Builder.<MiniArrowEntity>of( MiniArrowEntity::new, EntityClassification.MISC )
@@ -54,6 +54,7 @@ public class DWEntities {
         event.put( MINI_CREEPER.get(), MiniCreeperEntity.createAttributes().build() );
         event.put( MINI_ZOMBIE.get(), MiniZombieEntity.createAttributes().build() );
         event.put( MINI_SKELETON.get(), MiniSkeletonEntity.createAttributes().build() );
+        event.put( MINI_SPIDER.get(), MiniSpiderEntity.createAttributes().build() );
     }
     
     public static AttributeModifierMap.MutableAttribute standardMiniAttributes( AttributeModifierMap.MutableAttribute builder, double baseSpeed ) {

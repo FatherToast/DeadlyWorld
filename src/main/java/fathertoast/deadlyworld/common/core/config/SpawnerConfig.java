@@ -272,7 +272,8 @@ public class SpawnerConfig extends FeatureConfig {
             return new WeightedEntityList(
                     new EntityEntry( DWEntities.MINI_ZOMBIE, 200 ),
                     new EntityEntry( DWEntities.MINI_SKELETON, 100 ),
-                    new EntityEntry( DWEntities.MINI_CREEPER, 100 )
+                    new EntityEntry( DWEntities.MINI_CREEPER, 100 ),
+                    new EntityEntry( DWEntities.MINI_SPIDER, 100 )
             );
         }
     }

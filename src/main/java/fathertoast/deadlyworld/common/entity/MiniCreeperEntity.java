@@ -15,8 +15,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class MiniCreeperEntity extends CreeperEntity {
     
     public MiniCreeperEntity( EntityType<? extends CreeperEntity> entityType, World world ) { super( entityType, world ); }

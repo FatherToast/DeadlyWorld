@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Items;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -27,6 +28,9 @@ public class DWItems {
             DWEntities.MINI_ZOMBIE, 0xAFAF, 0x799C65);
     public static final RegistryObject<ForgeSpawnEggItem> MINI_SKELETON_SPAWN_EGG = registerSpawnEgg(
             DWEntities.MINI_SKELETON, 0xC1C1C1, 0x494949);
+    public static final RegistryObject<ForgeSpawnEggItem> MINI_SPIDER_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MINI_SPIDER, 0x342D27, 0xA80E0E);
+
 
     protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg( RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor) {
         String name = typeRegistryObject.getId().getPath() + "_spawn_egg";

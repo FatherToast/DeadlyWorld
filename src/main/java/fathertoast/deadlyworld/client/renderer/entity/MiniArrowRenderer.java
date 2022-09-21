@@ -31,52 +31,52 @@ public class MiniArrowRenderer<T extends MiniArrowEntity> extends EntityRenderer
     }
 
     @Override
-    public void render(T miniArrow, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
+    public void render(T miniArrow, float p_225623_2_, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         matrixStack.pushPose();
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(p_225623_3_, miniArrow.yRotO, miniArrow.yRot) - 90.0F));
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(p_225623_3_, miniArrow.xRotO, miniArrow.xRot)));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTick, miniArrow.yRotO, miniArrow.yRot) - 90.0F));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTick, miniArrow.xRotO, miniArrow.xRot)));
 
-        float lvt_17_1_ = (float)miniArrow.shakeTime - p_225623_3_;
+        float shakeTime = (float) miniArrow.shakeTime - partialTick;
 
-        if (lvt_17_1_ > 0.0F) {
-            float lvt_18_1_ = -MathHelper.sin(lvt_17_1_ * 3.0F) * lvt_17_1_;
-            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(lvt_18_1_));
+        if (shakeTime > 0.0F) {
+            float rot = -MathHelper.sin(shakeTime * 3.0F) * shakeTime;
+            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(rot));
         }
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(45.0F));
         matrixStack.scale(0.02F, 0.02F, 0.02F);
         matrixStack.translate(-4.0D, 0.0D, 0.0D);
 
-        IVertexBuilder lvt_18_2_ = p_225623_5_.getBuffer(RenderType.entityCutout(this.getTextureLocation(miniArrow)));
-        MatrixStack.Entry lvt_19_1_ = matrixStack.last();
-        Matrix4f lvt_20_1_ = lvt_19_1_.pose();
-        Matrix3f lvt_21_1_ = lvt_19_1_.normal();
-        this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -7, -2, -2, 0.0F, 0.15625F, -1, 0, 0, p_225623_6_);
-        this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -7, -2, 2, 0.15625F, 0.15625F, -1, 0, 0, p_225623_6_);
-        this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -7, 2, 2, 0.15625F, 0.3125F, -1, 0, 0, p_225623_6_);
-        this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -7, 2, -2, 0.0F, 0.3125F, -1, 0, 0, p_225623_6_);
-        this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -7, 2, -2, 0.0F, 0.15625F, 1, 0, 0, p_225623_6_);
-        this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -7, 2, 2, 0.15625F, 0.15625F, 1, 0, 0, p_225623_6_);
-        this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -7, -2, 2, 0.15625F, 0.3125F, 1, 0, 0, p_225623_6_);
-        this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -7, -2, -2, 0.0F, 0.3125F, 1, 0, 0, p_225623_6_);
+        IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.entityCutout( getTextureLocation( miniArrow ) ));
+        MatrixStack.Entry matrixEntry = matrixStack.last();
+        Matrix4f matrix4f = matrixEntry.pose();
+        Matrix3f matrix3f = matrixEntry.normal();
 
-        for(int lvt_22_1_ = 0; lvt_22_1_ < 4; ++lvt_22_1_) {
+        vertex(matrix4f, matrix3f, vertexBuilder, -7, -2, -2, 0.0F, 0.15625F, -1, 0, 0, packedLight);
+        vertex(matrix4f, matrix3f, vertexBuilder, -7, -2, 2, 0.15625F, 0.15625F, -1, 0, 0, packedLight);
+        vertex(matrix4f, matrix3f, vertexBuilder, -7, 2, 2, 0.15625F, 0.3125F, -1, 0, 0, packedLight);
+        vertex(matrix4f, matrix3f, vertexBuilder, -7, 2, -2, 0.0F, 0.3125F, -1, 0, 0, packedLight);
+        vertex(matrix4f, matrix3f, vertexBuilder, -7, 2, -2, 0.0F, 0.15625F, 1, 0, 0, packedLight);
+        vertex(matrix4f, matrix3f, vertexBuilder, -7, 2, 2, 0.15625F, 0.15625F, 1, 0, 0, packedLight);
+        vertex(matrix4f, matrix3f, vertexBuilder, -7, -2, 2, 0.15625F, 0.3125F, 1, 0, 0, packedLight);
+        vertex(matrix4f, matrix3f, vertexBuilder, -7, -2, -2, 0.0F, 0.3125F, 1, 0, 0, packedLight);
+
+        for(int i = 0; i < 4; ++i) {
             matrixStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
-            this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -8, -2, 0, 0.0F, 0.0F, 0, 1, 0, p_225623_6_);
-            this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, 8, -2, 0, 0.5F, 0.0F, 0, 1, 0, p_225623_6_);
-            this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, 8, 2, 0, 0.5F, 0.15625F, 0, 1, 0, p_225623_6_);
-            this.vertex(lvt_20_1_, lvt_21_1_, lvt_18_2_, -8, 2, 0, 0.0F, 0.15625F, 0, 1, 0, p_225623_6_);
+            vertex(matrix4f, matrix3f, vertexBuilder, -8, -2, 0, 0.0F, 0.0F, 0, 1, 0, packedLight);
+            vertex(matrix4f, matrix3f, vertexBuilder, 8, -2, 0, 0.5F, 0.0F, 0, 1, 0, packedLight);
+            vertex(matrix4f, matrix3f, vertexBuilder, 8, 2, 0, 0.5F, 0.15625F, 0, 1, 0, packedLight);
+            vertex(matrix4f, matrix3f, vertexBuilder, -8, 2, 0, 0.0F, 0.15625F, 0, 1, 0, packedLight);
         }
-
         matrixStack.popPose();
-        super.render(miniArrow, p_225623_2_, p_225623_3_, matrixStack, p_225623_5_, p_225623_6_);
+        super.render(miniArrow, p_225623_2_, partialTick, matrixStack, buffer, packedLight);
     }
 
-    public void vertex(Matrix4f matrix4f, Matrix3f matrix3f, IVertexBuilder vertexBuilder, int p_229039_4_, int p_229039_5_, int p_229039_6_, float p_229039_7_, float p_229039_8_, int p_229039_9_, int p_229039_10_, int p_229039_11_, int p_229039_12_) {
-        vertexBuilder.vertex(matrix4f, (float)p_229039_4_, (float)p_229039_5_, (float)p_229039_6_)
+    public void vertex(Matrix4f matrix4f, Matrix3f matrix3f, IVertexBuilder vertexBuilder, int x, int y, int z, float u, float v, int xNormal, int zNormal, int yNormal, int uv2) {
+        vertexBuilder.vertex(matrix4f, (float)x, (float)y, (float)z)
                 .color(255, 255, 255, 255)
-                .uv(p_229039_7_, p_229039_8_).overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(p_229039_12_)
-                .normal(matrix3f, (float)p_229039_9_, (float)p_229039_11_, (float)p_229039_10_)
+                .uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(uv2)
+                .normal(matrix3f, (float)xNormal, (float)yNormal, (float)zNormal)
                 .endVertex();
     }
 }

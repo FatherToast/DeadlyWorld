@@ -55,9 +55,10 @@ public class ClientRegister {
         // Mini mobs
         RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_CREEPER.get(), MiniCreeperRenderer::new );
         RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_ZOMBIE.get(), MiniZombieRenderer::new );
-        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_SKELETON.get(), MiniSkeletonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_SKELETON.get(), MiniSkeletonRenderer::new );
+        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_SPIDER.get(), MiniSpiderRenderer::new );
 
         // Projectiles
-        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_ARROW.get(), MiniArrowRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler( DWEntities.MINI_ARROW.get(), MiniArrowRenderer::new );
     }
 }

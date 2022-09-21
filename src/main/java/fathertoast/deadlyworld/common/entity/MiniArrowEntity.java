@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public class MiniArrowEntity extends AbstractArrowEntity implements IEntityAdditionalSpawnData {
     
-    private static final DataParameter<Integer> ID_EFFECT_COLOR = EntityDataManager.defineId( ArrowEntity.class, DataSerializers.INT );
+    private static final DataParameter<Integer> ID_EFFECT_COLOR = EntityDataManager.defineId( MiniArrowEntity.class, DataSerializers.INT );
     
     private Potion potion;
     private final Set<EffectInstance> effects;
