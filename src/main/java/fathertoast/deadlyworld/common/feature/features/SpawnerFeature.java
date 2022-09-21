@@ -21,7 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 import java.util.function.Supplier;
 
-@ParametersAreNonnullByDefault
 public class SpawnerFeature extends Feature<NoFeatureConfig> {
     
     private final Supplier<DeadlySpawnerBlock> spawnerBlockSupplier;
