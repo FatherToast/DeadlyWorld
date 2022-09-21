@@ -7,8 +7,8 @@ import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.config.util.EntityEntry;
 import fathertoast.deadlyworld.common.core.config.util.WeightedEntityList;
-import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
+import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.util.OnClient;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.block.Block;
@@ -117,8 +117,9 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
             this.initializeSpawner( spawnerType, dimConfigs );
         }
         else {
-            // TODO - Was too tired to use my brain, revisit this
-            DeadlyWorld.LOG.error( "Aaaaauughh" );
+            DeadlyWorld.LOG.error( "Attempted to initialize Deadly Spawner tile entity with the wrong type of block! TileEntity:{}, Block:{}",
+                    this.getType().getRegistryName(),
+                    getBlockState().getBlock().getRegistryName() );
         }
     }
     
@@ -146,7 +147,8 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         spawnRange = (float) spawnerConfig.spawnRange.get();
         
         // Initialize logic
-        this.setEntityToSpawn( spawnerConfig.spawnList.get().next( random ) );
+        EntityType<?> toSpawn = spawnerConfig.spawnList.get().next( random );
+        setEntityToSpawn( toSpawn == null ? EntityType.PIG : toSpawn );
     }
     
     public void setEntityToSpawn( EntityType<? extends Entity> entityType ) {

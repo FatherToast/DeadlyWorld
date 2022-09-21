@@ -31,7 +31,7 @@ public class DeadlyWorld {
      *  o general
      *      o dimension-based configs
      *      o biome-based configs
-     *      + F3+B bounding box renderer for tile entities
+     *      - F3+B bounding box renderer for tile entities (MOVED TO CRUST)
      *  o blocks
      *      - configurable physical properties
      *      o procedurally generated silverfish blocks
@@ -42,6 +42,7 @@ public class DeadlyWorld {
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
+     *      + fast flowing lava
      *  o items
      *      o feature tester
      *      o event
@@ -86,6 +87,7 @@ public class DeadlyWorld {
      *      o brutal
      *      o silverfish nest
      *      + mini
+     *        + mini hanging from chains (in large caves or perhaps elsewhere with high ceilings)
      *      o dungeon-only version
      *      ? spider (combo)
      *      ? undead (combo)

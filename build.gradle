@@ -80,9 +80,6 @@ repositories {
         name 'tterrag'
         url 'https://maven.tterrag.com/'
     }
-    flatDir {
-        dir 'E:/IDEA projects/minecraft/Forge/DeadlyWorld/flatdep'
-    }
 }
 
 dependencies {
@@ -92,8 +89,6 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
     runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
     runtimeOnly fg.deobf("blank:naturalabsorption-1.16.5:2.2.0")
-
-    compileOnly fg.deobf("blank:naturalabsorption-1.16.5:2.2.0:api")
 }
 
 jar.finalizedBy('reobfJar')

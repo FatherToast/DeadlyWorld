@@ -2,7 +2,6 @@ package fathertoast.deadlyworld.common.tile.floortrap;
 
 import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
-import net.minecraft.block.BubbleColumnBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

@@ -4,9 +4,7 @@ import fathertoast.deadlyworld.common.block.FloorTrapBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.FloorTrapConfig;
-import fathertoast.deadlyworld.common.core.config.util.EntityList;
 import fathertoast.deadlyworld.common.util.References;
-import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,9 +14,7 @@ import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.LavaFluid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -46,7 +42,6 @@ public enum FloorTrapType implements IStringSerializable {
             if( fuseRange <= 0 ) {
                 fuseRange = 1;
             }
-
             // Spawn the primed tnt blocks
             for( int i = 0; i < config.tntCount.get(); i++ ) {
                 TNTEntity tnt = new TNTEntity( world, x, y, z, null );
@@ -74,7 +69,6 @@ public enum FloorTrapType implements IStringSerializable {
             if( fuseRange <= 0 ) {
                 fuseRange = 1;
             }
-
             // Pick an entity to spawn
             EntityType<?> entityType = config.spawnList.get().next( world.random );
 
@@ -151,12 +145,6 @@ public enum FloorTrapType implements IStringSerializable {
             double y = trapEntity.getBlockPos().getY() + 1.1;
             double z = trapEntity.getBlockPos().getZ() + 0.5;
 
-            int resetRange = config.maxResetTime.get() - config.minResetTime.get();
-            if( resetRange <= 0 ) {
-                resetRange = 1;
-            }
-            trapEntity.disableTrap( config.minResetTime.get() + world.random.nextInt( resetRange ) );
-
             // Load or pick the trap type
             ItemStack potionStack = trapEntity.getPotionStack(config.potionList.get(), world.random);
 
@@ -178,15 +166,9 @@ public enum FloorTrapType implements IStringSerializable {
             World world = trapEntity.getLevel();
             BlockPos pos = trapEntity.getBlockPos();
 
-            int resetRange = config.maxResetTime.get() - config.minResetTime.get();
-            if( resetRange <= 0 ) {
-                resetRange = 1;
-            }
-            trapEntity.disableTrap( config.minResetTime.get() + world.random.nextInt( resetRange ));
-
             boolean placedLava = false;
 
-            for (int i = 0; i < 2; ++i) {
+            for (int i = 1; i < 3; i++) {
                 if (world.getBlockState(pos.above()).canBeReplaced(Fluids.LAVA)) {
                     world.setBlock(pos.above(i), Blocks.LAVA.defaultBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
                     placedLava = true;
