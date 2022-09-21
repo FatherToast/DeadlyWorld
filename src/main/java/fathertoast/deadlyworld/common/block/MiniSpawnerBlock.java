@@ -40,7 +40,7 @@ public class MiniSpawnerBlock extends DeadlySpawnerBlock implements IWaterLoggab
 
     public MiniSpawnerBlock() {
         super(SpawnerType.MINI);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.DOWN).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(WATERLOGGED, false));
     }
     
     @Override

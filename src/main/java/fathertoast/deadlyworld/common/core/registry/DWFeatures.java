@@ -12,37 +12,40 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class DWFeatures {
     
     public static final DeferredRegister<Feature<?>> REGISTRY = DeferredRegister.create( ForgeRegistries.FEATURES, DeadlyWorld.MOD_ID );
-    
-    // SPAWNERS
-    public static final RegistryObject<Feature<NoFeatureConfig>> DEFAULT_SPAWNER =
-            register( "default_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.DEFAULT)));
-    public static final RegistryObject<Feature<NoFeatureConfig>> DUNGEON_SPAWNER =
-            register( "dungeon_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.DUNGEON)));
-    public static final RegistryObject<Feature<NoFeatureConfig>> SWARM_SPAWNER =
-            register( "swarm_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.SWARM)));
-    public static final RegistryObject<Feature<NoFeatureConfig>> BRUTAL_SPAWNER =
-            register( "brutal_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.BRUTAL)));
-    public static final RegistryObject<Feature<NoFeatureConfig>> NEST_SPAWNER =
-            register( "nest_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.NEST)));
-    public static final RegistryObject<Feature<NoFeatureConfig>> STREAM_SPAWNER =
-            register( "stream_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.STREAM)));
-    public static final RegistryObject<Feature<NoFeatureConfig>> MINI_SPAWNER =
-            register( "mini_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner(SpawnerType.STREAM)));
+
+    public static List<RegistryObject<SpawnerFeature>> SPAWNERS = registerSpawners();
+    public static List<RegistryObject<FloorTrapFeature>> FLOOR_TRAPS = registerFloorTraps();
 
 
-    // FLOOR TRAPS
-    public static final RegistryObject<Feature<NoFeatureConfig>> TNT_FLOOR_TRAP =
-            register( "tnt_floor_trap", () -> new FloorTrapFeature( NoFeatureConfig.CODEC, DWBlocks.floorTrap(FloorTrapType.TNT)));
-    public static final RegistryObject<Feature<NoFeatureConfig>> TNT_MOB_FLOOR_TRAP =
-            register( "tnt_mob_floor_trap", () -> new FloorTrapFeature( NoFeatureConfig.CODEC, DWBlocks.floorTrap(FloorTrapType.TNT_MOB)));
-    public static final RegistryObject<Feature<NoFeatureConfig>> POTION_FLOOR_TRAP =
-            register( "potion_floor_trap", () -> new FloorTrapFeature( NoFeatureConfig.CODEC, DWBlocks.floorTrap(FloorTrapType.POTION)));
 
+    private static List<RegistryObject<SpawnerFeature>> registerSpawners() {
+        List<RegistryObject<SpawnerFeature>> list = new ArrayList<>();
+
+        for (SpawnerType spawnerType : SpawnerType.values()) {
+            String name = spawnerType.getSerializedName();
+            RegistryObject<SpawnerFeature> feature = register( name + "_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner( spawnerType )));
+            list.add( feature );
+        }
+        return list;
+    }
+
+    private static List<RegistryObject<FloorTrapFeature>> registerFloorTraps() {
+        List<RegistryObject<FloorTrapFeature>> list = new ArrayList<>();
+
+        for (FloorTrapType trapType : FloorTrapType.values()) {
+            String name = trapType.getSerializedName();
+            RegistryObject<FloorTrapFeature> feature = register( name + "_floor_trap", () -> new FloorTrapFeature( NoFeatureConfig.CODEC, DWBlocks.floorTrap( trapType )));
+            list.add( feature );
+        }
+        return list;
+    }
 
     private static <FC extends IFeatureConfig, T extends Feature<FC>> RegistryObject<T> register( String name, Supplier<T> featureSupplier ) {
         return REGISTRY.register( name, featureSupplier );

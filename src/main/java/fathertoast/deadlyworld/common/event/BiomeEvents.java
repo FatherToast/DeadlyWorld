@@ -3,6 +3,8 @@ package fathertoast.deadlyworld.common.event;
 import fathertoast.deadlyworld.common.feature.DWConfiguredFeatures;
 import net.minecraft.world.biome.BiomeGenerationSettings;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -16,15 +18,8 @@ public class BiomeEvents {
 
         BiomeGenerationSettingsBuilder generationSettings = event.getGeneration();
 
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.DEFAULT_SPAWNER);
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.SWARM_SPAWNER);
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.BRUTAL_SPAWNER);
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.NEST_SPAWNER);
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.STREAM_SPAWNER);
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.MINI_SPAWNER);
-
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.TNT_FLOOR_TRAP);
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.TNT_MOB_FLOOR_TRAP);
-        generationSettings.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, DWConfiguredFeatures.POTION_FLOOR_TRAP);
+        for ( ConfiguredFeature<NoFeatureConfig, ?> feature : DWConfiguredFeatures.SIMPLE_FEATURES ) {
+            generationSettings.addFeature( GenerationStage.Decoration.UNDERGROUND_DECORATION, feature );
+        }
     }
 }
