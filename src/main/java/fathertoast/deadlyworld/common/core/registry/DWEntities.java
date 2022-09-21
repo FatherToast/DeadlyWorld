@@ -63,7 +63,7 @@ public class DWEntities {
     public static AttributeModifierMap.MutableAttribute standardMiniAttributes( AttributeModifierMap.MutableAttribute builder, double baseSpeed, double baseHealth ) {
         return builder
                 .add( Attributes.MOVEMENT_SPEED, baseSpeed * 1.3 )
-                .add( Attributes.MAX_HEALTH, baseHealth / 2.0 );
+                .add( Attributes.MAX_HEALTH, baseHealth / 3.0 );
     }
     
     public static void registerSpawnPlacements() {
