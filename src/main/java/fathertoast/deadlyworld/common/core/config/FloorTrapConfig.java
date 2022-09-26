@@ -28,9 +28,7 @@ public class FloorTrapConfig extends FeatureConfig {
         SPEC.describeEntityList();
 
         SPEC.newLine();
-        SPEC.comment(
-                "woah"
-        );
+        SPEC.describePotionList();
 
         TNT = new TntTrapTypeCategory( SPEC, this, FloorTrapType.TNT, 0.16, 12, 52, 0.3,
                 6.0,true, 60, 20, 180, 80, 3, 2.0D );

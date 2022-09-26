@@ -7,6 +7,7 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.field.AbstractConfigField;
 import fathertoast.deadlyworld.common.core.config.field.BlockListField;
 import fathertoast.deadlyworld.common.core.config.field.EntityListField;
+import fathertoast.deadlyworld.common.core.config.field.PotionListField;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -306,6 +307,10 @@ public class ToastConfigSpec {
     
     /** Inserts a detailed description of how to use the block list field. */
     public void describeBlockList() { ACTIONS.add( new Comment( BlockListField.verboseDescription() ) ); }
+
+    public void describePotionList() {
+        ACTIONS.add( new Comment( PotionListField.verboseDescription() ) );
+    }
     
     /**
      * @param name    The category name.

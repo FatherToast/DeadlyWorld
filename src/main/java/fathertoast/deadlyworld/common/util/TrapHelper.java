@@ -1,8 +1,10 @@
 package fathertoast.deadlyworld.common.util;
 
+import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.config.util.WeightedPotionList;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -26,15 +29,19 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 public class TrapHelper {
+
+    public static final Predicate<Entity> ATTACK_ALLOWED_PEACEFUL = (entity) -> !(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity)entity).isCreative();
 
     public static final int NBT_TYPE_PRIMITIVE = Constants.NBT.TAG_ANY_NUMERIC;
     public static final int NBT_TYPE_STRING = Constants.NBT.TAG_STRING;
 
 
-    public static boolean isValidPlayerInRange(World world, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable) {
+    public static boolean isValidPlayerInRange( World world, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
         double x = pos.getX() + 0.5;
         double y = pos.getY();
         double z = pos.getZ() + 0.5;
@@ -43,6 +50,25 @@ public class TrapHelper {
         for( int i = 0; i < world.players().size( ); i++ ) {
             PlayerEntity player = world.players().get( i );
             if( isValidTarget(player, requireVulnerable) &&
+                    player.distanceToSqr(x, y, z) <= rangeSq &&
+                    (!checkSight || canEntitySeeBlock( world, pos, player ))
+            )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isValidTrapPlayerInRange( World world, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
+        double x = pos.getX() + 0.5;
+        double y = pos.getY();
+        double z = pos.getZ() + 0.5;
+
+        double rangeSq = range * range;
+        for( int i = 0; i < world.players().size( ); i++ ) {
+            PlayerEntity player = world.players().get( i );
+            if( isValidTrapTarget( player, requireVulnerable ) &&
                     player.distanceToSqr(x, y, z) <= rangeSq &&
                     (!checkSight || canEntitySeeBlock( world, pos, player ))
             )
@@ -75,9 +101,41 @@ public class TrapHelper {
         return closestPlayer;
     }
 
-    public static boolean isValidTarget( Entity entity, boolean requireVulnerable ) {
+    /** Used for traps/devices that doesn't spawn any monsters. */
+    public static PlayerEntity getNearestTrapValidPlayerInRange( World world, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
+        double x = pos.getX() + 0.5D;
+        double y = pos.getY();
+        double z = pos.getZ() + 0.5D;
+
+        double rangeSq = range * range;
+        PlayerEntity closestPlayer = null;
+        double closestDistSq = Double.POSITIVE_INFINITY;
+
+        for (PlayerEntity player : world.players()) {
+            double distSq = player.distanceToSqr( x, y, z );
+
+            if( isValidTrapTarget( player, requireVulnerable ) &&
+                    distSq <= rangeSq && distSq < closestDistSq &&
+                    (!checkSight || canEntitySeeBlock( world, pos, player ))) {
+                closestPlayer = player;
+                closestDistSq = distSq;
+            }
+        }
+        return closestPlayer;
+    }
+
+    public static boolean isValidTrapTarget( Entity entity, boolean requireVulnerable ) {
+        final boolean allowInPeaceful = Config.GENERAL.GENERAL.activateTrapsInPeaceful.get();
+
+        return requireVulnerable
+                ? ( allowInPeaceful ? ATTACK_ALLOWED_PEACEFUL.test( entity ) : EntityPredicates.ATTACK_ALLOWED.test( entity ))
+                : EntityPredicates.NO_SPECTATORS.test( entity );
+    }
+
+    public static boolean isValidTarget ( Entity entity, boolean requireVulnerable ) {
         return requireVulnerable ? EntityPredicates.ATTACK_ALLOWED.test( entity ) : EntityPredicates.NO_SPECTATORS.test( entity );
     }
+
 
     public static boolean canEntitySeeBlock( World world, BlockPos pos, Entity entity ) {
         BlockRayTraceResult result = world.clip( new RayTraceContext(
@@ -102,42 +160,14 @@ public class TrapHelper {
         return true;
     }
 
-    @SuppressWarnings("ConstantConditions")
-    public static ItemStack getPotionFromTrapData( CompoundNBT trapData, WeightedPotionList potionList, Random random ) {
-        final String TAG_POTION_TYPE = "PotionType";
-        EffectInstance effectInstance;
+    public static void setStackPotionColor(ItemStack potionStack) {
+        List<EffectInstance> effects = PotionUtils.getCustomEffects(potionStack);
 
-        if ( trapData.contains(TAG_POTION_TYPE, Constants.NBT.TAG_COMPOUND )) {
-            CompoundNBT potionData = trapData.getCompound( TAG_POTION_TYPE );
+        if (!effects.isEmpty()) {
+            int color = PotionUtils.getColor(effects);
 
-            if ( potionData.contains( "Effect", NBT_TYPE_STRING )
-                    && potionData.contains( "Duration", NBT_TYPE_PRIMITIVE )
-                    && potionData.contains( "Amplifier", NBT_TYPE_PRIMITIVE )) {
-
-                Effect effect = Effects.HARM;
-                int duration;
-                int amplifier;
-
-                ResourceLocation effectId = ResourceLocation.tryParse(potionData.getString("Effect"));
-
-                if (effectId != null) {
-                    if (ForgeRegistries.POTIONS.containsKey(effectId)) {
-                        effect = ForgeRegistries.POTIONS.getValue(effectId);
-                    }
-                }
-                duration = potionData.getInt("Duration");
-                amplifier = potionData.getInt("Amplifier");
-
-                effectInstance = new EffectInstance(effect, duration, amplifier);
-            }
-            else {
-                effectInstance = new EffectInstance(Effects.HARM, 1, 0);
-            }
+            potionStack.getOrCreateTag().putInt("CustomPotionColor", color);
         }
-        else {
-            effectInstance = potionList.next( random );
-        }
-        return PotionUtils.setCustomEffects( new ItemStack( Items.SPLASH_POTION ), Collections.singletonList( effectInstance ));
     }
 
     // Utility class, instantiating not needed

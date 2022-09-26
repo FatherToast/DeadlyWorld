@@ -15,7 +15,7 @@ public class PotionListField extends AbstractPotionListField<PotionList> {
     /** Provides a detailed description of how to use entity lists. Recommended to put at the top of any file using potion lists. */
     public static List<String> verboseDescription() {
         List<String> comment = new ArrayList<>();
-        comment.add( "Potion List fields: General format = [ \"namespace:effect value1 value2 ...\", ... ]" );
+        comment.add( "Potion List fields: General format = [ \"namespace:effect weight duration amplifier ...\", ... ]" );
         comment.add( "  Potion lists are arrays of potion effect types. Some potion lists specify a number of values linked to each potion effect." );
         comment.add( "  Potion effects are defined by their key in the effect registry, usually following the pattern 'namespace:effect_name'." );
         comment.add( "  '" + REG_KEY_DEFAULT + "' can be used instead of a potion effect registry key to provide default values for all entities." );

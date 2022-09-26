@@ -195,7 +195,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
         }
         else {
             activationDelay = 4;
-            activated = TrapHelper.isValidPlayerInRange( this.level, this.worldPosition, activationRange, false, false );
+            activated = TrapHelper.isValidPlayerInRange( this.level, this.worldPosition, activationRange, false, true );
         }
         
         if( this.level.isClientSide ) {
@@ -215,7 +215,7 @@ public class DeadlySpawnerTileEntity extends TileEntity implements ITickableTile
                     spawnDelay--;
                 }
                 
-                else if( checkSight && !TrapHelper.isValidPlayerInRange( level, worldPosition, activationRange, true, false ) ) {
+                else if( checkSight && !TrapHelper.isValidPlayerInRange( level, worldPosition, activationRange, true, true ) ) {
                     // Failed sight check; impose a small delay, so we don't spam ray traces
                     spawnDelay = 6 + level.random.nextInt( 10 );
                 }

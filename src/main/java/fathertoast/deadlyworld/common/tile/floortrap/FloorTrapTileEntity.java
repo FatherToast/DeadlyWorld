@@ -132,6 +132,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
                     effectInstance = new EffectInstance(Effects.HARM, 1, 0);
 
                 potionStack = PotionUtils.setCustomEffects(new ItemStack(Items.SPLASH_POTION), Collections.singletonList(effectInstance));
+                TrapHelper.setStackPotionColor(potionStack);
             }
         }
     }
@@ -155,7 +156,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
     }
 
     public PlayerEntity getTarget( ) {
-        return TrapHelper.getNearestValidPlayerInRange( level, getBlockPos().above( ), activationRange, checkSight, true );
+        return TrapHelper.getNearestTrapValidPlayerInRange( level, getBlockPos().above( ), activationRange, checkSight, true );
     }
 
     @Nonnull
@@ -181,8 +182,12 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
             // Run server-side logic
             if( triggerDelay == -1 ) {
                 // Check if trap should be tripped
-                if( TrapHelper.isValidPlayerInRange( level, getBlockPos().above( ), activationRange, checkSight, true ) ) {
-                    tripTrap( );
+                boolean validPlayerInRange = trapType.spawnsMonster()
+                        ? TrapHelper.isValidPlayerInRange( level, getBlockPos().above( ), activationRange, checkSight, true )
+                        : TrapHelper.isValidTrapPlayerInRange( level, getBlockPos().above( ), activationRange, checkSight, true );
+
+                if( validPlayerInRange ) {
+                    tripTrap();
                     level.playSound( null, getBlockPos().getX( ) + 0.5, getBlockPos().getY( ) + 1, getBlockPos().getZ( ) + 0.5,
                             SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 1.0F, 1.0F );
                 }
@@ -350,6 +355,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
                 effectInstance = new EffectInstance(Effects.HARM, 1, 0);
             }
             potionStack = PotionUtils.setCustomEffects(new ItemStack(Items.SPLASH_POTION), Collections.singletonList(effectInstance));
+            TrapHelper.setStackPotionColor(potionStack);
         }
     }
 

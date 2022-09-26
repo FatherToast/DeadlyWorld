@@ -57,6 +57,11 @@ public enum FloorTrapType implements IStringSerializable {
 
     TNT_MOB( "tnt_mob", (dimConfig) -> dimConfig.FLOOR_TRAPS.TNT_MOB ) {
         @Override
+        public boolean spawnsMonster() {
+            return true;
+        }
+
+        @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapTileEntity trapEntity ) {
             FloorTrapConfig.TntMobTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT_MOB;
             World world = trapEntity.getLevel();
@@ -216,6 +221,10 @@ public enum FloorTrapType implements IStringSerializable {
 
     /** @return A Supplier of the Spawner Block to register for this Spawner Type */
     public Supplier<FloorTrapBlock> getBlock() { return () -> new FloorTrapBlock(this); }
+
+    public boolean spawnsMonster() {
+        return false;
+    }
 
     public final FloorTrapConfig.FloorTrapTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
 
