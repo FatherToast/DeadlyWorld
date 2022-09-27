@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.core.config;
 
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.field.BooleanField;
 import fathertoast.deadlyworld.common.core.config.field.DoubleField;
 import fathertoast.deadlyworld.common.core.config.field.IntField;
@@ -7,6 +8,7 @@ import fathertoast.deadlyworld.common.core.config.field.ToolTypeField;
 import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.tile.tower.TowerType;
 import net.minecraft.block.AbstractBlock;
 import net.minecraftforge.common.ToolType;
 
@@ -31,9 +33,15 @@ public class BlocksConfig extends Config.AbstractConfig {
         }
 
         // Floor Traps
-        for (FloorTrapType type : FloorTrapType.values()) {
-            LOOKUP.put(toKey(FloorTrapType.CATEGORY, type.toString()), new BlockCategory( SPEC, FloorTrapType.CATEGORY, type.toString(),
-                    5.0, 1200.0, 1));
+        for ( FloorTrapType type : FloorTrapType.values() ) {
+            LOOKUP.put( toKey( FloorTrapType.CATEGORY, type.toString() ), new BlockCategory( SPEC, FloorTrapType.CATEGORY, type.toString(),
+                    5.0, 1200.0, 1 ) );
+        }
+
+        // Tower Dispensers
+        for ( TowerType type : TowerType.values() ) {
+            LOOKUP.put( toKey( TowerType.CATEGORY, type.toString()), new BlockCategory( SPEC, TowerType.CATEGORY, type.toString(),
+                    5.0, 1200.0, 1) );
         }
         
         //TODO add storm drain; will possibly include in a "water traps" category
@@ -41,11 +49,22 @@ public class BlocksConfig extends Config.AbstractConfig {
     
     public BlockCategory get( SpawnerType type ) { return get( SpawnerType.CATEGORY, type.toString() ); }
 
-    public BlockCategory get(FloorTrapType type) {
+    public BlockCategory get( FloorTrapType type ) {
         return get( FloorTrapType.CATEGORY, type.toString());
     }
 
-    private BlockCategory get( String category, String type ) { return LOOKUP.get( toKey( category, type ) ); }
+    public BlockCategory get( TowerType type ) {
+        return get( TowerType.CATEGORY, type.toString() );
+    }
+
+    private BlockCategory get( String category, String type ) {
+        BlocksConfig.BlockCategory blockCategory = LOOKUP.get( toKey( category, type ) );
+
+        if (blockCategory == null)
+            throw new IllegalStateException(DeadlyWorld.logPrefix(this.getClass()) + "No block category exists for type '" + type + '"');
+
+        return blockCategory;
+    }
     
     private static String toKey( String category, String type ) { return category + "." + type; }
     

@@ -10,7 +10,11 @@ import net.minecraft.world.World;
 
 public class MimicEntity extends MonsterEntity {
     
-    public MimicEntity( EntityType<? extends MonsterEntity> entityType, World world ) { super( entityType, world ); }
+    public MimicEntity( EntityType<? extends MonsterEntity> entityType, World world ) {
+        super( entityType, world );
+        // Lol!
+        maxUpStep = 1.0F;
+    }
     
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MonsterEntity.createMonsterAttributes()

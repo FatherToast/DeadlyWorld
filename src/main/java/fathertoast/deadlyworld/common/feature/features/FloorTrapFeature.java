@@ -10,11 +10,13 @@ import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
 import fathertoast.deadlyworld.common.util.FeatureGenHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.data.BlockStateVariantBuilder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 import java.util.function.Supplier;
@@ -30,6 +32,7 @@ public class FloorTrapFeature extends Feature<NoFeatureConfig> {
 
     @Override
     public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random random, BlockPos origin, NoFeatureConfig featureConfig ) {
+        DeadlyWorld.LOG.info("Gen pos:" + origin);
         FloorTrapType trapType = floorTrapBlockSupplier.get().getTrapType();
         FloorTrapConfig.FloorTrapTypeCategory trapConfig = trapType.getFeatureConfig( this.getDimensionConfig(seedReader) );
         double countPerChunk = trapConfig.countPerChunk.get();
@@ -54,7 +57,7 @@ public class FloorTrapFeature extends Feature<NoFeatureConfig> {
         }
 
         for( int i = 0; i < placementCount; i++ ) {
-            BlockPos currentPos = this.getFeaturePos( origin, minY, random );
+            BlockPos currentPos = getFeaturePos( origin, minY, random );
 
             while( currentPos.getY() < maxY ) {
 
@@ -62,8 +65,8 @@ public class FloorTrapFeature extends Feature<NoFeatureConfig> {
                     // Just hit an air block, check for valid placement position
                     BlockPos pos = currentPos.immutable();
 
-                    if( this.canBePlaced( seedReader, pos ) ) {
-                        this.placeTrap( trapConfig, trapType, seedReader, random, pos );
+                    if( canBePlaced( seedReader, pos ) ) {
+                        placeTrap( trapConfig, trapType, seedReader, random, pos );
                         return true;
                     }
                 }
@@ -95,7 +98,6 @@ public class FloorTrapFeature extends Feature<NoFeatureConfig> {
         if( random.nextFloat() < trapConfig.chestChance.get() ) {
             FeatureGenHelper.placeChest( pos.below(2), seedReader, random, trapType.getChestLootTable() );
         }
-
         // Place floor trap
         seedReader.setBlock( pos.below(), state, 18 );
     }
@@ -112,7 +114,7 @@ public class FloorTrapFeature extends Feature<NoFeatureConfig> {
     }
 
     private BlockPos getFeaturePos( BlockPos origin, int startY, Random random ) {
-        return origin.offset( random.nextInt( 8 ) - random.nextInt( 8 ), startY, random.nextInt( 8 ) - random.nextInt( 8 ) );
+        return origin.offset( random.nextInt( 16 ), startY, random.nextInt( 16 ));
     }
 
     private DimensionConfigGroup getDimensionConfig(ISeedReader seedReader ) {

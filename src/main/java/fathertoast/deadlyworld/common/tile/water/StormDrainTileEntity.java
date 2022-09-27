@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.tile.floortrap;
+package fathertoast.deadlyworld.common.tile.water;
 
 import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.DWDamageSources;

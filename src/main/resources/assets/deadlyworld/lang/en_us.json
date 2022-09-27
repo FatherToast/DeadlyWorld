@@ -13,12 +13,11 @@
   "block.deadlyworld.lava_floor_trap": "Lava Floor Trap",
   "block.deadlyworld.storm_drain": "Storm Drain Trap",
 
-  "block.deadlyworld.tower_dispenser": "Broken Tower Dispenser",
-  "block.deadlyworld.tower_dispenser.simple": "Arrow Tower Dispenser",
-  "block.deadlyworld.tower_dispenser.fire": "Arrow Tower Dispenser of Flame",
-  "block.deadlyworld.tower_dispenser.potion": "Arrow Tower Dispenser of Magic",
-  "block.deadlyworld.tower_dispenser.fireball": "Fireball Tower Dispenser",
-  "block.deadlyworld.tower_dispenser.gatling": "Arrow Tower Dispenser of Speed",
+  "block.deadlyworld.simple_tower_dispenser": "Arrow Tower Dispenser",
+  "block.deadlyworld.fire_tower_dispenser": "Flaming Arrow Tower Dispenser",
+  "block.deadlyworld.potion_tower_dispenser": "Magic Arrow Tower Dispenser",
+  "block.deadlyworld.fireball_tower_dispenser": "Fireball Tower Dispenser",
+  "block.deadlyworld.gatling_tower_dispenser": "Gatling Arrow Tower Dispenser",
 
   "item.deadlyworld.mimic_spawn_egg": "Mimic Spawn Egg",
   "item.deadlyworld.mini_creeper_spawn_egg": "Mini Creeper Spawn Egg",

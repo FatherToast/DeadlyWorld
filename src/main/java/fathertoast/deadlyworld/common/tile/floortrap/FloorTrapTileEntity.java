@@ -61,6 +61,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
     private double activationRange;
     private boolean checkSight;
     private FloorTrapType trapType;
+
     // Used for potion traps
     private CompoundNBT typeData;
     @Nullable
@@ -90,16 +91,16 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
 
     @Override
     public void onLoad() {
-        if( getLevel() == null ) {
+        if( level == null ) {
             DeadlyWorld.LOG.error( "Failed to load floor trap block entity at \"{}\"", this.getBlockPos() );
             return;
         }
         if( getBlockState().getBlock() instanceof FloorTrapBlock ) {
-            DimensionConfigGroup dimConfigs = Config.getDimensionConfigs( getLevel() );
+            DimensionConfigGroup dimConfigs = Config.getDimensionConfigs( level );
             FloorTrapType trapType = ((FloorTrapBlock) getBlockState().getBlock()).getTrapType();
             this.trapType = trapType;
 
-            initializeFloorTrap( trapType, dimConfigs, getLevel().random );
+            initializeFloorTrap( trapType, dimConfigs, level.random );
         }
         else {
             DeadlyWorld.LOG.error( "Attempted to initialize Floor Trap tile entity with the wrong type of block! TileEntity:{}, Block:{}",

@@ -3,10 +3,12 @@ package fathertoast.deadlyworld.common.core.registry;
 import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.StormDrainBlock;
+import fathertoast.deadlyworld.common.block.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapTileEntity;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.tile.tower.TowerType;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -26,12 +28,16 @@ public class DWBlocks {
     
     private static final List<RegistryObject<DeadlySpawnerBlock>> SPAWNERS;
     private static final List<RegistryObject<FloorTrapBlock>> FLOOR_TRAPS;
+    private static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
 
     public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
+
+
 
     static {
         final ArrayList<RegistryObject<DeadlySpawnerBlock>> spawners = new ArrayList<>();
         final ArrayList<RegistryObject<FloorTrapBlock>> floorTraps = new ArrayList<>();
+        final ArrayList<RegistryObject<TowerDispenserBlock>> towerDispensers = new ArrayList<>();
 
         for(SpawnerType type : SpawnerType.values()) {
             spawners.add(type.ordinal(), registerSpawner(type));
@@ -44,6 +50,12 @@ public class DWBlocks {
         }
         floorTraps.trimToSize();
         FLOOR_TRAPS = Collections.unmodifiableList( floorTraps );
+
+        for (TowerType type : TowerType.values()) {
+            towerDispensers.add(type.ordinal(), registerTowerDispenser(type));
+        }
+        towerDispensers.trimToSize();
+        TOWER_DISPENSERS = Collections.unmodifiableList( towerDispensers );
     }
 
 
@@ -62,6 +74,10 @@ public class DWBlocks {
     
     /** @return Creates an array of all floor trap blocks and returns it. */
     public static Block[] floorTrapBlocks() { return blockArray(FLOOR_TRAPS); }
+
+    public static Block[] towerDispenserBlocks() {
+        return blockArray(TOWER_DISPENSERS);
+    }
     
     /** @return Creates a new array referencing all the blocks represented by a list of block registry objects. */
     private static <T extends Block> Block[] blockArray(List<RegistryObject<T>> blockRegObjects) {
@@ -99,6 +115,13 @@ public class DWBlocks {
     private static RegistryObject<FloorTrapBlock> registerFloorTrap(FloorTrapType trapType) {
         String regName = trapType.getSerializedName() + "_floor_trap";
         RegistryObject<FloorTrapBlock> blockRegObject = REGISTRY.register( regName, trapType.getBlock() );
+        DWItems.registerBlockItem( regName, blockRegObject, new Item.Properties().tab( ItemGroup.TAB_DECORATIONS ) );
+        return blockRegObject;
+    }
+
+    private static RegistryObject<TowerDispenserBlock> registerTowerDispenser(TowerType towerType) {
+        String regName = towerType.getSerializedName() + "_tower_dispenser";
+        RegistryObject<TowerDispenserBlock> blockRegObject = REGISTRY.register( regName, towerType.getBlock() );
         DWItems.registerBlockItem( regName, blockRegObject, new Item.Properties().tab( ItemGroup.TAB_DECORATIONS ) );
         return blockRegObject;
     }

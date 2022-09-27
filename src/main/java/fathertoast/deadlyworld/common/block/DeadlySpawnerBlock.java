@@ -38,7 +38,8 @@ public class DeadlySpawnerBlock extends Block {
     public int getExpDrop( BlockState state, IWorldReader reader, BlockPos pos, int fortune, int silkTouch ) {
         return silkTouch > 0 ? 0 : (15 + RANDOM.nextInt( 15 ) + RANDOM.nextInt( 15 ));
     }
-    
+
+    @SuppressWarnings("deprecation")
     @Override
     public BlockRenderType getRenderShape( BlockState state ) { return BlockRenderType.MODEL; }
 }

@@ -4,7 +4,8 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.DeadlySpawnerTileEntity;
 import fathertoast.deadlyworld.common.tile.spawner.MiniSpawnerTileEntity;
-import fathertoast.deadlyworld.common.tile.floortrap.StormDrainTileEntity;
+import fathertoast.deadlyworld.common.tile.water.StormDrainTileEntity;
+import fathertoast.deadlyworld.common.tile.tower.TowerDispenserTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
@@ -25,6 +26,9 @@ public class DWTileEntities {
     
     public static final RegistryObject<TileEntityType<FloorTrapTileEntity>> FLOOR_TRAP = register( "floor_trap",
             () -> TileEntityType.Builder.of( FloorTrapTileEntity::new, DWBlocks.floorTrapBlocks() ).build( null ));
+
+    public static final RegistryObject<TileEntityType<TowerDispenserTileEntity>> TOWER_DISPENSER = register("tower_dispenser",
+            () -> TileEntityType.Builder.of( TowerDispenserTileEntity::new, DWBlocks.towerDispenserBlocks() ).build( null ));
 
     public static final RegistryObject<TileEntityType<MiniSpawnerTileEntity>> MINI_SPAWNER = register( "mini_spawner",
             () -> TileEntityType.Builder.of( MiniSpawnerTileEntity::new, DWBlocks.spawnerBlocks()).build( null ));

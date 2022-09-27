@@ -16,6 +16,7 @@ import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.SeaGrassFeature;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
@@ -111,9 +112,9 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
         
         return airAbove && solidBelow;
     }
-    
+
     private BlockPos getFeaturePos( BlockPos origin, int startY, Random random ) {
-        return origin.offset( random.nextInt( 8 ) - random.nextInt( 8 ), startY, random.nextInt( 8 ) - random.nextInt( 8 ) );
+        return origin.offset( random.nextInt( 16 ), startY, random.nextInt( 16 ));
     }
     
     private DimensionConfigGroup getDimensionConfig( ISeedReader seedReader ) {

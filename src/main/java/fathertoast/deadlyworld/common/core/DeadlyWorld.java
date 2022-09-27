@@ -170,6 +170,10 @@ public class DeadlyWorld {
     
     /** @return A ResourceLocation with the mod's namespace. */
     public static ResourceLocation resourceLoc( String path ) { return new ResourceLocation( MOD_ID, path ); }
+
+    public static String logPrefix(Class<?> clazz) {
+        return "[" + MOD_ID + "/" + clazz.getSimpleName() + "] ";
+    }
     
     /** @return Returns a Forge registry entry as a string, or "null" if it is null. */
     public static String toString( @Nullable ForgeRegistryEntry<?> regEntry ) { return regEntry == null ? "null" : toString( regEntry.getRegistryName() ); }

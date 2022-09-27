@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.client.renderer.tile;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import fathertoast.deadlyworld.common.tile.floortrap.StormDrainTileEntity;
+import fathertoast.deadlyworld.common.tile.water.StormDrainTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
