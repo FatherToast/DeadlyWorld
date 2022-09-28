@@ -52,6 +52,7 @@ public class DeadlyWorld {
      *      - mini skeleton
      *      + mini arrow
      *      - mini zombie
+     *      - mini spider
      *      + mimic
      *      ? dispenser fish hook
      *  o vein world gen

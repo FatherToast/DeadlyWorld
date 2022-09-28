@@ -15,11 +15,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.FlowersFeature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.SeaGrassFeature;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
 public class SpawnerFeature extends Feature<NoFeatureConfig> {
@@ -102,14 +104,14 @@ public class SpawnerFeature extends Feature<NoFeatureConfig> {
             FeatureGenHelper.placeChest( pos.below(), seedReader, random, spawnerType.getChestLootTable() );
         }
 
-        // Place and initialize spawner
+        // Place spawner
         seedReader.setBlock( pos, spawnerState, 18 );
     }
     
     boolean canBePlaced( ISeedReader world, Random random, BlockPos pos ) {
         boolean airAbove = world.isEmptyBlock( pos.offset(0, 2, 0));
         boolean solidBelow = TrapHelper.isSolidBlock( world, pos.offset( 0, -1, 0 ));
-        
+
         return airAbove && solidBelow;
     }
 
