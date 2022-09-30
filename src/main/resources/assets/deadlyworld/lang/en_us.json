@@ -1,4 +1,6 @@
 {
+  "block.deadlyworld.sewer_bedrock": "Nasty Stone",
+
   "block.deadlyworld.simple_deadly_spawner": "Monster Spawner",
   "block.deadlyworld.stream_deadly_spawner": "Monster Stream Spawner",
   "block.deadlyworld.swarm_deadly_spawner": "Monster Spawner of Swarms",

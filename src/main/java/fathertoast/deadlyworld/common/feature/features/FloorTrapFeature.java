@@ -32,7 +32,6 @@ public class FloorTrapFeature extends Feature<NoFeatureConfig> {
 
     @Override
     public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random random, BlockPos origin, NoFeatureConfig featureConfig ) {
-        DeadlyWorld.LOG.info("Gen pos:" + origin);
         FloorTrapType trapType = floorTrapBlockSupplier.get().getTrapType();
         FloorTrapConfig.FloorTrapTypeCategory trapConfig = trapType.getFeatureConfig( this.getDimensionConfig(seedReader) );
         double countPerChunk = trapConfig.countPerChunk.get();

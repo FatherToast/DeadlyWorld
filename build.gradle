@@ -80,15 +80,19 @@ repositories {
         name 'tterrag'
         url 'https://maven.tterrag.com/'
     }
+    maven {
+        name 'cursemaven'
+        url "https://cursemaven.com"
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     // Add in JEI and TOP to assist debugging during development
+    runtimeOnly fg.deobf("curse.maven:worldedit-225608:3283693")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
     runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
-    runtimeOnly fg.deobf("blank:naturalabsorption-1.16.5:2.2.0")
 }
 
 jar.finalizedBy('reobfJar')

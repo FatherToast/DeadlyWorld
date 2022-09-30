@@ -5,9 +5,11 @@ import fathertoast.deadlyworld.common.entity.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
+import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -68,8 +70,10 @@ public class DWEntities {
     }
     
     public static void registerSpawnPlacements() {
-        EntitySpawnPlacementRegistry.register( MINI_CREEPER.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MiniZombieEntity::checkMonsterSpawnRules );
-        EntitySpawnPlacementRegistry.register( MINI_ZOMBIE.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MiniZombieEntity::checkMonsterSpawnRules );
+        EntitySpawnPlacementRegistry.register( MINI_CREEPER.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules );
+        EntitySpawnPlacementRegistry.register( MINI_ZOMBIE.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules );
+        EntitySpawnPlacementRegistry.register( MINI_SKELETON.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules );
+        EntitySpawnPlacementRegistry.register( MINI_SPIDER.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules );
     }
     
     private static <T extends Entity> RegistryObject<EntityType<T>> register( String name, EntityType.Builder<T> builder ) {

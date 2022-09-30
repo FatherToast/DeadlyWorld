@@ -1,0 +1,8 @@
+{
+  "biome.sewer.sewer_ambience": {
+    "subtitle": "sound_event.deadlyworld.subtitle.sewer_ambience",
+    "sounds": [
+      "deadlyworld:biome/sewer/sewer_ambience"
+    ]
+  }
+}

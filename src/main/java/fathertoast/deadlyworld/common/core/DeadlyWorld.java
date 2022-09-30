@@ -1,15 +1,17 @@
 package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.core.config.Config;
+import fathertoast.deadlyworld.common.core.registry.*;
 import fathertoast.deadlyworld.common.event.BiomeEvents;
 import fathertoast.deadlyworld.common.event.EntityEvents;
 import fathertoast.deadlyworld.common.network.PacketHandler;
-import fathertoast.deadlyworld.common.core.registry.*;
+import fathertoast.deadlyworld.common.structure.DWConfiguredStructures;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
@@ -159,14 +161,27 @@ public class DeadlyWorld {
         MinecraftForge.EVENT_BUS.register( new EntityEvents() );
         
         eventBus.addListener( DWEntities::createAttributes );
+        eventBus.addListener( this::onCommonSetup );
+
+        MinecraftForge.EVENT_BUS.addListener( DWStructures::addDimensionalSpacing );
         
         DWBlocks.REGISTRY.register( eventBus );
         DWItems.REGISTRY.register( eventBus );
         DWEntities.REGISTRY.register( eventBus );
         DWTileEntities.REGISTRY.register( eventBus );
         DWFeatures.REGISTRY.register( eventBus );
+        DWBiomes.REGISTRY.register( eventBus );
+        DWSounds.REGISTRY.register( eventBus );
+        DWStructures.REGISTRY.register( eventBus );
         
         Config.preInitialize();
+    }
+
+    public void onCommonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            DWStructures.setupStructures();
+            DWConfiguredStructures.register();
+        });
     }
     
     /** @return A ResourceLocation with the mod's namespace. */

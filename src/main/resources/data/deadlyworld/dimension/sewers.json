@@ -1,0 +1,49 @@
+{
+  "type": {
+    "name": "deadlyworld:sewer",
+    "ultrawarm": false,
+    "natural": false,
+    "piglin_safe": false,
+    "respawn_anchor_works": false,
+    "bed_works": false,
+    "has_raids": false,
+    "has_skylight": false,
+    "has_ceiling": true,
+    "coordinate_scale": 1,
+    "ambient_light": 0.0,
+    "fixed_time": 1200,
+    "logical_height": 100,
+    "infiniburn": "minecraft:infiniburn_overworld"
+  },
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "deadlyworld:sewer",
+      "lakes": false,
+      "features": true,
+      "layers": [
+        {
+          "block": "minecraft:bedrock",
+          "height": 1
+        },
+        {
+          "block": "deadlyworld:sewer_bedrock",
+          "height": 40
+        },
+        {
+          "block": "minecraft:bedrock",
+          "height": 1
+        }
+      ],
+      "structures": {
+        "structures": {
+          "deadlyworld:sewer_dungeon": {
+            "spacing": 10,
+            "separation": 5,
+            "salt": 0
+          }
+        }
+      }
+    }
+  }
+}

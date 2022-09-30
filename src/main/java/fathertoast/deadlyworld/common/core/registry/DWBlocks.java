@@ -9,7 +9,12 @@ import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapTileEntity;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
 import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.tile.tower.TowerType;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -31,6 +36,7 @@ public class DWBlocks {
     private static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
 
     public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
+    public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock("sewer_bedrock", () -> new Block(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(-1.0F, 3600000.0F).noDrops().sound(SoundType.STONE)), ItemGroup.TAB_BUILDING_BLOCKS );
 
 
 
