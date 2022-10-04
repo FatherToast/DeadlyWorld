@@ -7,6 +7,7 @@ import fathertoast.deadlyworld.common.event.EntityEvents;
 import fathertoast.deadlyworld.common.network.PacketHandler;
 import fathertoast.deadlyworld.common.structure.DWConfiguredStructures;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
+import fathertoast.deadlyworld.common.world.worldgen.structure_processor.DWStructureProcessors;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -44,7 +45,7 @@ public class DeadlyWorld {
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
-     *      + fast flowing lava
+     *      ? fast flowing lava
      *  o items
      *      o feature tester
      *      o event
@@ -181,6 +182,7 @@ public class DeadlyWorld {
         event.enqueueWork(() -> {
             DWStructures.setupStructures();
             DWConfiguredStructures.register();
+            DWStructureProcessors.register();
         });
     }
     

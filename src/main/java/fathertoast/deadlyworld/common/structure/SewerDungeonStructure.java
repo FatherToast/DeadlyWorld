@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.structure;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SharedConstants;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.vector.Vector3i;
@@ -16,10 +17,10 @@ import net.minecraft.world.gen.feature.structure.*;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import org.apache.logging.log4j.Level;
 
-public class SewerDungeonFeature extends Structure<NoFeatureConfig> {
+public class SewerDungeonStructure extends Structure<NoFeatureConfig> {
 
 
-    public SewerDungeonFeature() {
+    public SewerDungeonStructure() {
         super(NoFeatureConfig.CODEC);
     }
 
@@ -30,7 +31,7 @@ public class SewerDungeonFeature extends Structure<NoFeatureConfig> {
 
     @Override
     public IStartFactory<NoFeatureConfig> getStartFactory() {
-        return SewerDungeonFeature.Start::new;
+        return SewerDungeonStructure.Start::new;
     }
 
     public static class Start extends StructureStart<NoFeatureConfig> {
@@ -45,18 +46,13 @@ public class SewerDungeonFeature extends Structure<NoFeatureConfig> {
 
             int x = chunkX * 16;
             int z = chunkZ * 16;
-            BlockPos centerPos = new BlockPos(x, 0, z);
+            // Start generating at Y 80, so we can generate upper and lower layers if we want to.
+            BlockPos centerPos = new BlockPos(x, 80, z);
 
             JigsawManager.addPieces(
                     registries,
                     new VillageConfig(() -> registries.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY)
                             // The path to the starting Template Pool JSON file to read.
-                            //
-                            // Note, this is "structure_tutorial:run_down_house/start_pool" which means
-                            // the game will automatically look into the following path for the template pool:
-                            // "resources/data/structure_tutorial/worldgen/template_pool/run_down_house/start_pool.json"
-                            // This is why your pool files must be in "data/<modid>/worldgen/template_pool/<the path to the pool here>"
-                            // because the game automatically will check in worldgen/template_pool for the pools.
                             .get(new ResourceLocation(DeadlyWorld.MOD_ID, "sewer_dungeon/start_pool")),
 
                             // How many pieces outward from center can a recursive jigsaw structure spawn.
@@ -104,12 +100,12 @@ public class SewerDungeonFeature extends Structure<NoFeatureConfig> {
             // Sets the bounds of the structure once you are finished.
             this.calculateBoundingBox();
 
-            // I use to debug and quickly find out if the structure is spawning or not and where it is.
-            // This is returning the coordinates of the center starting piece.
-            DeadlyWorld.LOG.log(Level.DEBUG, "Sewer Dungeon at " +
-                    this.pieces.get(0).getBoundingBox().x0 + " " +
-                    this.pieces.get(0).getBoundingBox().y0 + " " +
-                    this.pieces.get(0).getBoundingBox().z0);
+            if (SharedConstants.IS_RUNNING_IN_IDE) {
+                DeadlyWorld.LOG.log(Level.DEBUG, "Sewer Dungeon at " +
+                        this.pieces.get(0).getBoundingBox().x0 + " " +
+                        this.pieces.get(0).getBoundingBox().y0 + " " +
+                        this.pieces.get(0).getBoundingBox().z0);
+            }
         }
     }
 }

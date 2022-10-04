@@ -28,7 +28,7 @@
         },
         {
           "block": "deadlyworld:sewer_bedrock",
-          "height": 40
+          "height": 254
         },
         {
           "block": "minecraft:bedrock",
@@ -38,8 +38,8 @@
       "structures": {
         "structures": {
           "deadlyworld:sewer_dungeon": {
-            "spacing": 10,
-            "separation": 5,
+            "spacing": 15,
+            "separation": 12,
             "salt": 0
           }
         }

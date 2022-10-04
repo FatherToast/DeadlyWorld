@@ -11,23 +11,18 @@ import net.minecraft.world.gen.feature.StructureFeature;
 
 public class DWConfiguredStructures {
 
-    public static StructureFeature<?, ?> SEWER_DUNGEON = DWStructures.SEWER_DUNGEON.get().configured(IFeatureConfig.NONE);;
+    public static StructureFeature<?, ?> SEWER_DUNGEON;
+
 
     public static void register() {
-        register("configured_sewer_dungeon", SEWER_DUNGEON);
+        SEWER_DUNGEON = register("configured_sewer_dungeon", DWStructures.SEWER_DUNGEON.get().configured(IFeatureConfig.NONE));
     }
 
-    private static void register(String name, StructureFeature<?, ?> structureFeature) {
+
+    private static <T extends StructureFeature<?, ?>> T register(String name, T structureFeature) {
         Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
-        Registry.register(registry, new ResourceLocation(DeadlyWorld.MOD_ID, name), structureFeature);
-        /* Ok so, this part may be hard to grasp but basically, just add your structure to this to
-        * prevent any sort of crash or issue with other mod's custom ChunkGenerators. If they use
-        * FlatGenerationSettings.STRUCTURE_FEATURES in it and you don't add your structure to it, the game
-        * could crash later when you attempt to add the StructureSeparationSettings to the dimension.
-        *
-        * (It would also crash with superflat worldtype if you omit the below line
-        * and attempt to add the structure's StructureSeparationSettings to the world
-         */
-        FlatGenerationSettings.STRUCTURE_FEATURES.put(structureFeature.feature, structureFeature);
+        T structureFeat = Registry.register(registry, new ResourceLocation(DeadlyWorld.MOD_ID, name), structureFeature);
+        FlatGenerationSettings.STRUCTURE_FEATURES.put(structureFeat.feature, structureFeat);
+        return structureFeat;
     }
 }

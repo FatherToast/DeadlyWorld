@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.item.DeviceBlueprintItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -13,11 +14,16 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.function.Supplier;
+
 public class DWItems {
     
     private static final ItemGroup DEFAULT_TAB = ItemGroup.TAB_DECORATIONS;
     
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create( ForgeRegistries.ITEMS, DeadlyWorld.MOD_ID );
+
+
+    public static final RegistryObject<DeviceBlueprintItem> DEVICE_BLUEPRINT = register("device_blueprint", DeviceBlueprintItem::new);
 
     // Spawn eggs
     public static final RegistryObject<ForgeSpawnEggItem> MIMIC_SPAWN_EGG = registerSpawnEgg(
@@ -31,6 +37,10 @@ public class DWItems {
     public static final RegistryObject<ForgeSpawnEggItem> MINI_SPIDER_SPAWN_EGG = registerSpawnEgg(
             DWEntities.MINI_SPIDER, 0x342D27, 0xA80E0E);
 
+
+    private static <T extends Item> RegistryObject<T> register(String name, Supplier<T> supplier) {
+        return REGISTRY.register(name, supplier);
+    }
 
     protected static <T extends Entity> RegistryObject<ForgeSpawnEggItem> registerSpawnEgg( RegistryObject<EntityType<T>> typeRegistryObject, int backgroundColor, int highlightColor) {
         String name = typeRegistryObject.getId().getPath() + "_spawn_egg";

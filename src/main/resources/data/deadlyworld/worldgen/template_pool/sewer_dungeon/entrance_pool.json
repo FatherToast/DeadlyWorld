@@ -5,8 +5,17 @@
     {
       "weight": 1,
       "element": {
-        "location": "deadlyworld:sewer/canal",
-        "processors": "minecraft:empty",
+        "location": "deadlyworld:sewer/cross",
+        "processors": [
+          {
+            "processor_type": "minecraft:block_age",
+            "mossiness": 0.25
+          },
+          {
+            "processor_type": "deadlyworld:cobweb_decorator",
+            "webbiness": 0.05
+          }
+        ],
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
       }

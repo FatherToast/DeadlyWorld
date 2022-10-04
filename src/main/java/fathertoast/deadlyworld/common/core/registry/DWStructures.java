@@ -6,13 +6,12 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.structure.SewerDungeonFeature;
+import fathertoast.deadlyworld.common.structure.SewerDungeonStructure;
 import fathertoast.deadlyworld.common.world.dimension.DWDimensions;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.Dimension;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
@@ -41,7 +40,7 @@ public class DWStructures {
     private static final List<Pair<RegistryObject<? extends Structure<?>>, List<RegistryKey<World>>>> STRUCTURE_DIMENSION = new ArrayList<>();
 
 
-    public static final RegistryObject<SewerDungeonFeature> SEWER_DUNGEON = register("sewer_dungeon", SewerDungeonFeature::new, DWDimensions.SEWERS_WORLD);
+    public static final RegistryObject<SewerDungeonStructure> SEWER_DUNGEON = register("sewer_dungeon", SewerDungeonStructure::new, DWDimensions.SEWERS_WORLD);
 
 
     /**
