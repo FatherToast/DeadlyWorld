@@ -56,7 +56,8 @@ public class DeadlyWorld {
      *      + mini arrow
      *      - mini zombie
      *      - mini spider
-     *      + mimic
+     *      + mimic chest
+     *      + mimic spawner
      *      ? dispenser fish hook
      *  o vein world gen
      *      o silverfish
@@ -90,6 +91,7 @@ public class DeadlyWorld {
      *      o swarm
      *      o brutal
      *      o silverfish nest
+     *      o mimic
      *      + mini
      *        + mini hanging from chains (in large caves or perhaps elsewhere with high ceilings)
      *      o dungeon-only version
