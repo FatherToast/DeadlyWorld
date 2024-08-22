@@ -42,7 +42,7 @@ public class CobwebDecoratorProcessor extends StructureProcessor {
             BlockState randomNeighborState = world.getBlockState(randomNeighborPos);
 
             if (!randomNeighborState.isAir(world, randomNeighborPos) && !randomNeighborState.getCollisionShape(world, randomNeighborPos).isEmpty()) {
-                if (webbiness < random.nextFloat()) {
+                if (random.nextFloat() < webbiness) {
                     return new Template.BlockInfo(blockPos, Blocks.COBWEB.defaultBlockState(), blockToProcess.nbt);
                 }
             }

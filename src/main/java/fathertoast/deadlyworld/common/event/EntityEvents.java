@@ -6,6 +6,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EntityEvents {
 
+    // TODO - Get rid of this lazy stuff and actually do the override
     @SubscribeEvent
     public void onLivingDamage(LivingDamageEvent event) {
         // Too lazy to override the on hit method for the mini arrow entity,

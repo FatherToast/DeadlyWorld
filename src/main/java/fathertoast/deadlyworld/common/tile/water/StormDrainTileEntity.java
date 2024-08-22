@@ -2,10 +2,16 @@ package fathertoast.deadlyworld.common.tile.water;
 
 import fathertoast.deadlyworld.common.core.registry.DWTileEntities;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
+import fathertoast.deadlyworld.common.world.dimension.DWDimensions;
+import fathertoast.deadlyworld.common.world.dimension.SewersTeleporter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.ServerPlayNetHandler;
+import net.minecraft.network.play.client.CMoveVehiclePacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -66,11 +73,10 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
                         break;
 
                     if (livingEntity.isInWater()) {
-                        boolean isPlayer = livingEntity instanceof PlayerEntity;
-                        this.pullEntity(livingEntity, isPlayer);
+                        this.pullEntity(livingEntity);
 
                         if (livingEntity.isColliding(this.getBlockPos().above(), this.getBlockState())) {
-                            this.onCollidingTop(livingEntity, isPlayer);
+                            this.onCollidingTop(livingEntity);
                         }
                     }
                     ++count;
@@ -106,8 +112,8 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
         this.suctionBox = new AxisAlignedBB(lowerCorner, upperCorner).move(0.5D, 0.0D, 0.5D);
     }
 
-    private void pullEntity(Entity entity, boolean isPlayer) {
-        if (isPlayer && ((PlayerEntity) entity).isCreative()) {
+    private void pullEntity(Entity entity) {
+        if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative()) {
             return;
         }
         BlockPos pos = this.getBlockPos();
@@ -125,12 +131,24 @@ public class StormDrainTileEntity extends TileEntity implements ITickableTileEnt
         }
     }
 
-    private void onCollidingTop(LivingEntity livingEntity, boolean isPlayer) {
+    @SuppressWarnings("ConstantConditions")
+    private void onCollidingTop(LivingEntity livingEntity) {
         if (this.damageTimer <= 0) {
             livingEntity.hurt(DWDamageSources.VORTEX, 1);
-        }
-        if (isPlayer) {
-            // TODO - sewer dimension teleport stuff
+
+            if (livingEntity instanceof ServerPlayerEntity) {
+                ServerPlayerEntity player = (ServerPlayerEntity) livingEntity;
+                MinecraftServer server = player.getServer();
+
+                if (player.isAlive() && !player.isVehicle() && !player.isPassenger()
+                        && player.canChangeDimensions() && !player.getLevel().dimension().equals(DWDimensions.SEWERS_WORLD)) {
+                    ServerWorld sewerWorld = server.getLevel(DWDimensions.SEWERS_WORLD);
+
+                    if (sewerWorld != null) {
+                        player.changeDimension(sewerWorld, new SewersTeleporter());
+                    }
+                }
+            }
         }
     }
 

@@ -72,7 +72,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
     private int maxTriggerDelay;
     /** Count until the trap triggers after being tripped. -1 if the trap has not been tripped. */
     private int triggerDelay = -1;
-    private Supplier<Integer> resetTime;
+    private Supplier<Integer> resetTime = () -> 20;
 
     public FloorTrapTileEntity() {
         super(DWTileEntities.FLOOR_TRAP.get());
@@ -232,7 +232,7 @@ public class FloorTrapTileEntity extends TileEntity implements ITickableTileEnti
 
     @Override
     public CompoundNBT save( CompoundNBT tag ) {
-        super.save( tag );
+        tag = super.save( tag );
 
         // Attributes
         if (camoState != null) {

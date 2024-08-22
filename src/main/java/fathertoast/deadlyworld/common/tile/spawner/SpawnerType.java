@@ -106,23 +106,6 @@ public enum SpawnerType implements IStringSerializable {
     
     /** @return A Supplier of the Spawner Block to register for this Spawner Type */
     public Supplier<DeadlySpawnerBlock> getBlock() { return () -> new DeadlySpawnerBlock(this); }
-
-    /**
-     * Returns a SpawnerType from ID.
-     * If there exists no SpawnerType with the given ID, default to {@link SpawnerType#DEFAULT}
-     *
-     * @param ID The ID of the SpawnerType.
-     * @return A SpawnerType matching the given ID.
-     */
-    @Nonnull
-    public static SpawnerType getFromID( String ID ) {
-        for( SpawnerType spawnerType : values() ) {
-            if( spawnerType.getSerializedName().equals( ID ) ) {
-                return spawnerType;
-            }
-        }
-        return DEFAULT;
-    }
     
     @Override
     public String toString() { return getSerializedName(); }
@@ -167,6 +150,23 @@ public enum SpawnerType implements IStringSerializable {
                         new AttributeModifier( DeadlyWorld.MOD_ID + ":" + this.id + " spawner bonus", value, operation ) );
             }
         }
+    }
+
+    /**
+     * Returns a SpawnerType from ID.
+     * If there exists no SpawnerType with the given ID, default to {@link SpawnerType#DEFAULT}
+     *
+     * @param ID The ID of the SpawnerType.
+     * @return A SpawnerType matching the given ID.
+     */
+    @Nonnull
+    public static SpawnerType getFromID( String ID ) {
+        for( SpawnerType spawnerType : values() ) {
+            if( spawnerType.getSerializedName().equals( ID ) ) {
+                return spawnerType;
+            }
+        }
+        return DEFAULT;
     }
     
     public static SpawnerType fromIndex( int index ) {

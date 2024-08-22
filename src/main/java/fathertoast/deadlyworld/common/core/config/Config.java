@@ -6,6 +6,7 @@ import fathertoast.deadlyworld.common.core.config.file.ToastConfigSpec;
 import fathertoast.deadlyworld.common.core.config.file.TomlHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -87,7 +88,7 @@ public class Config {
         
         //TODO Actually register dimensions dynamically - DynamicRegistries.builtin().dimensionTypes()?
         //  - Note; should make sure overworld is loaded no matter what, and maybe store a reference to it to use as a default in case of issues
-        
+
         final List<RegistryKey<World>> temp = new ArrayList<>( server.levelKeys() );
         
         // Keep track of opened files so we can close any we don't need

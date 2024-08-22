@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,8 +24,12 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.model.animation.CapabilityAnimation;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,7 +46,7 @@ public class MiniArrowEntity extends AbstractArrowEntity implements IEntityAddit
     private Potion potion;
     private final Set<EffectInstance> effects;
     private boolean fixedColor;
-    
+
     public MiniArrowEntity( EntityType<? extends MiniArrowEntity> entityType, World world ) {
         super( entityType, world );
         this.setBaseDamage( this.getBaseDamage() / 2.0 );

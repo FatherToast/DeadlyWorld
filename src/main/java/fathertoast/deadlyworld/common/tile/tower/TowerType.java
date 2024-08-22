@@ -5,6 +5,7 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.FloorTrapConfig;
 import fathertoast.deadlyworld.common.core.config.TowerDispenserConfig;
+import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,8 +22,11 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static fathertoast.deadlyworld.common.tile.spawner.SpawnerType.DEFAULT;
 
 public enum TowerType implements IStringSerializable {
 
@@ -162,6 +166,15 @@ public enum TowerType implements IStringSerializable {
     @Override
     public String toString( ) { return id; }
 
+    @Nonnull
+    public static TowerType getFromID( String ID ) {
+        for( TowerType towerType : values() ) {
+            if( towerType.getSerializedName().equals( ID ) ) {
+                return towerType;
+            }
+        }
+        return SIMPLE;
+    }
 
     public static TowerType fromIndex(int index ) {
         if( index < 0 || index >= values().length ) {

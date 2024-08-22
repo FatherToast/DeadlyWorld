@@ -4,6 +4,7 @@ import fathertoast.deadlyworld.common.block.FloorTrapBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.config.FloorTrapConfig;
+import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -23,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -233,6 +235,15 @@ public enum FloorTrapType implements IStringSerializable {
     @Override
     public String toString( ) { return id; }
 
+    @Nonnull
+    public static FloorTrapType getFromID( String ID ) {
+        for( FloorTrapType trapType : values() ) {
+            if( trapType.getSerializedName().equals( ID ) ) {
+                return trapType;
+            }
+        }
+        return TNT;
+    }
 
     public static FloorTrapType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {

@@ -1,9 +1,6 @@
 package fathertoast.deadlyworld.common.core.registry;
 
-import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
-import fathertoast.deadlyworld.common.block.FloorTrapBlock;
-import fathertoast.deadlyworld.common.block.StormDrainBlock;
-import fathertoast.deadlyworld.common.block.TowerDispenserBlock;
+import fathertoast.deadlyworld.common.block.*;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapTileEntity;
 import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
@@ -18,6 +15,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -36,6 +34,7 @@ public class DWBlocks {
     private static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
 
     public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
+    public static final RegistryObject<Block> SEWER_EXIT = registerBlock("sewer_exit", SewerExitBlock::new, ItemGroup.TAB_BUILDING_BLOCKS);
     public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock("sewer_bedrock", () -> new Block(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(-1.0F, 3600000.0F).noDrops().sound(SoundType.STONE)), ItemGroup.TAB_BUILDING_BLOCKS );
 
 
@@ -130,5 +129,9 @@ public class DWBlocks {
         RegistryObject<TowerDispenserBlock> blockRegObject = REGISTRY.register( regName, towerType.getBlock() );
         DWItems.registerBlockItem( regName, blockRegObject, new Item.Properties().tab( ItemGroup.TAB_DECORATIONS ) );
         return blockRegObject;
+    }
+
+    public static void onBlockRegister(RegistryEvent.Register<Block> event) {
+
     }
 }

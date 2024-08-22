@@ -4,6 +4,7 @@ import fathertoast.deadlyworld.common.core.config.Config;
 import fathertoast.deadlyworld.common.core.registry.*;
 import fathertoast.deadlyworld.common.event.BiomeEvents;
 import fathertoast.deadlyworld.common.event.EntityEvents;
+import fathertoast.deadlyworld.common.feature.DWConfiguredFeatures;
 import fathertoast.deadlyworld.common.network.PacketHandler;
 import fathertoast.deadlyworld.common.structure.DWConfiguredStructures;
 import fathertoast.deadlyworld.common.util.DWDamageSources;
@@ -47,7 +48,7 @@ public class DeadlyWorld {
      *      ? wall trap
      *      ? fast flowing lava
      *  o items
-     *      o feature tester
+     *      o feature tester (strictly speaking taken care of in vanilla 1.20+)
      *      o event
      *  + entities
      *      ? configurable base attributes & stats
@@ -57,6 +58,8 @@ public class DeadlyWorld {
      *      - mini zombie
      *      - mini spider
      *      + mimic
+     *      + micro ghast (the small boi)
+     *      + note block mimic (jazz terror)
      *      ? dispenser fish hook
      *  o vein world gen
      *      o silverfish
@@ -180,6 +183,9 @@ public class DeadlyWorld {
 
     public void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            Config.initialize();
+            DWConfiguredFeatures.register();
+            DWEntities.registerSpawnPlacements();
             DWStructures.setupStructures();
             DWConfiguredStructures.register();
             DWStructureProcessors.register();

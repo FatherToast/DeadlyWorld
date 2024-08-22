@@ -1,5 +1,6 @@
 {
   "block.deadlyworld.sewer_bedrock": "Nasty Stone",
+  "block.deadlyworld.sewer_exit": "Sewer Exit",
 
   "block.deadlyworld.simple_deadly_spawner": "Monster Spawner",
   "block.deadlyworld.stream_deadly_spawner": "Monster Stream Spawner",
@@ -26,6 +27,7 @@
   "item.deadlyworld.mini_zombie_spawn_egg": "Mini Zombie Spawn Egg",
   "item.deadlyworld.mini_skeleton_spawn_egg": "Mini Skeleton Spawn Egg",
   "item.deadlyworld.mini_spider_spawn_egg": "Mini Spider Spawn Egg",
+  "item.deadlyworld.micro_ghast_spawn_egg": "Micro Ghast Spawn Egg",
   "item.deadlyworld.device_blueprint": "Deadly Device Blueprint",
   "item.deadlyworld.event_item": "Deadly World Event Item",
 
@@ -34,6 +36,8 @@
   "entity.deadlyworld.mini_zombie": "Mini Zombie",
   "entity.deadlyworld.mini_skeleton": "Mini Skeleton",
   "entity.deadlyworld.mini_spider": "Mini Spider",
+  "entity.deadlyworld.micro_ghast": "Micro Ghast",
+  "entity.deadlyworld.micro_fireball": "Micro Fireball",
   "entity.deadlyworld.mini_arrow": "Mini Arrow",
 
   "block.deadlyworld.deadly_silverfish.tooltip": "Infested",
@@ -44,6 +48,8 @@
   "block.deadlyworld.event_item.tooltip.lava": "Lava Flow",
   "block.deadlyworld.event_item.tooltip.poison_gas": "Poison Gas",
   "block.deadlyworld.event_item.tooltip.spawn_mimic": "Spawn Mimic",
+  "item.deadlyworld.device_blueprint.tooltip.invalid": "No Instructions",
+  "item.deadlyworld.device_blueprint.tooltip.device_name": "Type: %1$s",
 
   "item.deadlyworld.feature_tester": "Deadly World Feature Tester",
   "block.deadlyworld.feature_tester.tooltip": "Feature:",

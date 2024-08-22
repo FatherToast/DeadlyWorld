@@ -9,6 +9,7 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.monster.GhastEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -41,11 +42,19 @@ public class DWEntities {
     public static final RegistryObject<EntityType<MiniSpiderEntity>> MINI_SPIDER = register( "mini_spider",
             EntityType.Builder.of( MiniSpiderEntity::new, EntityClassification.MONSTER )
                     .sized( 0.35F, 0.35F ).clientTrackingRange( 8 ) );
+
+    public static final RegistryObject<EntityType<MicroGhastEntity>> MICRO_GHAST = register("micro_ghast",
+            EntityType.Builder.of( MicroGhastEntity::new, EntityClassification.MONSTER )
+                    .sized(0.1F, 0.1F ).clientTrackingRange( 8 ) );
     
     public static final RegistryObject<EntityType<MiniArrowEntity>> MINI_ARROW = register( "mini_arrow",
             EntityType.Builder.<MiniArrowEntity>of( MiniArrowEntity::new, EntityClassification.MISC )
                     .sized( 0.1F, 0.1F ).clientTrackingRange( 4 ).updateInterval( 20 ) );
-    
+
+    public static final RegistryObject<EntityType<MicroFireballEntity>> MICRO_FIREBALL = register( "micro_fireball",
+            EntityType.Builder.<MicroFireballEntity>of( MicroFireballEntity::new, EntityClassification.MISC )
+                    .sized( 0.05F, 0.05F ).clientTrackingRange( 4 ).updateInterval( 20 ) );
+
     
     /** Sets the default attributes for entity types, such as max health, attack damage etc. */
     public static void createAttributes( EntityAttributeCreationEvent event ) {
@@ -57,6 +66,9 @@ public class DWEntities {
         event.put( MINI_ZOMBIE.get(), MiniZombieEntity.createAttributes().build() );
         event.put( MINI_SKELETON.get(), MiniSkeletonEntity.createAttributes().build() );
         event.put( MINI_SPIDER.get(), MiniSpiderEntity.createAttributes().build() );
+
+        // MICRO MOBS, HOLY MOLY YOU GUYS
+        event.put( MICRO_GHAST.get(), MicroGhastEntity.createAttributes().build());
     }
     
     public static AttributeModifierMap.MutableAttribute standardMiniAttributes( AttributeModifierMap.MutableAttribute builder, double baseSpeed ) {
@@ -74,6 +86,7 @@ public class DWEntities {
         EntitySpawnPlacementRegistry.register( MINI_ZOMBIE.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules );
         EntitySpawnPlacementRegistry.register( MINI_SKELETON.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules );
         EntitySpawnPlacementRegistry.register( MINI_SPIDER.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules );
+        EntitySpawnPlacementRegistry.register( MICRO_GHAST.get(), PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, MicroGhastEntity::checkMicroGhastSpawnRules );
     }
     
     private static <T extends Entity> RegistryObject<EntityType<T>> register( String name, EntityType.Builder<T> builder ) {
