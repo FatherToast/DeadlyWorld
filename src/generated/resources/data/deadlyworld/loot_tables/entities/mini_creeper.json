@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:entities/creeper"
+        }
+      ],
+      "name": "vanilla",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "deadlyworld:entities/mini_creeper"
+}
