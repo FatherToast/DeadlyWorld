@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package fathertoast.deadlyworld.client.renderer.entity;
+package fathertoast.deadlyworld.client;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

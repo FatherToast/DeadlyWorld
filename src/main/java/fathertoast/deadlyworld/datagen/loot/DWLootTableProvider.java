@@ -1,43 +1,29 @@
 package fathertoast.deadlyworld.datagen.loot;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.LootTableProvider;
-import net.minecraft.loot.LootParameterSet;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.ValidationTracker;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.ValidationContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.Set;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class DWLootTableProvider extends LootTableProvider {
-    
-    public static final float RARITY_UNCOMMON = 0.25F;
-    public static final float RARITY_RARE = 0.025F;
-    
-    public DWLootTableProvider( DataGenerator generator ) { super( generator ); }
-    
-    @Override
-    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables() {
-        ImmutableList.Builder<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> builder = new ImmutableList.Builder<>();
-        
-        //TODO Event loot tables
-        //TODO Block loot tables
-        builder.add( Pair.of( DWChestLootTables::new, LootParameterSets.CHEST ) );
-        
-        return builder.build();
+    public DWLootTableProvider( PackOutput output ) {
+        super( output, Set.of(), List.of(
+                new SubProviderEntry( DWEntityLootTables::new, LootContextParamSets.ENTITY )
+        ) );
     }
     
     @Override
-    protected void validate( Map<ResourceLocation, LootTable> map, ValidationTracker validationTracker ) { /* NOOP */ }
+    protected void validate( Map<ResourceLocation, LootTable> map, ValidationContext validationcontext ) {
+        // Bruh
+    }
 }

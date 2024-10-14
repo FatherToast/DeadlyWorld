@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[36,)"
+loaderVersion = "[47,)"
 license = "GNU General Public License v3.0"
 issueTrackerURL = "https://github.com/FatherToast/DeadlyWorld/issues/"
 
@@ -27,15 +27,22 @@ Discussion: https://discord.gg/GFTzTdX/
 [[dependencies.deadlyworld]]
 modId = "forge"
 mandatory = true
-versionRange = "[36.2.17,)"
+versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.deadlyworld]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.16.5,1.17)"
+versionRange = "[1.20.1]"
 ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.deadlyworld]]
+modId = "crust"
+mandatory = true
+versionRange = "[2.3.4,)"
+ordering = "BEFORE"
 side = "BOTH"
 
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/

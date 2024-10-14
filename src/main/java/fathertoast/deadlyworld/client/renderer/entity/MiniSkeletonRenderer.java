@@ -1,19 +1,22 @@
 package fathertoast.deadlyworld.client.renderer.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.SkeletonRenderer;
-import net.minecraft.entity.monster.AbstractSkeletonEntity;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn( Dist.CLIENT )
 public class MiniSkeletonRenderer extends SkeletonRenderer {
-
-    public MiniSkeletonRenderer(EntityRendererManager rendererManager) {
-        super(rendererManager);
-        this.shadowRadius = 0.2F;
+    
+    public MiniSkeletonRenderer( EntityRendererProvider.Context renderContext ) {
+        super( renderContext );
+        shadowRadius = 0.2F;
     }
-
+    
     @Override
-    public void scale(AbstractSkeletonEntity skeleton, MatrixStack matrixStack, float partialTick) {
-        matrixStack.scale(0.4F, 0.4F, 0.4F);
+    public void scale( AbstractSkeleton skeleton, PoseStack stack, float partialTick ) {
+        stack.scale( 0.4F, 0.4F, 0.4F );
     }
 }

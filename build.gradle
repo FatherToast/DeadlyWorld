@@ -1,30 +1,35 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0,6.2)', changing: true
+        classpath group: "org.spongepowered", name: "mixingradle", version: "0.7-SNAPSHOT"
     }
 }
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+}
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
+apply plugin: "org.spongepowered.mixin"
 
 // The mod's version and id
 version = "${mc_version}-${mod_version}"
-archivesBaseName = 'DeadlyWorld'
+archivesBaseName = 'deadlyworld'
 group = "fathertoast.${archivesBaseName}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
     mappings channel: 'official', version: "${mc_version}"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
-        client {
+        configureEach {
             workingDirectory project.file('run')
 
             property 'forge.logging.markers', 'REGISTRIES'
@@ -35,34 +40,28 @@ minecraft {
                     source sourceSets.main
                 }
             }
+        }
+
+        client {
+            property "mixin.debug.export", "true"
+            property 'mixin.env.disableRefMap', 'true'
+
+            //arg "-mixin.config=specialmobs.mixins.json"
         }
 
         server {
-            workingDirectory project.file('run')
+            property "mixin.debug.export", "true"
+            property 'mixin.env.disableRefMap', 'true'
 
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
+            //arg "-mixin.config=specialmobs.mixins.json"
+        }
 
-            mods {
-                deadlyworld {
-                    source sourceSets.main
-                }
-            }
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', 'deadlyworld'
         }
 
         data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
             args '--mod', 'deadlyworld', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                deadlyworld {
-                    source sourceSets.main
-                }
-            }
         }
     }
 }
@@ -71,28 +70,45 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    // Repos for mods to include during development
     maven {
-        name 'prog'
-        url 'http://dvs1.progwml6.com/files/maven'
+        name 'CurseMaven'
+        url 'https://cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
     }
-    maven {
-        name 'tterrag'
-        url 'https://maven.tterrag.com/'
-    }
-    maven {
-        name 'cursemaven'
-        url "https://cursemaven.com"
+    flatDir {
+        dir 'flat_deps'
     }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
+    // Crust; only implement the api, but include the entire mod at runtime
+    implementation "curse.maven:crust-873570:${crust_api_version}"
+    runtimeOnly "curse.maven:crust-873570:${crust_src_version}"
+
     // Add in JEI and TOP to assist debugging during development
-    runtimeOnly fg.deobf("curse.maven:worldedit-225608:3283693")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
-    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
+    runtimeOnly fg.deobf("curse.maven:jei-238222:${jei_version}")
+    runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "Deadly World",
+                "Specification-Vendor"    : "FatherToast",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "FatherToast",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                //"MixinConfigs"            : "deadlyworld.mixins.json"
+        ])
+    }
 }
 
 jar.finalizedBy('reobfJar')

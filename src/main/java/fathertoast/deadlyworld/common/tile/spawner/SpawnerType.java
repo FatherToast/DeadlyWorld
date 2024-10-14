@@ -1,31 +1,27 @@
 package fathertoast.deadlyworld.common.tile.spawner;
 
-import fathertoast.deadlyworld.common.block.DeadlySpawnerBlock;
-import fathertoast.deadlyworld.common.block.MiniSpawnerBlock;
+import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.config.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.core.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.util.References;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @MethodsReturnNonnullByDefault
-public enum SpawnerType implements IStringSerializable {
+public enum SpawnerType {
     
     // Standalone features
     DEFAULT( "simple", ( dimConfigs ) -> dimConfigs.SPAWNERS.LONE ),
@@ -34,27 +30,25 @@ public enum SpawnerType implements IStringSerializable {
     BRUTAL( "brutal", ( dimConfigs ) -> dimConfigs.SPAWNERS.BRUTAL ) {
         /** Applies any additional modifiers to entities spawned by spawners of this type. */
         @Override
-        public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, World world, BlockPos pos ) {
+        public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level world, BlockPos pos ) {
             super.initEntity( entity, dimConfigs, world, pos );
             
             // Apply potion effects
-            if( !(entity instanceof CreeperEntity) ) {
+            if( !(entity instanceof Creeper) ) {
                 final boolean hide = dimConfigs.SPAWNERS.BRUTAL.ambientFx.get();
                 if( dimConfigs.SPAWNERS.BRUTAL.fireResistance.get() ) {
-                    entity.addEffect( new EffectInstance( Effects.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, hide, !hide ) );
+                    entity.addEffect( new MobEffectInstance( MobEffects.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, hide, !hide ) );
                 }
                 if( dimConfigs.SPAWNERS.BRUTAL.waterBreathing.get() ) {
-                    entity.addEffect( new EffectInstance( Effects.WATER_BREATHING, Integer.MAX_VALUE, 0, hide, !hide ) );
+                    entity.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, Integer.MAX_VALUE, 0, hide, !hide ) );
                 }
             }
         }
     },
     NEST( "nest", "silverfish nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST ),
     MINI( "mini", ( dimConfigs ) -> dimConfigs.SPAWNERS.MINI ) {
-        @Override
-        public Supplier<DeadlySpawnerBlock> getBlock() {
-            return MiniSpawnerBlock::new;
-        }
+        //        @Override
+        //        public Supplier<DeadlySpawnerBlock> getBlock() { return MiniSpawnerBlock::new; }
     },
     
     // Subfeatures
@@ -70,7 +64,7 @@ public enum SpawnerType implements IStringSerializable {
     /** A human-readable name for this spawner type. Used in config descriptions, usually followed by " spawner" or " spawners". */
     private final String displayName;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
-    private final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction;
+    private final Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configGetter;
     
     /** True if this spawner type is used as part of another feature. */
     private final boolean subfeature;
@@ -88,25 +82,20 @@ public enum SpawnerType implements IStringSerializable {
     }
     
     SpawnerType( String name, String prettyName, boolean sub, Function<DimensionConfigGroup, SpawnerConfig.SpawnerTypeCategory> configFunction ) {
-        this.id = name;
-        this.displayName = prettyName;
-        this.configFunction = configFunction;
-        this.subfeature = sub;
+        id = name;
+        displayName = prettyName;
+        configGetter = configFunction;
+        subfeature = sub;
     }
     
-    @Override
-    public String getSerializedName() { return id; }
-
-    public String getDisplayName() {
-        return displayName;
-    }
+    public String getDisplayName() { return displayName; }
     
     /** @return True if this type is a subfeature; false if it is a standalone feature. */
     public final boolean isSubfeature() { return subfeature; }
     
-    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
-    public Supplier<DeadlySpawnerBlock> getBlock() { return () -> new DeadlySpawnerBlock(this); }
-
+    //    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
+    //    public Supplier<DeadlySpawnerBlock> getBlock() { return () -> new DeadlySpawnerBlock( this ); }
+    
     /**
      * Returns a SpawnerType from ID.
      * If there exists no SpawnerType with the given ID, default to {@link SpawnerType#DEFAULT}
@@ -117,7 +106,7 @@ public enum SpawnerType implements IStringSerializable {
     @Nonnull
     public static SpawnerType getFromID( String ID ) {
         for( SpawnerType spawnerType : values() ) {
-            if( spawnerType.getSerializedName().equals( ID ) ) {
+            if( spawnerType.toString().equals( ID ) ) {
                 return spawnerType;
             }
         }
@@ -125,13 +114,13 @@ public enum SpawnerType implements IStringSerializable {
     }
     
     @Override
-    public String toString() { return getSerializedName(); }
+    public String toString() { return id; }
     
     public ResourceLocation getChestLootTable() {
         return DeadlyWorld.resourceLoc( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
     }
     
-    public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
+    public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configGetter.apply( dimConfigs ); }
     
     /* TODO - Move decoration to the Feature itself
     public abstract
@@ -139,7 +128,7 @@ public enum SpawnerType implements IStringSerializable {
     */
     
     /** Applies any additional modifiers to entities spawned by spawners of this type. */
-    public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, World world, BlockPos pos ) {
+    public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level world, BlockPos pos ) {
         final SpawnerConfig.SpawnerTypeCategory config = getFeatureConfig( dimConfigs );
         
         // Apply attribute modifiers
@@ -161,10 +150,10 @@ public enum SpawnerType implements IStringSerializable {
     /** Adds a custom attribute modifier to the entity. */
     private void addModifier( LivingEntity entity, Attribute attribute, double value, AttributeModifier.Operation operation ) {
         if( value != 0.0 ) {
-            ModifiableAttributeInstance attributeInstance = entity.getAttribute( attribute );
+            AttributeInstance attributeInstance = entity.getAttribute( attribute );
             if( attributeInstance != null ) {
                 attributeInstance.addPermanentModifier(
-                        new AttributeModifier( DeadlyWorld.MOD_ID + ":" + this.id + " spawner bonus", value, operation ) );
+                        new AttributeModifier( DeadlyWorld.MOD_ID + ":" + id + " spawner bonus", value, operation ) );
             }
         }
     }
@@ -178,7 +167,7 @@ public enum SpawnerType implements IStringSerializable {
     }
     
     private static void addAttribute( LivingEntity entity, Attribute attribute, double amount ) {
-        ModifiableAttributeInstance attributeInstance = entity.getAttribute( attribute );
+        AttributeInstance attributeInstance = entity.getAttribute( attribute );
         
         if( attributeInstance != null ) {
             attributeInstance.setBaseValue( attributeInstance.getBaseValue() + amount );
@@ -186,7 +175,7 @@ public enum SpawnerType implements IStringSerializable {
     }
     
     private static void multAttribute( LivingEntity entity, Attribute attribute, double amount ) {
-        ModifiableAttributeInstance attributeInstance = entity.getAttribute( attribute );
+        AttributeInstance attributeInstance = entity.getAttribute( attribute );
         
         if( attributeInstance != null ) {
             attributeInstance.setBaseValue( attributeInstance.getBaseValue() * amount );

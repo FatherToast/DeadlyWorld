@@ -1,19 +1,22 @@
 package fathertoast.deadlyworld.client.renderer.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import fathertoast.deadlyworld.common.entity.MiniSpiderEntity;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import fathertoast.deadlyworld.common.entity.MiniSpider;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.SpiderRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MiniSpiderRenderer extends SpiderRenderer<MiniSpiderEntity> {
-
-    public MiniSpiderRenderer(EntityRendererManager rendererManager) {
-        super(rendererManager);
-        this.shadowRadius = 0.3F;
+@OnlyIn( Dist.CLIENT )
+public class MiniSpiderRenderer extends SpiderRenderer<MiniSpider> {
+    
+    public MiniSpiderRenderer( EntityRendererProvider.Context renderContext ) {
+        super( renderContext );
+        shadowRadius = 0.3F;
     }
-
+    
     @Override
-    public void scale(MiniSpiderEntity spider, MatrixStack matrixStack, float partialTick) {
-        matrixStack.scale(0.4F, 0.4F, 0.4F);
+    public void scale( MiniSpider spider, PoseStack stack, float partialTick ) {
+        stack.scale( 0.4F, 0.4F, 0.4F );
     }
 }

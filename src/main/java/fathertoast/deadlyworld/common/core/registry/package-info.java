@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package fathertoast.deadlyworld.client.renderer.entity;
+package fathertoast.deadlyworld.common.core.registry;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

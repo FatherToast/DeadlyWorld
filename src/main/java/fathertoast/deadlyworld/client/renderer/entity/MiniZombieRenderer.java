@@ -1,19 +1,22 @@
 package fathertoast.deadlyworld.client.renderer.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
-import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn( Dist.CLIENT )
 public class MiniZombieRenderer extends ZombieRenderer {
-
-    public MiniZombieRenderer(EntityRendererManager rendererManager) {
-        super(rendererManager);
-        this.shadowRadius = 0.2F;
+    
+    public MiniZombieRenderer( EntityRendererProvider.Context renderContext ) {
+        super( renderContext );
+        shadowRadius = 0.2F;
     }
-
+    
     @Override
-    public void scale(ZombieEntity zombie, MatrixStack matrixStack, float partialTick) {
-        matrixStack.scale(0.4F, 0.4F, 0.4F);
+    public void scale( Zombie zombie, PoseStack stack, float partialTick ) {
+        stack.scale( 0.4F, 0.4F, 0.4F );
     }
 }
