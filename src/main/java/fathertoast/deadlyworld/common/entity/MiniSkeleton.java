@@ -22,21 +22,6 @@ public class MiniSkeleton extends Skeleton {
                 .add( Attributes.ATTACK_DAMAGE, Attributes.ATTACK_DAMAGE.getDefaultValue() / 2.0 );
     }
     
-    //    @Override TODO Do we need this?
-    //    public void performRangedAttack( LivingEntity target, float distance ) {
-    //        ItemStack itemstack = getProjectile( getItemInHand( ProjectileUtil.getWeaponHoldingHand( this, item -> item instanceof BowItem ) ) );
-    //        MiniArrowEntity miniArrow = getArrow( itemstack, distance );
-    //
-    //        double dX = target.getX() - getX();
-    //        double dY = target.getY( 0.3333333333333333 ) - miniArrow.getY();
-    //        double dZ = target.getZ() - getZ();
-    //        double dH = Math.sqrt( dX * dX + dZ * dZ );
-    //
-    //        miniArrow.shoot( dX, dY + dH * (double) 0.2F, dZ, 1.6F, (float) (14 - level().getDifficulty().getId() * 4) );
-    //        playSound( SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (getRandom().nextFloat() * 0.4F + 1.0F) );
-    //        level().addFreshEntity( miniArrow );
-    //    }
-    
     /** Modified copy-paste of {@link ProjectileUtil#getMobArrow(LivingEntity, ItemStack, float)} */
     @Override
     protected MiniArrow getArrow( ItemStack ammo, float dist ) {

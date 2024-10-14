@@ -41,9 +41,7 @@ public class MiniArrow extends AbstractArrow {//TODO maybe this whole thing can 
     private final Set<MobEffectInstance> effects = Sets.newHashSet();
     private boolean fixedColor;
     
-    public MiniArrow( EntityType<? extends MiniArrow> entityType, Level level ) {
-        super( entityType, level );
-    }
+    public MiniArrow( EntityType<? extends MiniArrow> entityType, Level level ) { super( entityType, level ); }
     
     @SuppressWarnings( "unused" ) // For parity with Arrow
     public MiniArrow( Level level, double x, double y, double z ) {
