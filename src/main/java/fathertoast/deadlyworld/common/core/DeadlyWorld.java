@@ -26,31 +26,35 @@ public class DeadlyWorld {
      *  o general
      *      o dimension-based configs
      *      o biome-based configs
-     *      + F3+B bounding box renderer for tile entities (MOVED TO CRUST)
+     *      + F3+B bounding box renderer for tile entities
      *  o blocks
      *      o configurable physical properties
      *      o procedurally generated silverfish blocks
      *      o deadly spawner
-     *      + mini spawner
+     *      o mini spawner
      *      o floor trap
      *      o tower dispenser
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
      *      ? fast flowing lava
+     *      ? cake
      *  o items
      *      o feature tester
      *      o event
      *  + entities
      *      o configurable base attributes & stats
-     *      + mini creeper
-     *      + mini skeleton
-     *      + mini arrow
-     *      + mini zombie
-     *      + mini spider
-     *      + mimic chest
+     *      - mini creeper
+     *      - mini skeleton
+     *      - mini arrow
+     *      - mini zombie
+     *      - mini spider
+     *      o mimic chest
      *      + mimic spawner
+     *      + mimic cake
      *      ? dispenser fish hook
+     *      ? water monsters
+     *      ? lava monsters
      *  o vein world gen
      *      o silverfish
      *      o lava
@@ -62,7 +66,7 @@ public class DeadlyWorld {
      *      ? new vein gen styles
      *  o dungeon world gen
      *      o spawner
-     *      + mini
+     *      o mini
      *      o tower
      *      ? other special dungeon types
      *      o vanilla dungeon disable
@@ -75,7 +79,6 @@ public class DeadlyWorld {
      *      o surprise
      *      o mimic
      *      + cave-in (via surprise or combo w/ ceiling trap)
-     *      + mimic 2.0 (custom entity)
      *      ? random cake from cake item tag
      *  o spawner world gen
      *      o default
@@ -84,30 +87,35 @@ public class DeadlyWorld {
      *      o brutal
      *      o silverfish nest
      *      o mimic
-     *      + mini
+     *      o mini
      *      o dungeon-only version
      *      ? hanging from chain version (in large caves or perhaps elsewhere with high ceilings)
-     *      ? spider (combo)
-     *      ? undead (combo)
-     *      ? creeper (combo)
-     *      ? fire immunity (combo)
      *  o tower world gen
-     *      o default
-     *      o fire
+     *      o arrow
+     *      o fire arrow
+     *      o gatling arrow
      *      o potion
-     *      o gatling
      *      o fireball
-     *      ? splash potion
-     *      ? fish hook (combo, custom entity)
-     *      ? splash poison (combo)
-     *      ? splash harm (combo)
-     *      ? lightning (combo)
+     *      + mini
      *      ? allow towers to generate on ceilings and/or walls
+     *  ? combo world gen
+     *      ? spawner + fish hook tower
+     *      ? spider spawner + splash poison tower
+     *      ? undead spawner + splash harm tower
+     *      ? creeper spawner + lightning tower
+     *      ? creeper spawner + lightning floor trap
+     *      ? fire immune spawner + fireball tower
+     *      ? fire immune spawner + fire floor trap
+     *      ? chicken spawner + egg tower
      *  o floor trap world gen
      *      o tnt
      *      o tnt mob
      *      o potion
      *      o fire (from pre-1.12.2 version)
+     *      + chicken
+     *      + unique/boss mob
+     *      ? ambush
+     *      ? blackout ambush
      *      ? pit
      *  ? water trap world gen
      *      + vortex
@@ -115,6 +123,8 @@ public class DeadlyWorld {
      *  + ceiling trap world gen
      *      + cave-in
      *      + lava
+     *      ? water
+     *      ? anvil
      *      ? more would be nice
      *  ? combo feature world gen
      *      + spider spawner & splash poison dispenser
@@ -123,12 +133,13 @@ public class DeadlyWorld {
      *      + any floor trap & fish hook dispenser
      *      + fire immune spawner & fireball dispenser
      *      + creeper spawner & lightning dispenser
-     *  ? new monsters - maybe these belong in a different mod?
-     *      ? water monsters
-     *      ? lava monsters
      *  ? wall trap world gen
-     *      + arrow traps
-     *      ? spike traps
+     *      + arrow
+     *      + potion
+     *      + lava
+     *      ? water
+     *      ? spike
+     *      ? uhh what else?
      *
      * Possible future additions:
      *  - option to allow floor traps to trigger vs creative mode players, and vice-versa for other traps
