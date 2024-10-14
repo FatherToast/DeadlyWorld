@@ -34,7 +34,9 @@
   "entity.deadlyworld.mini_zombie": "Mini Zombie",
   "entity.deadlyworld.mini_skeleton": "Mini Skeleton",
   "entity.deadlyworld.mini_spider": "Mini Spider",
+  "entity.deadlyworld.micro_ghast": "Micro Ghast",
   "entity.deadlyworld.mini_arrow": "Mini Arrow",
+  "entity.deadlyworld.micro_fireball": "Micro Fireball",
 
   "block.deadlyworld.deadly_silverfish.tooltip": "Infested",
   "block.deadlyworld.event_item.tooltip": "Event:",

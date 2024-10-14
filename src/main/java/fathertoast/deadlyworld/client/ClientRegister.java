@@ -3,6 +3,11 @@ package fathertoast.deadlyworld.client;
 import fathertoast.deadlyworld.client.renderer.entity.*;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import net.minecraft.client.renderer.entity.DragonFireballRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -53,8 +58,14 @@ public class ClientRegister {//TODO
         event.registerEntityRenderer( DWEntities.MINI_ZOMBIE.get(), MiniZombieRenderer::new );
         event.registerEntityRenderer( DWEntities.MINI_SKELETON.get(), MiniSkeletonRenderer::new );
         event.registerEntityRenderer( DWEntities.MINI_SPIDER.get(), MiniSpiderRenderer::new );
-        
+        event.registerEntityRenderer( DWEntities.MICRO_GHAST.get(), MicroGhastRenderer::new );
+
         // Projectiles
         event.registerEntityRenderer( DWEntities.MINI_ARROW.get(), MiniArrowRenderer::new );
+        registerThrownRenderer( DWEntities.MICRO_FIREBALL.get(),0.15F, true, event );
+    }
+
+    static <T extends Entity & ItemSupplier> void registerThrownRenderer( EntityType<T> entityType, float scale, boolean fullBright, EntityRenderersEvent.RegisterRenderers event ) {
+        event.registerEntityRenderer( entityType, ( context ) -> new ThrownItemRenderer<>( context, scale, fullBright ) );
     }
 }

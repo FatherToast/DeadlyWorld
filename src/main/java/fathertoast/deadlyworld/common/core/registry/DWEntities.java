@@ -2,10 +2,7 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.*;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
@@ -39,12 +36,20 @@ public class DWEntities {
     public static final RegistryObject<EntityType<MiniSpider>> MINI_SPIDER = register( "mini_spider",
             EntityType.Builder.of( MiniSpider::new, MobCategory.MONSTER )
                     .sized( 0.35F, 0.35F ).clientTrackingRange( 8 ) );
-    
+
+    public static final RegistryObject<EntityType<MicroGhast>> MICRO_GHAST = register( "micro_ghast",
+            EntityType.Builder.of( MicroGhast::new, MobCategory.MONSTER )
+                    .sized( 0.1F, 0.1F ).clientTrackingRange( 8 ) );
+
     public static final RegistryObject<EntityType<MiniArrow>> MINI_ARROW = register( "mini_arrow",
             EntityType.Builder.<MiniArrow>of( MiniArrow::new, MobCategory.MISC )
                     .sized( 0.1F, 0.1F ).clientTrackingRange( 4 ).updateInterval( 20 ) );
-    
-    
+
+    public static final RegistryObject<EntityType<MicroFireball>> MICRO_FIREBALL = register( "micro_fireball",
+            EntityType.Builder.<MicroFireball>of( MicroFireball::new, MobCategory.MISC )
+                    .sized( 0.1F, 0.1F ).clientTrackingRange( 4 ).updateInterval( 20 ) );
+
+
     /** Sets the default attributes for entity types, such as max health, attack damage etc. */
     public static void createAttributes( EntityAttributeCreationEvent event ) {
         // New mobs
@@ -55,6 +60,7 @@ public class DWEntities {
         event.put( MINI_ZOMBIE.get(), MiniZombie.createAttributes().build() );
         event.put( MINI_SKELETON.get(), MiniSkeleton.createAttributes().build() );
         event.put( MINI_SPIDER.get(), MiniSpider.createAttributes().build() );
+        event.put( MICRO_GHAST.get(), MicroGhast.createAttributes().build() );
     }
     
     public static AttributeSupplier.Builder standardMiniAttributes( AttributeSupplier.Builder builder, double baseSpeed ) {
@@ -72,6 +78,10 @@ public class DWEntities {
         registerSpawnPlacements( event, MINI_ZOMBIE );
         registerSpawnPlacements( event, MINI_SKELETON );
         registerSpawnPlacements( event, MINI_SPIDER );
+
+        event.register( MICRO_GHAST.get(), SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, MicroGhast::checkMicroGhastSpawnRules,
+                SpawnPlacementRegisterEvent.Operation.REPLACE );
     }
     
     private static <T extends Entity> RegistryObject<EntityType<T>> register( String name, EntityType.Builder<T> builder ) {
