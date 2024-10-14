@@ -21,7 +21,7 @@ public final class ModEventHandler {
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
-    public static void setup( FMLCommonSetupEvent event ) {
+    static void setup( FMLCommonSetupEvent event ) {
         Config.initialize();
         //DWConfiguredFeatures.register();
     }
@@ -32,7 +32,7 @@ public final class ModEventHandler {
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
-    public static void setup( SpawnPlacementRegisterEvent event ) {
+    static void setup( SpawnPlacementRegisterEvent event ) {
         DWEntities.registerSpawnPlacements( event );
     }
 }

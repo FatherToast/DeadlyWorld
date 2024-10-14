@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,9 +25,8 @@ public class MiniSkeleton extends Skeleton {
     
     /** Modified copy-paste of {@link ProjectileUtil#getMobArrow(LivingEntity, ItemStack, float)} */
     @Override
-    protected MiniArrow getArrow( ItemStack ammo, float dist ) {
+    protected AbstractArrow getArrow( ItemStack ammo, float dist ) {
         MiniArrow miniArrow = new MiniArrow( level(), this );
-        miniArrow.setBaseDamage( 0.05 );
         miniArrow.setEnchantmentEffectsFromEntity( this, dist );
         if( ammo.is( Items.TIPPED_ARROW ) ) {
             miniArrow.setEffectsFromItem( ammo );

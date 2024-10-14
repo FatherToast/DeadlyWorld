@@ -2,9 +2,7 @@ package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
-import fathertoast.deadlyworld.common.event.EntityEvents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -155,9 +153,6 @@ public class DeadlyWorld {
         
         //        DWDamageSources.init();
         //        packetHandler.registerMessages();
-        
-        //        MinecraftForge.EVENT_BUS.register( new BiomeEvents() );
-        MinecraftForge.EVENT_BUS.register( new EntityEvents() );
         
         eventBus.addListener( DWEntities::createAttributes );
         eventBus.addListener( this::onCommonSetup );
