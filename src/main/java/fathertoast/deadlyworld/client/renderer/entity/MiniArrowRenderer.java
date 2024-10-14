@@ -21,17 +21,17 @@ import org.joml.Matrix4f;
  * Modified copy-paste of {@link net.minecraft.client.renderer.entity.ArrowRenderer} combined with {@link TippableArrowRenderer}.
  */
 @OnlyIn( Dist.CLIENT )
-public class MiniArrowRenderer<T extends MiniArrow> extends EntityRenderer<T> {
+public class MiniArrowRenderer extends EntityRenderer<MiniArrow> {
     
     public MiniArrowRenderer( EntityRendererProvider.Context renderContext ) { super( renderContext ); }
     
     @Override
-    public ResourceLocation getTextureLocation( T miniArrow ) {
+    public ResourceLocation getTextureLocation( MiniArrow miniArrow ) {
         return miniArrow.getColor() > 0 ? TippableArrowRenderer.TIPPED_ARROW_LOCATION : TippableArrowRenderer.NORMAL_ARROW_LOCATION;
     }
     
     @Override
-    public void render( T arrow, float rotation, float partialTick, PoseStack stack, MultiBufferSource buffer, int packedLight ) {
+    public void render( MiniArrow arrow, float rotation, float partialTick, PoseStack stack, MultiBufferSource buffer, int packedLight ) {
         stack.pushPose();
         stack.mulPose( Axis.YP.rotationDegrees( Mth.lerp( partialTick, arrow.yRotO, arrow.getYRot() ) - 90.0F ) );
         stack.mulPose( Axis.ZP.rotationDegrees( Mth.lerp( partialTick, arrow.xRotO, arrow.getXRot() ) ) );

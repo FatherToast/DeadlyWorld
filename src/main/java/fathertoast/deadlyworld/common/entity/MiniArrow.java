@@ -29,21 +29,18 @@ import java.util.Set;
 /**
  * Modified copy-paste of {@link net.minecraft.world.entity.projectile.Arrow}.
  */
-public class MiniArrow extends AbstractArrow {//TODO maybe this whole thing can just extend Arrow?
+public class MiniArrow extends AbstractArrow {
     
     private static final String TAG_COLOR = "Color";
     private static final int EXPOSED_POTION_DECAY_TIME = 600;
     private static final int NO_EFFECT_COLOR = -1;
-    
     private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR = SynchedEntityData.defineId( MiniArrow.class, EntityDataSerializers.INT );
     
     private Potion potion = Potions.EMPTY;
     private final Set<MobEffectInstance> effects = Sets.newHashSet();
     private boolean fixedColor;
     
-    public MiniArrow( EntityType<? extends MiniArrow> entityType, Level level ) {
-        super( entityType, level );
-    }
+    public MiniArrow( EntityType<? extends MiniArrow> entityType, Level level ) { super( entityType, level ); }
     
     @SuppressWarnings( "unused" ) // For parity with Arrow
     public MiniArrow( Level level, double x, double y, double z ) {
@@ -224,23 +221,6 @@ public class MiniArrow extends AbstractArrow {//TODO maybe this whole thing can 
             return tippedArrow;
         }
     }
-    
-    //TODO Are these needed?
-    //
-    //    @Override
-    //    public IPacket<?> getAddEntityPacket() {
-    //        return NetworkHooks.getEntitySpawningPacket( this );
-    //    }
-    //
-    //    @Override
-    //    public void writeSpawnData( PacketBuffer buffer ) {
-    //        buffer.writeInt( getOwner() == null ? getId() : getOwner().getId() );
-    //    }
-    //
-    //    @Override
-    //    public void readSpawnData( PacketBuffer additionalData ) {
-    //        setOwner( level.getEntity( additionalData.readInt() ) );
-    //    }
     
     @Override
     public void handleEntityEvent( byte event ) {
