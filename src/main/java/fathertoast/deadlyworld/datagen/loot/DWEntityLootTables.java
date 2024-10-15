@@ -5,7 +5,6 @@ import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.stream.Stream;
@@ -29,6 +28,8 @@ public class DWEntityLootTables extends EntityLootSubProvider {
                 .addLootTable( "vanilla", EntityType.SKELETON.getDefaultLootTable() ).toLootTable() );
         add( DWEntities.MINI_SPIDER.get(), new LootTableBuilder()
                 .addLootTable( "vanilla", EntityType.SPIDER.getDefaultLootTable() ).toLootTable() );
+        add( DWEntities.MICRO_GHAST.get(), new LootTableBuilder()
+                .addLootTable( "vanilla", EntityType.GHAST.getDefaultLootTable() ).toLootTable() );
     }
     
     /** Supplies the entity types this loot table provider will be used for. */
