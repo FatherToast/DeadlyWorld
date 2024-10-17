@@ -170,17 +170,14 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             }
             
             if( spawnDelay > 0 ) {
-                DeadlyWorld.LOG.error( "Delay: {}", spawnDelay );
                 // Spawner is on cooldown
                 spawnDelay--;
             }
             else if( checkSight && !TrapHelper.isValidPlayerInRange( level, pos, requiredPlayerRange, true, true ) ) {
                 // Failed sight check; impose a small delay, so we don't spam ray traces
                 spawnDelay = 6 + level.random.nextInt( 10 );
-                DeadlyWorld.LOG.error( "Failed sight check?" );
             }
             else {
-                DeadlyWorld.LOG.error( "le spawn" );
                 // Attempt spawning
                 doSpawn( level, pos );
             }
@@ -198,12 +195,10 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         else {
             activationDelay = 4;
             activated = TrapHelper.isValidPlayerInRange( level, pos, requiredPlayerRange, false, false );
-            DeadlyWorld.LOG.error( "Active: {}", activated );
         }
     }
     
     private void doSpawn( ServerLevel level, BlockPos pos ) {
-        DeadlyWorld.LOG.error( "Doing spawn" );
         final DimensionConfigGroup dimConfigs = Config.getDimensionConfigs( level );
         RandomSource random = level.getRandom();
         
@@ -220,7 +215,6 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         // Spawn a batch of mobs
         int spawns = 0;
         for( int i = 0; i < spawnCount; i++ ) {
-            DeadlyWorld.LOG.error( "Spawn attempt {}", i );
             // Pick random location
             ListTag posTag = entityTag.getList( "Pos", Tag.TAG_DOUBLE );
             int coords = posTag.size();
@@ -300,7 +294,6 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             
             // Keep track of successful spawns
             spawns++;
-            DeadlyWorld.LOG.error( "Successfully spawned #{}", spawns );
             if( spawnsRemaining > 0 ) {
                 spawnsRemaining--;
                 if( spawnsRemaining <= 0 ) {
