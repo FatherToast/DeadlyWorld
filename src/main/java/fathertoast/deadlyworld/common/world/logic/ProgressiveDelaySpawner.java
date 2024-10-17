@@ -37,15 +37,17 @@ import java.util.Optional;
  * Heavily modifies mob spawner logic to initially spawn at the max rate and slow down to the
  * min rate the longer it is active. This can be disabled by config/nbt.
  * This change is for the following goals:
- * - Reduces random difficulty spikes
- * - Makes spawners more difficult to rush
- * - Allows spawner encounters to be "beaten" by fighting enough
- * - Reduces mob farm potential (important since we generate so many spawners)
  * <p>
+ * - Reduces random difficulty spikes<br>
+ * - Makes spawners more difficult to rush<br>
+ * - Allows spawner encounters to be "beaten" by fighting enough<br>
+ * - Reduces mob farm potential (important since we generate so many spawners)
+ * <br><br>
  * Adds some extra functionality as well, just because:
- * - Ignore light levels
- * - Optional line-of-sight check
- * - Can be given a limited number of spawns
+ * <p>
+ * - Ignore light levels<br>
+ * - Optional line-of-sight check<br>
+ * - Can be given a limited number of spawns<br>
  * - Better "spawn potentials" implementation
  */
 public class ProgressiveDelaySpawner extends BaseSpawner {
