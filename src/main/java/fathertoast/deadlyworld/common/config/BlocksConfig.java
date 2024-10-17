@@ -7,9 +7,9 @@ import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
-import fathertoast.deadlyworld.common.tile.spawner.SpawnerType;
-import fathertoast.deadlyworld.common.tile.tower.TowerType;
+import fathertoast.deadlyworld.common.block.floortrap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.tower.TowerType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.HashMap;

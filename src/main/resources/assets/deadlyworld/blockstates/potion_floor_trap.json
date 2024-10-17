@@ -1,6 +1,7 @@
 {
   "variants": {
-    "": { "model": "minecraft:block/dropper_vertical"
+    "": {
+      "model": "minecraft:block/dropper_vertical"
     }
   }
 }

@@ -2,7 +2,10 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.*;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
@@ -12,6 +15,8 @@ import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import javax.annotation.Nullable;
 
 public class DWEntities {
     
@@ -36,20 +41,20 @@ public class DWEntities {
     public static final RegistryObject<EntityType<MiniSpider>> MINI_SPIDER = register( "mini_spider",
             EntityType.Builder.of( MiniSpider::new, MobCategory.MONSTER )
                     .sized( 0.35F, 0.35F ).clientTrackingRange( 8 ) );
-
+    
     public static final RegistryObject<EntityType<MicroGhast>> MICRO_GHAST = register( "micro_ghast",
             EntityType.Builder.of( MicroGhast::new, MobCategory.MONSTER )
-                    .sized( 0.1F, 0.1F ).clientTrackingRange( 8 ) );
-
+                    .sized( 0.2F, 0.2F ).clientTrackingRange( 8 ) );
+    
     public static final RegistryObject<EntityType<MiniArrow>> MINI_ARROW = register( "mini_arrow",
             EntityType.Builder.<MiniArrow>of( MiniArrow::new, MobCategory.MISC )
                     .sized( 0.1F, 0.1F ).clientTrackingRange( 4 ).updateInterval( 20 ) );
-
+    
     public static final RegistryObject<EntityType<MicroFireball>> MICRO_FIREBALL = register( "micro_fireball",
             EntityType.Builder.<MicroFireball>of( MicroFireball::new, MobCategory.MISC )
                     .sized( 0.1F, 0.1F ).clientTrackingRange( 4 ).updateInterval( 20 ) );
-
-
+    
+    
     /** Sets the default attributes for entity types, such as max health, attack damage etc. */
     public static void createAttributes( EntityAttributeCreationEvent event ) {
         // New mobs
@@ -73,24 +78,37 @@ public class DWEntities {
                 .add( Attributes.MAX_HEALTH, baseHealth / 3.0 );
     }
     
-    public static void registerSpawnPlacements( SpawnPlacementRegisterEvent event ) {
-        registerSpawnPlacements( event, MINI_CREEPER );
-        registerSpawnPlacements( event, MINI_ZOMBIE );
-        registerSpawnPlacements( event, MINI_SKELETON );
-        registerSpawnPlacements( event, MINI_SPIDER );
-
-        event.register( MICRO_GHAST.get(), SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, MicroGhast::checkMicroGhastSpawnRules,
-                SpawnPlacementRegisterEvent.Operation.REPLACE );
+    public static void registerMonsterSpawnPlacements( SpawnPlacementRegisterEvent event ) {
+        registerMonsterSpawnPlacements( event, MINI_CREEPER );
+        registerMonsterSpawnPlacements( event, MINI_ZOMBIE );
+        registerMonsterSpawnPlacements( event, MINI_SKELETON );
+        registerMonsterSpawnPlacements( event, MINI_SPIDER );
+        
+        registerSpawnPlacements( event, MICRO_GHAST, MicroGhast::checkMicroGhastSpawnRules );
     }
     
+    /** Registers an entity type. */
     private static <T extends Entity> RegistryObject<EntityType<T>> register( String name, EntityType.Builder<T> builder ) {
         return REGISTRY.register( name, () -> builder.build( name ) );
     }
     
-    private static <T extends Monster> void registerSpawnPlacements( SpawnPlacementRegisterEvent event, RegistryObject<EntityType<T>> entityType ) {
-        event.register( entityType.get(), SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules,
+    /** Registers default monster spawn placement rules to an entity type that spawns on the ground. */
+    private static <T extends Monster> void registerMonsterSpawnPlacements(
+            SpawnPlacementRegisterEvent event, RegistryObject<EntityType<T>> entityType ) {
+        registerSpawnPlacements( event, entityType, Monster::checkMonsterSpawnRules );
+    }
+    
+    /** Registers spawn placement rules to an entity type that spawns on the ground. */
+    private static <T extends Entity> void registerSpawnPlacements(
+            SpawnPlacementRegisterEvent event, RegistryObject<EntityType<T>> entityType, SpawnPlacements.SpawnPredicate<T> predicate ) {
+        registerSpawnPlacements( event, entityType, SpawnPlacements.Type.ON_GROUND, predicate );
+    }
+    
+    /** Registers spawn placement rules to an entity type. */
+    private static <T extends Entity> void registerSpawnPlacements(
+            SpawnPlacementRegisterEvent event, RegistryObject<EntityType<T>> entityType, @Nullable SpawnPlacements.Type placementType,
+            SpawnPlacements.SpawnPredicate<T> predicate ) {
+        event.register( entityType.get(), placementType, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, predicate,
                 SpawnPlacementRegisterEvent.Operation.REPLACE );
     }
 }

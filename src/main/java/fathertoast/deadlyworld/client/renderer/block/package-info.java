@@ -1,7 +1,7 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 @OnlyIn( Dist.CLIENT )
-package fathertoast.deadlyworld.client;
+package fathertoast.deadlyworld.client.renderer.block;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraftforge.api.distmarker.Dist;

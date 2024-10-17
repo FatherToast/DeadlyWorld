@@ -8,7 +8,7 @@ import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.crust.api.config.common.value.EntityEntry;
 import fathertoast.crust.api.config.common.value.EntityList;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.tile.floortrap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.floortrap.FloorTrapType;
 import net.minecraft.world.entity.EntityType;
 
 public class FloorTrapConfig extends FeatureConfig {

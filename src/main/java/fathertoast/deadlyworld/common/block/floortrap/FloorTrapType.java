@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.tile.floortrap;
+package fathertoast.deadlyworld.common.block.floortrap;
 
 import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.FloorTrapConfig;

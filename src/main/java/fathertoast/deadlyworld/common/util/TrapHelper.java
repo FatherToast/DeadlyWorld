@@ -1,16 +1,20 @@
 package fathertoast.deadlyworld.common.util;
 
+import fathertoast.deadlyworld.common.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -23,7 +27,7 @@ public class TrapHelper {
     
     public static boolean isValidPlayerInRange( Level level, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
         double x = pos.getX() + 0.5;
-        double y = pos.getY();
+        double y = pos.getY() + 0.5;
         double z = pos.getZ() + 0.5;
         
         double rangeSq = range * range;
@@ -41,7 +45,7 @@ public class TrapHelper {
     
     public static boolean isValidTrapPlayerInRange( Level level, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
         double x = pos.getX() + 0.5;
-        double y = pos.getY();
+        double y = pos.getY() + 0.5;
         double z = pos.getZ() + 0.5;
         
         double rangeSq = range * range;
@@ -60,7 +64,7 @@ public class TrapHelper {
     @Nullable
     public static Player getNearestValidPlayerInRange( Level level, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
         double x = pos.getX() + 0.5;
-        double y = pos.getY();
+        double y = pos.getY() + 0.5;
         double z = pos.getZ() + 0.5;
         
         double rangeSq = range * range;
@@ -84,7 +88,7 @@ public class TrapHelper {
     @Nullable
     public static Player getNearestTrapValidPlayerInRange( Level level, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
         double x = pos.getX() + 0.5;
-        double y = pos.getY();
+        double y = pos.getY() + 0.5;
         double z = pos.getZ() + 0.5;
         
         double rangeSq = range * range;
@@ -105,31 +109,27 @@ public class TrapHelper {
     }
     
     public static boolean isValidTrapTarget( Entity entity, boolean requireVulnerable ) {
-        //        final boolean allowInPeaceful = Config.GENERAL.GENERAL.activateTrapsInPeaceful.get();
-        //        return requireVulnerable
-        //                ? (allowInPeaceful ? ATTACK_ALLOWED_PEACEFUL.test( entity ) : EntityPredicates.ATTACK_ALLOWED.test( entity ))
-        //                : EntityPredicates.NO_SPECTATORS.test( entity );
-        return false;//TODO
+        final boolean allowInPeaceful = Config.GENERAL.GENERAL.activateTrapsInPeaceful.get();
+        return requireVulnerable
+                ? (allowInPeaceful ? ATTACK_ALLOWED_PEACEFUL.test( entity ) : EntitySelector.NO_CREATIVE_OR_SPECTATOR.test( entity ))
+                : EntitySelector.NO_SPECTATORS.test( entity );
     }
     
     public static boolean isValidTarget( Entity entity, boolean requireVulnerable ) {
-        //        return requireVulnerable ? EntityPredicates.ATTACK_ALLOWED.test( entity ) : EntityPredicates.NO_SPECTATORS.test( entity );
-        return false;//TODO
+        return requireVulnerable ? EntitySelector.NO_CREATIVE_OR_SPECTATOR.test( entity ) : EntitySelector.NO_SPECTATORS.test( entity );
     }
     
     
     public static boolean canEntitySeeBlock( Level level, BlockPos pos, Entity entity ) {
-        //        BlockRayTraceResult result = level.clip( new RayTraceContext(
-        //                new Vector3d( entity.getX(), entity.getY() + entity.getEyeHeight(), entity.getZ() ),
-        //                new Vector3d( pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5 ),
-        //                RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, null ) );
-        //
-        //
-        //        // No colliding blocks in the path or at the destination, can see
-        //        return result.getType() == RayTraceResult.Type.MISS ||
-        //                // Hit something, can see if the passed position (or the block above) is the hit
-        //                (result.getBlockPos().equals( pos ) || result.getBlockPos().equals( pos.offset( 0, 1, 0 ) ));
-        return false;//TODO
+        BlockHitResult result = level.clip( new ClipContext(
+                new Vec3( entity.getX(), entity.getY() + entity.getEyeHeight(), entity.getZ() ),
+                new Vec3( pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5 ),
+                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null ) );
+        
+        // No colliding blocks in the path or at the destination, can see
+        return result.getType() == BlockHitResult.Type.MISS ||
+                // Hit something, can see if the passed position (or the block above) is the hit
+                (result.getBlockPos().equals( pos ) || result.getBlockPos().equals( pos.offset( 0, 1, 0 ) ));
     }
     
     public static boolean isSolidBlock( BlockGetter level, BlockPos pos ) {

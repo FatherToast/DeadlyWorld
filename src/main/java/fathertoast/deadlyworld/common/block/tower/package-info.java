@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package fathertoast.deadlyworld.common.tile.spawner;
+package fathertoast.deadlyworld.common.block.tower;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

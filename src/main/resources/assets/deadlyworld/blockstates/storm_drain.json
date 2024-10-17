@@ -1,6 +1,7 @@
 {
   "variants": {
-    "": { "model": "deadlyworld:block/storm_drain"
+    "": {
+      "model": "deadlyworld:block/storm_drain"
     }
   }
 }

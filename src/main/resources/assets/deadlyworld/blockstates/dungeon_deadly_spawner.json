@@ -1,6 +1,7 @@
 {
   "variants": {
-    "": { "model": "minecraft:block/spawner"
+    "": {
+      "model": "deadlyworld:block/deadly_spawner"
     }
   }
 }

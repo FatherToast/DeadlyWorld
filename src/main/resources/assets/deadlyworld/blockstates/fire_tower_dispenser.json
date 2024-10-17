@@ -1,6 +1,7 @@
 {
   "variants": {
-    "": { "model": "deadlyworld:block/tower_dispenser"
+    "": {
+      "model": "deadlyworld:block/tower_dispenser"
     }
   }
 }

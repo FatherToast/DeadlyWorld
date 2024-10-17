@@ -1,10 +1,9 @@
-package fathertoast.deadlyworld.common.tile.spawner;
+package fathertoast.deadlyworld.common.block.spawner;
 
 import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,10 +16,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-@MethodsReturnNonnullByDefault
 public enum SpawnerType {
     
     // Standalone features
@@ -30,8 +28,8 @@ public enum SpawnerType {
     BRUTAL( "brutal", ( dimConfigs ) -> dimConfigs.SPAWNERS.BRUTAL ) {
         /** Applies any additional modifiers to entities spawned by spawners of this type. */
         @Override
-        public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level world, BlockPos pos ) {
-            super.initEntity( entity, dimConfigs, world, pos );
+        public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level level, BlockPos pos ) {
+            super.initEntity( entity, dimConfigs, level, pos );
             
             // Apply potion effects
             if( !(entity instanceof Creeper) ) {
@@ -93,8 +91,8 @@ public enum SpawnerType {
     /** @return True if this type is a subfeature; false if it is a standalone feature. */
     public final boolean isSubfeature() { return subfeature; }
     
-    //    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
-    //    public Supplier<DeadlySpawnerBlock> getBlock() { return () -> new DeadlySpawnerBlock( this ); }
+    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
+    public Supplier<DeadlySpawnerBlock> getBlock() { return () -> new DeadlySpawnerBlock( this ); }
     
     /**
      * Returns a SpawnerType from ID.
@@ -103,7 +101,6 @@ public enum SpawnerType {
      * @param ID The ID of the SpawnerType.
      * @return A SpawnerType matching the given ID.
      */
-    @Nonnull
     public static SpawnerType getFromID( String ID ) {
         for( SpawnerType spawnerType : values() ) {
             if( spawnerType.toString().equals( ID ) ) {
@@ -128,7 +125,7 @@ public enum SpawnerType {
     */
     
     /** Applies any additional modifiers to entities spawned by spawners of this type. */
-    public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level world, BlockPos pos ) {
+    public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level level, BlockPos pos ) {
         final SpawnerConfig.SpawnerTypeCategory config = getFeatureConfig( dimConfigs );
         
         // Apply attribute modifiers

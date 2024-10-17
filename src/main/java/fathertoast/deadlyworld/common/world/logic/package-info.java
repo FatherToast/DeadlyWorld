@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package fathertoast.deadlyworld.common.tile.floortrap;
+package fathertoast.deadlyworld.common.world.logic;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

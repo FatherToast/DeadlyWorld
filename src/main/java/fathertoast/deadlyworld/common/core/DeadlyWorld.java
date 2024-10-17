@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -170,10 +170,11 @@ public class DeadlyWorld {
         
         //        MinecraftForge.EVENT_BUS.addListener( DWStructures::addDimensionalSpacing );
         
-        //        DWBlocks.REGISTRY.register( eventBus );
-        //        DWItems.REGISTRY.register( eventBus );
+        DWBlocks.REGISTRY.register( eventBus );
+        DWItems.REGISTRY.register( eventBus );
+        DWCreativeModeTabs.REGISTRY.register( eventBus );
         DWEntities.REGISTRY.register( eventBus );
-        //        DWBlockEntities.REGISTRY.register( eventBus );
+        DWBlockEntities.REGISTRY.register( eventBus );
         //        DWFeatures.REGISTRY.register( eventBus );
         //        DWBiomes.REGISTRY.register( eventBus );
         //        DWSounds.REGISTRY.register( eventBus );

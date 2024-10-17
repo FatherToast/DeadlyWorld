@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.tile.tower;
+package fathertoast.deadlyworld.common.block.tower;
 
 import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.TowerDispenserConfig;

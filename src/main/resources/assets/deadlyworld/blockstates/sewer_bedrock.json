@@ -1,6 +1,7 @@
 {
   "variants": {
-    "": { "model": "deadlyworld:block/sewer_bedrock"
+    "": {
+      "model": "deadlyworld:block/sewer_bedrock"
     }
   }
 }

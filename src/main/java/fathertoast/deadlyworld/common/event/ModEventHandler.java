@@ -33,6 +33,6 @@ public final class ModEventHandler {
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
     static void setup( SpawnPlacementRegisterEvent event ) {
-        DWEntities.registerSpawnPlacements( event );
+        DWEntities.registerMonsterSpawnPlacements( event );
     }
 }
