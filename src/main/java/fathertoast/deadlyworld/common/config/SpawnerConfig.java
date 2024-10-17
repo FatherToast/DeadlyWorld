@@ -4,12 +4,12 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.ConfigUtil;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
-import fathertoast.crust.api.config.common.field.EntityListField;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.crust.api.config.common.file.TomlHelper;
 import fathertoast.crust.api.config.common.value.EntityEntry;
-import fathertoast.crust.api.config.common.value.EntityList;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
+import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import net.minecraft.world.entity.EntityType;
@@ -87,7 +87,7 @@ public class SpawnerConfig extends FeatureConfig {
         public final IntField spawnRange;
         
         public final DoubleField dynamicChance;
-        public final EntityListField spawnList;
+        public final WeightedEntityListField spawnList;
         
         public final DoubleField addedFollowRange;
         public final DoubleField addedMaxHealth;
@@ -160,7 +160,7 @@ public class SpawnerConfig extends FeatureConfig {
             dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
                     "The chance for a " + FEATURE_TYPE_NAME + " to generate as 'dynamic'.",
                     "Dynamic spawners pick a new mob to spawn after each spawn." ) );
-            spawnList = SPEC.define( new EntityListField( "spawn_list", makeDefaultSpawnList( parent ).setSingleValue().setRangePos(),
+            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( parent ),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + "s. One of these is chosen",
                     "at random when the spawner is generated. Spawners that are generated as 'dynamic' will pick again",
                     "between each spawn." ) );
@@ -185,9 +185,9 @@ public class SpawnerConfig extends FeatureConfig {
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */
-        protected EntityList makeDefaultSpawnList( FeatureConfig feature ) {
+        protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
             if( isNetherDimension( feature ) ) {
-                return new EntityList(
+                return new WeightedEntityList(
                         new EntityEntry( EntityType.WITHER_SKELETON, 200 ),
                         new EntityEntry( EntityType.HUSK, 100 ),
                         new EntityEntry( EntityType.BLAZE, 100 ),
@@ -197,13 +197,13 @@ public class SpawnerConfig extends FeatureConfig {
                 );
             }
             if( isEndDimension( feature ) ) {
-                return new EntityList(
+                return new WeightedEntityList(
                         new EntityEntry( EntityType.ENDERMAN, 200 ),
                         new EntityEntry( EntityType.CREEPER, 10 )
                 );
             }
             // For the overworld, as well as any dimensions added by mods
-            return new EntityList(
+            return new WeightedEntityList(
                     // Vanilla dungeon mobs
                     new EntityEntry( EntityType.ZOMBIE, 200 ),
                     new EntityEntry( EntityType.SKELETON, 100 ),
@@ -260,8 +260,8 @@ public class SpawnerConfig extends FeatureConfig {
         
         /** @return The default spawn list to use for this spawner type and dimension. */
         @Override
-        protected EntityList makeDefaultSpawnList( FeatureConfig feature ) {
-            return new EntityList( new EntityEntry( EntityType.SILVERFISH, 100 ) );
+        protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
+            return new WeightedEntityList( new EntityEntry( EntityType.SILVERFISH, 100 ) );
         }
     }
     
@@ -275,8 +275,8 @@ public class SpawnerConfig extends FeatureConfig {
         
         /** @return The default spawn list to use for this spawner type and dimension. */
         @Override
-        protected EntityList makeDefaultSpawnList( FeatureConfig feature ) {
-            return new EntityList(
+        protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
+            return new WeightedEntityList(
                     new EntityEntry( DWEntities.MINI_ZOMBIE.get(), 200 ),
                     new EntityEntry( DWEntities.MINI_SKELETON.get(), 100 ),
                     new EntityEntry( DWEntities.MINI_CREEPER.get(), 100 ),

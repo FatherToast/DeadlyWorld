@@ -3,12 +3,12 @@ package fathertoast.deadlyworld.common.config;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
-import fathertoast.crust.api.config.common.field.EntityListField;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.crust.api.config.common.value.EntityEntry;
-import fathertoast.crust.api.config.common.value.EntityList;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.block.floortrap.FloorTrapType;
+import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
+import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.entity.EntityType;
 
 public class FloorTrapConfig extends FeatureConfig {
@@ -121,7 +121,7 @@ public class FloorTrapConfig extends FeatureConfig {
     
     public static class TntMobTrapTypeCategory extends TntTrapTypeCategory {
         
-        public final EntityListField spawnList;
+        public final WeightedEntityListField spawnList;
         public final DoubleField speedMultiplier;
         public final DoubleField healthMultiplier;
         
@@ -130,7 +130,7 @@ public class FloorTrapConfig extends FeatureConfig {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRange, checkSight,
                     maxResetTime, minResetTime, maxFuseTime, minFuseTime, tntCount, launchSpeed );
             
-            this.spawnList = SPEC.define( new EntityListField( "spawn_list", makeDefaultSpawnList( parent ),
+            this.spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( parent ),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + "s. One of these is chosen",
                     "at random when the trap is generated. Traps that are generated as 'dynamic' will pick again",
                     "between each spawn." ) );
@@ -145,9 +145,9 @@ public class FloorTrapConfig extends FeatureConfig {
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */
-        protected EntityList makeDefaultSpawnList( FeatureConfig feature ) {
+        protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
             if( isNetherDimension( feature ) ) {
-                return new EntityList(
+                return new WeightedEntityList(
                         new EntityEntry( EntityType.WITHER_SKELETON, 200 ),
                         new EntityEntry( EntityType.HUSK, 100 ),
                         new EntityEntry( EntityType.CAVE_SPIDER, 10 ),
@@ -155,13 +155,13 @@ public class FloorTrapConfig extends FeatureConfig {
                 );
             }
             if( isEndDimension( feature ) ) {
-                return new EntityList(
+                return new WeightedEntityList(
                         new EntityEntry( EntityType.ENDERMAN, 200 ),
                         new EntityEntry( EntityType.CREEPER, 10 )
                 );
             }
             // For the overworld, as well as any dimensions added by mods
-            return new EntityList(
+            return new WeightedEntityList(
                     // Vanilla dungeon mobs
                     new EntityEntry( EntityType.ZOMBIE, 200 ),
                     new EntityEntry( EntityType.SKELETON, 100 ),

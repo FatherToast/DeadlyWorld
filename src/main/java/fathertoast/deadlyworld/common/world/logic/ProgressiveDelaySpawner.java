@@ -1,12 +1,13 @@
 package fathertoast.deadlyworld.common.world.logic;
 
-import fathertoast.crust.api.config.common.value.EntityList;
 import fathertoast.crust.api.lib.LevelEventHelper;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.SpawnerConfig;
+import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
+import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.core.BlockPos;
@@ -85,7 +86,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     protected int spawnsRemaining;
     /** Weighted list of entities to pick from for each spawn batch, if present. */
     @Nullable
-    protected EntityList dynamicSpawnList;
+    protected WeightedEntityList dynamicSpawnList;
     
     /** Whether this spawner is active. Reduces the number of times we need to iterate over the player list. */
     protected boolean activated;
@@ -133,14 +134,14 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         spawnsRemaining = spawnerConfig.maxSpawns.get();
         if( spawnsRemaining == 0 )
             spawnsRemaining = -1; // 0 would have no meaning in the config, but here it means "disabled"
-        if( random.nextFloat() < spawnerConfig.dynamicChance.get() ) {
+        if( random.nextFloat() < spawnerConfig.dynamicChance.get() && !spawnerConfig.spawnList.get().isDisabled() ) {
             dynamicSpawnList = spawnerConfig.spawnList.get();
         }
         else {
             dynamicSpawnList = null;
         }
         
-        EntityType<?> toSpawn = EntityType.ZOMBIE;//spawnerConfig.spawnList.get().next( random );
+        EntityType<?> toSpawn = spawnerConfig.spawnList.get().next( random );
         setEntityId( toSpawn, level, random,
                 blockEntity == null ? BlockPos.ZERO : blockEntity.getBlockPos() );
     }
@@ -335,8 +336,8 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             }
         }
         
-        if( dynamicSpawnList != null /*&& !dynamicSpawnList.isEmpty()*/ ) {
-            EntityType<?> nextType = EntityType.ZOMBIE;//dynamicSpawnList.next( level.random );
+        if( dynamicSpawnList != null && !dynamicSpawnList.isDisabled() ) {
+            EntityType<?> nextType = dynamicSpawnList.next( level.random );
             
             if( nextType == null ) {
                 DeadlyWorld.LOG.warn( "Failed to fetch next random entity entry in a weighted entity list. Could the total weight be 0?" );
@@ -370,21 +371,9 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             spawnDelayBuildup = loadTag.getFloat( TAG_DELAY_BUILDUP );
         if( NBTHelper.containsNumber( loadTag, TAG_SPAWNS_REMAINING ) )
             spawnsRemaining = loadTag.getShort( TAG_SPAWNS_REMAINING );
-        //TODO load dynamicSpawnList
-        
-        //        if( dynamicSpawnList != null && !dynamicSpawnList.isEmpty() ) {
-        //            CompoundNBT spawnListTag = new CompoundNBT();
-        //            int tagIndex = 0;
-        //
-        //            for( EntityEntry entry : dynamicSpawnList.getAllEntries() ) {
-        //                // Assuming the first index of the
-        //                // entry's value set is the weight.
-        //                String stringEntry = entry.TYPE.get().getRegistryName().toString() + " " + entry.VALUES[0];
-        //                spawnListTag.putString( String.valueOf( tagIndex ), stringEntry );
-        //                ++tagIndex;
-        //            }
-        //            compound.put( TAG_DYNAMIC_SPAWN_LIST, spawnListTag );
-        //        }
+        if( NBTHelper.containsList( loadTag, TAG_DYNAMIC_SPAWN_LIST ) )
+            dynamicSpawnList = WeightedEntityListField.fromNBT( loadTag.getList( TAG_DYNAMIC_SPAWN_LIST, Tag.TAG_STRING ),
+                    1, 0.0, Double.MAX_VALUE );
         
         super.load( level, pos, loadTag );
     }
@@ -397,13 +386,8 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         
         saveTag.putFloat( TAG_DELAY_BUILDUP, spawnDelayBuildup );
         saveTag.putShort( TAG_SPAWNS_REMAINING, (short) spawnsRemaining );
-        //TODO save dynamicSpawnList
-        
-        //        if( tag.contains( TAG_DYNAMIC_SPAWN_LIST, Constants.NBT.TAG_COMPOUND ) ) {
-        //            CompoundNBT spawnListTag = tag.getCompound( TAG_DYNAMIC_SPAWN_LIST );
-        //
-        //            dynamicSpawnList = WeightedEntityList.loadFromNBT( spawnListTag );
-        //        }
+        if( dynamicSpawnList != null && !dynamicSpawnList.isDisabled() )
+            saveTag.put( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList.toNBT( new ListTag() ) );
         
         return super.save( saveTag );
     }
@@ -427,6 +411,15 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     
     @Override
     public void broadcastEvent( Level level, BlockPos pos, int eventId ) { eventBroadcaster.accept( level, pos, eventId ); }
+    
+    @Override
+    public boolean onEventTriggered( Level level, int eventId ) {
+        if( eventId == EVENT_TIMER_RESET ) {
+            // Force the client to re-create the display entity after spawning, in case it was changed
+            if( level.isClientSide ) displayEntity = null;
+        }
+        return super.onEventTriggered( level, eventId );
+    }
     
     @Override
     @Nullable
