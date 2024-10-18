@@ -27,9 +27,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
-import org.apache.logging.log4j.util.TriConsumer;
+import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -52,7 +53,6 @@ import java.util.Optional;
  * - Better "spawn potentials" implementation
  */
 public class ProgressiveDelaySpawner extends BaseSpawner {
-    private static final int EVENT_TIMER_RESET = 1;
     
     // Settings tags
     public static final String TAG_CHECK_SIGHT = "CheckSight";
@@ -71,7 +71,8 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     private final Entity mobileEntity;
     @Nullable
     private final BlockEntity blockEntity;
-    private final TriConsumer<Level, BlockPos, Integer> eventBroadcaster;
+    /** This is usually either the mobileEntity or blockEntity, but not required to be. */
+    private final ISpawnerObject spawnerObject;
     
     // Settings
     /** True if line of sight is required for spawning. */
@@ -96,25 +97,35 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     /** The spawn delay previously set; the core of the progressive delay logic. */
     protected float spawnDelayBuildup;
     
+    
     @SuppressWarnings( "unused" ) // For possible future use
-    public ProgressiveDelaySpawner( SpawnerType type, Entity entity, TriConsumer<Level, BlockPos, Integer> eventBroadcast ) {
-        spawnerType = type;
-        mobileEntity = entity;
-        blockEntity = null;
-        eventBroadcaster = eventBroadcast;
+    public <T extends Entity & ISpawnerObject> ProgressiveDelaySpawner( SpawnerType type, T entity ) {
+        this( type, entity, entity );
     }
     
-    public ProgressiveDelaySpawner( SpawnerType type, BlockEntity block, TriConsumer<Level, BlockPos, Integer> eventBroadcast ) {
+    public ProgressiveDelaySpawner( SpawnerType type, Entity entity, ISpawnerObject spawnerObj ) {
+        this( type, entity, null, spawnerObj );
+    }
+    
+    public <T extends BlockEntity & ISpawnerObject> ProgressiveDelaySpawner( SpawnerType type, T block ) {
+        this( type, block, block );
+    }
+    
+    public ProgressiveDelaySpawner( SpawnerType type, BlockEntity block, ISpawnerObject spawnerObj ) {
+        this( type, null, block, spawnerObj );
+    }
+    
+    private ProgressiveDelaySpawner( SpawnerType type, @Nullable Entity entity, @Nullable BlockEntity block, ISpawnerObject spawnerObj ) {
         spawnerType = type;
-        mobileEntity = null;
+        mobileEntity = entity;
         blockEntity = block;
-        eventBroadcaster = eventBroadcast;
+        spawnerObject = spawnerObj;
     }
     
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
-    public void initializeSpawner( Level level, BlockPos pos, RandomSource random ) {
+    public void initializeSpawner( Level level, @SuppressWarnings( "unused" ) BlockPos pos, RandomSource random ) {
         final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
         
         // Set attributes from the config
@@ -157,16 +168,24 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     
     @Override
     public void clientTick( Level level, BlockPos pos ) {
-        if( spawnsRemaining == 0 ) return;
-        updateActivationStatus( level, pos );//TODO Legacy logic, is this needed?
-        super.clientTick( level, pos );
+        updateActivationStatus( level, pos );
+        
+        if( !activated ) {
+            oSpin = spin;
+        }
+        else if( displayEntity != null ) {
+            spawnerObject.spawnEffectParticle( this, level, pos );
+            
+            if( spawnDelay > 0 ) spawnDelay--;
+            
+            oSpin = spin;
+            spin = (spin + 1000.0F / (spawnDelay + 200.0F)) % 360.0;
+        }
     }
     
     @Override
     public void serverTick( ServerLevel level, BlockPos pos ) {
-        if( spawnsRemaining == 0 ) return;
         updateActivationStatus( level, pos );
-        
         if( activated ) {
             if( spawnDelay < 0 ) {
                 delay( level, pos, false );
@@ -176,7 +195,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
                 // Spawner is on cooldown
                 spawnDelay--;
             }
-            else if( checkSight && !TrapHelper.isValidPlayerInRange( level, pos, requiredPlayerRange, true, true ) ) {
+            else if( checkSight && !TrapHelper.isValidPlayerInRange( level, pos, requiredPlayerRange, true, false ) ) {
                 // Failed sight check; impose a small delay, so we don't spam ray traces
                 spawnDelay = 6 + level.random.nextInt( 10 );
             }
@@ -192,7 +211,10 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     }
     
     private void updateActivationStatus( Level level, BlockPos pos ) {
-        if( activationDelay > 0 ) {
+        if( spawnsRemaining == 0 ) {
+            activated = false;
+        }
+        else if( activationDelay > 0 ) {
             activationDelay--;
         }
         else {
@@ -229,21 +251,14 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             if( !level.noCollision( entityType.getAABB( x, y, z ) ) )
                 continue;
             BlockPos spawnPos = BlockPos.containing( x, y, z );
-            if( spawnData.getCustomSpawnRules().isPresent() ) {
-                if( !entityType.getCategory().isFriendly() && level.getDifficulty() == Difficulty.PEACEFUL ) {
-                    delay( level, pos, spawns > 0 );
-                    return; // This isn't going to change... cancel spawn batch
-                }
-                
-                // Commented out to ignore light level check; we can make this a config option later if desired
-                //SpawnData.CustomSpawnRules customSpawnRules = spawnData.getCustomSpawnRules().get();
-                //if( !customSpawnRules.blockLightLimit().isValueInRange( level.getBrightness( LightLayer.BLOCK, spawnPos ) ) ||
-                //        !customSpawnRules.skyLightLimit().isValueInRange( level.getBrightness( LightLayer.SKY, spawnPos ) ) )
-                //    continue;
+            if( !entityType.getCategory().isFriendly() && level.getDifficulty() == Difficulty.PEACEFUL ) {
+                delay( level, pos, spawns > 0 );
+                return; // This isn't going to change... cancel spawn batch
             }
-            else if( !SpawnPlacements.checkSpawnRules( entityType, level, MobSpawnType.SPAWNER, spawnPos, level.getRandom() ) ) {
-                continue; // Can't spawn here, but maybe another spot works
-            }
+            // Call Forge event directly to skip spawn placement rules
+            //noinspection UnstableApiUsage
+            if( !ForgeEventFactory.checkSpawnPlacements( entityType, level, MobSpawnType.SPAWNER, spawnPos, level.getRandom(), true ) )
+                continue;
             
             // Create the entity
             Entity entity = EntityType.loadEntityRecursive( entityTag, level, ( passenger ) -> {
@@ -270,15 +285,19 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             // Actually spawn the entity
             entity.moveTo( entity.getX(), entity.getY(), entity.getZ(), random.nextFloat() * 360.0F, 0.0F );
             if( entity instanceof Mob mob ) {
-                if( !ForgeEventFactory.checkSpawnPositionSpawner( mob, level, MobSpawnType.SPAWNER, spawnData, this ) )
+                // Skip spawn rules check, since this is yet another light level check
+                MobSpawnEvent.PositionCheck posCheck = new MobSpawnEvent.PositionCheck( mob, level, MobSpawnType.SPAWNER, null );
+                MinecraftForge.EVENT_BUS.post( posCheck );
+                if( posCheck.getResult() == Event.Result.DENY || posCheck.getResult() == Event.Result.DEFAULT && !mob.checkSpawnObstruction( level ) )
                     continue;
                 
-                MobSpawnEvent.FinalizeSpawn event = ForgeEventFactory.onFinalizeSpawnSpawner( mob, level,
+                MobSpawnEvent.FinalizeSpawn finalizeSpawn = ForgeEventFactory.onFinalizeSpawnSpawner( mob, level,
                         level.getCurrentDifficultyAt( mob.blockPosition() ), null, entityTag, this );
-                if( event != null && spawnData.getEntityToSpawn().size() == 1 && NBTHelper.containsString( spawnData.getEntityToSpawn(), Entity.ID_TAG ) ) {
+                if( finalizeSpawn != null && spawnData.getEntityToSpawn().size() == 1 && NBTHelper.containsString( spawnData.getEntityToSpawn(), Entity.ID_TAG ) ) {
                     // These are expected for parity with vanilla code
                     //noinspection deprecation, OverrideOnly
-                    mob.finalizeSpawn( level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData(), event.getSpawnTag() );
+                    mob.finalizeSpawn( level, finalizeSpawn.getDifficulty(), finalizeSpawn.getSpawnType(),
+                            finalizeSpawn.getSpawnData(), finalizeSpawn.getSpawnTag() );
                 }
             }
             if( entity instanceof LivingEntity living ) {
@@ -313,8 +332,6 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     }
     
     protected void delay( Level level, BlockPos pos, boolean incrProgressiveDelay ) {
-        if( spawnsRemaining == 0 ) return;
-        
         if( maxSpawnDelay <= minSpawnDelay ) {
             // Spawn delay is a constant
             spawnDelay = minSpawnDelay;
@@ -338,9 +355,8 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         
         if( dynamicSpawnList != null && !dynamicSpawnList.isDisabled() ) {
             EntityType<?> nextType = dynamicSpawnList.next( level.random );
-            
             if( nextType == null ) {
-                DeadlyWorld.LOG.warn( "Failed to fetch next random entity entry in a weighted entity list. Could the total weight be 0?" );
+                DeadlyWorld.LOG.warn( "Failed to fetch next random entity entry in a weighted entity list?" );
             }
             else {
                 setEntityId( nextType, level, level.random, pos );
@@ -350,7 +366,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             spawnPotentials.getRandom( level.random ).ifPresent( ( spawnData ) ->
                     setNextSpawnData( level, pos, spawnData.getData() ) );
         }
-        broadcastEvent( level, pos, EVENT_TIMER_RESET );
+        broadcastEvent( level, pos, EVENT_SPAWN );
     }
     
     public void disableSpawner() {
@@ -410,11 +426,13 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     }
     
     @Override
-    public void broadcastEvent( Level level, BlockPos pos, int eventId ) { eventBroadcaster.accept( level, pos, eventId ); }
+    public void broadcastEvent( Level level, BlockPos pos, int eventId ) {
+        spawnerObject.broadcastEvent( this, level, pos, eventId );
+    }
     
     @Override
     public boolean onEventTriggered( Level level, int eventId ) {
-        if( eventId == EVENT_TIMER_RESET ) {
+        if( eventId == EVENT_SPAWN ) {
             // Force the client to re-create the display entity after spawning, in case it was changed
             if( level.isClientSide ) displayEntity = null;
         }

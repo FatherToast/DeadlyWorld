@@ -55,7 +55,12 @@ public class DeadlySpawnerBlock extends BaseEntityBlock {
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockState state, BlockEntityType<T> type ) {
-        return createTickerHelper( type, DWBlockEntities.DEADLY_SPAWNER.get(),
+        return getTicker( level, type, DWBlockEntities.DEADLY_SPAWNER.get() );
+    }
+    
+    @Nullable
+    public <T extends BlockEntity, V extends DeadlySpawnerBlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockEntityType<T> type, BlockEntityType<V> expectedType ) {
+        return createTickerHelper( type, expectedType,
                 level.isClientSide ? DeadlySpawnerBlockEntity::clientTick : DeadlySpawnerBlockEntity::serverTick );
     }
     

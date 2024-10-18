@@ -2,8 +2,10 @@ package fathertoast.deadlyworld.common.block.spawner;
 
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
+import fathertoast.deadlyworld.common.world.logic.ISpawnerObject;
 import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -11,24 +13,26 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Modified copy-paste of {@link net.minecraft.world.level.block.entity.SpawnerBlockEntity}.
  */
-public class DeadlySpawnerBlockEntity extends BlockEntity {
+public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObject {
+    
+    private static final Vec3 DEFAULT_EFFECT_OFFSETS = new Vec3( 0.0, 0.2, 0.0 );
     
     protected final ProgressiveDelaySpawner spawner;
     protected final SpawnerType spawnerType;
     
-    public DeadlySpawnerBlockEntity( BlockPos pos, BlockState state ) {
-        super( DWBlockEntities.DEADLY_SPAWNER.get(), pos, state );
-        spawnerType = ((DeadlySpawnerBlock) state.getBlock()).getSpawnerType();
-        spawner = new ProgressiveDelaySpawner( spawnerType, this, this::eventBroadcast );
-    }
+    public DeadlySpawnerBlockEntity( BlockPos pos, BlockState state ) { this( DWBlockEntities.DEADLY_SPAWNER.get(), pos, state ); }
     
-    private void eventBroadcast( Level level, BlockPos pos, int eventId ) {
-        level.blockEvent( pos, DWBlocks.spawner( spawnerType ).get(), eventId, 0 );
+    public DeadlySpawnerBlockEntity( BlockEntityType<?> type, BlockPos pos, BlockState state ) {
+        super( type, pos, state );
+        spawnerType = ((DeadlySpawnerBlock) state.getBlock()).getSpawnerType();
+        spawner = new ProgressiveDelaySpawner( spawnerType, this );
     }
     
     @Override
@@ -72,9 +76,28 @@ public class DeadlySpawnerBlockEntity extends BlockEntity {
     @Override
     public boolean onlyOpCanSetNbt() { return true; }
     
+    @Override // ISpawnerObject
+    public void broadcastEvent( ProgressiveDelaySpawner spawner, Level level, BlockPos pos, int eventId ) {
+        level.blockEvent( pos, DWBlocks.spawner( spawnerType ).get(), eventId, 0 );
+    }
+    
+    @Override // ISpawnerObject
+    public void spawnEffectParticle( ProgressiveDelaySpawner spawner, Level level, BlockPos pos ) {
+        RandomSource random = level.getRandom();
+        double x = (double) pos.getX() + random.nextDouble();
+        double y = (double) pos.getY() + random.nextDouble();
+        double z = (double) pos.getZ() + random.nextDouble();
+        level.addParticle( ParticleTypes.SMOKE, x, y, z, 0.0, 0.0, 0.0 );
+        level.addParticle( ParticleTypes.FLAME, x, y, z, 0.0, 0.0, 0.0 );
+    }
+    
+    public ProgressiveDelaySpawner getSpawner() { return spawner; }
+    
     public void setEntityId( EntityType<?> entityType, RandomSource random ) {
         spawner.setEntityId( entityType, level, random, worldPosition );
     }
     
-    public ProgressiveDelaySpawner getSpawner() { return spawner; }
+    public float getEntityRenderScale() { return 0.53125F; }
+    
+    public Vec3 getEntityRenderOffset() { return DEFAULT_EFFECT_OFFSETS; }
 }

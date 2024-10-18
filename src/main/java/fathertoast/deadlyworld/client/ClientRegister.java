@@ -35,7 +35,7 @@ public class ClientRegister {
     
     static void registerBlockEntityRenderers() {
         BlockEntityRenderers.register( DWBlockEntities.DEADLY_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
-        //        BlockEntityRenderers.register( DWBlockEntities.MINI_SPAWNER.get(), MiniSpawnerBlockEntityRenderer::new );
+        BlockEntityRenderers.register( DWBlockEntities.MINI_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
         //        BlockEntityRenderers.register( DWBlockEntities.FLOOR_TRAP.get(), FloorTrapBlockEntityRenderer::new );
         //        BlockEntityRenderers.register( DWBlockEntities.STORM_DRAIN.get(), StormDrainBlockEntityRenderer::new );
     }

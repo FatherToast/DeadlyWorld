@@ -35,18 +35,18 @@ public enum SpawnerType {
             if( !(entity instanceof Creeper) ) {
                 final boolean hide = dimConfigs.SPAWNERS.BRUTAL.ambientFx.get();
                 if( dimConfigs.SPAWNERS.BRUTAL.fireResistance.get() ) {
-                    entity.addEffect( new MobEffectInstance( MobEffects.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, hide, !hide ) );
+                    entity.addEffect( new MobEffectInstance( MobEffects.FIRE_RESISTANCE, MobEffectInstance.INFINITE_DURATION, 0, hide, !hide ) );
                 }
                 if( dimConfigs.SPAWNERS.BRUTAL.waterBreathing.get() ) {
-                    entity.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, Integer.MAX_VALUE, 0, hide, !hide ) );
+                    entity.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, MobEffectInstance.INFINITE_DURATION, 0, hide, !hide ) );
                 }
             }
         }
     },
     NEST( "nest", "silverfish nest", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST ),
     MINI( "mini", ( dimConfigs ) -> dimConfigs.SPAWNERS.MINI ) {
-        //        @Override
-        //        public Supplier<DeadlySpawnerBlock> getBlock() { return MiniSpawnerBlock::new; }
+        @Override
+        public Supplier<DeadlySpawnerBlock> getBlock() { return MiniSpawnerBlock::new; }
     },
     
     // Subfeatures

@@ -11,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Modified copy-paste of {@link net.minecraft.client.renderer.blockentity.SpawnerRenderer}.
@@ -33,13 +34,13 @@ public class DeadlySpawnerBlockEntityRenderer implements BlockEntityRenderer<Dea
         BaseSpawner spawner = blockEntity.getSpawner();
         Entity entity = spawner.getOrCreateDisplayEntity( level, level.getRandom(), blockEntity.getBlockPos() );
         if( entity != null ) {
-            float scale = 0.53125F;
+            float scale = blockEntity.getEntityRenderScale();
             float girth = Math.max( entity.getBbWidth(), entity.getBbHeight() );
             if( girth > 1.0F ) scale /= girth;
             
-            stack.translate( 0.0F, 0.4F, 0.0F );
+            Vec3 offset = blockEntity.getEntityRenderOffset();
+            stack.translate( offset.x, offset.y, offset.z );
             stack.mulPose( Axis.YP.rotationDegrees( (float) Mth.lerp( partialTick, spawner.getoSpin(), spawner.getSpin() ) * 10.0F ) );
-            stack.translate( 0.0F, -0.2F, 0.0F );
             stack.mulPose( Axis.XP.rotationDegrees( -30.0F ) );
             stack.scale( scale, scale, scale );
             entityRenderer.render( entity, 0.0, 0.0, 0.0, 0.0F,
