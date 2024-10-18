@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "fathertoast.deadlyworld.common.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "refmap": "deadlyworld.mixins.refmap.json",
+  "mixins": [
+    "PointedDripstoneBlockMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

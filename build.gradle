@@ -47,14 +47,14 @@ minecraft {
             property "mixin.debug.export", "true"
             property 'mixin.env.disableRefMap', 'true'
 
-            //arg "-mixin.config=specialmobs.mixins.json"
+            arg "-mixin.config=deadlyworld.mixins.json"
         }
 
         server {
             property "mixin.debug.export", "true"
             property 'mixin.env.disableRefMap', 'true'
 
-            //arg "-mixin.config=specialmobs.mixins.json"
+            arg "-mixin.config=deadlyworld.mixins.json"
         }
 
         gameTestServer {
@@ -106,8 +106,8 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
                 "Implementation-Vendor"   : "FatherToast",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-                //"MixinConfigs"            : "deadlyworld.mixins.json"
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs"            : "deadlyworld.mixins.json"
         ])
     }
 }
