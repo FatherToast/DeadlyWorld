@@ -43,7 +43,7 @@ public class DeadlyWorld {
      *      o feature tester
      *      o event
      *  o entities
-     *      o configurable base attributes & stats
+     *      - configurable base attributes & stats
      *      - mini creeper
      *      - mini zombie
      *      - mini skeleton

@@ -1,12 +1,9 @@
 package fathertoast.deadlyworld.common.entity;
 
-import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -17,11 +14,6 @@ import net.minecraft.world.level.Level;
 public class MiniSkeleton extends Skeleton {
     
     public MiniSkeleton( EntityType<? extends Skeleton> entityType, Level level ) { super( entityType, level ); }
-    
-    public static AttributeSupplier.Builder createAttributes() {
-        return DWEntities.standardMiniAttributes( Skeleton.createAttributes(), 0.25 )
-                .add( Attributes.ATTACK_DAMAGE, Attributes.ATTACK_DAMAGE.getDefaultValue() / 2.0 );
-    }
     
     /** Modified copy-paste of {@link ProjectileUtil#getMobArrow(LivingEntity, ItemStack, float)} */
     @Override

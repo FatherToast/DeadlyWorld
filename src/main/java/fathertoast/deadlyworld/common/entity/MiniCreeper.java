@@ -1,9 +1,7 @@
 package fathertoast.deadlyworld.common.entity;
 
-import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.entity.ai.MiniSwellGoal;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -16,10 +14,6 @@ import net.minecraft.world.level.Level;
 public class MiniCreeper extends Creeper {
     
     public MiniCreeper( EntityType<? extends Creeper> entityType, Level level ) { super( entityType, level ); }
-    
-    public static AttributeSupplier.Builder createAttributes() {
-        return DWEntities.standardMiniAttributes( Creeper.createAttributes(), 0.25 );
-    }
     
     @Override
     protected void registerGoals() {

@@ -18,6 +18,7 @@ public class Config {
     private static final ConfigManager MANAGER = ConfigManager.create( "DeadlyWorld" );
     
     public static final BlocksConfig BLOCKS = new BlocksConfig( MANAGER, "blocks" );
+    public static final EntitiesConfig ENTITIES = new EntitiesConfig( MANAGER, "entities" );
     
     public static final GeneralConfig GENERAL = new GeneralConfig( MANAGER, "general" );
     
@@ -52,6 +53,7 @@ public class Config {
     /** Performs initial loading of certain configs in this mod. Called by the mod's constructor. */
     public static void preInitialize() {
         BLOCKS.SPEC.initialize();
+        ENTITIES.SPEC.initialize();
     }
     
     /** Performs initial loading of certain configs in this mod. Called during FMLCommonSetupEvent. */
