@@ -30,8 +30,8 @@ public class DeadlyWorld {
      *  o blocks
      *      o configurable physical properties
      *      o procedurally generated silverfish blocks
-     *      o deadly spawner
-     *      o mini spawner
+     *      - deadly spawner
+     *      - mini spawner
      *      o floor trap
      *      o tower dispenser
      *      ? water trap - actual impl TBD
@@ -42,13 +42,15 @@ public class DeadlyWorld {
      *  o items
      *      o feature tester
      *      o event
-     *  + entities
+     *  o entities
      *      o configurable base attributes & stats
      *      - mini creeper
-     *      - mini skeleton
-     *      - mini arrow
      *      - mini zombie
+     *      - mini skeleton
+     *          - mini arrow
      *      - mini spider
+     *      - micro ghast
+     *          - micro fireball
      *      o mimic chest
      *      + mimic spawner
      *      + mimic cake
