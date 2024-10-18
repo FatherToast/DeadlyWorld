@@ -111,11 +111,11 @@ public final class GameEventHandler {
         Level level = (Level) event.getLevel();
         BlockPos pos = event.getPos();
 
+        // Below ocean and no skylight? Likely we are in a cave!
         if ( level.getBrightness( LightLayer.SKY, pos ) <= 2 && pos.getY() < level.getSeaLevel() ) {
             // Perform check a bit rarely, hopefully lowering the player's guard a bit
             if ( level.getRandom().nextInt( 10 ) == 0 ) {
-                // Scan blocks above for pointed dripstone
-
+                // Move up until we hit something solid or reach an offset of 10
                 for ( int offset = 1; offset < 10; offset++ ) {
                     BlockState aboveState = level.getBlockState( pos.above( offset ) );
 
