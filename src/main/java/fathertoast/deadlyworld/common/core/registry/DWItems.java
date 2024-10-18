@@ -29,6 +29,8 @@ public class DWItems {
             DWEntities.MINI_SKELETON, 0xC1C1C1, 0x494949 );
     public static final RegistryObject<ForgeSpawnEggItem> MINI_SPIDER_SPAWN_EGG = registerSpawnEgg(
             DWEntities.MINI_SPIDER, 0x342D27, 0xA80E0E );
+    public static final RegistryObject<ForgeSpawnEggItem> MICRO_GHAST_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MICRO_GHAST, 0xF9F9F9, 0xBCBCBC );
     
     /** Registers an item. */
     private static <T extends Item> RegistryObject<T> register( String name, Supplier<T> supplier ) {
