@@ -160,6 +160,8 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     /** Increments the number of mobs this is allowed to spawn, if it has limited spawns. */
     public void addSpawn() { if( spawnsRemaining >= 0 ) spawnsRemaining++; }
     
+    public int getSpawnRange() { return spawnRange; }
+    
     @Override // Overridden just to allow nullable entity type
     public void setEntityId( @Nullable EntityType<?> entityType, @Nullable Level level, RandomSource random, BlockPos pos ) {
         if( entityType == null ) nextSpawnData = null;

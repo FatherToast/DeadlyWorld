@@ -40,6 +40,7 @@ public class DeadlyWorld {
      *      ? fast flowing lava
      *      ? cake
      *  o items
+     *      - spawn eggs
      *      o feature tester
      *      o event
      *  o entities
