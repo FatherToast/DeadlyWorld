@@ -3,10 +3,12 @@ package fathertoast.deadlyworld.datagen.loot;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import net.minecraft.data.loot.EntityLootSubProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class DWEntityLootTables extends EntityLootSubProvider {
@@ -16,20 +18,23 @@ public class DWEntityLootTables extends EntityLootSubProvider {
     @Override
     public void generate() {
         // New mobs
-        //        add( DWEntities.MIMIC.get(), new LootTableBuilder()
-        //                .addLootTable( "chest", Blocks.CHEST.getLootTable() ).toLootTable() );
+        //add( DWEntities.MIMIC, new LootTableBuilder().addLootTable( "chest", Blocks.CHEST.getLootTable() ) );
         
         // Mini mobs
-        add( DWEntities.MINI_CREEPER.get(), new LootTableBuilder()
-                .addLootTable( "vanilla", EntityType.CREEPER.getDefaultLootTable() ).toLootTable() );
-        add( DWEntities.MINI_ZOMBIE.get(), new LootTableBuilder()
-                .addLootTable( "vanilla", EntityType.ZOMBIE.getDefaultLootTable() ).toLootTable() );
-        add( DWEntities.MINI_SKELETON.get(), new LootTableBuilder()
-                .addLootTable( "vanilla", EntityType.SKELETON.getDefaultLootTable() ).toLootTable() );
-        add( DWEntities.MINI_SPIDER.get(), new LootTableBuilder()
-                .addLootTable( "vanilla", EntityType.SPIDER.getDefaultLootTable() ).toLootTable() );
-        add( DWEntities.MICRO_GHAST.get(), new LootTableBuilder()
-                .addLootTable( "vanilla", EntityType.GHAST.getDefaultLootTable() ).toLootTable() );
+        addVanillaLike( DWEntities.MINI_CREEPER, EntityType.CREEPER );
+        addVanillaLike( DWEntities.MINI_ZOMBIE, EntityType.ZOMBIE );
+        addVanillaLike( DWEntities.MINI_SKELETON, EntityType.SKELETON );
+        addVanillaLike( DWEntities.MINI_SPIDER, EntityType.SPIDER );
+        addVanillaLike( DWEntities.MICRO_GHAST, EntityType.GHAST );
+    }
+    
+    protected <T extends Entity> void addVanillaLike( Supplier<EntityType<T>> entity, EntityType<?> vanillaEntity ) {
+        add( entity.get(), new LootTableBuilder()
+                .addLootTable( "vanilla", vanillaEntity.getDefaultLootTable() ).toLootTable() );
+    }
+    
+    protected <T extends Entity> void add( Supplier<EntityType<T>> entity, LootTableBuilder builder ) {
+        add( entity.get(), builder.toLootTable() );
     }
     
     /** Supplies the entity types this loot table provider will be used for. */

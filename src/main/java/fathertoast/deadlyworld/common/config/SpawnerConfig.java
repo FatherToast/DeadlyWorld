@@ -66,7 +66,7 @@ public class SpawnerConfig extends FeatureConfig {
         MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.01, 12, 52, 0.3,
                 16, false, 100, 400, 20, 6, 4, 0.1 );
         
-        DUNGEON = new SpawnerTypeCategory( this, SpawnerType.DUNGEON, 0.0, 0, 0, 0.0,
+        DUNGEON = new SubfeatureSpawnerCategory( this, SpawnerType.DUNGEON,
                 16, false, 200, 800, 40, 4, 4, 0.1 );
     }
     
