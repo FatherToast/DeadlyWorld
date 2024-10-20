@@ -20,7 +20,7 @@ public class Config {
     public static final BlocksConfig BLOCKS = new BlocksConfig( MANAGER, "blocks" );
     public static final EntitiesConfig ENTITIES = new EntitiesConfig( MANAGER, "entities" );
     
-    public static final GeneralConfig GENERAL = new GeneralConfig( MANAGER, "general" );
+    public static final MainConfig MAIN = new MainConfig( MANAGER, "main" );
     
     /** Mapping of each dimension type to its config. */
     private static HashMap<ResourceKey<Level>, DimensionConfigGroup> DIMENSIONS;

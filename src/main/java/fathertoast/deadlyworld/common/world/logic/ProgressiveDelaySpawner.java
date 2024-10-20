@@ -197,7 +197,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
                 // Spawner is on cooldown
                 spawnDelay--;
             }
-            else if( checkSight && !TrapHelper.isValidPlayerInRange( level, pos, requiredPlayerRange, true, false ) ) {
+            else if( checkSight && !TrapHelper.isPlayerInSpawnerRange( level, pos, requiredPlayerRange, true ) ) {
                 // Failed sight check; impose a small delay, so we don't spam ray traces
                 spawnDelay = 6 + level.random.nextInt( 10 );
             }
@@ -221,7 +221,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         }
         else {
             activationDelay = 4;
-            activated = TrapHelper.isValidPlayerInRange( level, pos, requiredPlayerRange, false, false );
+            activated = TrapHelper.isPlayerInSpawnerRange( level, pos, requiredPlayerRange, false );
         }
     }
     

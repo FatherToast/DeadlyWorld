@@ -3,9 +3,9 @@ package fathertoast.deadlyworld.common.util;
 import fathertoast.deadlyworld.common.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -18,14 +18,11 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Predicate;
 
-public class TrapHelper {
+public final class TrapHelper {
     
-    public static final Predicate<Entity> ATTACK_ALLOWED_PEACEFUL = ( entity ) -> !(entity instanceof Player) ||
-            !entity.isSpectator() && !((Player) entity).isCreative();
-    
-    public static boolean isValidPlayerInRange( Level level, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
+    /** @return True if any player within range can activate a spawner, optionally requiring line-of-sight (ray trace). */
+    public static boolean isPlayerInSpawnerRange( Level level, BlockPos pos, double range, boolean checkSight ) {
         double x = pos.getX() + 0.5;
         double y = pos.getY() + 0.5;
         double z = pos.getZ() + 0.5;
@@ -33,36 +30,41 @@ public class TrapHelper {
         double rangeSq = range * range;
         for( int i = 0; i < level.players().size(); i++ ) {
             Player player = level.players().get( i );
-            if( isValidTarget( player, requireVulnerable ) &&
-                    player.distanceToSqr( x, y, z ) <= rangeSq &&
-                    (!checkSight || canEntitySeeBlock( level, pos, player ))
-            ) {
+            if( canActivateSpawner( player ) && player.distanceToSqr( x, y, z ) <= rangeSq &&
+                    (!checkSight || canEntitySeeBlock( level, pos, player )) ) {
                 return true;
             }
         }
         return false;
     }
     
-    public static boolean isValidTrapPlayerInRange( Level level, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
-        double x = pos.getX() + 0.5;
-        double y = pos.getY() + 0.5;
-        double z = pos.getZ() + 0.5;
-        
-        double rangeSq = range * range;
-        for( int i = 0; i < level.players().size(); i++ ) {
-            Player player = level.players().get( i );
-            if( isValidTrapTarget( player, requireVulnerable ) &&
-                    player.distanceToSqr( x, y, z ) <= rangeSq &&
-                    (!checkSight || canEntitySeeBlock( level, pos, player ))
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
+    /**
+     * @return An arbitrary player within range that can be targeted by a trap, optionally requiring line-of-sight (ray trace).
+     * Null if there are no valid targets.
+     */
     @Nullable
-    public static Player getNearestValidPlayerInRange( Level level, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
+    public static Player getTrapTargetInRange( Level level, BlockPos pos, double range, boolean checkSight ) {
+        double x = pos.getX() + 0.5;
+        double y = pos.getY() + 0.5;
+        double z = pos.getZ() + 0.5;
+        
+        double rangeSq = range * range;
+        for( int i = 0; i < level.players().size(); i++ ) {
+            Player player = level.players().get( i );
+            if( canTrapTarget( player ) && player.distanceToSqr( x, y, z ) <= rangeSq &&
+                    (!checkSight || canEntitySeeBlock( level, pos, player )) ) {
+                return player;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * @return The closest player within range that can be targeted by a trap, optionally requiring line-of-sight (ray trace).
+     * Null if there are no valid targets.
+     */
+    @Nullable
+    public static Player getNearestTrapTargetInRange( Level level, BlockPos pos, double range, boolean checkSight ) {
         double x = pos.getX() + 0.5;
         double y = pos.getY() + 0.5;
         double z = pos.getZ() + 0.5;
@@ -74,8 +76,7 @@ public class TrapHelper {
         for( Player player : level.players() ) {
             double distSq = player.distanceToSqr( x, y, z );
             
-            if( isValidTarget( player, requireVulnerable ) &&
-                    distSq <= rangeSq && distSq < closestDistSq &&
+            if( canTrapTarget( player ) && distSq <= rangeSq && distSq < closestDistSq &&
                     (!checkSight || canEntitySeeBlock( level, pos, player )) ) {
                 closestPlayer = player;
                 closestDistSq = distSq;
@@ -84,42 +85,24 @@ public class TrapHelper {
         return closestPlayer;
     }
     
-    /** Used for traps/devices that don't spawn any monsters. */
-    @Nullable
-    public static Player getNearestTrapValidPlayerInRange( Level level, BlockPos pos, double range, boolean checkSight, boolean requireVulnerable ) {
-        double x = pos.getX() + 0.5;
-        double y = pos.getY() + 0.5;
-        double z = pos.getZ() + 0.5;
-        
-        double rangeSq = range * range;
-        Player closestPlayer = null;
-        double closestDistSq = Double.POSITIVE_INFINITY;
-        
-        for( Player player : level.players() ) {
-            double distSq = player.distanceToSqr( x, y, z );
-            
-            if( isValidTrapTarget( player, requireVulnerable ) &&
-                    distSq <= rangeSq && distSq < closestDistSq &&
-                    (!checkSight || canEntitySeeBlock( level, pos, player )) ) {
-                closestPlayer = player;
-                closestDistSq = distSq;
-            }
-        }
-        return closestPlayer;
+    /** @return True if the entity can activate a spawner. */
+    public static boolean canActivateSpawner( Entity entity ) {
+        return isTangible( entity ) && (Config.MAIN.GENERAL.activateSpawnersVsCreative.get() || isVulnerable( entity ));
     }
     
-    public static boolean isValidTrapTarget( Entity entity, boolean requireVulnerable ) {
-        final boolean allowInPeaceful = Config.GENERAL.GENERAL.activateTrapsInPeaceful.get();
-        return requireVulnerable
-                ? (allowInPeaceful ? ATTACK_ALLOWED_PEACEFUL.test( entity ) : EntitySelector.NO_CREATIVE_OR_SPECTATOR.test( entity ))
-                : EntitySelector.NO_SPECTATORS.test( entity );
+    /** @return True if the entity can be targeted by a trap. */
+    public static boolean canTrapTarget( Entity entity ) {
+        return (Config.MAIN.GENERAL.activateTrapsInPeaceful.get() || entity.level().getDifficulty() != Difficulty.PEACEFUL) &&
+                isTangible( entity ) && (Config.MAIN.GENERAL.activateTrapsVsCreative.get() || isVulnerable( entity ));
     }
     
-    public static boolean isValidTarget( Entity entity, boolean requireVulnerable ) {
-        return requireVulnerable ? EntitySelector.NO_CREATIVE_OR_SPECTATOR.test( entity ) : EntitySelector.NO_SPECTATORS.test( entity );
-    }
+    /** @return True if the entity is vulnerable (not invulnerable nor a creative mode player). */
+    public static boolean isVulnerable( Entity entity ) { return !entity.isInvulnerable() && (!(entity instanceof Player) || !((Player) entity).isCreative()); }
     
+    /** @return True if the entity is tangible (not spectating nor dead). */
+    public static boolean isTangible( Entity entity ) { return entity.isAlive() && !entity.isSpectator(); }
     
+    /** @return True if the entity has clear line-of-sight to the block position. This is a ray trace, please use responsibly. */
     public static boolean canEntitySeeBlock( Level level, BlockPos pos, Entity entity ) {
         BlockHitResult result = level.clip( new ClipContext(
                 new Vec3( entity.getX(), entity.getY() + entity.getEyeHeight(), entity.getZ() ),
@@ -149,7 +132,4 @@ public class TrapHelper {
             potionStack.getOrCreateTag().putInt( PotionUtils.TAG_CUSTOM_POTION_COLOR, color );
         }
     }
-    
-    // Utility class, instantiating not needed
-    private TrapHelper() { }
 }
