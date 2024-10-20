@@ -6,10 +6,10 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.block.floortrap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.HashMap;
@@ -132,7 +132,7 @@ public class BlocksConfig extends AbstractConfigFile {
         
         /** Called by this mod's blocks during construction to apply configured stats. */
         public BlockBehaviour.Properties adjustBlockProperties( BlockBehaviour.Properties props ) {
-            if( requiresTool.get() ) props.requiresCorrectToolForDrops();
+            props.requiresCorrectToolForDrops = requiresTool.get();
             return props.strength( (float) destroyTime.get(), (float) explosionResistance.get() )
                     //.harvestLevel( harvestLevel.get() ).harvestTool( harvestTool.get() ) TODO Figure out how to do these
                     .friction( (float) slipperiness.get() ).speedFactor( (float) speedFactor.get() ).jumpFactor( (float) jumpFactor.get() )
