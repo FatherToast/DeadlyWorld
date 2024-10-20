@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO This class may need to be largely gutted, not sure if setting block properties this way is allowed anymore
 public class BlocksConfig extends AbstractConfigFile {
     
     private final Map<String, BlockCategory> LOOKUP = new HashMap<>();
@@ -73,8 +72,6 @@ public class BlocksConfig extends AbstractConfigFile {
         public final DoubleField destroyTime;
         public final DoubleField explosionResistance;
         
-        //public final ToolTypeField harvestTool;
-        //public final IntField harvestLevel;
         public final BooleanField requiresTool;
         
         public final DoubleField slipperiness;
@@ -100,13 +97,6 @@ public class BlocksConfig extends AbstractConfigFile {
             
             SPEC.newLine();
             
-            //TODO
-            //            harvestTool = SPEC.define( new ToolTypeField( "harvest_tool", toolLevel < 0 ? null : ToolType.PICKAXE,
-            //                    "If a harvest tool is specified, then players attempting to break " + name + "s",
-            //                    "will suffer a severe dig speed penalty unless they are using the proper tool." ) );
-            //            harvestLevel = SPEC.define( new IntField( "harvest_level", toolLevel, IntField.Range.ANY,
-            //                    "The minimum tool material level required for the harvest tool to work. Mods may add their own tiers.",
-            //                    "Vanilla material levels: 0 = wood/gold, 1 = stone, 2 = iron, 3 = diamond, 4 = netherite" ) );
             requiresTool = SPEC.define( new BooleanField( "requires_tool", false,
                     "If true, " + name + "s will not drop any loot unless broken by the harvest tool." ) );
             
@@ -134,7 +124,6 @@ public class BlocksConfig extends AbstractConfigFile {
         public BlockBehaviour.Properties adjustBlockProperties( BlockBehaviour.Properties props ) {
             props.requiresCorrectToolForDrops = requiresTool.get();
             return props.strength( (float) destroyTime.get(), (float) explosionResistance.get() )
-                    //.harvestLevel( harvestLevel.get() ).harvestTool( harvestTool.get() ) TODO Figure out how to do these
                     .friction( (float) slipperiness.get() ).speedFactor( (float) speedFactor.get() ).jumpFactor( (float) jumpFactor.get() )
                     .lightLevel( ( state ) -> lightLevel.get() );
         }

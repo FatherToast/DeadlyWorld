@@ -58,16 +58,6 @@ public class DWBlockEntities {
     }
     
     /** @return Creates a new array of all blocks extracted from a list of block registry objects. */
-    private static <T extends Block> Block[] blockArray( List<RegistryObject<T>> blockRegObjects ) {
-        final Block[] blocks = new Block[blockRegObjects.size()];
-        
-        for( int i = 0; i < blocks.length; i++ ) {
-            blocks[i] = blockRegObjects.get( i ).get();
-        }
-        return blocks;
-    }
-    
-    /** @return Creates a new array of all blocks extracted from a list of block registry objects. */
     private static DeadlySpawnerBlock[] getStandardSpawnerBlocks() {
         List<DeadlySpawnerBlock> blocks = new ArrayList<>();
         for( RegistryObject<DeadlySpawnerBlock> block : DWBlocks.SPAWNERS ) {

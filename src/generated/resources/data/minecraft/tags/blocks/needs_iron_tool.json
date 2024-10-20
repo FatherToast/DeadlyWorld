@@ -1,0 +1,11 @@
+{
+  "values": [
+    "deadlyworld:simple_deadly_spawner",
+    "deadlyworld:stream_deadly_spawner",
+    "deadlyworld:swarm_deadly_spawner",
+    "deadlyworld:brutal_deadly_spawner",
+    "deadlyworld:nest_deadly_spawner",
+    "deadlyworld:mini_deadly_spawner",
+    "deadlyworld:dungeon_deadly_spawner"
+  ]
+}
