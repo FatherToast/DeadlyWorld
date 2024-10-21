@@ -17,10 +17,10 @@ public class Config {
     
     private static final ConfigManager MANAGER = ConfigManager.create( "DeadlyWorld" );
     
+    public static final GlobalConfig GLOBAL = new GlobalConfig( MANAGER, "_global" );
+    
     public static final BlocksConfig BLOCKS = new BlocksConfig( MANAGER, "blocks" );
     public static final EntitiesConfig ENTITIES = new EntitiesConfig( MANAGER, "entities" );
-    
-    public static final MainConfig MAIN = new MainConfig( MANAGER, "main" );
     
     /** Mapping of each dimension type to its config. */
     private static HashMap<ResourceKey<Level>, DimensionConfigGroup> DIMENSIONS;
@@ -52,6 +52,7 @@ public class Config {
     
     /** Performs initial loading of certain configs in this mod. Called by the mod's constructor. */
     public static void preInitialize() {
+        GLOBAL.SPEC.initialize();
         BLOCKS.SPEC.initialize();
         ENTITIES.SPEC.initialize();
     }

@@ -5,12 +5,12 @@ import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 
-public class MainConfig extends AbstractConfigFile {
+public class GlobalConfig extends AbstractConfigFile {
     
     public final General GENERAL;
     
     /** Builds the config spec that should be used for this config. */
-    MainConfig( ConfigManager manager, String fileName ) {
+    GlobalConfig( ConfigManager manager, String fileName ) {
         super( manager, fileName,
                 "This config contains options for miscellaneous features in the mod."
         );
@@ -18,14 +18,14 @@ public class MainConfig extends AbstractConfigFile {
         GENERAL = new General( this );
     }
     
-    public static class General extends AbstractConfigCategory<MainConfig> {
+    public static class General extends AbstractConfigCategory<GlobalConfig> {
         
         public final BooleanField activateTrapsInPeaceful;
         public final BooleanField activateTrapsVsCreative;
         
         public final BooleanField activateSpawnersVsCreative;
         
-        General( MainConfig parent ) {
+        General( GlobalConfig parent ) {
             super( parent, "general",
                     "Options to customize misc global settings." );
             

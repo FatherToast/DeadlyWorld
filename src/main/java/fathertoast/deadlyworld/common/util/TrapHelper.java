@@ -87,13 +87,13 @@ public final class TrapHelper {
     
     /** @return True if the entity can activate a spawner. */
     public static boolean canActivateSpawner( Entity entity ) {
-        return isTangible( entity ) && (Config.MAIN.GENERAL.activateSpawnersVsCreative.get() || isVulnerable( entity ));
+        return isTangible( entity ) && (Config.GLOBAL.GENERAL.activateSpawnersVsCreative.get() || isVulnerable( entity ));
     }
     
     /** @return True if the entity can be targeted by a trap. */
     public static boolean canTrapTarget( Entity entity ) {
-        return (Config.MAIN.GENERAL.activateTrapsInPeaceful.get() || entity.level().getDifficulty() != Difficulty.PEACEFUL) &&
-                isTangible( entity ) && (Config.MAIN.GENERAL.activateTrapsVsCreative.get() || isVulnerable( entity ));
+        return (Config.GLOBAL.GENERAL.activateTrapsInPeaceful.get() || entity.level().getDifficulty() != Difficulty.PEACEFUL) &&
+                isTangible( entity ) && (Config.GLOBAL.GENERAL.activateTrapsVsCreative.get() || isVulnerable( entity ));
     }
     
     /** @return True if the entity is vulnerable (not invulnerable nor a creative mode player). */
