@@ -29,7 +29,7 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     
     private static final Vec3 DEFAULT_EFFECT_OFFSETS = new Vec3( 0.0, 0.2, 0.0 );
     
-    protected final ProgressiveDelaySpawner spawner;
+    protected final ProgressiveDelaySpawner spawnerLogic;
     protected final SpawnerType spawnerType;
     
     public DeadlySpawnerBlockEntity( BlockPos pos, BlockState state ) { this( DWBlockEntities.DEADLY_SPAWNER.get(), pos, state ); }
@@ -37,27 +37,27 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     public DeadlySpawnerBlockEntity( BlockEntityType<?> type, BlockPos pos, BlockState state ) {
         super( type, pos, state );
         spawnerType = ((DeadlySpawnerBlock) state.getBlock()).getSpawnerType();
-        spawner = new ProgressiveDelaySpawner( spawnerType, this );
+        spawnerLogic = new ProgressiveDelaySpawner( spawnerType, this );
     }
     
     @Override
     public void load( CompoundTag loadTag ) {
         super.load( loadTag );
-        spawner.load( level, worldPosition, loadTag );
+        spawnerLogic.load( level, worldPosition, loadTag );
     }
     
     @Override
     protected void saveAdditional( CompoundTag saveTag ) {
         super.saveAdditional( saveTag );
-        spawner.save( saveTag );
+        spawnerLogic.save( saveTag );
     }
     
     public static void clientTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlySpawnerBlockEntity blockEntity ) {
-        blockEntity.getSpawner().clientTick( level, pos );
+        blockEntity.getSpawnerLogic().clientTick( level, pos );
     }
     
     public static void serverTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlySpawnerBlockEntity blockEntity ) {
-        blockEntity.getSpawner().serverTick( (ServerLevel) level, pos );
+        blockEntity.getSpawnerLogic().serverTick( (ServerLevel) level, pos );
     }
     
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -74,7 +74,7 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     
     @Override
     public boolean triggerEvent( int id, int type ) {
-        return level != null && spawner.onEventTriggered( level, id ) ||
+        return level != null && spawnerLogic.onEventTriggered( level, id ) ||
                 super.triggerEvent( id, type );
     }
     
@@ -96,10 +96,10 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
         level.addParticle( ParticleTypes.FLAME, x, y, z, 0.0, 0.0, 0.0 );
     }
     
-    public ProgressiveDelaySpawner getSpawner() { return spawner; }
+    public ProgressiveDelaySpawner getSpawnerLogic() { return spawnerLogic; }
     
     public void setEntityId( EntityType<?> entityType, RandomSource random ) {
-        spawner.setEntityId( entityType, level, random, worldPosition );
+        spawnerLogic.setEntityId( entityType, level, random, worldPosition );
     }
     
     public float getEntityRenderScale() { return 0.53125F; }
@@ -111,6 +111,6 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     public List<AABB> getBoundingBoxes() {
         // Show spawn range (activation range is spherical, so won't work yet)
         return List.of( new AABB( worldPosition )
-                .inflate( spawner.getSpawnRange(), 1.0, spawner.getSpawnRange() ) );
+                .inflate( spawnerLogic.getSpawnRange(), 1.0, spawnerLogic.getSpawnRange() ) );
     }
 }

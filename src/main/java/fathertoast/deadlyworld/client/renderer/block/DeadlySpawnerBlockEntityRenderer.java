@@ -31,7 +31,7 @@ public class DeadlySpawnerBlockEntityRenderer implements BlockEntityRenderer<Dea
         stack.pushPose();
         stack.translate( 0.5F, 0.0F, 0.5F );
         
-        BaseSpawner spawner = blockEntity.getSpawner();
+        BaseSpawner spawner = blockEntity.getSpawnerLogic();
         Entity entity = spawner.getOrCreateDisplayEntity( level, level.getRandom(), blockEntity.getBlockPos() );
         if( entity != null ) {
             float scale = blockEntity.getEntityRenderScale();

@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.event;
 
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.spawner.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
@@ -16,16 +17,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.player.ArrowNockEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -75,6 +73,9 @@ public final class GameEventHandler {
             if( event.getPlacedBlock().getBlock() instanceof DeadlySpawnerBlock spawner ) {
                 spawner.initializeSpawner( level, event.getPos(), level.getRandom() );
             }
+            else if( event.getPlacedBlock().getBlock() instanceof DeadlyTrapBlock trap ) {
+                trap.initializeTrap( level, event.getPos(), level.getRandom() );
+            }
         }
     }
     
@@ -100,7 +101,7 @@ public final class GameEventHandler {
             }
         }
     }
-
+    
     /**
      * Fired when a player is about to destroy a block. Cancelable.
      *
@@ -110,21 +111,21 @@ public final class GameEventHandler {
     static void onBlockBreak( BlockEvent.BreakEvent event ) {
         Level level = (Level) event.getLevel();
         BlockPos pos = event.getPos();
-
+        
         // Below ocean and no skylight? Likely we are in a cave!
-        if ( level.getBrightness( LightLayer.SKY, pos ) <= 2 && pos.getY() < level.getSeaLevel() ) {
+        if( level.getBrightness( LightLayer.SKY, pos ) <= 2 && pos.getY() < level.getSeaLevel() ) {
             // Perform check a bit rarely, hopefully lowering the player's guard a bit
-            if ( level.getRandom().nextInt( 10 ) == 0 ) {
+            if( level.getRandom().nextInt( 10 ) == 0 ) {
                 // Move up until we hit something solid or reach an offset of 10
-                for ( int offset = 1; offset < 10; offset++ ) {
+                for( int offset = 1; offset < 10; offset++ ) {
                     BlockState aboveState = level.getBlockState( pos.above( offset ) );
-
+                    
                     // Assume we hit the roof of a cave, check surrounding blocks
-                    if ( aboveState.isSolidRender( level, pos ) ) {
-                        for ( BlockPos p : BlockPos.betweenClosed( pos.offset( -1, offset - 1, -1 ), pos.offset( 1, offset + 1, 1) ) ) {
+                    if( aboveState.isSolidRender( level, pos ) ) {
+                        for( BlockPos p : BlockPos.betweenClosed( pos.offset( -1, offset - 1, -1 ), pos.offset( 1, offset + 1, 1 ) ) ) {
                             BlockState state = level.getBlockState( p );
-
-                            if ( level instanceof ServerLevel && state.is( Blocks.POINTED_DRIPSTONE ) && state.getValue( PointedDripstoneBlock.TIP_DIRECTION ) == Direction.DOWN ) {
+                            
+                            if( level instanceof ServerLevel && state.is( Blocks.POINTED_DRIPSTONE ) && state.getValue( PointedDripstoneBlock.TIP_DIRECTION ) == Direction.DOWN ) {
                                 // Dripstone moment!
                                 PointedDripstoneBlock.spawnFallingStalactite( state, (ServerLevel) level, p );
                             }
@@ -143,7 +144,7 @@ public final class GameEventHandler {
                                                 BlockState spawner, DeadlySpawnerBlockEntity spawnerBlockEntity ) {
         EntityType<?> spawnEntity = ((SpawnEggItem) spawnEgg.getItem()).getType( spawnEgg.getTag() );
         spawnerBlockEntity.setEntityId( spawnEntity, level.getRandom() );
-        spawnerBlockEntity.getSpawner().addSpawn(); // Let it spawn an extra mob, why not
+        spawnerBlockEntity.getSpawnerLogic().addSpawn(); // Let it spawn an extra mob, why not
         spawnerBlockEntity.setChanged();
         level.sendBlockUpdated( pos, spawner, spawner, Block.UPDATE_ALL );
         level.gameEvent( player, GameEvent.BLOCK_CHANGE, pos );

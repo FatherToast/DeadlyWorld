@@ -1,9 +1,6 @@
 package fathertoast.deadlyworld.common.core.registry;
 
-import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
-import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
-import fathertoast.deadlyworld.common.block.spawner.MiniSpawnerBlockEntity;
-import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spawner.*;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,8 +21,8 @@ public class DWBlockEntities {
     public static final RegistryObject<BlockEntityType<MiniSpawnerBlockEntity>> MINI_SPAWNER = register(
             "mini_spawner", MiniSpawnerBlockEntity::new, DWBlocks.spawner( SpawnerType.MINI ) );
     
-    //    public static final RegistryObject<BlockEntityType<FloorTrapBlockEntity>> FLOOR_TRAP = register(
-    //            "floor_trap", FloorTrapBlockEntity::new, DWBlocks.FLOOR_TRAPS );
+    public static final RegistryObject<BlockEntityType<DeadlyTrapBlockEntity>> DEADLY_TRAP = registerMultiple(
+            "deadly_trap", DeadlyTrapBlockEntity::new, () -> new Block[0] );
     
     //    public static final RegistryObject<BlockEntityType<TowerDispenserBlockEntity>> TOWER_DISPENSER = register(
     //            "tower_dispenser", TowerDispenserBlockEntity::new, DWBlocks.TOWER_DISPENSERS );
