@@ -1,0 +1,18 @@
+{
+  "type": "deadlyworld:lone_spawner",
+  "config": {
+    "spawner_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "deadlyworld:simple_deadly_spawner"
+      }
+    },
+    "topper_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:air"
+      }
+    },
+    "cannot_replace": "#minecraft:features_cannot_replace"
+  }
+}

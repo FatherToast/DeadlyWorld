@@ -52,13 +52,19 @@ public class Config {
     
     /** Performs initial loading of certain configs in this mod. Called by the mod's constructor. */
     public static void preInitialize() {
+        MANAGER.freezeFileWatcher = true;
+        
         GLOBAL.SPEC.initialize();
         BLOCKS.SPEC.initialize();
         ENTITIES.SPEC.initialize();
+        
+        MANAGER.freezeFileWatcher = false;
     }
     
     /** Performs initial loading of certain configs in this mod. Called during FMLCommonSetupEvent. */
     public static void initialize() {
+        MANAGER.freezeFileWatcher = true;
+        
         // Loading overworld config before the
         // others to prevent our world gen features
         // from exploding the universe with anger
@@ -66,6 +72,8 @@ public class Config {
         OVERWORLD_CONFIGS.initialize();
         DIMENSIONS = new HashMap<>();
         DIMENSIONS.put( Level.OVERWORLD, OVERWORLD_CONFIGS );
+        
+        MANAGER.freezeFileWatcher = false;
     }
     
     /** Performs loading of configs in this mod that depend on dynamic registries. Called during ServerStartingEvent. */
