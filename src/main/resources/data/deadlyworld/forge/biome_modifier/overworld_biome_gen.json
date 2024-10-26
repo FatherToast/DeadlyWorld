@@ -1,6 +1,6 @@
 {
   "type": "forge:add_features",
-  "biomes": "#is_overworld",
+  "biomes": "#minecraft:is_overworld",
   "features": "#deadlyworld:all/overworld",
   "step": "underground_decoration"
 }
