@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.datagen.tags;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
-import fathertoast.deadlyworld.datagen.worldgen.DWFeatureProvider;
+import fathertoast.deadlyworld.datagen.worldgen.DWPlacedFeatureProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -23,8 +23,8 @@ public class DWFeatureTagsProvider extends TagsProvider<PlacedFeature> {
     
     @Override
     protected void addTags( HolderLookup.Provider holderLookup ) {
-        addAll( DWTags.Features.OVERWORLD, DWFeatureProvider.OVERWORLD_FEATURES );
-        addAll( DWTags.Features.THE_NETHER, DWFeatureProvider.NETHER_FEATURES );
+        addAll( DWTags.Features.OVERWORLD, DWPlacedFeatureProvider.OVERWORLD_FEATURES );
+        addAll( DWTags.Features.THE_NETHER, DWPlacedFeatureProvider.NETHER_FEATURES );
         
         addTags( DWTags.Features.ALL, DWTags.Features.OVERWORLD, DWTags.Features.THE_NETHER );
     }

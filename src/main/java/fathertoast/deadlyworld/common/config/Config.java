@@ -24,30 +24,41 @@ public class Config {
     
     /** Mapping of each dimension type to its config. */
     private static HashMap<ResourceKey<Level>, DimensionConfigGroup> DIMENSIONS;
-    private static DimensionConfigGroup OVERWORLD_CONFIGS;
+    private static DimensionConfigGroup DEFAULT_CONFIGS;
     
     /**
-     * @return The group of configs associated with the given world's dimension.
-     * <p>
-     * Returns the overworld's config if the requested dimension config was not properly loaded;
-     * throws an exception if dimension configs have not yet been loaded.
+     * @return The group of configs to use when configs do not exist or are not loaded.
+     * @throws IllegalStateException if dimension configs have not yet been loaded.
+     */
+    public static DimensionConfigGroup getDefaultConfigs() {
+        assertLoaded();
+        return DEFAULT_CONFIGS;
+    }
+    
+    /**
+     * @return The group of configs associated with the given world's dimension,
+     * or the default configs if the requested dimension configs do not exist or are not loaded.
+     * @throws IllegalStateException if dimension configs have not yet been loaded.
      */
     public static DimensionConfigGroup getDimensionConfigs( Level level ) {
         return getDimensionConfigs( level.dimension() );
     }
     
     /**
-     * @return The group of configs associated with the given dimension type key.
-     * <p>
-     * Returns the overworld's config if the requested dimension config was not properly loaded;
-     * throws an exception if dimension configs have not yet been loaded.
+     * @return The group of configs associated with the given dimension type key,
+     * or the default configs if the requested dimension configs do not exist or are not loaded.
+     * @throws IllegalStateException if dimension configs have not yet been loaded.
      */
     public static DimensionConfigGroup getDimensionConfigs( ResourceKey<Level> dimension ) {
-        if( OVERWORLD_CONFIGS == null ) {
-            throw new IllegalStateException( "Attempted to access dimension configs before any have been loaded." );
-        }
+        assertLoaded();
         final DimensionConfigGroup configs = DIMENSIONS.get( dimension );
-        return configs == null ? OVERWORLD_CONFIGS : configs;
+        return configs == null ? DEFAULT_CONFIGS : configs;
+    }
+    
+    /** @throws IllegalStateException if dimension configs have not yet been loaded. */
+    private static void assertLoaded() {
+        if( DEFAULT_CONFIGS == null )
+            throw new IllegalStateException( "Attempted to access dimension configs before any have been loaded." );
     }
     
     /** Performs initial loading of certain configs in this mod. Called by the mod's constructor. */
@@ -65,20 +76,20 @@ public class Config {
     public static void initialize() {
         MANAGER.freezeFileWatcher = true;
         
-        // Loading overworld config before the
+        // Load default configs before the
         // others to prevent our world gen features
         // from exploding the universe with anger
-        OVERWORLD_CONFIGS = new DimensionConfigGroup( MANAGER, Level.OVERWORLD );
-        OVERWORLD_CONFIGS.initialize();
+        DEFAULT_CONFIGS = new DimensionConfigGroup( MANAGER, Level.OVERWORLD ); // For now, default = overworld = the only configs
+        DEFAULT_CONFIGS.initialize();
         DIMENSIONS = new HashMap<>();
-        DIMENSIONS.put( Level.OVERWORLD, OVERWORLD_CONFIGS );
+        DIMENSIONS.put( Level.OVERWORLD, DEFAULT_CONFIGS );
         
         MANAGER.freezeFileWatcher = false;
     }
     
     /** Performs loading of configs in this mod that depend on dynamic registries. Called during ServerStartingEvent. */
     public static void initializeDynamic( MinecraftServer server ) {
-        //TODO Actually register dimensions dynamically
+        //TODO Actually register dimensions dynamically?
         
         //        final List<RegistryKey<World>> temp = new ArrayList<>( server.levelKeys() );
         //

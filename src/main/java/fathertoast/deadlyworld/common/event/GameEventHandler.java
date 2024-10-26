@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.event;
 
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
-import fathertoast.deadlyworld.common.block.spawner.DeadlyTrapBlock;
+import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.MiniArrow;

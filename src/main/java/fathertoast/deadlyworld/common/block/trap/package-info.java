@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package fathertoast.deadlyworld.common.block.floortrap;
+package fathertoast.deadlyworld.common.block.trap;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

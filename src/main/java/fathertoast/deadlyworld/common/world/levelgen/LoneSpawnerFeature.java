@@ -3,13 +3,11 @@ package fathertoast.deadlyworld.common.world.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -52,8 +50,8 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
         // Place the spawner
         BlockState spawnerBlock = config.spawnerProvider.getState( random, context.origin() );
         safeSetBlock( level, context.origin(), spawnerBlock, predicate );
-        if( spawnerBlock.getBlock() instanceof DeadlySpawnerBlock spawner && level instanceof Level ) {
-            spawner.initializeSpawner( (Level) level, context.origin(), random );
+        if( spawnerBlock.getBlock() instanceof DeadlySpawnerBlock spawner ) {
+            spawner.initializeSpawner( level, context.origin(), random );
         }
         
         // Optionally place the topper
@@ -71,7 +69,6 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
             if( hasTopper ) placeVinesAround( level, topperPos, cursor, random );
         }
         
-        DeadlyWorld.LOG.info( "Spawner placed at {}", context.origin() );
         return true;
     }
     

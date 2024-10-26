@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.block.spawner.*;
+import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

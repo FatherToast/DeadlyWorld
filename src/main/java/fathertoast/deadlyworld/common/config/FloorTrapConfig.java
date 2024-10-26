@@ -5,7 +5,7 @@ import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.crust.api.config.common.value.EntityEntry;
-import fathertoast.deadlyworld.common.block.floortrap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;

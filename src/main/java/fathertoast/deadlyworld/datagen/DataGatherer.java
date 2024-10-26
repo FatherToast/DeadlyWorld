@@ -6,7 +6,8 @@ import fathertoast.deadlyworld.datagen.tags.DWBlockTagsProvider;
 import fathertoast.deadlyworld.datagen.tags.DWEntityTypeTagsProvider;
 import fathertoast.deadlyworld.datagen.tags.DWFeatureTagsProvider;
 import fathertoast.deadlyworld.datagen.tags.DWItemTagsProvider;
-import fathertoast.deadlyworld.datagen.worldgen.DWFeatureProvider;
+import fathertoast.deadlyworld.datagen.worldgen.DWConfiguredFeatureProvider;
+import fathertoast.deadlyworld.datagen.worldgen.DWPlacedFeatureProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
@@ -26,8 +27,8 @@ public class DataGatherer {
     
     /** Data provider that generates registry entries from supported registry types. */
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
-            .add( Registries.CONFIGURED_FEATURE, DWFeatureProvider::bootstrapConfigured )
-            .add( Registries.PLACED_FEATURE, DWFeatureProvider::bootstrapPlaced );
+            .add( Registries.CONFIGURED_FEATURE, DWConfiguredFeatureProvider::bootstrap )
+            .add( Registries.PLACED_FEATURE, DWPlacedFeatureProvider::bootstrap );
     
     @SubscribeEvent
     public static void onGatherData( GatherDataEvent event ) {

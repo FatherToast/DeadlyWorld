@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.spawner;
+package fathertoast.deadlyworld.common.block.trap;
 
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.config.BlocksConfig;
@@ -45,7 +45,13 @@ public class DeadlyTrapBlock extends BaseEntityBlock {
         };
     }
     
-    public void initializeTrap( Level level, BlockPos pos, RandomSource random ) {
+    public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random ) {
+        if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
+            trapBlockEntity.getTrapLogic().initializeTrap( trapBlockEntity.getLevel(), pos, random );
+        }
+    }
+    
+    public void initializeTrap( ServerLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
             trapBlockEntity.getTrapLogic().initializeTrap( level, pos, random );
         }

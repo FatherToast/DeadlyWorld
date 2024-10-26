@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BlockItem;
@@ -43,7 +44,13 @@ public class DeadlySpawnerBlock extends BaseEntityBlock {
     
     public final SpawnerType getSpawnerType() { return spawnerType; }
     
-    public void initializeSpawner( Level level, BlockPos pos, RandomSource random ) {
+    public void initializeSpawner( WorldGenLevel level, BlockPos pos, RandomSource random ) {
+        if( level.getBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
+            spawnerBlockEntity.getSpawnerLogic().initializeSpawner( spawnerBlockEntity.getLevel(), pos, random );
+        }
+    }
+    
+    public void initializeSpawner( ServerLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
             spawnerBlockEntity.getSpawnerLogic().initializeSpawner( level, pos, random );
         }

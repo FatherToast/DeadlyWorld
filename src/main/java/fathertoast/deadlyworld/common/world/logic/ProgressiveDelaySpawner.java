@@ -125,8 +125,9 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
-    public void initializeSpawner( Level level, @SuppressWarnings( "unused" ) BlockPos pos, RandomSource random ) {
-        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+    public void initializeSpawner( @Nullable Level level, @SuppressWarnings( "unused" ) BlockPos pos, RandomSource random ) {
+        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig(
+                level == null ? Config.getDefaultConfigs() : Config.getDimensionConfigs( level ) );
         
         // Set attributes from the config
         requiredPlayerRange = spawnerConfig.activationRange.get();
