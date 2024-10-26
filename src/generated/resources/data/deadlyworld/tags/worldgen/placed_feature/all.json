@@ -1,8 +1,6 @@
 {
   "values": [
-    "deadlyworld:simple_spawner_cave",
-    "deadlyworld:stream_spawner_cave",
-    "deadlyworld:swarm_spawner_cave",
-    "deadlyworld:brutal_spawner_cave"
+    "#deadlyworld:all/overworld",
+    "#deadlyworld:all/nether"
   ]
 }

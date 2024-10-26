@@ -57,6 +57,8 @@ public final class DWTags {
     
     public static final class Features {
         public static final TagKey<PlacedFeature> ALL = tag( "all" );
+        public static final TagKey<PlacedFeature> OVERWORLD = tag( "all/overworld" );
+        public static final TagKey<PlacedFeature> THE_NETHER = tag( "all/nether" );
         
         //        public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
         //        public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );

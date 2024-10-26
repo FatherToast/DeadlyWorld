@@ -24,19 +24,26 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class DWFeatureProvider {
-    public static final List<ResourceKey<PlacedFeature>> ALL_PLACEMENTS = new ArrayList<>();
+    public static final List<ResourceKey<PlacedFeature>> OVERWORLD_FEATURES = new ArrayList<>();
+    public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
     
     // Features
-    public static final ResourceKey<ConfiguredFeature<?, ?>> SIMPLE_SPAWNER = configuredKey( "simple_spawner" );
-    public static final ResourceKey<ConfiguredFeature<?, ?>> STREAM_SPAWNER = configuredKey( "stream_spawner" );
-    public static final ResourceKey<ConfiguredFeature<?, ?>> SWARM_SPAWNER = configuredKey( "swarm_spawner" );
-    public static final ResourceKey<ConfiguredFeature<?, ?>> BRUTAL_SPAWNER = configuredKey( "brutal_spawner" );
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SIMPLE_SPAWNER = configured( "simple_spawner" );
+    public static final ResourceKey<ConfiguredFeature<?, ?>> STREAM_SPAWNER = configured( "stream_spawner" );
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SWARM_SPAWNER = configured( "swarm_spawner" );
+    public static final ResourceKey<ConfiguredFeature<?, ?>> BRUTAL_SPAWNER = configured( "brutal_spawner" );
     
-    // Placements
-    public static final ResourceKey<PlacedFeature> SIMPLE_SPAWNER_CAVE = placedKey( "simple_spawner_cave" );
-    public static final ResourceKey<PlacedFeature> STREAM_SPAWNER_CAVE = placedKey( "stream_spawner_cave" );
-    public static final ResourceKey<PlacedFeature> SWARM_SPAWNER_CAVE = placedKey( "swarm_spawner_cave" );
-    public static final ResourceKey<PlacedFeature> BRUTAL_SPAWNER_CAVE = placedKey( "brutal_spawner_cave" );
+    // Placements - Overworld
+    public static final ResourceKey<PlacedFeature> SIMPLE_SPAWNER_CAVE = placedOverworld( "simple_spawner_cave" );
+    public static final ResourceKey<PlacedFeature> STREAM_SPAWNER_CAVE = placedOverworld( "stream_spawner_cave" );
+    public static final ResourceKey<PlacedFeature> SWARM_SPAWNER_CAVE = placedOverworld( "swarm_spawner_cave" );
+    public static final ResourceKey<PlacedFeature> BRUTAL_SPAWNER_CAVE = placedOverworld( "brutal_spawner_cave" );
+    
+    // Placements - Nether
+    //    public static final ResourceKey<PlacedFeature> SIMPLE_SPAWNER_NETHER = placedNether( "simple_spawner" );
+    //    public static final ResourceKey<PlacedFeature> STREAM_SPAWNER_NETHER = placedNether( "stream_spawner" );
+    //    public static final ResourceKey<PlacedFeature> SWARM_SPAWNER_NETHER = placedNether( "swarm_spawner" );
+    //    public static final ResourceKey<PlacedFeature> BRUTAL_SPAWNER_NETHER = placedNether( "brutal_spawner" );
     
     /** Called by registry set builder to generate our configured features. */
     public static void bootstrapConfigured( BootstapContext<ConfiguredFeature<?, ?>> context ) {
@@ -80,7 +87,7 @@ public class DWFeatureProvider {
         context.register( confFeatureKey, configuredFeature );
     }
     
-    protected static ResourceKey<ConfiguredFeature<?, ?>> configuredKey( String name ) {
+    protected static ResourceKey<ConfiguredFeature<?, ?>> configured( String name ) {
         return ResourceKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.resourceLoc( name ) );
     }
     
@@ -102,9 +109,19 @@ public class DWFeatureProvider {
         context.register( placedFeatureKey, new PlacedFeature( configuredFeature, modifiers ) );
     }
     
-    protected static ResourceKey<PlacedFeature> placedKey( String name ) {
-        final ResourceKey<PlacedFeature> key = ResourceKey.create( Registries.PLACED_FEATURE, DeadlyWorld.resourceLoc( name ) );
-        ALL_PLACEMENTS.add( key );
+    protected static ResourceKey<PlacedFeature> placedOverworld( String name ) {
+        final ResourceKey<PlacedFeature> key = placedNowhere( name );
+        OVERWORLD_FEATURES.add( key );
         return key;
+    }
+    
+    protected static ResourceKey<PlacedFeature> placedNether( String name ) {
+        final ResourceKey<PlacedFeature> key = placedNowhere( name + "_nether" );
+        NETHER_FEATURES.add( key );
+        return key;
+    }
+    
+    protected static ResourceKey<PlacedFeature> placedNowhere( String name ) {
+        return ResourceKey.create( Registries.PLACED_FEATURE, DeadlyWorld.resourceLoc( name ) );
     }
 }

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#is_nether",
+  "features": "#deadlyworld:all/nether",
+  "step": "underground_decoration"
+}
