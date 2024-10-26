@@ -2,11 +2,14 @@ package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -35,6 +38,8 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
         ).apply( instance, Configuration::new ) );
     }
     
+    public LoneSpawnerFeature() { this( Configuration.CODEC ); }
+    
     public LoneSpawnerFeature( Codec<Configuration> codec ) { super( codec ); }
     
     @Override
@@ -45,14 +50,18 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
         
         // Place the spawner
-        safeSetBlock( level, context.origin(), config.spawnerProvider, random, predicate );
+        BlockState spawnerBlock = config.spawnerProvider.getState( random, context.origin() );
+        safeSetBlock( level, context.origin(), spawnerBlock, predicate );
+        if( spawnerBlock.getBlock() instanceof DeadlySpawnerBlock spawner && level instanceof Level ) {
+            spawner.initializeSpawner( (Level) level, context.origin(), random );
+        }
         
         // Optionally place the topper
         BlockPos topperPos = context.origin().above();
-        BlockState state = config.topperProvider.getState( random, topperPos );
-        boolean hasTopper = !state.isAir();
+        BlockState topperBlock = config.topperProvider.getState( random, topperPos );
+        boolean hasTopper = !topperBlock.isAir();
         if( hasTopper ) {
-            safeSetBlock( level, topperPos, state, predicate );
+            safeSetBlock( level, topperPos, topperBlock, predicate );
         }
         
         // Optionally decorate the spawner with vines
@@ -61,7 +70,9 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
             placeVinesAround( level, context.origin(), cursor, random );
             if( hasTopper ) placeVinesAround( level, topperPos, cursor, random );
         }
-        return false;
+        
+        DeadlyWorld.LOG.info( "Spawner placed at {}", context.origin() );
+        return true;
     }
     
     protected void placeVinesAround( WorldGenLevel level, BlockPos center, BlockPos.MutableBlockPos cursor, RandomSource random ) {

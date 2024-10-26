@@ -1,18 +1,19 @@
 {
   "type": "deadlyworld:lone_spawner",
   "config": {
+    "cannot_replace": "#minecraft:features_cannot_replace",
     "spawner_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "deadlyworld:simple_deadly_spawner"
+        "Name": "deadlyworld:stream_deadly_spawner"
       }
     },
     "topper_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "minecraft:air"
+        "Name": "minecraft:mud_bricks"
       }
     },
-    "cannot_replace": "#minecraft:features_cannot_replace"
+    "vines_decoration": false
   }
 }

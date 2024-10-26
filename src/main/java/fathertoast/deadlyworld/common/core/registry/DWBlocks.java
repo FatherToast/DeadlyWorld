@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class DWBlocks {
+public final class DWBlocks {
     public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create( ForgeRegistries.BLOCKS, DeadlyWorld.MOD_ID );
     
     public static final List<RegistryObject<DeadlySpawnerBlock>> SPAWNERS;

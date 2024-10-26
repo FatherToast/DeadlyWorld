@@ -173,6 +173,7 @@ public class DeadlyWorld {
         
         //        MinecraftForge.EVENT_BUS.addListener( DWStructures::addDimensionalSpacing );
         
+        DWTags.initialize();
         DWBlocks.REGISTRY.register( eventBus );
         DWItems.REGISTRY.register( eventBus );
         DWCreativeModeTabs.REGISTRY.register( eventBus );

@@ -1,18 +1,19 @@
 {
   "type": "deadlyworld:lone_spawner",
   "config": {
+    "cannot_replace": "#minecraft:features_cannot_replace",
     "spawner_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "deadlyworld:swarm_deadly_spawner"
+        "Name": "deadlyworld:simple_deadly_spawner"
       }
     },
     "topper_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "minecraft:chiseled_sandstone"
+        "Name": "minecraft:air"
       }
     },
-    "cannot_replace": "#minecraft:features_cannot_replace"
+    "vines_decoration": false
   }
 }

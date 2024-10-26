@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.util;
 
 import java.util.function.Supplier;
 
-public class References {
+public final class References {
     //    /** The base lang key for translating text from this mod. */
     //    public static final String LANG_KEY = DeadlyWorld.MOD_ID + ".";
     
@@ -16,6 +16,7 @@ public class References {
     /** The base path for chest loot tables from this mod. */
     public static final String CHEST_LOOT_PATH = LOOT_PATH + "chests/";
     
-    public static Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Comparable<String>>>>>>>>>>
+    @SuppressWarnings( "unused" ) // This is really actually used in one of the places
+    public static final Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Comparable<String>>>>>>>>>>
             IMPORTANT_SUPPLIER = () -> () -> () -> () -> () -> () -> () -> () -> () -> "toast";
 }

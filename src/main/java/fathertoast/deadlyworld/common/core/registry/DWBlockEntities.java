@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class DWBlockEntities {
+public final class DWBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create( ForgeRegistries.BLOCK_ENTITY_TYPES, DeadlyWorld.MOD_ID );
     
     public static final RegistryObject<BlockEntityType<DeadlySpawnerBlockEntity>> DEADLY_SPAWNER = registerMultiple(
