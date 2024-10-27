@@ -1,10 +1,12 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.LoneSpawnerFeature;
+import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -41,12 +43,13 @@ public class DWConfiguredFeatureProvider {
     /** Convenience method for making a simple block state provider. */
     protected static BlockStateProvider block( BlockState block ) { return BlockStateProvider.simple( block ); }
     
-    /** Registers a configured lone spawner type feature. */
+    /** Registers a configured lone spawner type feature. */ //TODO make the spawner settings dimension-sensitive
     protected static void registerLoneSpawner( BootstapContext<ConfiguredFeature<?, ?>> context,
                                                ResourceKey<ConfiguredFeature<?, ?>> confFeatureKey,
                                                SpawnerType type, BlockStateProvider topper, boolean vines ) {
         register( context, confFeatureKey, new ConfiguredFeature<>( DWFeatures.LONE_SPAWNER.get(),
                 new LoneSpawnerFeature.Configuration( block( DWBlocks.spawner( type ) ), topper,
+                        SpawnerSettings.of( type.getFeatureConfig( Config.getDefaultConfigs() ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE, vines ) ) );
     }
     

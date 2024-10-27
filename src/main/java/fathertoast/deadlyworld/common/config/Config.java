@@ -69,13 +69,6 @@ public class Config {
         BLOCKS.SPEC.initialize();
         ENTITIES.SPEC.initialize();
         
-        MANAGER.freezeFileWatcher = false;
-    }
-    
-    /** Performs initial loading of certain configs in this mod. Called during FMLCommonSetupEvent. */
-    public static void initialize() {
-        MANAGER.freezeFileWatcher = true;
-        
         // Load default configs before the
         // others to prevent our world gen features
         // from exploding the universe with anger
@@ -87,7 +80,14 @@ public class Config {
         MANAGER.freezeFileWatcher = false;
     }
     
-    /** Performs loading of configs in this mod that depend on dynamic registries. Called during ServerStartingEvent. */
+    //    /** Performs initial loading of certain configs in this mod. Called during FMLCommonSetupEvent. */
+    //    public static void initialize() {
+    //        MANAGER.freezeFileWatcher = true;
+    //
+    //        MANAGER.freezeFileWatcher = false;
+    //    }
+    
+    /** Performs loading of configs in this mod that depend on dynamicChance registries. Called during ServerStartingEvent. */
     public static void initializeDynamic( MinecraftServer server ) {
         //TODO Actually register dimensions dynamically?
         

@@ -102,7 +102,7 @@ public abstract class BaseTrap {
         //
         //        // Set attributes from the config
         //        activationRange = spawnerConfig.activationRange.get();
-        //        checkSight = spawnerConfig.checkSight.get();
+        //        checkSightChance = spawnerConfig.checkSightChance.get();
         //        maxNearbyEntities = spawnerConfig.maxNearbyEntities.get();
         //
         //        minSpawnDelay = spawnerConfig.delay.getMin();

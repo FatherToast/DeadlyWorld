@@ -44,12 +44,6 @@ public class DeadlySpawnerBlock extends BaseEntityBlock {
     
     public final SpawnerType getSpawnerType() { return spawnerType; }
     
-    public void initializeSpawner( WorldGenLevel level, BlockPos pos, RandomSource random ) {
-        if( level.getBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
-            spawnerBlockEntity.getSpawnerLogic().initializeSpawner( spawnerBlockEntity.getLevel(), pos, random );
-        }
-    }
-    
     public void initializeSpawner( ServerLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
             spawnerBlockEntity.getSpawnerLogic().initializeSpawner( level, pos, random );

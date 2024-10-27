@@ -152,7 +152,7 @@ public class DeadlyWorld {
      *  - allow vanilla dispensers to fire the custom fish hook entity when activating a fishing rod
      */
     
-    /** The mod id and namespace used by this mod. */
+    /** The mod id and modid used by this mod. */
     public static final String MOD_ID = "deadlyworld";
     
     /** The logger used by this mod. */
@@ -179,23 +179,26 @@ public class DeadlyWorld {
         DWCreativeModeTabs.REGISTRY.register( eventBus );
         DWEntities.REGISTRY.register( eventBus );
         DWBlockEntities.REGISTRY.register( eventBus );
-        DWFeatures.REGISTRY.register( eventBus );
         //        DWBiomes.REGISTRY.register( eventBus );
         //        DWSounds.REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
         
         Config.preInitialize();
+        
+        DWFieldProviders.register( eventBus );
+        DWFeatures.REGISTRY.register( eventBus );
+        DWPlacementTypes.REGISTRY.register( eventBus );
     }
     
     public void onCommonSetup( FMLCommonSetupEvent event ) {
-        //        event.enqueueWork( () -> {
-        //            DWStructures.setupStructures();
-        //            DWConfiguredStructures.register();
-        //            DWStructureProcessors.register();
-        //        } );
+        //event.enqueueWork( () -> {
+        //  DWStructures.setupStructures();
+        //  DWConfiguredStructures.register();
+        //  DWStructureProcessors.register();
+        //} );
     }
     
-    /** @return A ResourceLocation with the mod's namespace. */
+    /** @return A ResourceLocation with the mod's modid. */
     public static ResourceLocation resourceLoc( String path ) { return new ResourceLocation( MOD_ID, path ); }
     
     public static String logPrefix( Class<?> clazz ) {

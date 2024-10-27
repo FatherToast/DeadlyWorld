@@ -75,10 +75,12 @@ public class SpawnerConfig extends FeatureConfig {
         public final DoubleField chestChance;
         
         public final IntField activationRange;
-        public final BooleanField checkSight;
+        public final DoubleField checkSightChance;
         public final IntField maxNearbyEntities;
         
         public final IntField.RandomRange delay;
+        public final IntField delayMin;
+        public final IntField delayMax;
         public final IntField delayProgression;
         public final DoubleField delayRecovery;
         
@@ -120,7 +122,8 @@ public class SpawnerConfig extends FeatureConfig {
             
             activationRange = SPEC.define( new IntField( "required_player_range", activationRng, 0, Short.MAX_VALUE,
                     "The spawner is active as long as a player is within this distance (spherical distance)." ) );
-            checkSight = SPEC.define( new BooleanField( "activation_sight_check", sightCheck,
+            checkSightChance = SPEC.define( new DoubleField( "sight_check_chance", sightCheck ? 1.0 : 0.0, DoubleField.Range.PERCENT,
+                    "The chance for a " + FEATURE_TYPE_NAME + " to generate as requiring a sight check.",
                     "When the sight check is enabled, " + FEATURE_TYPE_NAME + " will only spawn when they have " +
                             "direct line-of-sight to a player within activation range. The spawner's delay will continue to " +
                             "tick down, but it will wait to actually spawn until it has line-of-sight." ) );
@@ -133,9 +136,9 @@ public class SpawnerConfig extends FeatureConfig {
             SPEC.newLine();
             
             delay = new IntField.RandomRange(
-                    SPEC.define( new IntField( "delay.min", minDelay, 0, Short.MAX_VALUE,
+                    delayMin = SPEC.define( new IntField( "delay.min", minDelay, 0, Short.MAX_VALUE,
                             "The minimum and maximum (inclusive) delay between spawn batches, in ticks. (20 ticks = 1 second)" ) ),
-                    SPEC.define( new IntField( "delay.max", maxDelay, 0, Short.MAX_VALUE ) )
+                    delayMax = SPEC.define( new IntField( "delay.max", maxDelay, 0, Short.MAX_VALUE ) )
             );
             delayProgression = SPEC.define( new IntField( "delay.progression", delayPrgr, 0, Short.MAX_VALUE,
                     "Each spawn batch increases the spawner's delay buildup by this many ticks (" + ConfigUtil.PLUS_OR_MINUS +
@@ -158,11 +161,11 @@ public class SpawnerConfig extends FeatureConfig {
             SPEC.newLine();
             
             dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
-                    "The chance for a " + FEATURE_TYPE_NAME + " to generate as 'dynamic'.",
+                    "The chance for a " + FEATURE_TYPE_NAME + " to generate as 'dynamicChance'.",
                     "Dynamic spawners pick a new mob to spawn after each spawn." ) );
             spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( parent ),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + "s. One of these is chosen",
-                    "at random when the spawner is generated. Spawners that are generated as 'dynamic' will pick again",
+                    "at random when the spawner is generated. Spawners that are generated as 'dynamicChance' will pick again",
                     "between each spawn." ) );
             
             SPEC.newLine();
@@ -277,10 +280,10 @@ public class SpawnerConfig extends FeatureConfig {
         @Override
         protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
             return new WeightedEntityList(
-                    new EntityEntry( DWEntities.MINI_ZOMBIE.get(), 200 ),
-                    new EntityEntry( DWEntities.MINI_SKELETON.get(), 100 ),
-                    new EntityEntry( DWEntities.MINI_SPIDER.get(), 100 ),
-                    new EntityEntry( DWEntities.MINI_CREEPER.get(), 50 )
+                    new EntityEntry( null, DWEntities.MINI_ZOMBIE.getId(), true, 200 ),
+                    new EntityEntry( null, DWEntities.MINI_SKELETON.getId(), true, 100 ),
+                    new EntityEntry( null, DWEntities.MINI_SPIDER.getId(), true, 100 ),
+                    new EntityEntry( null, DWEntities.MINI_CREEPER.getId(), true, 50 )
             );
         }
     }

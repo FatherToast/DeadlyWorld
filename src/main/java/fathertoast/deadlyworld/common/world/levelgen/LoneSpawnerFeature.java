@@ -23,14 +23,14 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
     public record Configuration(
             BlockStateProvider spawnerProvider,
             BlockStateProvider topperProvider,
-            //SpawnerSettings spawnerSettings, TODO allow overrides for config settings here
+            SpawnerSettings spawnerSettings,
             TagKey<Block> cannotReplace,
             boolean vinesDecoration
     ) implements FeatureConfiguration {
         public static final Codec<Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
                 BlockStateProvider.CODEC.fieldOf( "spawner_provider" ).forGetter( Configuration::spawnerProvider ),
                 BlockStateProvider.CODEC.fieldOf( "topper_provider" ).forGetter( Configuration::topperProvider ),
-                //SpawnerSettings.CODEC.fieldOf( "spawner" ).forGetter( Configuration::spawnerSettings ),
+                SpawnerSettings.CODEC.fieldOf( "spawner" ).forGetter( Configuration::spawnerSettings ),
                 TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( Configuration::cannotReplace ),
                 Codec.BOOL.fieldOf( "vines_decoration" ).orElse( false ).forGetter( Configuration::vinesDecoration )
         ).apply( instance, Configuration::new ) );
@@ -50,8 +50,8 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
         // Place the spawner
         BlockState spawnerBlock = config.spawnerProvider.getState( random, context.origin() );
         safeSetBlock( level, context.origin(), spawnerBlock, predicate );
-        if( spawnerBlock.getBlock() instanceof DeadlySpawnerBlock spawner ) {
-            spawner.initializeSpawner( level, context.origin(), random );
+        if( spawnerBlock.getBlock() instanceof DeadlySpawnerBlock ) {
+            config.spawnerSettings.initializeSpawner( level, context.origin(), random );
         }
         
         // Optionally place the topper

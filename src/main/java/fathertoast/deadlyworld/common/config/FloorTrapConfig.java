@@ -132,7 +132,7 @@ public class FloorTrapConfig extends FeatureConfig {
             
             this.spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( parent ),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + "s. One of these is chosen",
-                    "at random when the trap is generated. Traps that are generated as 'dynamic' will pick again",
+                    "at random when the trap is generated. Traps that are generated as 'dynamicChance' will pick again",
                     "between each spawn." ) );
             
             SPEC.newLine();
@@ -184,7 +184,7 @@ public class FloorTrapConfig extends FeatureConfig {
             //TODO
             //            potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList( feature ),
             //                    "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when hurling splash potions. One of these is chosen",
-            //                    "at random when the trap is generated. If the trap is generated as 'dynamic' it will pick again",
+            //                    "at random when the trap is generated. If the trap is generated as 'dynamicChance' it will pick again",
             //                    "between each potion effect." ) );
         }
         

@@ -7,6 +7,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.*;
 
@@ -21,10 +22,10 @@ public class DWPlacedFeatureProvider {
     /** List of all placements that should generate in nether biomes. */
     public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
     
-    static final ResourceKey<PlacedFeature> SIMPLE_SPAWNER_CAVE = overworldKey( "simple_spawner_cave" );
-    static final ResourceKey<PlacedFeature> STREAM_SPAWNER_CAVE = overworldKey( "stream_spawner_cave" );
-    static final ResourceKey<PlacedFeature> SWARM_SPAWNER_CAVE = overworldKey( "swarm_spawner_cave" );
-    static final ResourceKey<PlacedFeature> BRUTAL_SPAWNER_CAVE = overworldKey( "brutal_spawner_cave" );
+    static final ResourceKey<PlacedFeature> SIMPLE_SPAWNER_CAVE = overworldKey( "simple_spawner_upper" );
+    static final ResourceKey<PlacedFeature> STREAM_SPAWNER_CAVE = overworldKey( "stream_spawner_upper" );
+    static final ResourceKey<PlacedFeature> SWARM_SPAWNER_CAVE = overworldKey( "swarm_spawner_upper" );
+    static final ResourceKey<PlacedFeature> BRUTAL_SPAWNER_CAVE = overworldKey( "brutal_spawner_upper" );
     
     //    public static final ResourceKey<PlacedFeature> SIMPLE_SPAWNER_NETHER = netherKey( "simple_spawner" );
     //    public static final ResourceKey<PlacedFeature> STREAM_SPAWNER_NETHER = netherKey( "stream_spawner" );
@@ -34,6 +35,10 @@ public class DWPlacedFeatureProvider {
     /** Called by registry set builder to generate our placed features. */
     public static void bootstrap( BootstapContext<PlacedFeature> context ) {
         final HolderGetter<ConfiguredFeature<?, ?>> getter = context.lookup( Registries.CONFIGURED_FEATURE );
+        
+        List<PlacementModifier> upperPlacements = List.of( CountPlacement.of( 10 ), InSquarePlacement.spread(),
+                HeightRangePlacement.uniform( VerticalAnchor.absolute( 0 ), VerticalAnchor.belowTop( 1 ) ),
+                BiomeFilter.biome() );
         
         register( context, getter, SIMPLE_SPAWNER_CAVE, SIMPLE_SPAWNER,
                 RarityFilter.onAverageOnceEvery( 1 ), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome() );
