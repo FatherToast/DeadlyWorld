@@ -21,6 +21,8 @@ public class DWItems {
     // Spawn eggs
     //    public static final RegistryObject<ForgeSpawnEggItem> MIMIC_SPAWN_EGG = registerSpawnEgg(
     //            DWEntities.MIMIC, 0xAB792D, 0x443C30 );
+    public static final RegistryObject<ForgeSpawnEggItem> JUKEBOX_MIMIC_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.JUKEBOX_MIMIC, 0x945D41, 0x412818 );
     public static final RegistryObject<ForgeSpawnEggItem> MINI_CREEPER_SPAWN_EGG = registerSpawnEgg(
             DWEntities.MINI_CREEPER, 0xDA70B, 0x000000 );
     public static final RegistryObject<ForgeSpawnEggItem> MINI_ZOMBIE_SPAWN_EGG = registerSpawnEgg(

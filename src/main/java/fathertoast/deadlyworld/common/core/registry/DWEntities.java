@@ -26,6 +26,9 @@ public class DWEntities {
     //    public static final RegistryObject<EntityType<Mimic>> MIMIC = register( "mimic",
     //            EntityType.Builder.of( Mimic::new, MobCategory.MONSTER )
     //                    .sized( 0.9375F, 0.9375F ).clientTrackingRange( 8 ) );
+    public static final RegistryObject<EntityType<JukeboxMimic>> JUKEBOX_MIMIC = register( "jukebox_mimic",
+            EntityType.Builder.of( JukeboxMimic::new, MobCategory.MONSTER )
+                    .sized( 1.0F, 1.625F ).clientTrackingRange( 8 ) );
     
     // Mini mobs
     public static final RegistryObject<EntityType<MiniCreeper>> MINI_CREEPER = register( "mini_creeper",
@@ -56,6 +59,7 @@ public class DWEntities {
     public static void createAttributes( EntityAttributeCreationEvent event ) {
         // Mimics
         //event.put( MIMIC.get(), Mimic.createAttributes().build() );
+        createConfigAttributes( event, JUKEBOX_MIMIC, Config.ENTITIES.MIMICS.jukeboxAttributes, JukeboxMimic.createJukeboxMimicAttributes() );
         
         // Mini mobs
         createConfigAttributes( event, MINI_CREEPER, Config.ENTITIES.MINIS.creeperAttributes, MiniCreeper.createAttributes() );

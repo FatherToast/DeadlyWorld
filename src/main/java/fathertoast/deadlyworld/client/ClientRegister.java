@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.client;
 
 import fathertoast.deadlyworld.client.renderer.block.DeadlySpawnerBlockEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.entity.*;
+import fathertoast.deadlyworld.client.renderer.entity.model.JukeboxMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
@@ -42,12 +43,14 @@ public class ClientRegister {
     
     @SubscribeEvent
     static void registerLayerDefs( EntityRenderersEvent.RegisterLayerDefinitions event ) {
+        event.registerLayerDefinition( DWModelLayers.JUKEBOX_MIMIC, JukeboxMimicModel::createBodyLayer );
     }
     
     @SubscribeEvent
     static void registerEntityRenderers( EntityRenderersEvent.RegisterRenderers event ) {
         // New mobs
         //event.registerEntityRenderer( DWEntities.MIMIC.get(), MimicRenderer::new );
+        event.registerEntityRenderer( DWEntities.JUKEBOX_MIMIC.get(), JukeboxMimicRenderer::new );
         
         // Mini mobs
         event.registerEntityRenderer( DWEntities.MINI_CREEPER.get(), MiniCreeperRenderer::new );

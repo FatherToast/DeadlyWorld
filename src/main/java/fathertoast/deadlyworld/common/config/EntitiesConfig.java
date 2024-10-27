@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 public class EntitiesConfig extends AbstractConfigFile {
     
     public final Minis MINIS;
+    public final Mimics MIMICS;
     
     /** Builds the config spec that should be used for this config. */
     EntitiesConfig( ConfigManager manager, String fileName ) {
@@ -19,6 +20,7 @@ public class EntitiesConfig extends AbstractConfigFile {
         );
         
         MINIS = new Minis( this );
+        MIMICS = new Mimics( this );
     }
     
     public static class Minis extends AbstractConfigCategory<EntitiesConfig> {
@@ -53,6 +55,34 @@ public class EntitiesConfig extends AbstractConfigFile {
             return SPEC.define( new AttributeListField( key + "_attributes", defaults,
                     "Attribute modifiers for " + name + ". If no attribute changes are defined here, " +
                             name + " will have the exact same attributes as the full-size version vanilla mob." ) );
+        }
+    }
+
+    public static class Mimics extends AbstractConfigCategory<EntitiesConfig> {
+
+        public final AttributeListField chestAttributes;
+        public final AttributeListField jukeboxAttributes;
+
+        Mimics( EntitiesConfig parent ) {
+            super( parent, "mimics",
+                    "Options to customize misc global settings." );
+
+            chestAttributes = mimicAttributes( "chest" );
+            jukeboxAttributes = mimicAttributes( "jukebox" );
+        }
+
+        private AttributeListField mimicAttributes( String key ) {
+            return mimicAttributes( key, key + " mimics" );
+        }
+
+        private AttributeListField mimicAttributes( String key, String name ) {
+            AttributeList defaults = new AttributeList(
+                    AttributeEntry.add( Attributes.MAX_HEALTH, 15.0D ),
+                    AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.0 ),
+                    AttributeEntry.add( Attributes.ATTACK_DAMAGE, 2.0 )
+            );
+            return SPEC.define( new AttributeListField( key + "_attributes", defaults,
+                    "Attribute modifiers for " + name + "." ) );
         }
     }
 }
