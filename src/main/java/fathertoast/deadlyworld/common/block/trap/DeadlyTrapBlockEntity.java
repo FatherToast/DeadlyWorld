@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.spawner;
+package fathertoast.deadlyworld.common.block.trap;
 
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;

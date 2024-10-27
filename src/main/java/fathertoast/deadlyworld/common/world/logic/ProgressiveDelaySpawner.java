@@ -10,6 +10,7 @@ import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.TrapHelper;
+import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -125,37 +126,55 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
-    public void initializeSpawner( Level level, @SuppressWarnings( "unused" ) BlockPos pos, RandomSource random ) {
+    public void initializeSpawner( SpawnerSettings spawnerSettings, BlockPos pos, RandomSource random ) {
+        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( // TODO remove all config dependencies here
+                getLevel() == null ? Config.getDefaultConfigs() : Config.getDimensionConfigs( getLevel() ) );
+        initializeSpawner( getLevel(), pos, random,
+                spawnerSettings.requiredPlayerRange().sample( random ), spawnerSettings.checkSightChance().sample( random ),
+                spawnerSettings.maxNearbyEntities().sample( random ),
+                spawnerSettings.spawnDelay().getMinValue(), spawnerSettings.spawnDelay().getMaxValue(),
+                spawnerSettings.spawnDelayProgression().sample( random ), spawnerSettings.spawnDelayRecovery().sample( random ),
+                spawnerSettings.maxSpawns().sample( random ), spawnerSettings.spawnCount().sample( random ),
+                spawnerSettings.spawnRange().sample( random ), spawnerSettings.dynamicChance().sample( random ),
+                spawnerConfig.spawnList.get() );
+    }
+    
+    public void initializeSpawner( Level level, BlockPos pos, RandomSource random ) {
         final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+        initializeSpawner( level, pos, random,
+                spawnerConfig.activationRange.get(), (float) spawnerConfig.checkSightChance.get(),
+                spawnerConfig.maxNearbyEntities.get(),
+                spawnerConfig.delay.getMin(), spawnerConfig.delay.getMax(),
+                spawnerConfig.delayProgression.get(), (float) spawnerConfig.delayRecovery.get(),
+                spawnerConfig.maxSpawns.get(), spawnerConfig.spawnCount.get(),
+                spawnerConfig.spawnRange.get(), (float) spawnerConfig.dynamicChance.get(),
+                spawnerConfig.spawnList.get() );
+    }
+    
+    public void initializeSpawner( @Nullable Level level, @SuppressWarnings( "unused" ) BlockPos pos, RandomSource random,
+                                   int activationRange, float checkSightChance, int maxNearby,
+                                   int delayMin, int delayMax, int delayProgression, float delayRecovery,
+                                   int maxSpawns, int count, int range, float dynamicChance, WeightedEntityList spawnList ) {
+        requiredPlayerRange = activationRange;
+        checkSight = roll( random, checkSightChance );
+        maxNearbyEntities = maxNearby;
         
-        // Set attributes from the config
-        requiredPlayerRange = spawnerConfig.activationRange.get();
-        checkSight = spawnerConfig.checkSight.get();
-        maxNearbyEntities = spawnerConfig.maxNearbyEntities.get();
+        minSpawnDelay = delayMin;
+        maxSpawnDelay = delayMax;
+        spawnDelayProgression = delayProgression;
+        spawnDelayRecovery = delayRecovery;
         
-        minSpawnDelay = spawnerConfig.delay.getMin();
-        maxSpawnDelay = spawnerConfig.delay.getMax();
-        spawnDelayProgression = spawnerConfig.delayProgression.get();
-        spawnDelayRecovery = (float) spawnerConfig.delayRecovery.get();
+        spawnsRemaining = maxSpawns == 0 ? -1 : maxSpawns; // 0 would have no meaning in the config, but here it means "disabled"
+        spawnCount = count;
+        spawnRange = range;
+        dynamicSpawnList = !spawnList.isDisabled() && roll( random, dynamicChance ) ? spawnList : null;
         
-        spawnCount = spawnerConfig.spawnCount.get();
-        spawnRange = spawnerConfig.spawnRange.get();
-        
-        // Initialize logic
-        spawnsRemaining = spawnerConfig.maxSpawns.get();
-        if( spawnsRemaining == 0 )
-            spawnsRemaining = -1; // 0 would have no meaning in the config, but here it means "disabled"
-        if( random.nextFloat() < spawnerConfig.dynamicChance.get() && !spawnerConfig.spawnList.get().isDisabled() ) {
-            dynamicSpawnList = spawnerConfig.spawnList.get();
-        }
-        else {
-            dynamicSpawnList = null;
-        }
-        
-        EntityType<?> toSpawn = spawnerConfig.spawnList.get().next( random );
+        EntityType<?> toSpawn = spawnList.next( random );
         setEntityId( toSpawn, level, random,
                 blockEntity == null ? BlockPos.ZERO : blockEntity.getBlockPos() );
     }
+    
+    private static boolean roll( RandomSource random, float chance ) { return chance >= 1.0F || chance > 0.0F && random.nextFloat() < chance; }
     
     /** Increments the number of mobs this is allowed to spawn, if it has limited spawns. */
     public void addSpawn() { if( spawnsRemaining >= 0 ) spawnsRemaining++; }

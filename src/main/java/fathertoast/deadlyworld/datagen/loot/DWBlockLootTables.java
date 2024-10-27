@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
-import fathertoast.deadlyworld.common.block.floortrap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;

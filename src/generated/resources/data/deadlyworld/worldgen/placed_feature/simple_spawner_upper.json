@@ -1,9 +1,9 @@
 {
-  "feature": "deadlyworld:sponge_lake",
+  "feature": "deadlyworld:simple_spawner",
   "placement": [
     {
       "type": "minecraft:rarity_filter",
-      "chance": 100
+      "chance": 1
     },
     {
       "type": "minecraft:in_square"

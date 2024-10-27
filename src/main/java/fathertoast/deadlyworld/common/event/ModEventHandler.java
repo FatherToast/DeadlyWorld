@@ -3,11 +3,13 @@ package fathertoast.deadlyworld.common.event;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWFieldProviders;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * Contains and automatically registers all needed mod events.
@@ -22,7 +24,7 @@ public final class ModEventHandler {
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
     static void setup( FMLCommonSetupEvent event ) {
-        Config.initialize();
+        //Config.initialize();
         //DWConfiguredFeatures.register();
     }
     

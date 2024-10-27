@@ -2,16 +2,21 @@ package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelWriter;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -25,13 +30,14 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
     public DeadlyFeature( Codec<FC> codec ) { super( codec ); }
     
     /** Convenience method for using safeSetBlock with a block state provider. */
-    protected void safeSetBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random, Predicate<BlockState> predicate ) {
+    protected void safeSetBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random, @Nullable Predicate<BlockState> predicate ) {
         safeSetBlock( level, pos, stateProvider.getState( random, pos ), predicate );
     }
     
-    @Override // We just override this so the parameter names aren't mush
-    protected void safeSetBlock( WorldGenLevel level, BlockPos pos, BlockState state, Predicate<BlockState> predicate ) {
-        super.safeSetBlock( level, pos, state, predicate );
+    @Override // We override this so the parameter names aren't mush, and also to allow null predicate
+    protected void safeSetBlock( WorldGenLevel level, BlockPos pos, BlockState state, @Nullable Predicate<BlockState> predicate ) {
+        if( predicate == null ) setBlock( level, pos, state );
+        else super.safeSetBlock( level, pos, state, predicate );
     }
     
     /** Convenience method for using setBlock with a block state provider. */
@@ -42,5 +48,21 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
     @Override // We override to use Block.UPDATE_CLIENTS rather than Block.UPDATE_ALL (to match safeSetBlock)
     protected void setBlock( LevelWriter level, BlockPos pos, BlockState state ) {
         level.setBlock( pos, state, Block.UPDATE_CLIENTS );
+    }
+    
+    /** Convenience method for placing a regular chest with loot. */
+    protected void placeChest( WorldGenLevel level, BlockPos pos, RandomSource random, ResourceLocation lootTable, @Nullable Predicate<BlockState> predicate ) {
+        placeChest( level, pos, Blocks.CHEST, random, lootTable, predicate );
+    }
+    
+    /** Convenience method for placing a trapped chest with loot. */
+    protected void placeTrappedChest( WorldGenLevel level, BlockPos pos, RandomSource random, ResourceLocation lootTable, @Nullable Predicate<BlockState> predicate ) {
+        placeChest( level, pos, Blocks.TRAPPED_CHEST, random, lootTable, predicate );
+    }
+    
+    /** Convenience method for placing a specific type of chest with loot. */
+    protected void placeChest( WorldGenLevel level, BlockPos pos, Block chest, RandomSource random, ResourceLocation lootTable, @Nullable Predicate<BlockState> predicate ) {
+        safeSetBlock( level, pos, StructurePiece.reorient( level, pos, chest.defaultBlockState() ), predicate );
+        RandomizableContainerBlockEntity.setLootTable( level, random, pos, lootTable );
     }
 }

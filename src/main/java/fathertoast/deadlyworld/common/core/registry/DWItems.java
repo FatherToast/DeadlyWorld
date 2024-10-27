@@ -13,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-public class DWItems {
+public final class DWItems {
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create( ForgeRegistries.ITEMS, DeadlyWorld.MOD_ID );
     
     //public static final RegistryObject<DeviceBlueprintItem> DEVICE_BLUEPRINT = register( "device_blueprint", DeviceBlueprintItem::new );

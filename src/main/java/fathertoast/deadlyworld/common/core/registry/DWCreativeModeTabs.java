@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-public class DWCreativeModeTabs {
+public final class DWCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create( Registries.CREATIVE_MODE_TAB, DeadlyWorld.MOD_ID );
     
     public static final CreativeTabRegObj MOD_TAB = register( "all", () -> CreativeModeTab.builder()

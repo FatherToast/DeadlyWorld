@@ -18,7 +18,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 
-public class DWEntities {
+public final class DWEntities {
     
     public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create( ForgeRegistries.ENTITY_TYPES, DeadlyWorld.MOD_ID );
     

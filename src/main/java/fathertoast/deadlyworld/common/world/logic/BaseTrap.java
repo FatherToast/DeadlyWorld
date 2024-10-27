@@ -96,12 +96,13 @@ public abstract class BaseTrap {
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
-    public void initializeTrap( Level level, BlockPos pos, RandomSource random ) {//TODO
-        //        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {//TODO
+        //        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig(
+        //                level == null ? Config.getDefaultConfigs() : Config.getDimensionConfigs( level ) );
         //
         //        // Set attributes from the config
         //        activationRange = spawnerConfig.activationRange.get();
-        //        checkSight = spawnerConfig.checkSight.get();
+        //        checkSightChance = spawnerConfig.checkSightChance.get();
         //        maxNearbyEntities = spawnerConfig.maxNearbyEntities.get();
         //
         //        minSpawnDelay = spawnerConfig.delay.getMin();
