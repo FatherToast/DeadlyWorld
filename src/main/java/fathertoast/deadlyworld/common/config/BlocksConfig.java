@@ -6,7 +6,7 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.deadlyworld.common.block.trap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -27,34 +27,30 @@ public class BlocksConfig extends AbstractConfigFile {
         
         // Spawners
         for( SpawnerType type : SpawnerType.values() ) {
-            LOOKUP.put( toKey( SpawnerType.CATEGORY, type.toString() ), new BlockCategory( this, SpawnerType.CATEGORY, type.toString(),
+            LOOKUP.put( toKey( SpawnerType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, SpawnerType.BLOCK_CATEGORY, type.toString(),
                     5.0, 1200.0, 2 ) );
         }
         
         // Floor Traps
-        for( FloorTrapType type : FloorTrapType.values() ) {
-            LOOKUP.put( toKey( FloorTrapType.CATEGORY, type.toString() ), new BlockCategory( this, FloorTrapType.CATEGORY, type.toString(),
+        for( TrapType type : TrapType.values() ) {
+            LOOKUP.put( toKey( TrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, TrapType.BLOCK_CATEGORY, type.toString(),
                     5.0, 1200.0, 1 ) );
         }
         
         // Tower Dispensers
         for( TowerType type : TowerType.values() ) {
-            LOOKUP.put( toKey( TowerType.CATEGORY, type.toString() ), new BlockCategory( this, TowerType.CATEGORY, type.toString(),
+            LOOKUP.put( toKey( TowerType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, TowerType.BLOCK_CATEGORY, type.toString(),
                     5.0, 1200.0, 1 ) );
         }
         
         //TODO add storm drain; will possibly include in a "water traps" category
     }
     
-    public BlockCategory get( SpawnerType type ) { return get( SpawnerType.CATEGORY, type.toString() ); }
+    public BlockCategory get( SpawnerType type ) { return get( SpawnerType.BLOCK_CATEGORY, type.toString() ); }
     
-    public BlockCategory get( FloorTrapType type ) {
-        return get( FloorTrapType.CATEGORY, type.toString() );
-    }
+    public BlockCategory get( TrapType type ) { return get( TrapType.BLOCK_CATEGORY, type.toString() ); }
     
-    public BlockCategory get( TowerType type ) {
-        return get( TowerType.CATEGORY, type.toString() );
-    }
+    public BlockCategory get( TowerType type ) { return get( TowerType.BLOCK_CATEGORY, type.toString() ); }
     
     private BlockCategory get( String category, String type ) {
         BlocksConfig.BlockCategory blockCategory = LOOKUP.get( toKey( category, type ) );

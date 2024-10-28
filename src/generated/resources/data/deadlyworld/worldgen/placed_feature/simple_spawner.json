@@ -5,7 +5,7 @@
       "type": "minecraft:count",
       "count": {
         "type": "deadlyworld:config_count_int",
-        "count": "deadlyworld:feature_spawners:simple_spawner_features.placements"
+        "count": "deadlyworld:worldgen/minecraft/overworld/spawners:simple_spawners.placements"
       }
     },
     {
@@ -15,8 +15,8 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "deadlyworld:config_uniform_height",
-        "max_inclusive": "deadlyworld:feature_spawners:simple_spawner_features.height.max",
-        "min_inclusive": "deadlyworld:feature_spawners:simple_spawner_features.height.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/spawners:simple_spawners.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/spawners:simple_spawners.height.min"
       }
     },
     {

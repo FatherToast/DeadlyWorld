@@ -5,44 +5,44 @@
     "spawner": {
       "activation_sight_check": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.sight_check_chance"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.sight_check_chance"
       },
       "delay": {
         "type": "deadlyworld:config_uniform_int",
-        "max_inclusive": "deadlyworld:feature_spawners:stream_spawner_features.delay.max",
-        "min_inclusive": "deadlyworld:feature_spawners:stream_spawner_features.delay.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.delay.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.delay.min"
       },
       "delay_progression": {
         "type": "deadlyworld:config_constant_int",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.delay.progression"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.delay.progression"
       },
       "delay_recovery_rate": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.delay.recovery_rate"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.delay.recovery_rate"
       },
       "dynamic_chance": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.dynamic_chance"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.dynamic_chance"
       },
       "max_nearby_entities": {
         "type": "deadlyworld:config_constant_int",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.max_nearby_entities"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.max_nearby_entities"
       },
       "max_spawns": {
         "type": "deadlyworld:config_constant_int",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.max_spawns"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.max_spawns"
       },
       "required_player_range": {
         "type": "deadlyworld:config_constant_int",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.required_player_range"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.required_player_range"
       },
       "spawn_count": {
         "type": "deadlyworld:config_constant_int",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.spawn_count"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.spawn_count"
       },
       "spawn_range": {
         "type": "deadlyworld:config_constant_int",
-        "value": "deadlyworld:feature_spawners:stream_spawner_features.spawn_range"
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:stream_spawners.spawn_range"
       }
     },
     "spawner_provider": {

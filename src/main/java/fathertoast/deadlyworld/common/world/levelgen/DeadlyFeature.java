@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
-import fathertoast.deadlyworld.common.config.FeatureConfig;
+import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -40,7 +40,7 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
         
         final BlockState state = Blocks.GLASS.defaultBlockState();
         final BlockPos.MutableBlockPos cursor = pos.mutable().move( 0, 5, 0 );
-        final int heightLimit = level.getMaxBuildHeight() - 1;
+        final int heightLimit = level.getMaxBuildHeight();
         while( cursor.getY() < heightLimit ) {
             level.setBlock( cursor, state, Block.UPDATE_CLIENTS );
             cursor.move( 0, 1, 0 );

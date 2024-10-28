@@ -4,8 +4,8 @@ import fathertoast.crust.api.lib.LevelEventHelper;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.SpawnerConfig;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -129,8 +129,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
     public void initializeSpawner( WorldGenLevel level, BlockPos pos, RandomSource random, SpawnerSettings spawnerSettings ) {
-        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig(
-                getLevel() == null ? Config.getDefaultConfigs() : Config.getDimensionConfigs( getLevel() ) );
+        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, spawnerConfig );
         initializeSpawner( getLevel(), pos, random,
                 spawnerSettings.requiredPlayerRange().sample( random ), spawnerSettings.checkSightChance().sample( random ),

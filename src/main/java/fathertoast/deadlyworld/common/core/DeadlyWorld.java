@@ -24,11 +24,11 @@ public class DeadlyWorld {
      * (KEY: - = complete in current version, o = incomplete feature from previous version,
      *       + = incomplete new feature, ? = feature to consider adding)
      *  o general
-     *      o dimension-based configs
+     *      - dimension-based configs
      *      o biome-based configs
-     *      + F3+B bounding box renderer for tile entities
+     *      - F3+B bounding box renderer for tile entities
      *  o blocks
-     *      o configurable physical properties
+     *      - configurable physical properties
      *      o procedurally generated silverfish blocks
      *      - deadly spawner
      *      - mini spawner
@@ -76,21 +76,21 @@ public class DeadlyWorld {
      *  o chest world gen
      *      o default
      *      o valuable
-     *      o trapped (default disabled)
+     *      ? trapped (default disabled)
      *      o tnt floor trap
      *      o infested
      *      o surprise
      *      o mimic
      *      + cave-in (via surprise or combo w/ ceiling trap)
      *      ? random cake from cake item tag
-     *  o spawner world gen
-     *      o default
-     *      o stream
-     *      o swarm
-     *      o brutal
-     *      o silverfish nest
-     *      o mimic
-     *      o mini
+     *  - spawner world gen
+     *      - default
+     *      - stream
+     *      - swarm
+     *      - brutal
+     *      - silverfish nest
+     *      - mini
+     *      + mimic
      *      o dungeon-only version
      *      ? hanging from chain version (in large caves or perhaps elsewhere with high ceilings)
      *  o tower world gen

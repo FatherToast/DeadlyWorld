@@ -45,12 +45,6 @@ public class DeadlyTrapBlock extends BaseEntityBlock {
         };
     }
     
-    public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random ) {
-        if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
-            trapBlockEntity.getTrapLogic().initializeTrap( trapBlockEntity.getLevel(), pos, random );
-        }
-    }
-    
     public void initializeTrap( ServerLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
             trapBlockEntity.getTrapLogic().initializeTrap( level, pos, random );
@@ -79,32 +73,4 @@ public class DeadlyTrapBlock extends BaseEntityBlock {
     
     @Override
     public RenderShape getRenderShape( BlockState state ) { return RenderShape.MODEL; }
-    
-    @Override
-    public void appendHoverText( ItemStack itemStack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag mode ) {
-        super.appendHoverText( itemStack, level, tooltip, mode );
-        
-        Optional<Component> entityDisplayName = getSpawnEntityDisplayName( itemStack );
-        if( entityDisplayName.isPresent() ) {
-            tooltip.add( entityDisplayName.get() );
-        }
-        else {
-            tooltip.add( CommonComponents.EMPTY );
-            tooltip.add( Component.translatable( "block.minecraft.spawner.desc1" ).withStyle( ChatFormatting.GRAY ) );
-            tooltip.add( CommonComponents.space().append( Component.translatable( "block.minecraft.spawner.desc2" ).withStyle( ChatFormatting.BLUE ) ) );
-        }
-    }
-    
-    private Optional<Component> getSpawnEntityDisplayName( ItemStack itemStack ) {
-        CompoundTag tag = BlockItem.getBlockEntityData( itemStack );
-        if( tag != null && NBTHelper.containsCompound( tag, BaseSpawner.SPAWN_DATA_TAG ) ) {
-            ResourceLocation entityId = ResourceLocation.tryParse( tag.getCompound( BaseSpawner.SPAWN_DATA_TAG )
-                    .getCompound( SpawnData.ENTITY_TAG ).getString( Entity.ID_TAG ) );
-            if( entityId != null ) {
-                return ForgeRegistries.ENTITY_TYPES.getDelegate( entityId ).map( ( entityType ) ->
-                        Component.translatable( entityType.get().getDescriptionId() ).withStyle( ChatFormatting.GRAY ) );
-            }
-        }
-        return Optional.empty();
-    }
 }

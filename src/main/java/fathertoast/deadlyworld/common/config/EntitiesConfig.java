@@ -18,6 +18,9 @@ public class EntitiesConfig extends AbstractConfigFile {
                 "This config contains options for miscellaneous features in the mod."
         );
         
+        SPEC.newLine();
+        SPEC.describeAttributeList();
+        
         MINIS = new Minis( this );
     }
     

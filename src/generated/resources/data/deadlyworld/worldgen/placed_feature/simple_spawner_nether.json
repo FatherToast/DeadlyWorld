@@ -1,11 +1,11 @@
 {
-  "feature": "deadlyworld:brutal_spawner",
+  "feature": "deadlyworld:simple_spawner_nether",
   "placement": [
     {
       "type": "minecraft:count",
       "count": {
         "type": "deadlyworld:config_count_int",
-        "count": "deadlyworld:worldgen/minecraft/overworld/spawners:brutal_spawners.placements"
+        "count": "deadlyworld:worldgen/minecraft/the_nether/spawners:simple_spawners.placements"
       }
     },
     {
@@ -15,8 +15,8 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "deadlyworld:config_uniform_height",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/spawners:brutal_spawners.height.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/spawners:brutal_spawners.height.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/spawners:simple_spawners.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/spawners:simple_spawners.height.min"
       }
     },
     {

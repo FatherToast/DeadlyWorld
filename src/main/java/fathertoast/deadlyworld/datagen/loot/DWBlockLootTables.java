@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
-import fathertoast.deadlyworld.common.block.trap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
@@ -43,7 +43,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     private LootTableBuilder buildSpawnerLoot( SpawnerType type ) {
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) {
-            case DEFAULT, MINI, DUNGEON -> { } // No extras
+            case SIMPLE, MINI, DUNGEON -> { } // No extras
             case STREAM -> loot.addPool( buildExplorationLootPool() );
             case SWARM -> loot.addPool( buildExplosivesLootPool() );
             case BRUTAL -> loot.addPool( buildValuableLootPool() );
@@ -54,7 +54,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         return loot.addPool( buildBasicSpawnerLootPool() );
     }
     
-    private LootTableBuilder buildFloorTrapLoot( FloorTrapType type ) {
+    private LootTableBuilder buildFloorTrapLoot( TrapType type ) {
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) { //TODO
             case TNT -> { }
