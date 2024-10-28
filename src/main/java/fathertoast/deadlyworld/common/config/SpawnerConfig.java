@@ -48,22 +48,22 @@ public class SpawnerConfig extends FeatureConfig {
                 "    generated and can then be overwritten for individual spawners by nbt editing."
         );
         
-        LONE = new SpawnerTypeCategory( this, SpawnerType.DEFAULT, 0.16, 12, 52, 0.3,
+        LONE = new SpawnerTypeCategory( this, SpawnerType.DEFAULT, 0.8, -54, 54, 0.3,
                 16, false, 200, 800, 40, 4, 4, 0.1 );
         
-        STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.04, 12, 42, 1.0,
+        STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.24, -54, 34, 1.0,
                 16, true, 0, 400, 10, 1, 2, 0.95 );
         
-        SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.04, 12, 32, 1.0,
+        SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.16, -54, 14, 1.0,
                 20, true, 400, 2400, 100, 12, 8, 0.05 );
         
-        BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.04, 12, 32, 1.0,
+        BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.08, -54, 0, 1.0,
                 16, true, 200, 800, 100, 2, 3, 0.05 );
         
-        NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.16, 12, 62, 0.3,
+        NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.72, -54, 54, 0.3,
                 16, false, 100, 400, 20, 6, 6, 0.0 );
         
-        MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.01, 12, 52, 0.3,
+        MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.08, -54, 54, 0.3,
                 16, false, 100, 400, 20, 6, 4, 0.1 );
         
         DUNGEON = new SubfeatureSpawnerCategory( this, SpawnerType.DUNGEON,
@@ -121,48 +121,58 @@ public class SpawnerConfig extends FeatureConfig {
             }
             
             activationRange = SPEC.define( new IntField( "required_player_range", activationRng, 0, Short.MAX_VALUE,
-                    "The spawner is active as long as a player is within this distance (spherical distance)." ) );
+                    "The spawner is active as long as a player is within this distance (spherical distance).",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             checkSightChance = SPEC.define( new DoubleField( "sight_check_chance", sightCheck ? 1.0 : 0.0, DoubleField.Range.PERCENT,
                     "The chance for a " + FEATURE_TYPE_NAME + " to generate as requiring a sight check.",
                     "When the sight check is enabled, " + FEATURE_TYPE_NAME + " will only spawn when they have " +
                             "direct line-of-sight to a player within activation range. The spawner's delay will continue to " +
-                            "tick down, but it will wait to actually spawn until it has line-of-sight." ) );
+                            "tick down, but it will wait to actually spawn until it has line-of-sight.",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             maxNearbyEntities = SPEC.define( new IntField( "max_nearby_entities", spawnCnt * 2, 0, Short.MAX_VALUE,
                     "Will not spawn if this many or more similar entities are in close proximity. " +
                             "Specifically, it checks a cube that extends out by the spawn range in all six directions. " +
                             "Set this to 0 to allow spawns regardless of nearby entities.",
-                    "For reference, vanilla spawners have a max of 6 nearby entities." ) );
+                    "For reference, vanilla spawners have a max of 6 nearby entities.",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             
             SPEC.newLine();
             
             delay = new IntField.RandomRange(
                     delayMin = SPEC.define( new IntField( "delay.min", minDelay, 0, Short.MAX_VALUE,
-                            "The minimum and maximum (inclusive) delay between spawn batches, in ticks. (20 ticks = 1 second)" ) ),
+                            "The minimum and maximum (inclusive) delay between spawn batches, in ticks. (20 ticks = 1 second)",
+                            "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) ),
                     delayMax = SPEC.define( new IntField( "delay.max", maxDelay, 0, Short.MAX_VALUE ) )
             );
             delayProgression = SPEC.define( new IntField( "delay.progression", delayPrgr, 0, Short.MAX_VALUE,
                     "Each spawn batch increases the spawner's delay buildup by this many ticks (" + ConfigUtil.PLUS_OR_MINUS +
                             "10%). Set this to 0 to revert to the vanilla spawner behavior (simple random between min and max delays).",
-                    "See above for a more in-depth description of progressive spawn delay." ) );
+                    "See above for a more in-depth description of progressive spawn delay.",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             delayRecovery = SPEC.define( new DoubleField( "delay.recovery_rate", delayPrgr * 0.0025, DoubleField.Range.NON_NEGATIVE,
                     "The rate at which the spawn delay buildup on spawners recovers while no players are within range.",
-                    "Inactive spawners' delay are reduced by this value each tick (20 times per second)." ) );
+                    "Inactive spawners' delay are reduced by this value each tick (20 times per second).",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             
             SPEC.newLine();
             
             maxSpawns = SPEC.define( new IntField( "max_spawns", 0, 0, Short.MAX_VALUE,
                     "The total number of mobs that can be spawned by this type of spawner. Spawners permanently " +
-                            "deactivate when they run out of spawns. Set this to 0 for unlimited spawns (the normal behavior)." ) );
+                            "deactivate when they run out of spawns. Set this to 0 for unlimited spawns (the normal behavior).",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             spawnCount = SPEC.define( new IntField( "spawn_count", spawnCnt, 0, Short.MAX_VALUE,
-                    "The number of mobs to try spawning with each spawn batch. May spawn fewer depending on nearby obstructions." ) );
+                    "The number of mobs to try spawning with each spawn batch. May spawn fewer depending on nearby obstructions.",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             spawnRange = SPEC.define( new IntField( "spawn_range", spawnRng, 0, Short.MAX_VALUE,
-                    "The maximum horizontal range to spawn mobs in." ) );
+                    "The maximum horizontal range to spawn mobs in.",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             
             SPEC.newLine();
             
             dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
                     "The chance for a " + FEATURE_TYPE_NAME + " to generate as 'dynamicChance'.",
-                    "Dynamic spawners pick a new mob to spawn after each spawn." ) );
+                    "Dynamic spawners pick a new mob to spawn after each spawn.",
+                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
             spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( parent ),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + "s. One of these is chosen",
                     "at random when the spawner is generated. Spawners that are generated as 'dynamicChance' will pick again",

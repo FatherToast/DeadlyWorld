@@ -36,16 +36,16 @@ import net.minecraftforge.fml.common.Mod;
  */
 @Mod.EventBusSubscriber( modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE )
 public final class GameEventHandler {
-    /**
-     * Called after ServerAboutToStartEvent and before ServerStartedEvent.
-     * This event allows for customizations of the server.
-     *
-     * @param event The event data.
-     */
-    @SubscribeEvent( priority = EventPriority.NORMAL )
-    static void onServerStarting( ServerStartingEvent event ) {
-        Config.initializeDynamic( event.getServer() );
-    }
+    //    /**
+    //     * Called after ServerAboutToStartEvent and before ServerStartedEvent.
+    //     * This event allows for customizations of the server.
+    //     *
+    //     * @param event The event data.
+    //     */
+    //    @SubscribeEvent( priority = EventPriority.NORMAL )
+    //    static void onServerStarting( ServerStartingEvent event ) {
+    //        Config.initializeDynamic( event.getServer() );
+    //    }
     
     /**
      * Called during LivingEntity#actuallyHurt after all damage calculations, right before damage is applied.

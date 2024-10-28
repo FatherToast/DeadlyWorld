@@ -1,8 +1,10 @@
 {
   "values": [
-    "deadlyworld:simple_spawner_upper",
-    "deadlyworld:stream_spawner_upper",
-    "deadlyworld:swarm_spawner_upper",
-    "deadlyworld:brutal_spawner_upper"
+    "deadlyworld:simple_spawner",
+    "deadlyworld:stream_spawner",
+    "deadlyworld:swarm_spawner",
+    "deadlyworld:brutal_spawner",
+    "deadlyworld:mini_spawner",
+    "deadlyworld:silverfish_nest"
   ]
 }

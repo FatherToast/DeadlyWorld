@@ -21,8 +21,8 @@ public abstract class FeatureConfig extends AbstractConfigFile {
     
     FeatureConfig( ConfigManager manager, DimensionConfigGroup dimConfigs, String name ) {
         super( manager, "feature_" + ConfigUtil.noSpaces( name ) + "s",
-                "This config contains options for all " + name + " features specific to the",
-                dimConfigs.longDimensionName() + "."
+                "This config contains options for all " + name + " features specific to the " +
+                        dimConfigs.longDimensionName() + "."
         );
         DIMENSION_CONFIGS = dimConfigs;
         FEATURE_NAME = name + " feature";
@@ -37,6 +37,8 @@ public abstract class FeatureConfig extends AbstractConfigFile {
         public final DoubleField countPerChunk;
         
         public final IntField.RandomRange heights;
+        public final IntField heightMin;
+        public final IntField heightMax;
         
         /**
          * Creates a new feature or subfeature category.
@@ -46,33 +48,37 @@ public abstract class FeatureConfig extends AbstractConfigFile {
         FeatureTypeCategory( FeatureConfig parent, String name,
                              double placements, int minHeight, int maxHeight ) {
             super( parent, ConfigUtil.noSpaces( name + "_" + parent.FEATURE_NAME ) + "s",
-                    "Options to customize " + name + " " + parent.FEATURE_NAME + "s specific to the",
-                    parent.DIMENSION_CONFIGS.longDimensionName() + "." );
+                    "Options to customize " + name + " " + parent.FEATURE_NAME + "s specific to the " +
+                            parent.DIMENSION_CONFIGS.longDimensionName() + "." );
             FEATURE_TYPE_NAME = name + " " + parent.FEATURE_NAME;
             
             if( isSubfeature() ) {
                 debugMarker = null;
                 countPerChunk = null;
                 heights = null;
+                heightMin = null;
+                heightMax = null;
             }
             else {
                 debugMarker = SPEC.define( new BooleanField( "testing_markers", false,
-                        "When set to true, places a 1x1 column of glass to the height limit from a few blocks above each",
-                        "generated " + FEATURE_TYPE_NAME + ". This is game-breaking and laggy. Also prints a message to the console.",
+                        "When set to true, places a 1x1 column of glass to the height limit from a few blocks above each " +
+                                "generated " + FEATURE_TYPE_NAME + ". This is game-breaking and laggy. Also prints a message to the console.",
                         "Consider using a tool to strip away all stone/dirt/etc. or xray after world gen for more intensive testing." ) );
                 
                 SPEC.newLine();
                 
                 countPerChunk = SPEC.define( new DoubleField( "placements", placements, DoubleField.Range.NON_NEGATIVE,
-                        "The number of placement attempts per chunk (16x16 blocks) for " + FEATURE_TYPE_NAME,
-                        "A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt)." ) );
+                        "The number of placement attempts per chunk (16x16 blocks) for " + FEATURE_TYPE_NAME +
+                                "s. A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt).",
+                        "This setting can be overridden for world gen by 'placed_feature' files in data packs." ) );
                 
                 SPEC.newLine();
                 
                 heights = new IntField.RandomRange(
-                        SPEC.define( new IntField( "height.min", minHeight, IntField.Range.NON_NEGATIVE,
-                                "The minimum and maximum (inclusive) heights/y-values " + FEATURE_TYPE_NAME + "s can generate at." ) ),
-                        SPEC.define( new IntField( "height.max", maxHeight, IntField.Range.NON_NEGATIVE ) )
+                        heightMin = SPEC.define( new IntField( "height.min", minHeight, IntField.Range.ANY,
+                                "The minimum and maximum (inclusive) heights/y-values " + FEATURE_TYPE_NAME + "s can generate at.",
+                                "This setting can be overridden for world gen by 'placed_feature' files in data packs." ) ),
+                        heightMax = SPEC.define( new IntField( "height.max", maxHeight, IntField.Range.ANY ) )
                 );
             }
         }

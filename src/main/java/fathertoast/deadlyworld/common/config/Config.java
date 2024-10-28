@@ -2,7 +2,6 @@ package fathertoast.deadlyworld.common.config;
 
 import fathertoast.crust.api.config.common.ConfigManager;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import java.util.HashMap;
  * configurable value.
  */
 public class Config {
-    
     private static final ConfigManager MANAGER = ConfigManager.create( "DeadlyWorld" );
     
     public static final GlobalConfig GLOBAL = new GlobalConfig( MANAGER, "_global" );
@@ -61,59 +59,19 @@ public class Config {
             throw new IllegalStateException( "Attempted to access dimension configs before any have been loaded." );
     }
     
-    /** Performs initial loading of certain configs in this mod. Called by the mod's constructor. */
-    public static void preInitialize() {
+    /** Performs loading of configs in this mod. Called by the mod's constructor. */
+    public static void initialize() {
         MANAGER.freezeFileWatcher = true;
         
         GLOBAL.SPEC.initialize();
         BLOCKS.SPEC.initialize();
         ENTITIES.SPEC.initialize();
         
-        // Load default configs before the
-        // others to prevent our world gen features
-        // from exploding the universe with anger
         DEFAULT_CONFIGS = new DimensionConfigGroup( MANAGER, Level.OVERWORLD ); // For now, default = overworld = the only configs
         DEFAULT_CONFIGS.initialize();
-        DIMENSIONS = new HashMap<>();
+        DIMENSIONS = new HashMap<>(); // TODO load a config group for each dimension in a list field in GLOBAL
         DIMENSIONS.put( Level.OVERWORLD, DEFAULT_CONFIGS );
         
         MANAGER.freezeFileWatcher = false;
-    }
-    
-    //    /** Performs initial loading of certain configs in this mod. Called during FMLCommonSetupEvent. */
-    //    public static void initialize() {
-    //        MANAGER.freezeFileWatcher = true;
-    //
-    //        MANAGER.freezeFileWatcher = false;
-    //    }
-    
-    /** Performs loading of configs in this mod that depend on dynamicChance registries. Called during ServerStartingEvent. */
-    public static void initializeDynamic( MinecraftServer server ) {
-        //TODO Actually register dimensions dynamically?
-        
-        //        final List<RegistryKey<World>> temp = new ArrayList<>( server.levelKeys() );
-        //
-        //        // Keep track of opened files so we can close any we don't need
-        //        final HashMap<RegistryKey<World>, DimensionConfigGroup> previousDims = DIMENSIONS;
-        //
-        //        // Load dimension configs
-        //        DIMENSIONS = new HashMap<>();
-        //
-        //        for( RegistryKey<World> dimension : temp ) {
-        //            // Use previously opened config if available and remove to prevent it from being closed
-        //            final DimensionConfigGroup dimConfigs = previousDims != null && previousDims.containsKey( dimension ) ?
-        //                    previousDims.remove( dimension ) :
-        //                    new DimensionConfigGroup( CONFIG_DIR, dimension );
-        //
-        //            // Load it and store the reference
-        //            dimConfigs.initialize();
-        //            DIMENSIONS.put( dimension, dimConfigs );
-        //        }
-        //        if( OVERWORLD_CONFIGS == null ) { OVERWORLD_CONFIGS = DIMENSIONS.get( World.OVERWORLD ); }
-        //
-        //        // Close any configs no longer being used
-        //        if( previousDims != null && !previousDims.isEmpty() ) {
-        //            for( DimensionConfigGroup dimConfigs : previousDims.values() ) { dimConfigs.destroy(); }
-        //        }
     }
 }
