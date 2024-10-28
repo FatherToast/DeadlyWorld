@@ -54,7 +54,7 @@ public record SpawnerSettings(
     
     public void initializeSpawner( WorldGenLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
-            spawnerBlockEntity.getSpawnerLogic().initializeSpawner( this, pos, random );
+            spawnerBlockEntity.getSpawnerLogic().initializeSpawner( level, pos, random, this );
         }
     }
 }

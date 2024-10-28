@@ -1,6 +1,8 @@
 package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
+import fathertoast.deadlyworld.common.config.FeatureConfig;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -26,6 +28,24 @@ import java.util.function.Predicate;
  */
 public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Feature<FC> {
     protected static final Predicate<BlockState> IS_AIR = BlockBehaviour.BlockStateBase::isAir;
+    
+    /** Generates a debug marker above the position if it is enabled in the config. */
+    public static void debugMarkerIfEnabled( WorldGenLevel level, BlockPos pos, FeatureConfig.FeatureTypeCategory config ) {
+        if( config.debugMarker != null && config.debugMarker.get() ) debugMarker( level, pos );
+    }
+    
+    /** Generates a debug marker above the position. */
+    public static void debugMarker( WorldGenLevel level, BlockPos pos ) {
+        DeadlyWorld.LOG.info( "Generating marker at {}", pos );
+        
+        final BlockState state = Blocks.GLASS.defaultBlockState();
+        final BlockPos.MutableBlockPos cursor = pos.mutable().move( 0, 5, 0 );
+        final int heightLimit = level.getMaxBuildHeight() - 1;
+        while( cursor.getY() < heightLimit ) {
+            level.setBlock( cursor, state, Block.UPDATE_CLIENTS );
+            cursor.move( 0, 1, 0 );
+        }
+    }
     
     public DeadlyFeature( Codec<FC> codec ) { super( codec ); }
     

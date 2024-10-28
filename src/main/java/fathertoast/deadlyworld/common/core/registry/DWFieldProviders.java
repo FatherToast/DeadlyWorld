@@ -26,6 +26,8 @@ public class DWFieldProviders {
             "config_constant_int", ConfigConstantIntProvider.CODEC );
     public static final RegistryObject<IntProviderType<ConfigUniformIntProvider>> INT_UNIFORM = registerIntProvider(
             "config_uniform_int", ConfigUniformIntProvider.CODEC );
+    public static final RegistryObject<IntProviderType<ConfigCountProvider>> INT_COUNT = registerIntProvider(
+            "config_count_int", ConfigCountProvider.CODEC );
     
     public static final RegistryObject<FloatProviderType<ConfigConstantFloatProvider>> FLOAT_CONSTANT = registerFloatProvider(
             "config_constant_float", ConfigConstantFloatProvider.CODEC );

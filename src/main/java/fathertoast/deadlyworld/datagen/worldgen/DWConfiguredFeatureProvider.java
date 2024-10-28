@@ -6,6 +6,7 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.LoneSpawnerFeature;
+import fathertoast.deadlyworld.common.world.levelgen.SilverfishNestFeature;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
@@ -25,6 +26,8 @@ public class DWConfiguredFeatureProvider {
     static final ResourceKey<ConfiguredFeature<?, ?>> STREAM_SPAWNER = key( "stream_spawner" );
     static final ResourceKey<ConfiguredFeature<?, ?>> SWARM_SPAWNER = key( "swarm_spawner" );
     static final ResourceKey<ConfiguredFeature<?, ?>> BRUTAL_SPAWNER = key( "brutal_spawner" );
+    static final ResourceKey<ConfiguredFeature<?, ?>> MINI_SPAWNER = key( "mini_spawner" );
+    static final ResourceKey<ConfiguredFeature<?, ?>> SILVERFISH_NEST = key( "silverfish_nest" );
     
     /** Called by registry set builder to generate our configured features. */
     public static void bootstrap( BootstapContext<ConfiguredFeature<?, ?>> context ) {
@@ -32,6 +35,10 @@ public class DWConfiguredFeatureProvider {
         registerLoneSpawner( context, STREAM_SPAWNER, SpawnerType.STREAM, block( Blocks.MUD_BRICKS ), false );
         registerLoneSpawner( context, SWARM_SPAWNER, SpawnerType.SWARM, block( Blocks.CHISELED_SANDSTONE ), false );
         registerLoneSpawner( context, BRUTAL_SPAWNER, SpawnerType.BRUTAL, block( Blocks.CHISELED_STONE_BRICKS ), true );
+        registerLoneSpawner( context, MINI_SPAWNER, SpawnerType.MINI, block( Blocks.AIR ), false );
+        register( context, SILVERFISH_NEST, new ConfiguredFeature<>( DWFeatures.SILVERFISH_NEST.get(), new SilverfishNestFeature.Configuration(
+                block( DWBlocks.spawner( SpawnerType.NEST ) ), block( Blocks.INFESTED_COBBLESTONE ),
+                SpawnerSettings.of( SpawnerType.NEST.getFeatureConfig( Config.getDefaultConfigs() ) ), BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
     
     /** Convenience method for making a simple block state provider. */

@@ -183,7 +183,7 @@ public class DeadlyWorld {
         //        DWSounds.REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
         
-        Config.preInitialize();
+        Config.initialize();
         
         DWFieldProviders.register( eventBus );
         DWFeatures.REGISTRY.register( eventBus );

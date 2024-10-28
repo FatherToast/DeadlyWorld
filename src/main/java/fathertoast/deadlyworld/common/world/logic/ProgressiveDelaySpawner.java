@@ -10,6 +10,7 @@ import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.TrapHelper;
+import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.SpawnData;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -126,9 +128,10 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
-    public void initializeSpawner( SpawnerSettings spawnerSettings, BlockPos pos, RandomSource random ) {
-        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( // TODO remove all config dependencies here
+    public void initializeSpawner( WorldGenLevel level, BlockPos pos, RandomSource random, SpawnerSettings spawnerSettings ) {
+        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig(
                 getLevel() == null ? Config.getDefaultConfigs() : Config.getDimensionConfigs( getLevel() ) );
+        DeadlyFeature.debugMarkerIfEnabled( level, pos, spawnerConfig );
         initializeSpawner( getLevel(), pos, random,
                 spawnerSettings.requiredPlayerRange().sample( random ), spawnerSettings.checkSightChance().sample( random ),
                 spawnerSettings.maxNearbyEntities().sample( random ),
@@ -136,7 +139,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
                 spawnerSettings.spawnDelayProgression().sample( random ), spawnerSettings.spawnDelayRecovery().sample( random ),
                 spawnerSettings.maxSpawns().sample( random ), spawnerSettings.spawnCount().sample( random ),
                 spawnerSettings.spawnRange().sample( random ), spawnerSettings.dynamicChance().sample( random ),
-                spawnerConfig.spawnList.get() );
+                spawnerConfig.spawnList.get() ); // TODO replace with data driven value
     }
     
     public void initializeSpawner( Level level, BlockPos pos, RandomSource random ) {
