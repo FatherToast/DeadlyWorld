@@ -1,3 +1,10 @@
 {
-  "values": []
+  "values": [
+    "deadlyworld:simple_spawner_nether",
+    "deadlyworld:stream_spawner_nether",
+    "deadlyworld:swarm_spawner_nether",
+    "deadlyworld:brutal_spawner_nether",
+    "deadlyworld:mini_spawner_nether",
+    "deadlyworld:silverfish_nest_nether"
+  ]
 }

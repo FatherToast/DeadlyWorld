@@ -1,0 +1,142 @@
+package fathertoast.deadlyworld.common.config.dimension;
+
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.AbstractConfigFile;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.ConfigUtil;
+import fathertoast.crust.api.config.common.field.BooleanField;
+import fathertoast.crust.api.config.common.field.DoubleField;
+import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
+import net.minecraft.world.level.Level;
+
+import static fathertoast.deadlyworld.common.util.References.*;
+
+/**
+ * A config file for one set of features (e.g. spawners). Establishes framework and config options used by all features -
+ * namely, common feature placement settings.
+ */
+public abstract class FeatureConfig extends AbstractConfigFile {
+    /** The name of this feature (e.g. "spawners"). */
+    final String FEATURE_NAME;
+    
+    /** The parent group containing this feature config. */
+    public final DimensionConfigGroup DIMENSION_CONFIGS;
+    
+    FeatureConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs, String name ) {
+        super( manager, dir + ConfigUtil.noSpaces( name + "s" ),
+                "This config contains options for all " + name + " features specific to the " +
+                        dimConfigs.longDimensionName() + "." );
+        DIMENSION_CONFIGS = dimConfigs;
+        FEATURE_NAME = name + "s";
+        
+        if( Level.OVERWORLD.equals( dimConfigs.DIMENSION ) ) {
+            SPEC.decreaseIndent();
+            SPEC.newLine();
+            SPEC.comment( "This config also functions as the default settings for " + name + " features in any extra " +
+                    "dimensions that do not have world gen configs (all dimensions not included in the \"" +
+                    Config.MAIN.GENERAL.extraDimensions.getKey() + "\" list within the mod's main config file, \"" +
+                    Config.MAIN.SPEC.NAME + "\")." );
+            SPEC.increaseIndent();
+        }
+    }
+    
+    public static class FeatureTypeCategory extends AbstractConfigCategory<FeatureConfig> {
+        /** The name of this feature type (e.g. "simple spawners"). */
+        final String FEATURE_TYPE_NAME;
+        
+        public final BooleanField debugMarker;
+        
+        public final DoubleField countPerChunk;
+        
+        public final IntField.RandomRange heights;
+        public final IntField heightMin, heightMax; // TODO delete after Crust update
+        
+        /**
+         * Creates a new feature or subfeature category.
+         * For features, this creates three config options, so begin subclass constructors by entering a new line in the spec.
+         * For subfeatures, this strictly sets up the base category, so do NOT start with a new line.
+         */
+        FeatureTypeCategory( FeatureConfig parent, String name,
+                             double placements, int minHeight, int maxHeight ) {
+            super( parent, ConfigUtil.noSpaces( name + "_" + parent.FEATURE_NAME ),
+                    "Options to customize " + name + " " + parent.FEATURE_NAME + " specific to the " +
+                            parent.DIMENSION_CONFIGS.longDimensionName() + "." );
+            FEATURE_TYPE_NAME = name + " " + parent.FEATURE_NAME;
+            
+            if( isSubfeature() ) {
+                debugMarker = null;
+                countPerChunk = null;
+                heights = null;
+                heightMin = null;
+                heightMax = null;
+            }
+            else {
+                boolean isNether = isNetherDimension();
+                
+                debugMarker = SPEC.define( new BooleanField( "testing_markers", false,
+                        "When set to true, places a 1x1 column of glass to the height limit from a few blocks above each " +
+                                "generated " + FEATURE_TYPE_NAME + ". This is game-breaking and laggy. Also prints a message to the console.",
+                        "Consider using a tool to strip away all stone/dirt/etc. or xray after world gen for more intensive testing.",
+                        DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
+                
+                SPEC.newLine();
+                
+                countPerChunk = SPEC.define( new DoubleField( "placements", placements, DoubleField.Range.NON_NEGATIVE,
+                        "The number of placement attempts per chunk (16x16 blocks) for " + FEATURE_TYPE_NAME + ". " +
+                                "A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt).",
+                        DimensionConfigHelper.MESSAGE_PLACED_FEATURE_OVERRIDE ) );
+                
+                SPEC.newLine();
+                
+                heights = new IntField.RandomRange(
+                        heightMin = SPEC.define( new IntField( "height.min", isNether ? DEPTH_NETHER_LAVA : minHeight, IntField.Range.ANY,
+                                "The minimum and maximum (inclusive) heights/y-values " + FEATURE_TYPE_NAME + " can generate at.",
+                                DimensionConfigHelper.MESSAGE_PLACED_FEATURE_OVERRIDE ) ),
+                        heightMax = SPEC.define( new IntField( "height.max", isNether ? DEPTH_NETHER_CEIL : maxHeight, IntField.Range.ANY ) )
+                );
+            }
+        }
+        
+        /** @return True if this config is for a subfeature. */
+        public final boolean isSubfeature() { return this instanceof SubfeatureCategory; }
+        
+        /** @return True if this config is for the Nether dimension. */
+        protected boolean isNetherDimension() { return Level.NETHER.equals( PARENT.DIMENSION_CONFIGS.DIMENSION ); }
+        
+        /** @return True if this config is for the End dimension. */
+        protected boolean isEndDimension() { return Level.END.equals( PARENT.DIMENSION_CONFIGS.DIMENSION ); }
+        
+        // Helper methods for commonly used fields below
+        
+        protected IntField standardActivationRangeIntField( int defaultValue ) {
+            return new IntField( "required_player_range", defaultValue, 0, Short.MAX_VALUE,
+                    "These " + PARENT.FEATURE_NAME + " are active as long as a player is within this distance (spherical distance).",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE );
+        }
+        
+        protected DoubleField standardActivationRangeField( double defaultValue ) {
+            return new DoubleField( "required_player_range", defaultValue, DoubleField.Range.NON_NEGATIVE,
+                    "These " + PARENT.FEATURE_NAME + " are active as long as a player is within this distance (spherical distance).",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE );
+        }
+        
+        protected DoubleField standardCheckSightField( boolean defaultValue ) {
+            return new DoubleField( "sight_check_chance", defaultValue ? 1.0 : 0.0, DoubleField.Range.PERCENT,
+                    "The chance for " + FEATURE_TYPE_NAME + " to generate as requiring a sight check.",
+                    "When the sight check is enabled, " + FEATURE_TYPE_NAME + " will only spawn when they have " +
+                            "direct line-of-sight to a player within activation range. The spawner's delay will continue to " +
+                            "tick down, but it will wait to actually spawn until it has line-of-sight.",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE );
+        }
+    }
+    
+    /**
+     * A config feature category that represents a subfeature.
+     * <p>
+     * Any feature category implementing this interface should have all placement-sensitive config options stripped,
+     * since these options will be handled by the primary feature.
+     */
+    public interface SubfeatureCategory { }
+}

@@ -1,69 +1,72 @@
-package fathertoast.deadlyworld.common.config;
+package fathertoast.deadlyworld.common.config.dimension;
 
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.ConfigUtil;
+import fathertoast.crust.api.config.common.field.AttributeListField;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.crust.api.config.common.file.TomlHelper;
+import fathertoast.crust.api.config.common.value.AttributeEntry;
+import fathertoast.crust.api.config.common.value.AttributeList;
 import fathertoast.crust.api.config.common.value.EntityEntry;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+
+import static fathertoast.deadlyworld.common.util.References.*;
 
 public class SpawnerConfig extends FeatureConfig {
     
-    public final SpawnerTypeCategory LONE;
+    public final SpawnerTypeCategory SIMPLE;
     public final SpawnerTypeCategory STREAM;
     public final SpawnerTypeCategory SWARM;
     public final BrutalSpawnerCategory BRUTAL;
     public final SpawnerTypeCategory NEST;
     public final SpawnerTypeCategory MINI;
     
-    public final SpawnerTypeCategory DUNGEON;
+    public final SubfeatureSpawnerCategory DUNGEON;
     
     /** Builds the config spec that should be used for this config. */
-    SpawnerConfig( ConfigManager manager, DimensionConfigGroup dimConfigs ) {
-        super( manager, dimConfigs, "spawner" );
+    SpawnerConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
+        super( manager, dir, dimConfigs, "spawner" );
         
         SPEC.newLine();
         SPEC.describeEntityList();
         
         SPEC.newLine();
-        SPEC.comment(
-                "Progressive Spawn Delay:",
-                "  By default, spawners added by this mod use a mechanic called 'progressive spawn delay'. Unlike vanilla",
-                "    spawners that have a completely random delay chosen anywhere from 10 to 40 seconds (what awful variance!),",
-                "    Deadly World spawners will start from a 10 second delay and slowly increase up to 40 seconds delay as you",
-                "    continue to stand close to them (with the same vanilla delay limits of 200-800 ticks).",
-                "  A spawner's 'delay buildup' starts at its minimum delay and increases by its delay progression (" +
-                        ConfigUtil.PLUS_OR_MINUS + "10%)",
-                "    with each successful spawn, up to its maximum delay.",
-                "  When no players are within the spawner's activation range, its 'delay buildup' is continuously decreased by",
-                "    its delay recovery, back down to its minimum delay.",
-                "  The delay, delay progression, and delay recovery for each spawner type are determined by these configs when",
-                "    generated and can then be overwritten for individual spawners by nbt editing."
-        );
+        SPEC.comment( "Progressive Spawn Delay:",
+                "  * By default, spawners added by this mod use a mechanic called 'progressive spawn delay'. Unlike vanilla " +
+                        "spawners that have a completely random delay chosen anywhere from 10 to 40 seconds (what awful variance!), " +
+                        "Deadly World spawners will start from a 10 second delay and slowly increase up to 40 seconds delay as you " +
+                        "continue to stand close to them (with the same vanilla delay limits of 200-800 ticks).",
+                "  * A spawner's 'delay buildup' starts at its minimum delay and increases by its delay progression (" +
+                        ConfigUtil.PLUS_OR_MINUS + "10%) with each successful spawn, up to its maximum delay.",
+                "  * While no players are within the spawner's activation range, its 'delay buildup' is continuously decreased by " +
+                        "its delay recovery, back down to its minimum delay.",
+                "  * The delay, delay progression, and delay recovery for each spawner type are determined by either these configs or " +
+                        "the 'configured_feature' json file when generated or placed and can then be overwritten for individual " +
+                        "spawners by nbt editing." );
         
-        LONE = new SpawnerTypeCategory( this, SpawnerType.DEFAULT, 0.8, -54, 54, 0.3,
+        SIMPLE = new SpawnerTypeCategory( this, SpawnerType.SIMPLE, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
                 16, false, 200, 800, 40, 4, 4, 0.1 );
         
-        STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.24, -54, 34, 1.0,
+        STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.24, DEPTH_LAVA, DEPTH_1, 1.0,
                 16, true, 0, 400, 10, 1, 2, 0.95 );
         
-        SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.16, -54, 14, 1.0,
+        SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.16, DEPTH_LAVA, DEPTH_2, 1.0,
                 20, true, 400, 2400, 100, 12, 8, 0.05 );
         
-        BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.08, -54, 0, 1.0,
+        BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.08, DEPTH_LAVA, DEPTH_3, 1.0,
                 16, true, 200, 800, 100, 2, 3, 0.05 );
         
-        NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.72, -54, 54, 0.3,
+        NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.72, DEPTH_LAVA, DEPTH_0, 0.3,
                 16, false, 100, 400, 20, 6, 6, 0.0 );
         
-        MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.08, -54, 54, 0.3,
+        MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.08, DEPTH_LAVA, DEPTH_0, 0.3,
                 16, false, 100, 400, 20, 6, 4, 0.1 );
         
         DUNGEON = new SubfeatureSpawnerCategory( this, SpawnerType.DUNGEON,
@@ -72,15 +75,14 @@ public class SpawnerConfig extends FeatureConfig {
     
     public static class SpawnerTypeCategory extends FeatureTypeCategory {
         
-        public final DoubleField chestChance;
+        //public final DoubleField chestChance;
         
         public final IntField activationRange;
         public final DoubleField checkSightChance;
         public final IntField maxNearbyEntities;
         
         public final IntField.RandomRange delay;
-        public final IntField delayMin;
-        public final IntField delayMax;
+        public final IntField delayMin, delayMax; // TODO delete after Crust update
         public final IntField delayProgression;
         public final DoubleField delayRecovery;
         
@@ -91,115 +93,107 @@ public class SpawnerConfig extends FeatureConfig {
         public final DoubleField dynamicChance;
         public final WeightedEntityListField spawnList;
         
-        public final DoubleField addedFollowRange;
-        public final DoubleField addedMaxHealth;
-        public final DoubleField increasedMaxHealth;
-        public final DoubleField addedKnockbackResist;
-        public final DoubleField addedArmor;
-        public final DoubleField addedArmorToughness;
-        public final DoubleField addedDamage;
-        public final DoubleField increasedDamage;
-        public final DoubleField addedKnockback;
-        public final DoubleField increasedSpeed;
+        public final AttributeListField attributeAdjustments;
         
         SpawnerTypeCategory( FeatureConfig parent, SpawnerType type,
-                             double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean sightCheck,
-                             int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
+                             double placements, int minHeight, int maxHeight, double ignoredChestCh,
+                             int activationRng, boolean checkSight, int minDelay, int maxDelay, int delayPrgr,
+                             int spawnCnt, int spawnRng, double dynamicCh ) {
             super( parent, type.toString(), placements, minHeight, maxHeight );
             
-            if( isSubfeature() ) {
-                chestChance = null;
-            }
-            else {
-                SPEC.newLine();
-                
-                chestChance = SPEC.define( new DoubleField( "chest_chance", chestCh, DoubleField.Range.PERCENT,
-                        "The chance for a chest to generate beneath " + FEATURE_TYPE_NAME + ".",
-                        "For reference, the loot table for these chests is '" + DeadlyWorld.toString( type.getChestLootTable() ) + "'." ) );
-                
-                SPEC.newLine();
-            }
+            //if( isSubfeature() ) { TODO decide whether to re-add this
+            //    chestChance = null;
+            //}
+            //else {
+            //    SPEC.newLine();
+            //
+            //    chestChance = SPEC.define( new DoubleField( "chest_chance", chestCh, DoubleField.Range.PERCENT,
+            //            "The chance for a chest to generate beneath " + FEATURE_TYPE_NAME + ".",
+            //            "For reference, the loot table for these chests is '" + DeadlyWorld.toString( type.getChestLootTable() ) + "'." ) );
+            //
+            //    SPEC.newLine();
+            //}
             
-            activationRange = SPEC.define( new IntField( "required_player_range", activationRng, 0, Short.MAX_VALUE,
-                    "The spawner is active as long as a player is within this distance (spherical distance).",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
-            checkSightChance = SPEC.define( new DoubleField( "sight_check_chance", sightCheck ? 1.0 : 0.0, DoubleField.Range.PERCENT,
-                    "The chance for a " + FEATURE_TYPE_NAME + " to generate as requiring a sight check.",
-                    "When the sight check is enabled, " + FEATURE_TYPE_NAME + " will only spawn when they have " +
-                            "direct line-of-sight to a player within activation range. The spawner's delay will continue to " +
-                            "tick down, but it will wait to actually spawn until it has line-of-sight.",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
+            activationRange = SPEC.define( standardActivationRangeIntField( activationRng ) );
+            checkSightChance = SPEC.define( standardCheckSightField( checkSight ) );
             maxNearbyEntities = SPEC.define( new IntField( "max_nearby_entities", spawnCnt * 2, 0, Short.MAX_VALUE,
                     "Will not spawn if this many or more similar entities are in close proximity. " +
                             "Specifically, it checks a cube that extends out by the spawn range in all six directions. " +
                             "Set this to 0 to allow spawns regardless of nearby entities.",
                     "For reference, vanilla spawners have a max of 6 nearby entities.",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             
             SPEC.newLine();
             
             delay = new IntField.RandomRange(
                     delayMin = SPEC.define( new IntField( "delay.min", minDelay, 0, Short.MAX_VALUE,
                             "The minimum and maximum (inclusive) delay between spawn batches, in ticks. (20 ticks = 1 second)",
-                            "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) ),
+                            DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) ),
                     delayMax = SPEC.define( new IntField( "delay.max", maxDelay, 0, Short.MAX_VALUE ) )
             );
             delayProgression = SPEC.define( new IntField( "delay.progression", delayPrgr, 0, Short.MAX_VALUE,
                     "Each spawn batch increases the spawner's delay buildup by this many ticks (" + ConfigUtil.PLUS_OR_MINUS +
                             "10%). Set this to 0 to revert to the vanilla spawner behavior (simple random between min and max delays).",
                     "See above for a more in-depth description of progressive spawn delay.",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             delayRecovery = SPEC.define( new DoubleField( "delay.recovery_rate", delayPrgr * 0.0025, DoubleField.Range.NON_NEGATIVE,
                     "The rate at which the spawn delay buildup on spawners recovers while no players are within range.",
                     "Inactive spawners' delay are reduced by this value each tick (20 times per second).",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             
             SPEC.newLine();
             
             maxSpawns = SPEC.define( new IntField( "max_spawns", 0, 0, Short.MAX_VALUE,
                     "The total number of mobs that can be spawned by this type of spawner. Spawners permanently " +
                             "deactivate when they run out of spawns. Set this to 0 for unlimited spawns (the normal behavior).",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             spawnCount = SPEC.define( new IntField( "spawn_count", spawnCnt, 0, Short.MAX_VALUE,
                     "The number of mobs to try spawning with each spawn batch. May spawn fewer depending on nearby obstructions.",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             spawnRange = SPEC.define( new IntField( "spawn_range", spawnRng, 0, Short.MAX_VALUE,
                     "The maximum horizontal range to spawn mobs in.",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             
             SPEC.newLine();
             
             dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
-                    "The chance for a " + FEATURE_TYPE_NAME + " to generate as 'dynamicChance'.",
+                    "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamicChance'.",
                     "Dynamic spawners pick a new mob to spawn after each spawn.",
-                    "This setting can be overridden for world gen by 'configured_feature' files in data packs." ) );
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( parent ),
-                    "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + "s. One of these is chosen",
+                    "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + ". One of these is chosen",
                     "at random when the spawner is generated. Spawners that are generated as 'dynamicChance' will pick again",
-                    "between each spawn." ) );
+                    "between each spawn.",
+                    DimensionConfigHelper.MESSAGE_WORK_IN_PROGRESS_OVERRIDE ) ); // TODO
             
             SPEC.newLine();
             
-            final boolean brutal = type == SpawnerType.BRUTAL;
-            SPEC.comment( "Attribute modifiers applied to entities spawned by " + FEATURE_TYPE_NAME + "s, if applicable.",
-                    "Modifiers are disabled if their value is set to 0.",
-                    "Added modifiers use the 'addition' operation and increased modifiers use the 'multiply base' operation.",
-                    TomlHelper.multiFieldInfo( DoubleField.Range.ANY ) );
-            addedFollowRange = SPEC.define( new DoubleField( "modifier.added_follow_range", 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            addedMaxHealth = SPEC.define( new DoubleField( "modifier.added_max_health", brutal ? 5.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            increasedMaxHealth = SPEC.define( new DoubleField( "modifier.increased_max_health", brutal ? 0.2 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            addedKnockbackResist = SPEC.define( new DoubleField( "modifier.added_knockback_resistance", brutal ? 0.5 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            addedArmor = SPEC.define( new DoubleField( "modifier.added_armor", brutal ? 12.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            addedArmorToughness = SPEC.define( new DoubleField( "modifier.added_armor_toughness", brutal ? 8.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            addedDamage = SPEC.define( new DoubleField( "modifier.added_damage", brutal ? 1.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            increasedDamage = SPEC.define( new DoubleField( "modifier.increased_damage", brutal ? 0.2 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            addedKnockback = SPEC.define( new DoubleField( "modifier.added_knockback", brutal ? 2.0 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
-            increasedSpeed = SPEC.define( new DoubleField( "modifier.increased_speed", brutal ? 0.1 : 0.0, DoubleField.Range.ANY, (String[]) null ) );
+            attributeAdjustments = SPEC.define( new AttributeListField( "attribute_adjustments", makeDefaultAttributeList( type ),
+                    "Base attribute adjustments applied to entities spawned by " + FEATURE_TYPE_NAME + ", if applicable.",
+                    DimensionConfigHelper.MESSAGE_WORK_IN_PROGRESS_OVERRIDE ) ); // TODO
+        }
+        
+        /** @return The default spawn list to use for this spawner type and dimension. */
+        protected AttributeList makeDefaultAttributeList( SpawnerType type ) {
+            if( type == SpawnerType.BRUTAL ) {
+                return new AttributeList(
+                        AttributeEntry.add( Attributes.MAX_HEALTH, 5.0 ),
+                        AttributeEntry.mult( Attributes.MAX_HEALTH, 1.2 ),
+                        AttributeEntry.add( Attributes.KNOCKBACK_RESISTANCE, 0.5 ),
+                        AttributeEntry.add( Attributes.ARMOR, 12.0 ),
+                        AttributeEntry.add( Attributes.ARMOR_TOUGHNESS, 8.0 ),
+                        AttributeEntry.add( Attributes.ATTACK_DAMAGE, 1.0 ),
+                        AttributeEntry.mult( Attributes.ATTACK_DAMAGE, 1.2 ),
+                        AttributeEntry.add( Attributes.ATTACK_KNOCKBACK, 2.0 ),
+                        AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.1 )
+                );
+            }
+            return new AttributeList();
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */
         protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
-            if( isNetherDimension( feature ) ) {
+            if( isNetherDimension() ) {
                 return new WeightedEntityList(
                         new EntityEntry( EntityType.WITHER_SKELETON, 200 ),
                         new EntityEntry( EntityType.HUSK, 100 ),
@@ -209,7 +203,7 @@ public class SpawnerConfig extends FeatureConfig {
                         new EntityEntry( EntityType.MAGMA_CUBE, 10 )
                 );
             }
-            if( isEndDimension( feature ) ) {
+            if( isEndDimension() ) {
                 return new WeightedEntityList(
                         new EntityEntry( EntityType.ENDERMAN, 200 ),
                         new EntityEntry( EntityType.CREEPER, 10 )
@@ -231,9 +225,9 @@ public class SpawnerConfig extends FeatureConfig {
     
     public static class SubfeatureSpawnerCategory extends SpawnerTypeCategory implements SubfeatureCategory {
         SubfeatureSpawnerCategory( FeatureConfig parent, SpawnerType type,
-                                   int activationRng, boolean sightCheck,
+                                   int activationRng, boolean checkSight,
                                    int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
-            super( parent, type, 0.0, 0, 0, 0.0, activationRng, sightCheck,
+            super( parent, type, 0.0, 0, 0, 0.0, activationRng, checkSight,
                     minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
         }
     }
@@ -245,29 +239,32 @@ public class SpawnerConfig extends FeatureConfig {
         public final BooleanField waterBreathing;
         
         BrutalSpawnerCategory( FeatureConfig parent, SpawnerType type,
-                               double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean sightCheck,
+                               double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean checkSight,
                                int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
-            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, sightCheck,
+            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight,
                     minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
             
             SPEC.newLine();
             
             ambientFx = SPEC.define( new BooleanField( "brutal_ambient_fx", false,
-                    "If true, the potion effects below will not display potion effects particles." ) );
+                    "If true, the potion effects below will not display potion effects particles.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
             fireResistance = SPEC.define( new BooleanField( "brutal_fire_resistance", true,
-                    "If true, non-creeper mobs spawned by " + FEATURE_TYPE_NAME + "s will have the",
-                    "'fire resistance' potion effect." ) );
+                    "If true, non-creeper mobs spawned by " + FEATURE_TYPE_NAME + " will have the " +
+                            "'fire resistance' potion effect.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
             waterBreathing = SPEC.define( new BooleanField( "brutal_water_breathing", true,
-                    "If true, non-creeper mobs spawned by " + FEATURE_TYPE_NAME + "s will have the",
-                    "'water breathing' potion effect." ) );
+                    "If true, non-creeper mobs spawned by " + FEATURE_TYPE_NAME + " will have the " +
+                            "'water breathing' potion effect.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
     }
     
     public static class NestSpawnerCategory extends SpawnerTypeCategory {
         NestSpawnerCategory( FeatureConfig parent, SpawnerType type,
-                             double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean sightCheck,
+                             double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean checkSight,
                              int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
-            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, sightCheck,
+            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight,
                     minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
         }
         
@@ -280,9 +277,9 @@ public class SpawnerConfig extends FeatureConfig {
     
     public static class MiniSpawnerCategory extends SpawnerTypeCategory {
         MiniSpawnerCategory( FeatureConfig parent, SpawnerType type,
-                             double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean sightCheck,
+                             double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean checkSight,
                              int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
-            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, sightCheck,
+            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight,
                     minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
         }
         

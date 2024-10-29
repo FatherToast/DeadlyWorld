@@ -3,7 +3,9 @@ package fathertoast.deadlyworld.common.world.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
-import fathertoast.deadlyworld.common.config.SpawnerConfig;
+import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
@@ -34,6 +36,8 @@ public record SpawnerSettings(
             SHORT_CODEC.fieldOf( "spawn_range" ).forGetter( SpawnerSettings::spawnRange ),
             FloatProvider.CODEC.fieldOf( "dynamic_chance" ).forGetter( SpawnerSettings::dynamicChance )
     ).apply( instance, SpawnerSettings::new ) );
+    
+    public static SpawnerSettings of( SpawnerType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
     
     public static SpawnerSettings of( SpawnerConfig.SpawnerTypeCategory config ) {
         return new SpawnerSettings(

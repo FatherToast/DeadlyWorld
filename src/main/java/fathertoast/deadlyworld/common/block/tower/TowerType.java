@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.block.tower;
 
-import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.TowerDispenserConfig;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceLocation;
@@ -102,7 +102,7 @@ public enum TowerType {
     
     /** The path for loot tables associated with these types. */
     public static final String LOOT_TABLE_PATH = "tower_dispensers/";
-    public static final String CATEGORY = "tower_dispensers";
+    public static final String BLOCK_CATEGORY = "tower_dispenser";
     
     private final String id;
     private final String displayName;

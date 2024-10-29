@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
-import fathertoast.deadlyworld.common.config.FeatureConfig;
+import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigCountProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigHeightProvider;
 import net.minecraft.core.Direction;

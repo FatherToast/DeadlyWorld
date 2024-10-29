@@ -51,7 +51,7 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
     private LootTableBuilder buildSpawnerChestLoot( SpawnerType type ) {
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) {
-            case DEFAULT, STREAM -> loot.addPool( buildExplorationLootPool() );
+            case SIMPLE, STREAM -> loot.addPool( buildExplorationLootPool() );
             case SWARM -> loot.addPool( buildExplosivesLootPool() );
             case BRUTAL -> loot.addPool( buildValuableLootPool() );
             case NEST -> loot.addPool( buildBuggyLootPool() );

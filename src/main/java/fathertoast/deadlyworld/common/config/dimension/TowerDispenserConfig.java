@@ -1,11 +1,14 @@
-package fathertoast.deadlyworld.common.config;
+package fathertoast.deadlyworld.common.config.dimension;
 
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
+
+import static fathertoast.deadlyworld.common.util.References.*;
+
+import javax.annotation.Nullable;
 
 public class TowerDispenserConfig extends FeatureConfig {
     
@@ -13,31 +16,32 @@ public class TowerDispenserConfig extends FeatureConfig {
     public final TowerDispenserConfig.PotionTowerDispenserTypeCategory POTION;
     
     /** Builds the config spec that should be used for this config. */
-    TowerDispenserConfig( ConfigManager manager, DimensionConfigGroup dimConfigs ) {
-        super( manager, dimConfigs, "tower_dispenser" );
+    TowerDispenserConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
+        super( manager, dir, dimConfigs, "tower dispenser" );
         
         SPEC.newLine();
         SPEC.describeEntityList();
         
-        SPEC.newLine();
+        //SPEC.newLine();
         //SPEC.describePotionList();
         
-        SIMPLE = new TowerDispenserTypeCategory( this, TowerType.SIMPLE, 0.16, 12, 52, 0.3,
+        SIMPLE = new TowerDispenserTypeCategory( this, TowerType.SIMPLE, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
                 9.0, true, 20, 40, 2.0, 1.0, 0.08 );
         
-        POTION = new PotionTowerDispenserTypeCategory( this, TowerType.POTION, 0.16, 12, 52, 0.3,
-                9.0, true, 20, 40, 1.0, 1.0, 0.2 );
+        POTION = new PotionTowerDispenserTypeCategory( this, TowerType.POTION, 0.4, DEPTH_LAVA, DEPTH_0, 0.3,
+                9.0, true, 20, 40, 0.0, 1.0, 0.2 );
     }
     
     public static class TowerDispenserTypeCategory extends FeatureTypeCategory {
         
-        public final DoubleField chestChance;
+        //public final DoubleField chestChance;
         
         public final DoubleField activationRange;
-        public final BooleanField checkSight;
+        public final DoubleField checkSightChance;
         
-        public final IntField minAttackDelay;
-        public final IntField maxAttackDelay;
+        public final IntField.RandomRange attackDelay;
+        public final IntField attackDelayMin, attackDelayMax; // TODO delete after Crust update
+        @Nullable
         public final DoubleField attackDamage;
         
         public final DoubleField projectileSpeed;
@@ -45,52 +49,48 @@ public class TowerDispenserConfig extends FeatureConfig {
         
         
         TowerDispenserTypeCategory( FeatureConfig parent, TowerType type,
-                                    double placements, int minHeight, int maxHeight, double chestCh,
-                                    double activationRange, boolean checkSight, int minAttackDelay,
-                                    int maxAttackDelay, double attackDamage, double projectileSpeed, double projectileVariance ) {
+                                    double placements, int minHeight, int maxHeight, double ignoredChestCh,
+                                    double activationRng, boolean checkSight, int minAttackDelay,
+                                    int maxAttackDelay, double damage, double projSpeed, double projVariance ) {
             super( parent, type.toString(), placements, minHeight, maxHeight );
             
-            if( isSubfeature() ) {
-                chestChance = null;
-            }
-            else {
-                SPEC.newLine();
-                
-                chestChance = SPEC.define( new DoubleField( "chest_chance", chestCh, DoubleField.Range.PERCENT,
-                        "The chance for a chest to generate beneath " + FEATURE_TYPE_NAME + ".",
-                        "For reference, the loot table for these chests is '" + DeadlyWorld.toString( type.getChestLootTable() ) + "'." ) );
-                
-                SPEC.newLine();
-            }
+            //if( isSubfeature() ) { TODO decide whether to re-add this
+            //    chestChance = null;
+            //}
+            //else {
+            //    SPEC.newLine();
+            //
+            //    chestChance = SPEC.define( new DoubleField( "chest_chance", chestCh, DoubleField.Range.PERCENT,
+            //            "The chance for a chest to generate beneath " + FEATURE_TYPE_NAME + ".",
+            //            "For reference, the loot table for these chests is '" + DeadlyWorld.toString( type.getChestLootTable() ) + "'." ) );
+            //
+            //    SPEC.newLine();
+            //}
             
-            this.activationRange = SPEC.define( new DoubleField( "activation_range", activationRange, DoubleField.Range.NON_NEGATIVE,
-                    "The " + FEATURE_TYPE_NAME + " is active as long as a player is within this distance (spherical distance)." ) );
-            
-            this.checkSight = SPEC.define( new BooleanField( "activation_sight_check", checkSight,
-                    "When the sight check is enabled, " + FEATURE_TYPE_NAME + " will only activate when they have direct",
-                    "line-of-sight to a player within activation range. The " + FEATURE_TYPE_NAME + "'s delay will continue to tick down,",
-                    "but it will wait to actually activate until it has line-of-sight." ) );
+            activationRange = SPEC.define( standardActivationRangeField( activationRng ) );
+            checkSightChance = SPEC.define( standardCheckSightField( checkSight ) );
             
             SPEC.newLine();
             
-            this.minAttackDelay = SPEC.define( new IntField( "min_attack_delay", minAttackDelay, IntField.Range.POSITIVE,
-                    "The minimum amount of ticks that must pass before this " + FEATURE_TYPE_NAME + " can",
-                    "trigger again." ) );
-            
-            this.maxAttackDelay = SPEC.define( new IntField( "max_attack_delay", maxAttackDelay, IntField.Range.POSITIVE,
-                    "The maximum amount of ticks that must pass before this " + FEATURE_TYPE_NAME + " can",
-                    "trigger again." ) );
-            
-            this.attackDamage = SPEC.define( new DoubleField( "attack_damage", attackDamage, DoubleField.Range.NON_NEGATIVE,
-                    "The base damage of the projectile fired." ) );
+            attackDelay = new IntField.RandomRange(
+                    attackDelayMin = SPEC.define( new IntField( "attack_delay.min", minAttackDelay, 0, Short.MAX_VALUE,
+                            "The minimum and maximum (inclusive) delay between attacks, in ticks. (20 ticks = 1 second)",
+                            DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) ),
+                    attackDelayMax = SPEC.define( new IntField( "attack_delay.max", maxAttackDelay, 0, Short.MAX_VALUE ) )
+            );
+            attackDamage = damage > 0.0 ? SPEC.define( new DoubleField( "attack_damage", damage, DoubleField.Range.NON_NEGATIVE,
+                    "The base damage of attacks from " + FEATURE_TYPE_NAME + ".",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) ) : null;
             
             SPEC.newLine();
             
-            this.projectileSpeed = SPEC.define( new DoubleField( "projectile_speed", projectileSpeed, DoubleField.Range.NON_NEGATIVE,
-                    "The speed of the projectile fired." ) );
+            projectileSpeed = SPEC.define( new DoubleField( "projectile_speed", projSpeed, DoubleField.Range.NON_NEGATIVE,
+                    "The base speed of projectiles fired by " + FEATURE_TYPE_NAME + ".",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             
-            this.projectileVariance = SPEC.define( new DoubleField( "projectile_variance", projectileVariance, DoubleField.Range.NON_NEGATIVE,
-                    "The inaccuracy of the projectiles this " + FEATURE_TYPE_NAME + " fires." ) );
+            projectileVariance = SPEC.define( new DoubleField( "projectile_variance", projVariance, DoubleField.Range.NON_NEGATIVE,
+                    "The inaccuracy of projectiles fired by " + FEATURE_TYPE_NAME + ".",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
         }
     }
     

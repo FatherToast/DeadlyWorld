@@ -1,16 +1,16 @@
 package fathertoast.deadlyworld.common.block.trap;
 
-import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.FloorTrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Function;
 
-public enum FloorTrapType {
+public enum TrapType {
     
-    TNT( "tnt", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.TNT ) {
+    TNT( "tnt", ( dimConfig ) -> dimConfig.TRAPS.TNT ) {
         //        @Override
         //        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
         //            FloorTrapConfig.TntTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT;
@@ -37,7 +37,7 @@ public enum FloorTrapType {
         //        }
     },
     
-    TNT_MOB( "tnt_mob", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.TNT_MOB ) {
+    TNT_MOB( "tnt_mob", ( dimConfig ) -> dimConfig.TRAPS.TNT_MOB ) {
         @Override
         public boolean spawnsMonster() { return true; }
         
@@ -119,7 +119,7 @@ public enum FloorTrapType {
         //        }
     },
     
-    POTION( "potion", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.POTION ) {
+    POTION( "potion", ( dimConfig ) -> dimConfig.TRAPS.POTION ) {
         //        @Override
         //        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
         //            FloorTrapConfig.PotionTrapTypeCategory config = dimConfig.FLOOR_TRAPS.POTION;
@@ -143,7 +143,7 @@ public enum FloorTrapType {
         //        }
     },
     
-    LAVA( "lava", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.LAVA ) {
+    LAVA( "lava", ( dimConfig ) -> dimConfig.TRAPS.LAVA ) {
         //        @Override
         //        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
         //            FloorTrapConfig.FloorTrapTypeCategory config = dimConfig.FLOOR_TRAPS.LAVA;
@@ -167,20 +167,20 @@ public enum FloorTrapType {
     
     
     /** The path for loot tables associated with these types. */
-    public static final String LOOT_TABLE_PATH = "floor_traps/";
-    public static final String CATEGORY = "floor_trap";
+    public static final String LOOT_TABLE_PATH = "traps/";
+    public static final String BLOCK_CATEGORY = "trap";
     
     private final String id;
     private final String displayName;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
-    private final Function<DimensionConfigGroup, FloorTrapConfig.FloorTrapTypeCategory> configFunction;
+    private final Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction;
     
     
-    FloorTrapType( String id, Function<DimensionConfigGroup, FloorTrapConfig.FloorTrapTypeCategory> configFunction ) {
+    TrapType( String id, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
         this( id, id.replace( "_", " " ) + " floor traps", configFunction );
     }
     
-    FloorTrapType( String id, String displayName, Function<DimensionConfigGroup, FloorTrapConfig.FloorTrapTypeCategory> configFunction ) {
+    TrapType( String id, String displayName, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
         this.id = id;
         this.displayName = displayName;
         this.configFunction = configFunction;
@@ -201,7 +201,7 @@ public enum FloorTrapType {
         return false;
     }
     
-    public final FloorTrapConfig.FloorTrapTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
+    public final TrapConfig.TrapTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
     
     //    public abstract void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity );
     
@@ -209,7 +209,7 @@ public enum FloorTrapType {
     public String toString() { return id; }
     
     
-    public static FloorTrapType fromIndex( int index ) {
+    public static TrapType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {
             DeadlyWorld.LOG.warn( "Attempted to load invalid floor trap type from index '{}'", index );
             return TNT;

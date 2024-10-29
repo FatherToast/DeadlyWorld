@@ -2,8 +2,8 @@ package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.FeatureConfig;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -11,6 +11,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -27,37 +28,21 @@ public class DWPlacedFeatureProvider {
     /** List of all placements that should generate in nether biomes. */
     public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
     
-    static final ResourceKey<PlacedFeature> SIMPLE_SPAWNER_CAVE = overworldKey( "simple_spawner" );
-    static final ResourceKey<PlacedFeature> STREAM_SPAWNER_CAVE = overworldKey( "stream_spawner" );
-    static final ResourceKey<PlacedFeature> SWARM_SPAWNER_CAVE = overworldKey( "swarm_spawner" );
-    static final ResourceKey<PlacedFeature> BRUTAL_SPAWNER_CAVE = overworldKey( "brutal_spawner" );
-    static final ResourceKey<PlacedFeature> MINI_SPAWNER_CAVE = overworldKey( "mini_spawner" );
-    static final ResourceKey<PlacedFeature> SILVERFISH_NEST_CAVE = overworldKey( "silverfish_nest" );
-    
-    //    public static final ResourceKey<PlacedFeature> SIMPLE_SPAWNER_NETHER = netherKey( "simple_spawner" );
-    //    public static final ResourceKey<PlacedFeature> STREAM_SPAWNER_NETHER = netherKey( "stream_spawner" );
-    //    public static final ResourceKey<PlacedFeature> SWARM_SPAWNER_NETHER = netherKey( "swarm_spawner" );
-    //    public static final ResourceKey<PlacedFeature> BRUTAL_SPAWNER_NETHER = netherKey( "brutal_spawner" );
-    
     private static final BlockPredicate PREDICATE_ANY_FLUID = BlockPredicate.not( BlockPredicate.noFluid() );
     
     /** Called by registry set builder to generate our placed features. */
     public static void bootstrap( BootstapContext<PlacedFeature> context ) {
         final HolderGetter<ConfiguredFeature<?, ?>> getter = context.lookup( Registries.CONFIGURED_FEATURE );
+        final DimensionConfigGroup overworldConfigs = Config.getDimensionConfigs( Level.OVERWORLD );
+        final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         
-        DimensionConfigGroup overworldConfigs = Config.getDefaultConfigs();
-        register( context, getter, SIMPLE_SPAWNER_CAVE, SIMPLE_SPAWNER,
-                loneSpawner( SpawnerType.DEFAULT, overworldConfigs ) );
-        register( context, getter, STREAM_SPAWNER_CAVE, STREAM_SPAWNER,
-                loneSpawner( SpawnerType.STREAM, overworldConfigs ) );
-        register( context, getter, SWARM_SPAWNER_CAVE, SWARM_SPAWNER,
-                loneSpawner( SpawnerType.SWARM, overworldConfigs ) );
-        register( context, getter, BRUTAL_SPAWNER_CAVE, BRUTAL_SPAWNER,
-                loneSpawner( SpawnerType.BRUTAL, overworldConfigs ) );
-        register( context, getter, MINI_SPAWNER_CAVE, MINI_SPAWNER,
-                loneSpawner( SpawnerType.MINI, overworldConfigs ) );
-        register( context, getter, SILVERFISH_NEST_CAVE, SILVERFISH_NEST,
-                loneSpawner( SpawnerType.NEST, overworldConfigs ) );
+        // Standard lone spawner placements
+        registerLoneSpawner( context, getter, SIMPLE_SPAWNER, overworldConfigs, netherConfigs );
+        registerLoneSpawner( context, getter, STREAM_SPAWNER, overworldConfigs, netherConfigs );
+        registerLoneSpawner( context, getter, SWARM_SPAWNER, overworldConfigs, netherConfigs );
+        registerLoneSpawner( context, getter, BRUTAL_SPAWNER, overworldConfigs, netherConfigs );
+        registerLoneSpawner( context, getter, MINI_SPAWNER, overworldConfigs, netherConfigs );
+        registerLoneSpawner( context, getter, SILVERFISH_NEST, overworldConfigs, netherConfigs );
     }
     
     /** @return Modifiers for a lone spawner feature. */
@@ -101,9 +86,26 @@ public class DWPlacedFeatureProvider {
                 .moveVertical( up ? -1 : 1 ).requireBelowOceanFloor( 2 ).requireBiome().build();
     }
     
+    /** Registers a placed lone spawner type feature to each supported dimension. */
+    protected static void registerLoneSpawner( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
+                                               FeatureKeys.Spawner feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        register( context, getter, feature.overworldKeys, loneSpawner( feature.spawnerType, overworldConfigs ) );
+        register( context, getter, feature.netherKeys, loneSpawner( feature.spawnerType, netherConfigs ) );
+    }
+    
+    /** Registers a placed feature. */
+    protected static void register( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter, FeatureKeys featureKeys, PlacementModifier... modifiers ) {
+        register( context, getter, featureKeys.placedKey, featureKeys.configuredKey, modifiers );
+    }
+    
     /** Registers a placed feature. */
     protected static void register( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter, ResourceKey<PlacedFeature> placedFeatureKey, ResourceKey<ConfiguredFeature<?, ?>> configuredFeature, PlacementModifier... modifiers ) {
         register( context, placedFeatureKey, getter.getOrThrow( configuredFeature ), modifiers );
+    }
+    
+    /** Registers a placed feature. */
+    protected static void register( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter, FeatureKeys featureKeys, List<PlacementModifier> modifiers ) {
+        register( context, getter, featureKeys.placedKey, featureKeys.configuredKey, modifiers );
     }
     
     /** Registers a placed feature. */
