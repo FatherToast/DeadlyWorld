@@ -9,8 +9,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +36,8 @@ public class JukeboxMimic extends PathfinderMob implements Enemy {
         goalSelector.addGoal( 0, new FloatGoal( this ) );
         goalSelector.addGoal( 1, new MeleeAttackGoal( this, 1.0D, true ) );
         goalSelector.addGoal( 2, new WaterAvoidingRandomStrollGoal( this, 0.8D ) );
-        targetSelector.addGoal( 0, new NearestAttackableTargetGoal<>( this, Player.class, true ) );
+        targetSelector.addGoal( 0, new HurtByTargetGoal( this ) );
+        targetSelector.addGoal( 1, new NearestAttackableTargetGoal<>( this, Player.class, true ) );
     }
 
     @Override
