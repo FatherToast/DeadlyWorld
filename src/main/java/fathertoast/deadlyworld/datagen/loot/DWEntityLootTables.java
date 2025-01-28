@@ -6,6 +6,7 @@ import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
@@ -19,6 +20,8 @@ public class DWEntityLootTables extends EntityLootSubProvider {
     public void generate() {
         // New mobs
         //add( DWEntities.MIMIC, new LootTableBuilder().addLootTable( "chest", Blocks.CHEST.getLootTable() ) );
+        // TODO - proper jukebox mimic loot
+        add( DWEntities.JUKEBOX_MIMIC, new LootTableBuilder().addLootTable( "jukebox", Blocks.JUKEBOX.getLootTable() ) );
         
         // Mini mobs
         addVanillaLike( DWEntities.MINI_CREEPER, EntityType.CREEPER );

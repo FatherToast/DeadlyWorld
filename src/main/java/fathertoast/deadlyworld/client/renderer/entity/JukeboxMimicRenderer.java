@@ -14,7 +14,7 @@ public class JukeboxMimicRenderer extends MobRenderer<JukeboxMimic, JukeboxMimic
 
 
     public JukeboxMimicRenderer( EntityRendererProvider.Context context ) {
-        super( context, new JukeboxMimicModel<>( context.bakeLayer( DWModelLayers.JUKEBOX_MIMIC ) ), 1.0F );
+        super( context, new JukeboxMimicModel<>( context.bakeLayer( DWModelLayers.JUKEBOX_MIMIC ) ), 0.65F );
     }
 
     @Override
