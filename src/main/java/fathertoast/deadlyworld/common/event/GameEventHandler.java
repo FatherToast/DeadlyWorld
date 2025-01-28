@@ -109,6 +109,8 @@ public final class GameEventHandler {
      */
     @SubscribeEvent( priority = EventPriority.LOWEST )
     static void onBlockBreak( BlockEvent.BreakEvent event ) {
+        if ( !Config.MAIN.GENERAL.spookyStalactites.get() ) return;
+
         Level level = (Level) event.getLevel();
         BlockPos pos = event.getPos();
         

@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.util.mixin_hooks;
 
+import fathertoast.deadlyworld.common.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -11,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CommonMixinHooks {
 
     public static void pointedDripstoneProjectileHit( Level level, BlockState state, BlockHitResult hitResult, Projectile projectile, CallbackInfo ci ) {
+        if ( !Config.MAIN.GENERAL.pointedDripstoneSniping.get() ) return;
+
         BlockPos pos = hitResult.getBlockPos();
 
         if ( !level.isClientSide && projectile.mayInteract( level, pos )

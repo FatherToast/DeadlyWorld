@@ -31,6 +31,10 @@ public class MainConfig extends AbstractConfigFile {
         public final BooleanField activateSpawnersVsCreative;
         
         public final StringListField extraDimensions;
+
+        public final BooleanField pointedDripstoneSniping;
+        public final BooleanField spookyStalactites;
+
         
         General( MainConfig parent ) {
             super( parent, "general",
@@ -59,6 +63,23 @@ public class MainConfig extends AbstractConfigFile {
                             "world gen, and can also overwrite most world gen config settings. This mod generally only " +
                             "supports the default values here without the use of a data pack."
             ), RestartNote.GAME );
+
+            SPEC.newLine();
+
+            pointedDripstoneSniping = SPEC.define( new BooleanField("pointed_dripstone_sniping", true,
+                    "If enabled, pointed dripstone blocks will break when hit with any projectile entity tagged as 'minecraft:impact_projectiles'.",
+                    "In vanilla, only thrown tridents can break pointed dripstone, but this setting allows entities like arrows, snowballs and others to also do so.") );
+
+            spookyStalactites = SPEC.define( new BooleanField( "spooky_stalactites", true,
+                    "If enabled, there is a chance for nearby pointed dripstone (stalactites) in the ceiling to break off and fall when the player " +
+                            "is breaking blocks.",
+                    "Here are a list of conditions that must be met for stalactites to fall:",
+                    "A random number between 0 to 9 is picked. If it is 0, proceed (10% chance per block broken).",
+                    "Skylight level must be less than 3, and position of block broken must be below sea level.",
+                    "Lastly, stalactites must be within 10 block range above the broken block."
+                    ) );
+
+            SPEC.newLine();
         }
     }
 }
