@@ -10,15 +10,15 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class Mimic extends Monster {
+public class ChestMimic extends Monster {
     
-    public Mimic( EntityType<? extends Monster> entityType, Level level ) {
+    public ChestMimic(EntityType<? extends Monster> entityType, Level level ) {
         super( entityType, level );
         // Lol!
         setMaxUpStep( 1.0F );
     }
     
-    public static AttributeSupplier.Builder createAttributes() {
+    public static AttributeSupplier.Builder createChestMimicAttributes() {
         return Monster.createMonsterAttributes()
                 .add( Attributes.MOVEMENT_SPEED, 0.35 )
                 .add( Attributes.MAX_HEALTH, 30.0 );
