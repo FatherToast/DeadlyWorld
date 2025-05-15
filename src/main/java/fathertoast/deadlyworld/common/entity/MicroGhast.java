@@ -73,7 +73,7 @@ public class MicroGhast extends Ghast {
         public void tick() {
             if( ghast.getTarget() == null ) {
                 Vec3 vec3 = ghast.getDeltaMovement();
-                ghast.setYRot( -((float) Mth.atan2( vec3.x, vec3.z )) * (180F / (float) Math.PI) );
+                ghast.setYRot( -((float) Mth.atan2( vec3.x, vec3.z )) * ( 180F / (float) Math.PI ) );
                 ghast.yBodyRot = ghast.getYRot();
             }
             else {
@@ -172,7 +172,7 @@ public class MicroGhast extends Ghast {
             LivingEntity target = ghast.getTarget();
             
             if( target != null ) {
-                if( target.distanceToSqr( ghast ) < 128.0D && ghast.hasLineOfSight( target ) ) {
+                if( target.distanceToSqr( ghast ) < 96.0D && ghast.hasLineOfSight( target ) ) {
                     Level level = ghast.level();
                     ++chargeTime;
                     
