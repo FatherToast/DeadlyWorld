@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.entity;
 
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -10,11 +11,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 
 @SuppressWarnings("resource")
@@ -33,6 +37,74 @@ public class MicroFireball extends Fireball {
         super( DWEntities.MICRO_FIREBALL.get(), shooter, xPower, yPower, zPower, level);
     }
 
+    /** Overridden to fix particle trail and some other small things. */
+    @Override
+    public void tick() {
+        Entity owner = getOwner();
+
+        if ( level().isClientSide || ( owner == null || !owner.isRemoved() ) && level().hasChunkAt( blockPosition() ) ) {
+            // Mark projectile as shot first tick
+            if ( !hasBeenShot ) {
+                gameEvent( GameEvent.PROJECTILE_SHOOT, getOwner() );
+                hasBeenShot = true;
+            }
+
+            if ( !leftOwner ) {
+                leftOwner = checkLeftOwner();
+            }
+            baseTick();
+            // Set always on fire
+            setSecondsOnFire( 1 );
+
+            HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector( this, this::canHitEntity );
+
+            if ( hitResult.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact( this, hitResult ) ) {
+                onHit( hitResult );
+            }
+            checkInsideBlocks();
+
+            Vec3 deltaMovement = getDeltaMovement();
+            double newX = getX() + deltaMovement.x;
+            double newY = getY() + deltaMovement.y;
+            double newZ = getZ() + deltaMovement.z;
+            ProjectileUtil.rotateTowardsMovement( this, 0.2F );
+            float inertia = getInertia();
+
+            // Spawn bubble particles and slow down in water
+            if ( isInWater() ) {
+                for ( int i = 0; i < 2; ++i ) {
+                    level().addParticle(
+                            ParticleTypes.BUBBLE,
+                            newX - deltaMovement.x * 0.25D,
+                            newY - deltaMovement.y * 0.25D,
+                            newZ - deltaMovement.z * 0.25D,
+                            deltaMovement.x,
+                            deltaMovement.y,
+                            deltaMovement.z
+                    );
+                }
+                inertia = 0.8F;
+            }
+            setDeltaMovement( deltaMovement.add( xPower, yPower, zPower ).scale( inertia ) );
+            setPos( newX, newY, newZ );
+
+            // Spawn normal particles when not in water
+            if ( random.nextBoolean() ) {
+                level().addParticle(
+                        getTrailParticle(),
+                        newX,
+                        newY + 0.2D,
+                        newZ,
+                        0.0D,
+                        0.0D,
+                        0.0D
+                );
+            }
+        }
+        else {
+            discard();
+        }
+    }
 
     @Override
     protected void onHitEntity( EntityHitResult entityResult ) {

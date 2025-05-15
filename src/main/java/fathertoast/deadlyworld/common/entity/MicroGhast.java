@@ -18,7 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 
 public class MicroGhast extends Ghast {
-    
+
     public MicroGhast( EntityType<? extends Ghast> entityType, Level level ) {
         super( entityType, level );
         xpReward = 1;
@@ -51,6 +51,7 @@ public class MicroGhast extends Ghast {
     
     
     static class GhastLookGoal extends Goal {
+
         private final Ghast ghast;
         
         public GhastLookGoal( Ghast ghast ) {
@@ -78,11 +79,11 @@ public class MicroGhast extends Ghast {
             else {
                 LivingEntity target = ghast.getTarget();
                 
-                if( target.distanceToSqr( ghast ) < 1024.0D ) {
+                if( target.distanceToSqr( ghast ) < 128.0D ) {
                     double x = target.getX() - ghast.getX();
                     double z = target.getZ() - ghast.getZ();
                     
-                    ghast.setYRot( -((float) Mth.atan2( x, z )) * (180F / (float) Math.PI) );
+                    ghast.setYRot( -((float) Mth.atan2( x, z ) ) * ( 180F / (float) Math.PI ) );
                     ghast.yBodyRot = ghast.getYRot();
                 }
             }
@@ -90,6 +91,7 @@ public class MicroGhast extends Ghast {
     }
     
     static class MicroGhastMoveControl extends MoveControl {
+
         private final Ghast ghast;
         private int floatDuration;
         
@@ -170,7 +172,7 @@ public class MicroGhast extends Ghast {
             LivingEntity target = ghast.getTarget();
             
             if( target != null ) {
-                if( target.distanceToSqr( ghast ) < 1024.0D && ghast.hasLineOfSight( target ) ) {
+                if( target.distanceToSqr( ghast ) < 128.0D && ghast.hasLineOfSight( target ) ) {
                     Level level = ghast.level();
                     ++chargeTime;
                     
@@ -179,22 +181,22 @@ public class MicroGhast extends Ghast {
                     }
                     
                     if( chargeTime == 20 ) {
-                        Vec3 viewVec = ghast.getViewVector( 1.0F );
-                        double x = target.getX() - (ghast.getX() + viewVec.x);
-                        double y = target.getY( 0.5D ) - (ghast.getY( 0.5D ));
-                        double z = target.getZ() - (ghast.getZ() + viewVec.z);
+                        Vec3 viewVec = ghast.getViewVector( 1.0F ).multiply( 0.3, 0.0, 0.3 );
+                        double x = target.getX() - ( ghast.getX() + viewVec.x );
+                        double y = target.getY( 0.5D ) - (ghast.getY( 0.5D ) );
+                        double z = target.getZ() - ( ghast.getZ() + viewVec.z );
                         
                         if( !ghast.isSilent() ) {
                             level.levelEvent( null, 1016, ghast.blockPosition(), 0 );
                         }
                         MicroFireball fireball = new MicroFireball( ghast, x, y, z, level );
-                        fireball.setPos( ghast.getX() + viewVec.x, ghast.getY( 0.5D ), fireball.getZ() + viewVec.z );
+                        fireball.setPos( ghast.getX() + viewVec.x, ghast.getY( 0.25D ), fireball.getZ() + viewVec.z );
                         
                         level.addFreshEntity( fireball );
                         chargeTime = -40;
                     }
                 }
-                else if( chargeTime > 0 ) {
+                else if ( chargeTime > 0 ) {
                     --chargeTime;
                 }
                 ghast.setCharging( chargeTime > 10 );
