@@ -7,7 +7,7 @@ public class DWModelLayers {
 
 
     public static final ModelLayerLocation JUKEBOX_MIMIC = create("jukebox_mimic");
-
+    public static final ModelLayerLocation CHEST_MIMIC = create("chest_mimic");
 
 
     private static ModelLayerLocation create( String path ) {

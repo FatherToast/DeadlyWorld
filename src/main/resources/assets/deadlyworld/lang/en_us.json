@@ -23,7 +23,7 @@
   "block.deadlyworld.fireball_tower_dispenser": "Fireball Tower Dispenser",
   "block.deadlyworld.gatling_tower_dispenser": "Gatling Arrow Tower Dispenser",
 
-  "item.deadlyworld.mimic_spawn_egg": "Mimic Spawn Egg",
+  "item.deadlyworld.chest_mimic_spawn_egg": "Chest Mimic Spawn Egg",
   "item.deadlyworld.jukebox_mimic_spawn_egg": "Jukebox Mimic Spawn Egg",
   "item.deadlyworld.mini_creeper_spawn_egg": "Mini Creeper Spawn Egg",
   "item.deadlyworld.mini_zombie_spawn_egg": "Mini Zombie Spawn Egg",
@@ -33,7 +33,7 @@
   "item.deadlyworld.device_blueprint": "Deadly Device Blueprint",
   "item.deadlyworld.event_item": "Deadly World Event Item",
 
-  "entity.deadlyworld.mimic": "Mimic",
+  "entity.deadlyworld.chest_mimic": "Mimic",
   "entity.deadlyworld.jukebox_mimic": "Mimic",
   "entity.deadlyworld.mini_creeper": "Mini Creeper",
   "entity.deadlyworld.mini_zombie": "Mini Zombie",
@@ -51,9 +51,6 @@
   "block.deadlyworld.event_item.tooltip.lava": "Lava Flow",
   "block.deadlyworld.event_item.tooltip.poison_gas": "Poison Gas",
   "block.deadlyworld.event_item.tooltip.spawn_mimic": "Spawn Mimic",
-
-  "item.deadlyworld.feature_tester": "Deadly World Feature Tester",
-  "block.deadlyworld.feature_tester.tooltip": "Feature:",
 
   "block.deadlyworld.feature_tester.tooltip.chest.simple": "Simple Chest",
   "block.deadlyworld.feature_tester.tooltip.chest.valuable": "Valuable Chest",

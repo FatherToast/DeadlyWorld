@@ -3,18 +3,13 @@ package fathertoast.deadlyworld.client.renderer.entity.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import fathertoast.deadlyworld.common.entity.JukeboxMimic;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.SheepModel;
-import net.minecraft.client.model.SkeletonModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 
-public class JukeboxMimicModel<T extends JukeboxMimic> extends EntityModel<T> {
+public class JukeboxMimicModel<T extends JukeboxMimic> extends HierarchicalModel<T> {
 
 
     private final ModelPart body;
@@ -54,7 +49,9 @@ public class JukeboxMimicModel<T extends JukeboxMimic> extends EntityModel<T> {
     }
 
     @Override
-    public void setupAnim( JukeboxMimic mimic, float limbSwing, float limbSwingAmount, float partialTick, float netHeadYaw, float headPitch ) {
+    public void setupAnim( JukeboxMimic mimic, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch ) {
+        root().getAllParts().forEach(ModelPart::resetPose);
+
         body.xRot = headPitch * ( (float) Math.PI / 180F );
         body.yRot = netHeadYaw * ( (float) Math.PI / 180F );
 
@@ -65,5 +62,10 @@ public class JukeboxMimicModel<T extends JukeboxMimic> extends EntityModel<T> {
     @Override
     public void renderToBuffer( PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha ) {
         body.render( poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha );
+    }
+
+    @Override
+    public ModelPart root() {
+        return body;
     }
 }

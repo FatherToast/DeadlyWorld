@@ -84,7 +84,7 @@ public class WeightedEntityListField extends EntityListField {
         // Parse the entity-value array
         final String[] args = modifiedLine.split( " " );
         final ResourceLocation regKey;
-        if( REG_KEY_DEFAULT.equalsIgnoreCase( args[0].trim() ) ) {
+        if( "default".equalsIgnoreCase( args[0].trim() ) ) {
             // Handle the special case of a default entry
             regKey = null;
         }

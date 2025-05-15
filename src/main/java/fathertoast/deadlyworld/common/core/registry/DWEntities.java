@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.crust.api.config.common.field.AttributeListField;
 import fathertoast.crust.api.config.common.value.ConfigDrivenAttributeModifierMap;
+import fathertoast.deadlyworld.client.renderer.entity.model.ChestMimicModel;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.*;
@@ -23,9 +24,9 @@ public final class DWEntities {
     public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create( ForgeRegistries.ENTITY_TYPES, DeadlyWorld.MOD_ID );
     
     // Mimics
-    //    public static final RegistryObject<EntityType<Mimic>> MIMIC = register( "mimic",
-    //            EntityType.Builder.of( Mimic::new, MobCategory.MONSTER )
-    //                    .sized( 0.9375F, 0.9375F ).clientTrackingRange( 8 ) );
+    public static final RegistryObject<EntityType<ChestMimic>> CHEST_MIMIC = register( "chest_mimic",
+            EntityType.Builder.of( ChestMimic::new, MobCategory.MONSTER )
+                    .sized( 0.9375F, 0.9375F ).clientTrackingRange( 8 ) );
     public static final RegistryObject<EntityType<JukeboxMimic>> JUKEBOX_MIMIC = register( "jukebox_mimic",
             EntityType.Builder.of( JukeboxMimic::new, MobCategory.MONSTER )
                     .sized( 1.0F, 1.625F ).clientTrackingRange( 8 ) );
@@ -58,7 +59,7 @@ public final class DWEntities {
     /** Sets the default attributes for entity types, such as max health, attack damage etc. */
     public static void createAttributes( EntityAttributeCreationEvent event ) {
         // Mimics
-        //event.put( MIMIC.get(), Mimic.createAttributes().build() );
+        createConfigAttributes( event, CHEST_MIMIC, Config.ENTITIES.MIMICS.chestAttributes, ChestMimic.createChestMimicAttributes() );
         createConfigAttributes( event, JUKEBOX_MIMIC, Config.ENTITIES.MIMICS.jukeboxAttributes, JukeboxMimic.createJukeboxMimicAttributes() );
         
         // Mini mobs
