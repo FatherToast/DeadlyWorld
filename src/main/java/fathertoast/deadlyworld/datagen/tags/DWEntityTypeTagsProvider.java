@@ -19,14 +19,21 @@ public class DWEntityTypeTagsProvider extends EntityTypeTagsProvider {
     
     @Override
     protected void addTags( HolderLookup.Provider holderLookup ) {
-        tag( DWTags.EntityTypes.MINI ).add( DWEntities.MINI_CREEPER.get(), DWEntities.MICRO_GHAST.get(),
-                DWEntities.MINI_SKELETON.get(), DWEntities.MINI_SPIDER.get(), DWEntities.MINI_ZOMBIE.get() );
+        tag( DWTags.EntityTypes.MINI ).add(
+                DWEntities.MINI_CREEPER.get(), DWEntities.MICRO_GHAST.get(),
+                DWEntities.MINI_SKELETON.get(), DWEntities.MINI_SPIDER.get(),
+                DWEntities.MINI_ZOMBIE.get()
+        );
         
         tag( DWTags.EntityTypes.CREEPERS ).add( DWEntities.MINI_CREEPER.get() );
         tag( DWTags.EntityTypes.GHASTS ).add( DWEntities.MICRO_GHAST.get() );
         tag( EntityTypeTags.SKELETONS ).add( DWEntities.MINI_SKELETON.get() );
         tag( DWTags.EntityTypes.SPIDERS ).add( DWEntities.MINI_SPIDER.get() );
         tag( DWTags.EntityTypes.ZOMBIES ).add( DWEntities.MINI_ZOMBIE.get() );
+
+        tag( DWTags.EntityTypes.MIMIC ).add(
+                DWEntities.CHEST_MIMIC.get(), DWEntities.JUKEBOX_MIMIC.get()
+        );
         
         // Projectiles
         tag( EntityTypeTags.ARROWS ).add( DWEntities.MINI_ARROW.get() );

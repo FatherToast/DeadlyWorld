@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.client;
 
 import fathertoast.deadlyworld.client.renderer.block.DeadlySpawnerBlockEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.entity.*;
+import fathertoast.deadlyworld.client.renderer.entity.layer.ChestMimicChestLayer;
 import fathertoast.deadlyworld.client.renderer.entity.model.ChestMimicModel;
 import fathertoast.deadlyworld.client.renderer.entity.model.JukeboxMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -29,13 +30,14 @@ import net.minecraftforge.registries.RegistryObject;
 public class ClientRegister {
     
     @SubscribeEvent
-    static void onClientSetup( FMLClientSetupEvent event ) {
+    public static void onClientSetup( FMLClientSetupEvent event ) {
         MinecraftForge.EVENT_BUS.register( new ClientEvents() );
         
         registerBlockEntityRenderers();
+        ChestMimicChestLayer.validateChestTextures();
     }
-    
-    static void registerBlockEntityRenderers() {
+
+    private static void registerBlockEntityRenderers() {
         BlockEntityRenderers.register( DWBlockEntities.DEADLY_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
         BlockEntityRenderers.register( DWBlockEntities.MINI_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
         //        BlockEntityRenderers.register( DWBlockEntities.FLOOR_TRAP.get(), FloorTrapBlockEntityRenderer::new );
@@ -43,14 +45,14 @@ public class ClientRegister {
     }
     
     @SubscribeEvent
-    static void registerLayerDefs( EntityRenderersEvent.RegisterLayerDefinitions event ) {
+    public static void registerLayerDefs( EntityRenderersEvent.RegisterLayerDefinitions event ) {
         event.registerLayerDefinition( DWModelLayers.JUKEBOX_MIMIC, JukeboxMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.CHEST_MIMIC, ChestMimicModel::createBodyLayer );
         //event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
     }
     
     @SubscribeEvent
-    static void registerEntityRenderers( EntityRenderersEvent.RegisterRenderers event ) {
+    public static void registerEntityRenderers( EntityRenderersEvent.RegisterRenderers event ) {
         // New mobs
         event.registerEntityRenderer( DWEntities.CHEST_MIMIC.get(), ChestMimicRenderer::new );
         event.registerEntityRenderer( DWEntities.JUKEBOX_MIMIC.get(), JukeboxMimicRenderer::new );
@@ -72,7 +74,7 @@ public class ClientRegister {
     }
     
     @SubscribeEvent
-    static void buildCreativeContents( BuildCreativeModeTabContentsEvent event ) {
+    public static void buildCreativeContents( BuildCreativeModeTabContentsEvent event ) {
         if( event.getTabKey() == CreativeModeTabs.SEARCH ) {
             for( RegistryObject<Item> item : DWItems.REGISTRY.getEntries() ) {
                 event.accept( item.get() );

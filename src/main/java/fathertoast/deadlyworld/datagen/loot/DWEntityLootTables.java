@@ -19,7 +19,7 @@ public class DWEntityLootTables extends EntityLootSubProvider {
     @Override
     public void generate() {
         // New mobs
-        //add( DWEntities.MIMIC, new LootTableBuilder().addLootTable( "chest", Blocks.CHEST.getLootTable() ) );
+        add( DWEntities.CHEST_MIMIC, new LootTableBuilder().addLootTable( "chest", Blocks.CHEST.getLootTable() ) );
         // TODO - proper jukebox mimic loot
         add( DWEntities.JUKEBOX_MIMIC, new LootTableBuilder().addLootTable( "jukebox", Blocks.JUKEBOX.getLootTable() ) );
         

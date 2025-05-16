@@ -17,6 +17,7 @@ public final class DWItems {
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create( ForgeRegistries.ITEMS, DeadlyWorld.MOD_ID );
     
     //public static final RegistryObject<DeviceBlueprintItem> DEVICE_BLUEPRINT = register( "device_blueprint", DeviceBlueprintItem::new );
+    public static final RegistryObject<Item> MIMIC_CORE = registerSimple("mimic_core" );
     
     // Spawn eggs
     public static final RegistryObject<ForgeSpawnEggItem> MIMIC_SPAWN_EGG = registerSpawnEgg(
@@ -37,6 +38,10 @@ public final class DWItems {
     /** Registers an item. */
     private static <T extends Item> RegistryObject<T> register( String name, Supplier<T> supplier ) {
         return REGISTRY.register( name, supplier );
+    }
+
+    private static RegistryObject<Item> registerSimple( String name ) {
+        return REGISTRY.register( name, () -> new Item( new Item.Properties() ) );
     }
     
     /** Registers a simple spawn egg item for an entity type. */

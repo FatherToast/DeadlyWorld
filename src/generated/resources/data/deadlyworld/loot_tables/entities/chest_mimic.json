@@ -6,12 +6,12 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "name": "minecraft:blocks/jukebox"
+          "name": "minecraft:blocks/chest"
         }
       ],
-      "name": "jukebox",
+      "name": "chest",
       "rolls": 1.0
     }
   ],
-  "random_sequence": "deadlyworld:entities/jukebox_mimic"
+  "random_sequence": "deadlyworld:entities/chest_mimic"
 }

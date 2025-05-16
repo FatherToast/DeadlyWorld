@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.datagen;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.datagen.loot.DWLootModProvider;
 import fathertoast.deadlyworld.datagen.loot.DWLootTableProvider;
 import fathertoast.deadlyworld.datagen.tags.DWBlockTagsProvider;
 import fathertoast.deadlyworld.datagen.tags.DWEntityTypeTagsProvider;
@@ -47,8 +48,10 @@ public class DataGatherer {
         if( event.includeServer() ) {
             DatapackBuiltinEntriesProvider builtInProvider =
                     generator.addProvider( true, new DatapackBuiltinEntriesProvider( packOutput, lookupProvider, BUILDER, Set.of( DeadlyWorld.MOD_ID ) ) );
+
             generator.addProvider( true, new DWLootTableProvider( packOutput ) );
-            
+            generator.addProvider( true, new DWLootModProvider( packOutput ) );
+
             // Tags
             DWBlockTagsProvider blockTags =
                     generator.addProvider( true, new DWBlockTagsProvider( packOutput, lookupProvider, fileHelper ) );

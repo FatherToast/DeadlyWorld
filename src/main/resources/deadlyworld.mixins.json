@@ -5,7 +5,7 @@
   "minVersion": "0.8",
   "refmap": "deadlyworld.mixins.refmap.json",
   "mixins": [
-    "PointedDripstoneBlockMixin"
+
   ],
   "client": [],
   "server": [],

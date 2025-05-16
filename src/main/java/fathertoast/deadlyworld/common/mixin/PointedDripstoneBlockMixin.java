@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin( PointedDripstoneBlock.class )
+// TODO - Re-enable mixin before building; mixins can break hotswap
+//@Mixin( PointedDripstoneBlock.class )
 public abstract class PointedDripstoneBlockMixin extends Block implements Fallable, SimpleWaterloggedBlock {
 
     public PointedDripstoneBlockMixin( Properties properties ) {
@@ -22,8 +23,11 @@ public abstract class PointedDripstoneBlockMixin extends Block implements Fallab
     }
 
 
+    /*
     @Inject(method = "onProjectileHit", at = @At("HEAD"), cancellable = true)
     public void injectOnProjectileHit( Level level, BlockState state, BlockHitResult hitResult, Projectile projectile, CallbackInfo ci ) {
         CommonMixinHooks.pointedDripstoneProjectileHit( level, state, hitResult, projectile, ci );
     }
+
+     */
 }
