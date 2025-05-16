@@ -105,9 +105,11 @@ public final class GameEventHandler {
         BlockEntity blockEntity = level.getExistingBlockEntity( pos );
 
         if ( blockEntity instanceof ChestBlockEntity chest ) {
+            // Unpack loot table early so we can check the items
             chest.unpackLootTable( event.getEntity() );
             boolean spawnMimic = false;
 
+            // If inventory contains mimic core, do mimic stuff
             for ( ItemStack itemStack : chest.getItems() ) {
                 if ( itemStack.getItem() == DWItems.MIMIC_CORE.get() ) {
                     spawnMimic = true;
@@ -115,6 +117,7 @@ public final class GameEventHandler {
                 }
             }
 
+            // Spawn mimic!
             if ( !level.isClientSide && spawnMimic ) {
                 ChestMimic chestMimic = DWEntities.CHEST_MIMIC.get().create( event.getLevel() );
 
