@@ -4,165 +4,195 @@ import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
+import fathertoast.deadlyworld.common.util.TrapHelper;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public enum TrapType {
     
     TNT( "tnt", ( dimConfig ) -> dimConfig.TRAPS.TNT ) {
-        //        @Override
-        //        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
-        //            FloorTrapConfig.TntTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT;
-        //            World world = trapEntity.getLevel();
-        //
-        //            double x = trapEntity.getBlockPos().getX() + 0.5;
-        //            double y = trapEntity.getBlockPos().getY() + 1;
-        //            double z = trapEntity.getBlockPos().getZ() + 0.5;
-        //
-        //            int fuseRange = config.maxFuseTime.get() - config.minFuseTime.get();
-        //            if( fuseRange <= 0 ) {
-        //                fuseRange = 1;
-        //            }
-        //            // Spawn the primed tnt blocks
-        //            for( int i = 0; i < config.tntCount.get(); i++ ) {
-        //                TNTEntity tnt = new TNTEntity( world, x, y, z, null );
-        //
-        //                float speed = (float) config.launchSpeed.get() * world.random.nextFloat() + 0.02F;
-        //                tnt.setFuse( config.minFuseTime.get() + world.random.nextInt( fuseRange ) );
-        //                tnt.getDeltaMovement().multiply( speed, 0.1F * world.random.nextDouble(), speed );
-        //                world.addFreshEntity( tnt );
-        //            }
-        //            world.playSound( null, x, y, z, SoundEvents.TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F );
-        //        }
+        @Override
+        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+            TrapConfig.TntTrapTypeCategory config = dimConfig.TRAPS.TNT;
+            Level level = trapEntity.getLevel();
+
+            double x = trapEntity.getBlockPos().getX() + 0.5;
+            double y = trapEntity.getBlockPos().getY() + 1;
+            double z = trapEntity.getBlockPos().getZ() + 0.5;
+
+            int fuseRange = config.fuseTimeMax.get() - config.fuseTimeMin.get();
+            if( fuseRange <= 0 ) {
+                fuseRange = 1;
+            }
+            // Spawn the primed tnt blocks
+            for( int i = 0; i < config.tntCount.get(); i++ ) {
+                PrimedTnt tnt = new PrimedTnt( level, x, y, z, null );
+
+                float speed = (float) config.launchSpeed.get() * level.random.nextFloat() + 0.02F;
+                tnt.setFuse( config.fuseTimeMin.get() + level.random.nextInt( fuseRange ) );
+                tnt.getDeltaMovement().multiply( speed, 0.1F * level.random.nextDouble(), speed );
+                level.addFreshEntity( tnt );
+            }
+            level.playSound( null, x, y, z, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F );
+        }
     },
     
     TNT_MOB( "tnt_mob", ( dimConfig ) -> dimConfig.TRAPS.TNT_MOB ) {
         @Override
         public boolean spawnsMonster() { return true; }
-        
-        //        @Override
-        //        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
-        //            FloorTrapConfig.TntMobTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT_MOB;
-        //            World world = trapEntity.getLevel();
-        //
-        //            double x = trapEntity.getBlockPos().getX() + 0.5;
-        //            double y = trapEntity.getBlockPos().getY() + 1;
-        //            double z = trapEntity.getBlockPos().getZ() + 0.5;
-        //
-        //            int fuseRange = config.maxFuseTime.get() - config.minFuseTime.get();
-        //            if( fuseRange <= 0 ) {
-        //                fuseRange = 1;
-        //            }
-        //            // Pick an entity to spawn
-        //            EntityType<?> entityType = config.spawnList.get().next( world.random );
-        //
-        //            if( entityType == null ) {
-        //                DeadlyWorld.LOG.warn(
-        //                        "TNT mob floor trap received null entity type!" +
-        //                                " - This is probably caused by an error or change in the config for DIM_{} (defaulting to zombie)", world.dimension()
-        //                );
-        //                entityType = EntityType.ZOMBIE;
-        //            }
-        //
-        //            // Try to create the entity to spawn
-        //            Entity entity;
-        //            LivingEntity livingEntity = null;
-        //            try {
-        //                entity = entityType.create( world );
-        //            }
-        //            catch( Exception ex ) {
-        //                DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", entityType.getRegistryName(), ex );
-        //                return;
-        //            }
-        //
-        //            // Initialize the entity
-        //            entity.setPos( x, y, z );
-        //            entity.setRot( world.random.nextFloat() * 2.0F * (float) Math.PI, 0.0F );
-        //            entity.setDeltaMovement( entity.getDeltaMovement().x, 0.3D, entity.getDeltaMovement().z );
-        //
-        //            if( entity instanceof LivingEntity ) {
-        //                livingEntity = (LivingEntity) entity;
-        //                ModifiableAttributeInstance attribute;
-        //
-        //                if( config.healthMultiplier.get() != 1.0D ) {
-        //                    try {
-        //                        attribute = livingEntity.getAttribute( Attributes.MAX_HEALTH );
-        //                        attribute.setBaseValue( attribute.getBaseValue() * config.healthMultiplier.get() );
-        //                    }
-        //                    catch( Exception ex ) {
-        //                        // This is fine, entity just doesn't have the attribute
-        //                    }
-        //                }
-        //                if( config.speedMultiplier.get() != 1.0F ) {
-        //                    try {
-        //                        attribute = livingEntity.getAttribute( Attributes.MOVEMENT_SPEED );
-        //                        attribute.setBaseValue( attribute.getBaseValue() * config.speedMultiplier.get() );
-        //                    }
-        //                    catch( Exception ex ) {
-        //                        // This is fine, entity just doesn't have the attribute
-        //                    }
-        //                }
-        //                livingEntity.setHealth( livingEntity.getMaxHealth() );
-        //                livingEntity.setLastHurtByMob( trapEntity.getTarget() );
-        //            }
-        //
-        //            // Make the tnt "hat"
-        //            TNTEntity tnt = new TNTEntity( world, x, y, z, livingEntity );
-        //            tnt.copyPosition( entity );
-        //            tnt.setFuse( config.minFuseTime.get() + world.random.nextInt( fuseRange ) );
-        //            tnt.startRiding( entity, true );
-        //
-        //            // Spawn the entities and play alert sound
-        //            world.addFreshEntity( entity );
-        //            world.playSound( null, x, y, z, SoundEvents.TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F );
-        //        }
+
+        @Override
+        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+            TrapConfig.TntMobTrapTypeCategory config = dimConfig.TRAPS.TNT_MOB;
+            Level level = trapEntity.getLevel();
+
+            double x = trapEntity.getBlockPos().getX() + 0.5;
+            double y = trapEntity.getBlockPos().getY() + 1;
+            double z = trapEntity.getBlockPos().getZ() + 0.5;
+
+            int fuseRange = config.fuseTimeMax.get() - config.fuseTimeMin.get();
+
+            if( fuseRange <= 0 ) {
+                fuseRange = 1;
+            }
+            // Pick an entity to spawn
+            EntityType<?> entityType = config.spawnList.get().next( level.random );
+
+            if( entityType == null ) {
+                DeadlyWorld.LOG.warn(
+                        "TNT mob floor trap received null entity type!" +
+                                " - This is probably caused by an error or change in the config for DIM_{} (defaulting to zombie)", level.dimension()
+                );
+                entityType = EntityType.ZOMBIE;
+            }
+
+            // Try to create the entity to spawn
+            Entity entity;
+            LivingEntity livingEntity = null;
+            try {
+                entity = entityType.create( level );
+            }
+            catch( Exception ex ) {
+                DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", ForgeRegistries.ENTITY_TYPES.getKey( entityType ), ex );
+                return;
+            }
+            if ( entity == null ) {
+                DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", ForgeRegistries.ENTITY_TYPES.getKey( entityType ) );
+                return;
+            }
+
+            // Initialize the entity
+            entity.setPos( x, y, z );
+            entity.setYRot( level.random.nextFloat() * 2.0F * (float) Math.PI );
+            entity.setXRot( 0.0F );
+            entity.setDeltaMovement( entity.getDeltaMovement().x, 0.3D, entity.getDeltaMovement().z );
+
+            if( entity instanceof LivingEntity ) {
+                livingEntity = (LivingEntity) entity;
+                AttributeInstance attribute;
+
+                if( config.healthMultiplier.get() != 1.0D ) {
+                    try {
+                        attribute = livingEntity.getAttribute( Attributes.MAX_HEALTH );
+                        attribute.setBaseValue( attribute.getBaseValue() * config.healthMultiplier.get() );
+                    }
+                    catch( Exception ex ) {
+                        // This is fine, entity just doesn't have the attribute
+                    }
+                }
+                if( config.speedMultiplier.get() != 1.0F ) {
+                    try {
+                        attribute = livingEntity.getAttribute( Attributes.MOVEMENT_SPEED );
+                        attribute.setBaseValue( attribute.getBaseValue() * config.speedMultiplier.get() );
+                    }
+                    catch( Exception ex ) {
+                        // This is fine, entity just doesn't have the attribute
+                    }
+                }
+                livingEntity.setHealth( livingEntity.getMaxHealth() );
+                Entity tripTarget = trapEntity.getTrapLogic().getTripTarget();
+
+                if ( tripTarget instanceof LivingEntity livingTarget ) {
+                    livingEntity.setLastHurtByMob( livingTarget );
+                }
+            }
+            level.addFreshEntity( entity );
+
+            // Make the tnt "hat"
+            PrimedTnt tnt = new PrimedTnt( level, x, y, z, livingEntity );
+            tnt.copyPosition( entity );
+            tnt.setFuse( config.fuseTimeMin.get() + level.random.nextInt( fuseRange ) );
+            tnt.startRiding( entity, true );
+
+            // Spawn the entities and play alert sound
+            level.addFreshEntity( tnt );
+            level.playSound( null, x, y, z, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F );
+        }
     },
     
     POTION( "potion", ( dimConfig ) -> dimConfig.TRAPS.POTION ) {
-        //        @Override
-        //        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
-        //            FloorTrapConfig.PotionTrapTypeCategory config = dimConfig.FLOOR_TRAPS.POTION;
-        //
-        //            World world = trapEntity.getLevel();
-        //
-        //            double x = trapEntity.getBlockPos().getX() + 0.5;
-        //            double y = trapEntity.getBlockPos().getY() + 1.1;
-        //            double z = trapEntity.getBlockPos().getZ() + 0.5;
-        //
-        //            // Load or pick the trap type
-        //            ItemStack potionStack = trapEntity.getPotionStack( config.potionList.get(), world.random );
-        //
-        //            // Spawn the thrown potion
-        //            PotionEntity potionEntity = new PotionEntity( world, x, y, z );
-        //            potionEntity.setItem( potionStack );
-        //            potionEntity.setDeltaMovement( potionEntity.getDeltaMovement().x, 0.33D + 0.04D * world.random.nextDouble(), potionEntity.getDeltaMovement().z );
-        //            world.addFreshEntity( potionEntity );
-        //
-        //            world.playSound( null, x, y, z, SoundEvents.DISPENSER_LAUNCH, SoundCategory.BLOCKS, 1.0F, 1.0F );
-        //        }
+        @Override
+        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+            TrapConfig.PotionTrapTypeCategory config = dimConfig.TRAPS.POTION;
+
+            Level level = trapEntity.getLevel();
+
+            double x = trapEntity.getBlockPos().getX() + 0.5;
+            double y = trapEntity.getBlockPos().getY() + 1.1;
+            double z = trapEntity.getBlockPos().getZ() + 0.5;
+
+            // Pick potion
+            ItemStack potionStack = TrapHelper.getPotionFromList( config.potionList.get(), level.random );
+            TrapHelper.setStackPotionColor( potionStack );
+
+            // Spawn the thrown potion
+            ThrownPotion potionEntity = new ThrownPotion( level, x, y, z );
+            potionEntity.setItem( potionStack );
+            potionEntity.setDeltaMovement( potionEntity.getDeltaMovement().x, 0.33D + 0.04D * level.random.nextDouble(), potionEntity.getDeltaMovement().z );
+            level.addFreshEntity( potionEntity );
+
+            level.playSound( null, x, y, z, SoundEvents.DISPENSER_LAUNCH, SoundSource.BLOCKS, 1.0F, 1.0F );
+        }
     },
     
     LAVA( "lava", ( dimConfig ) -> dimConfig.TRAPS.LAVA ) {
-        //        @Override
-        //        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
-        //            FloorTrapConfig.FloorTrapTypeCategory config = dimConfig.FLOOR_TRAPS.LAVA;
-        //
-        //            World world = trapEntity.getLevel();
-        //            BlockPos pos = trapEntity.getBlockPos();
-        //
-        //            boolean placedLava = false;
-        //
-        //            for( int i = 1; i < 3; i++ ) {
-        //                if( world.getBlockState( pos.above() ).canBeReplaced( Fluids.LAVA ) ) {
-        //                    world.setBlock( pos.above( i ), Blocks.LAVA.defaultBlockState(), Constants.BlockFlags.BLOCK_UPDATE );
-        //                    placedLava = true;
-        //                }
-        //            }
-        //            if( placedLava ) {
-        //                world.playSound( null, pos, SoundEvents.BUCKET_EMPTY_LAVA, SoundCategory.BLOCKS, 1.0F, 1.0F );
-        //            }
-        //        }
+        @Override
+        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+            TrapConfig.TrapTypeCategory config = dimConfig.TRAPS.LAVA;
+
+            Level level = trapEntity.getLevel();
+            BlockPos pos = trapEntity.getBlockPos();
+
+            boolean placedLava = false;
+
+            for( int i = 1; i < 3; i++ ) {
+                if( level.getBlockState( pos.above() ).canBeReplaced( Fluids.LAVA ) ) {
+                    level.setBlock( pos.above( i ), Blocks.LAVA.defaultBlockState(), Block.UPDATE_ALL );
+                    placedLava = true;
+                }
+            }
+            if( placedLava ) {
+                level.playSound( null, pos, SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F );
+            }
+        }
     };
     
     
@@ -194,8 +224,8 @@ public enum TrapType {
         return DeadlyWorld.resourceLoc( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
     }
     
-    //    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
-    //    public Supplier<FloorTrapBlock> getBlock() { return () -> new FloorTrapBlock( this ); }
+    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
+    public Supplier<DeadlyTrapBlock> getBlock() { return () -> new DeadlyTrapBlock( this ); }
     
     public boolean spawnsMonster() {
         return false;
@@ -203,7 +233,7 @@ public enum TrapType {
     
     public final TrapConfig.TrapTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
     
-    //    public abstract void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity );
+    public abstract void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity );
     
     @Override
     public String toString() { return id; }

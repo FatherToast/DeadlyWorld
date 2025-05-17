@@ -6,8 +6,10 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 public class DWModelLayers {
 
 
-    public static final ModelLayerLocation JUKEBOX_MIMIC = create("jukebox_mimic");
-    public static final ModelLayerLocation CHEST_MIMIC = create("chest_mimic");
+    public static final ModelLayerLocation JUKEBOX_MIMIC = create( "jukebox_mimic" );
+    public static final ModelLayerLocation CHEST_MIMIC = create( "chest_mimic" );
+
+    public static final ModelLayerLocation DEADLY_TRAP_OVERLAY = create( "deadly_trap", "overlay" );
 
 
     private static ModelLayerLocation create( String path ) {

@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.block.trap;
 
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.config.BlocksConfig;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;
 import net.minecraft.ChatFormatting;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -31,16 +33,23 @@ import java.util.List;
 import java.util.Optional;
 
 public class DeadlyTrapBlock extends BaseEntityBlock {
-    
-    public DeadlyTrapBlock( BlocksConfig.BlockCategory config ) {
-        super( config.adjustBlockProperties( Properties.copy( Blocks.SPAWNER ) ) );
+
+    private final TrapType trapType;
+
+    public DeadlyTrapBlock( TrapType trapType ) {
+        super( Config.BLOCKS.get( trapType ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.DISPENSER ) ) );
+        this.trapType = trapType;
     }
-    
+
+    public TrapType getTrapType() {
+        return trapType;
+    }
+
     public BaseTrap newTrapLogic( DeadlyTrapBlockEntity blockEntity ) {
-        return new BaseTrap( blockEntity ) {
+        return new BaseTrap( trapType, blockEntity ) {
             @Override
             public void triggerTrap( ServerLevel level, BlockPos pos ) {
-                // TODO
+                trapType.triggerTrap( Config.getDimensionConfigs( level ), blockEntity );
             }
         };
     }
@@ -72,5 +81,7 @@ public class DeadlyTrapBlock extends BaseEntityBlock {
     }
     
     @Override
-    public RenderShape getRenderShape( BlockState state ) { return RenderShape.MODEL; }
+    public RenderShape getRenderShape( BlockState state ) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
+    }
 }

@@ -1,13 +1,16 @@
 package fathertoast.deadlyworld.common.util;
 
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
@@ -123,6 +126,17 @@ public final class TrapHelper {
                 return false;
         }
         return true;
+    }
+
+    /** @return A thrown potion item stack with a randomly picked effect instance from the given weighted potion list. */
+    public static ItemStack getPotionFromList( WeightedPotionList potionList, RandomSource random ) {
+        ItemStack potionStack = new ItemStack( Items.SPLASH_POTION );
+        MobEffectInstance effectInstance = potionList.next( random );
+
+        if ( effectInstance != null ) {
+            PotionUtils.setCustomEffects(potionStack, List.of(effectInstance));
+        }
+        return potionStack;
     }
     
     public static void setStackPotionColor( ItemStack potionStack ) {

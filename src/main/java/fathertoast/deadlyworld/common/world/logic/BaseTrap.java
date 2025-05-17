@@ -1,6 +1,10 @@
 package fathertoast.deadlyworld.common.world.logic;
 
 import fathertoast.crust.api.lib.NBTHelper;
+import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
+import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -57,6 +61,7 @@ public abstract class BaseTrap {
     protected int maxTriggerDelay;
     
     // Logic
+    private final TrapType trapType;
     /** The entity that tripped this trap. Usually (but not always) non-null when triggering and null in all other states. */
     @Nullable
     protected Entity tripEntity;
@@ -72,15 +77,16 @@ public abstract class BaseTrap {
     protected int tripCheckDelay;
     
     @SuppressWarnings( "unused" ) // For possible future use
-    public <T extends Entity & ITrapObject> BaseTrap( T entity ) { this( entity, entity ); }
+    public <T extends Entity & ITrapObject> BaseTrap( TrapType trapType, T entity ) { this( trapType, entity, entity ); }
     
-    public BaseTrap( Entity entity, ITrapObject trapObj ) { this( entity, null, trapObj ); }
+    public BaseTrap( TrapType trapType, Entity entity, ITrapObject trapObj ) { this( trapType, entity, null, trapObj ); }
     
-    public <T extends BlockEntity & ITrapObject> BaseTrap( T block ) { this( block, block ); }
+    public <T extends BlockEntity & ITrapObject> BaseTrap( TrapType trapType, T block ) { this( trapType, block, block ); }
     
-    public BaseTrap( BlockEntity block, ITrapObject trapObj ) { this( null, block, trapObj ); }
+    public BaseTrap( TrapType trapType, BlockEntity block, ITrapObject trapObj ) { this( trapType, null, block, trapObj ); }
     
-    private BaseTrap( @Nullable Entity entity, @Nullable BlockEntity block, ITrapObject trapObj ) {
+    private BaseTrap( TrapType trapType, @Nullable Entity entity, @Nullable BlockEntity block, ITrapObject trapObj ) {
+        this.trapType = trapType;
         mobileEntity = entity;
         blockEntity = block;
         trapObject = trapObj;
@@ -96,35 +102,25 @@ public abstract class BaseTrap {
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
-    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {//TODO
-        //        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig(
-        //                level == null ? Config.getDefaultConfigs() : Config.getDimensionConfigs( level ) );
-        //
-        //        // Set attributes from the config
-        //        activationRange = spawnerConfig.activationRange.get();
-        //        checkSightChance = spawnerConfig.checkSightChance.get();
-        //        maxNearbyEntities = spawnerConfig.maxNearbyEntities.get();
-        //
-        //        minSpawnDelay = spawnerConfig.delay.getMin();
-        //        maxSpawnDelay = spawnerConfig.delay.getMax();
-        //        spawnDelayProgression = spawnerConfig.delayProgression.get();
-        //        spawnDelayRecovery = (float) spawnerConfig.delayRecovery.get();
-        //
-        //        spawnCount = spawnerConfig.spawnCount.get();
-        //        spawnRange = spawnerConfig.spawnRange.get();
-        //
-        //        // Initialize logic
-        //        spawnsRemaining = spawnerConfig.maxSpawns.get();
-        //        if( spawnsRemaining == 0 )
-        //            spawnsRemaining = -1; // 0 would have no meaning in the config, but here it means "disabled"
-        //        if( random.nextFloat() < spawnerConfig.dynamicChance.get() && !spawnerConfig.spawnList.get().isDisabled() ) {
-        //            dynamicSpawnList = spawnerConfig.spawnList.get();
-        //        }
-        //        else {
-        //            dynamicSpawnList = null;
-        //        }
+    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {
+        final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+        initializeTrap( level, pos, random,
+                trapConfig.activationRange.get(), (float) trapConfig.checkSightChance.get(),
+                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), -1 // TODO - config thingy, for now just endless triggers
+        );
     }
-    
+
+    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random, double activationRange,
+                                float checkSightChance, int minResetTime, int maxResetTime, int triggersRemaining ) {
+        this.checkSight = roll( random, checkSightChance );
+        this.activationRange = activationRange;
+        this.minResetTime = minResetTime;
+        this.maxResetTime = maxResetTime;
+        this.triggersRemaining = triggersRemaining;
+    }
+
+    private static boolean roll( RandomSource random, float chance ) { return chance >= 1.0F || chance > 0.0F && random.nextFloat() < chance; }
+
     public double getActivationRange() { return activationRange; }
     
     public void clientTick( Level level, BlockPos pos ) { }
@@ -165,6 +161,11 @@ public abstract class BaseTrap {
     @Nullable
     protected Entity findTripTarget( ServerLevel level, BlockPos pos ) {
         return TrapHelper.getTrapTargetInRange( level, pos, activationRange, checkSight );
+    }
+
+    @Nullable
+    public Entity getTripTarget() {
+        return tripEntity;
     }
     
     /** Called each server tick while this trap is triggering. */

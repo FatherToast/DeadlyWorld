@@ -26,9 +26,9 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         for( SpawnerType type : SpawnerType.values() ) {
             add( DWBlocks.spawner( type ), buildSpawnerLoot( type ) );
         }
-        //        for( FloorTrapType type : FloorTrapType.values() ) {
-        //            add( DWBlocks.floorTrap( type ), buildFloorTrapLoot( type ) );
-        //        }
+        for( TrapType type : TrapType.values() ) {
+            add( DWBlocks.trap( type ), buildFloorTrapLoot( type ) );
+        }
         //        for( TowerType type : TowerType.values() ) {
         //            add( DWBlocks.towerDispenser( type ), buildTowerDispenserLoot( type ) );
         //        }
@@ -58,6 +58,9 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) { //TODO
             case TNT -> { }
+            case TNT_MOB -> { }
+            case POTION -> { }
+            case LAVA -> { }
             default ->
                     throw new IllegalArgumentException( "Floor trap type \"" + type + "\" is missing block loot table data gen code!" );
         }

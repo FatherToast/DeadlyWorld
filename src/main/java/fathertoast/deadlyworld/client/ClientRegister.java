@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.client;
 
 import fathertoast.deadlyworld.client.renderer.block.DeadlySpawnerBlockEntityRenderer;
+import fathertoast.deadlyworld.client.renderer.block.DeadlyTrapBlockEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.entity.*;
 import fathertoast.deadlyworld.client.renderer.entity.layer.ChestMimicChestLayer;
 import fathertoast.deadlyworld.client.renderer.entity.model.ChestMimicModel;
@@ -40,7 +41,7 @@ public class ClientRegister {
     private static void registerBlockEntityRenderers() {
         BlockEntityRenderers.register( DWBlockEntities.DEADLY_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
         BlockEntityRenderers.register( DWBlockEntities.MINI_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
-        //        BlockEntityRenderers.register( DWBlockEntities.FLOOR_TRAP.get(), FloorTrapBlockEntityRenderer::new );
+        BlockEntityRenderers.register( DWBlockEntities.DEADLY_TRAP.get(), DeadlyTrapBlockEntityRenderer::new );
         //        BlockEntityRenderers.register( DWBlockEntities.STORM_DRAIN.get(), StormDrainBlockEntityRenderer::new );
     }
     
@@ -49,6 +50,8 @@ public class ClientRegister {
         event.registerLayerDefinition( DWModelLayers.JUKEBOX_MIMIC, JukeboxMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.CHEST_MIMIC, ChestMimicModel::createBodyLayer );
         //event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
+
+        event.registerLayerDefinition( DWModelLayers.DEADLY_TRAP_OVERLAY, DeadlyTrapBlockEntityRenderer::createOverlayLayer );
     }
     
     @SubscribeEvent

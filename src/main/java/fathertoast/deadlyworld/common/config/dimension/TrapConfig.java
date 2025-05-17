@@ -4,11 +4,16 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.crust.api.config.common.value.EntityEntry;
+import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
+import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
+import fathertoast.deadlyworld.common.config.field.WeightedPotionListField;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static fathertoast.deadlyworld.common.util.References.*;
 
@@ -177,44 +182,44 @@ public class TrapConfig extends FeatureConfig {
     
     public static class PotionTrapTypeCategory extends TrapTypeCategory {
         
-        //        public final WeightedPotionListField potionList;
+        public final WeightedPotionListField potionList;
         
         PotionTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double chestCh,
                                 double activationRng, boolean checkSight, int minResetTime, int maxResetTime ) {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight, minResetTime, maxResetTime );
             
-            //TODO
-            //            potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList( feature ),
-            //                    "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when hurling splash potions. One of these is chosen",
-            //                    "at random when the trap is generated. If the trap is generated as 'dynamicChance' it will pick again",
-            //                    "between each potion effect." ) );
+            potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList(),
+                    "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when hurling splash potions. One of these is chosen",
+                    "at random when the trap is generated. If the trap is generated as 'dynamicChance' it will pick again",
+                    "between each potion effect." ) );
         }
         
-        //        /** @return The default spawn list to use for this spawner type and dimension. */
-        //        protected WeightedPotionList makeDefaultPotionList( FeatureConfig feature ) {
-        //            if( isNetherDimension( feature ) ) {
-        //                return new WeightedPotionList(
-        //                        new PotionEntry( MobEffects.WITHER, 5, 100, 0 ),
-        //                        new PotionEntry( MobEffects.MOVEMENT_SLOWDOWN, 30, 200, 2 ),
-        //                        new PotionEntry( MobEffects.POISON, 20, 100, 1 ),
-        //                        new PotionEntry( MobEffects.BLINDNESS, 10, 200, 0 )
-        //                );
-        //            }
-        //            if( isEndDimension( feature ) ) {
-        //                return new WeightedPotionList(
-        //                        new PotionEntry( MobEffects.LEVITATION, 40, 240, 0 ),
-        //                        new PotionEntry( MobEffects.CONFUSION, 40, 200, 0 ),
-        //                        new PotionEntry( MobEffects.WEAKNESS, 20, 280, 2 )
-        //                );
-        //            }
-        //            // For the overworld, as well as any dimensions added by mods
-        //            return new WeightedPotionList(
-        //                    new PotionEntry( MobEffects.POISON, 20, 200, 0 ),
-        //                    new PotionEntry( MobEffects.MOVEMENT_SLOWDOWN, 20, 200, 1 ),
-        //                    new PotionEntry( MobEffects.WEAKNESS, 20, 150, 1 ),
-        //                    new PotionEntry( MobEffects.HARM, 20, 1, 1 ),
-        //                    new PotionEntry( MobEffects.HUNGER, 20, 500, 1 )
-        //            );
-        //        }
+        /** @return The default spawn list to use for this spawner type and dimension. */
+        @SuppressWarnings( "ConstantConditions" )
+        protected WeightedPotionList makeDefaultPotionList() {
+            if( isNetherDimension( ) ) {
+                return new WeightedPotionList(
+                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.WITHER ), 5, 100, 0 ),
+                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.MOVEMENT_SLOWDOWN), 30, 200, 2 ),
+                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON), 20, 100, 1 ),
+                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.BLINDNESS), 10, 200, 0 )
+                );
+            }
+            if( isEndDimension( ) ) {
+                return new WeightedPotionList(
+                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.LEVITATION ), 40, 240, 0 ),
+                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.CONFUSION ), 40, 200, 0 ),
+                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.WEAKNESS ), 20, 280, 2 )
+                );
+            }
+            // For the overworld, as well as any dimensions added by mods
+            return new WeightedPotionList(
+                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 20, 200, 0 ),
+                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.MOVEMENT_SLOWDOWN ), 20, 200, 1 ),
+                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.WEAKNESS ), 20, 150, 1 ),
+                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.HARM ), 20, 1, 1 ),
+                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.HUNGER ), 20, 500, 1 )
+            );
+        }
     }
 }

@@ -1,0 +1,72 @@
+package fathertoast.deadlyworld.client.renderer.block;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import fathertoast.deadlyworld.client.DWModelLayers;
+import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
+
+public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<DeadlyTrapBlockEntity> {
+
+    private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.resourceLoc("textures/misc/floor_trap_overlay.png" );
+
+    private final ModelPart topOverlay;
+
+    public DeadlyTrapBlockEntityRenderer( BlockEntityRendererProvider.Context renderContext ) {
+        ModelPart root = renderContext.bakeLayer( DWModelLayers.DEADLY_TRAP_OVERLAY );
+        topOverlay = root.getChild( "overlay" );
+    }
+
+    public static LayerDefinition createOverlayLayer() {
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
+
+        partDefinition.addOrReplaceChild("overlay",
+                CubeListBuilder.create()
+                        .texOffs( -16, 0 )
+                        .addBox(-8.0F, -16.0F, -8.0F, 16.0F, 0.0F, 16.0F),
+                PartPose.offset( 0.0F, 24.0F, 0.0F )
+        );
+
+        return LayerDefinition.create( meshDefinition, 16, 16 );
+    }
+
+    @Override
+    public void render( DeadlyTrapBlockEntity deadlyTrap, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlayTexture ) {
+        poseStack.pushPose( );
+
+        BlockState camoState = deadlyTrap.getCamoState();
+
+        if ( camoState != null ) {
+            BlockPos pos = deadlyTrap.getBlockPos();
+            Level level = deadlyTrap.getLevel();
+            Minecraft.getInstance().getBlockRenderer().renderBatched( camoState, pos, level, poseStack, buffer.getBuffer( RenderType.cutout() ),
+                    false, level.random, ModelData.EMPTY, RenderType.cutout() );
+        }
+        renderTop( poseStack, buffer, packedLight, overlayTexture );
+        poseStack.popPose( );
+    }
+
+    private void renderTop( PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlayTexture ) {
+        poseStack.pushPose();
+        // Move the overlay model a tiiiny bit up to avoid Z-fighting at close ranges (hardly noticeable at longer ranges)
+        poseStack.translate( 0.5D, 0.501D, 0.5D );
+        topOverlay.render( poseStack, buffer.getBuffer( RenderType.entityCutout( TOP_OVERLAY ) ), packedLight, overlayTexture );
+        poseStack.popPose();
+    }
+}

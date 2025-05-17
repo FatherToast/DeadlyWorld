@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.block.spawner.*;
+import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +24,7 @@ public final class DWBlockEntities {
             "mini_spawner", MiniSpawnerBlockEntity::new, DWBlocks.spawner( SpawnerType.MINI ) );
     
     public static final RegistryObject<BlockEntityType<DeadlyTrapBlockEntity>> DEADLY_TRAP = registerMultiple(
-            "deadly_trap", DeadlyTrapBlockEntity::new, () -> new Block[0] );
+            "deadly_trap", DeadlyTrapBlockEntity::new, DWBlockEntities::getStandardTrapBlocks );
     
     //    public static final RegistryObject<BlockEntityType<TowerDispenserBlockEntity>> TOWER_DISPENSER = register(
     //            "tower_dispenser", TowerDispenserBlockEntity::new, DWBlocks.TOWER_DISPENSERS );
@@ -62,5 +63,14 @@ public final class DWBlockEntities {
             if( DeadlySpawnerBlock.class.equals( block.get().getClass() ) ) blocks.add( block.get() );
         }
         return blocks.toArray( new DeadlySpawnerBlock[0] );
+    }
+
+    /** @return Creates a new array of all blocks extracted from a list of block registry objects. */
+    private static DeadlyTrapBlock[] getStandardTrapBlocks() {
+        List<DeadlyTrapBlock> blocks = new ArrayList<>();
+        for( RegistryObject<DeadlyTrapBlock> block : DWBlocks.TRAPS ) {
+            if( DeadlyTrapBlock.class.equals( block.get().getClass() ) ) blocks.add( block.get() );
+        }
+        return blocks.toArray( new DeadlyTrapBlock[0] );
     }
 }
