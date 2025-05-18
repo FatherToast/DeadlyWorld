@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class DeadlyTrapBlock extends BaseEntityBlock {
+public class DeadlyTrapBlock extends BaseEntityBlock implements ICamoTrap {
 
     private final TrapType trapType;
 

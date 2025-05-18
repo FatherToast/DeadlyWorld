@@ -11,6 +11,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -20,6 +21,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
+
+import javax.annotation.Nullable;
 
 public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<DeadlyTrapBlockEntity> {
 
@@ -40,7 +43,7 @@ public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<Deadly
                 CubeListBuilder.create()
                         .texOffs( -16, 0 )
                         .addBox(-8.0F, -16.0F, -8.0F, 16.0F, 0.0F, 16.0F),
-                PartPose.offset( 0.0F, 24.0F, 0.0F )
+                PartPose.offset( 0.0F, 32.0F, 0.0F )
         );
 
         return LayerDefinition.create( meshDefinition, 16, 16 );
@@ -51,21 +54,30 @@ public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<Deadly
         poseStack.pushPose( );
 
         BlockState camoState = deadlyTrap.getCamoState();
+        BlockPos pos = deadlyTrap.getBlockPos();
+        Level level = deadlyTrap.getLevel();
 
-        if ( camoState != null ) {
-            BlockPos pos = deadlyTrap.getBlockPos();
-            Level level = deadlyTrap.getLevel();
-            Minecraft.getInstance().getBlockRenderer().renderBatched( camoState, pos, level, poseStack, buffer.getBuffer( RenderType.cutout() ),
-                    false, level.random, ModelData.EMPTY, RenderType.cutout() );
-        }
-        renderTop( poseStack, buffer, packedLight, overlayTexture );
+        Minecraft.getInstance().getBlockRenderer().renderBatched( camoState, pos, level, poseStack, buffer.getBuffer( RenderType.cutout() ),
+                false, level.random, ModelData.EMPTY, RenderType.cutout() );
+
+        renderTop( poseStack, level, pos, buffer, overlayTexture );
+
         poseStack.popPose( );
     }
 
-    private void renderTop( PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlayTexture ) {
+    private void renderTop( PoseStack poseStack, @Nullable Level level, BlockPos origin, MultiBufferSource buffer, int overlayTexture ) {
         poseStack.pushPose();
         // Move the overlay model a tiiiny bit up to avoid Z-fighting at close ranges (hardly noticeable at longer ranges)
-        poseStack.translate( 0.5D, 0.501D, 0.5D );
+        poseStack.translate( 0.5D, 0.001D, 0.5D );
+        int packedLight;
+
+        // Use light color of above position since the block we are at is solid
+        if ( level != null ) {
+            packedLight = LevelRenderer.getLightColor( level, origin.above() );
+        }
+        else {
+            packedLight = 15728880;
+        }
         topOverlay.render( poseStack, buffer.getBuffer( RenderType.entityCutout( TOP_OVERLAY ) ), packedLight, overlayTexture );
         poseStack.popPose();
     }

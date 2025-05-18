@@ -1,6 +1,8 @@
 package fathertoast.deadlyworld.common.block.trap;
 
+import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
+import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;
 import fathertoast.deadlyworld.common.world.logic.ITrapObject;
 import net.minecraft.core.BlockPos;
@@ -9,6 +11,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -59,12 +62,15 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
             BlockPos pos = getBlockPos().relative( direction );
             BlockState neighborState = level.getBlockState( pos );
 
+            if ( neighborState.getBlock() instanceof ICamoTrap ) continue;
+
             if ( neighborState.isSolidRender( level, pos ) ) {
                 camoState = neighborState;
                 break;
             }
         }
-        if ( camoState == null ) camoState = Blocks.COBBLESTONE.defaultBlockState();
+        if ( camoState == null )
+            camoState = Blocks.COBBLESTONE.defaultBlockState();
     }
 
     @Nonnull
@@ -78,7 +84,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
         trapLogic.load( level, worldPosition, loadTag );
 
         if ( loadTag.contains( CAMO_STATE_KEY, Tag.TAG_COMPOUND ) ) {
-            camoState = NbtUtils.readBlockState( level.holderLookup( Registries.BLOCK ), loadTag.getCompound( CAMO_STATE_KEY ) );
+            camoState = TrapHelper.readBlockState( loadTag.getCompound( CAMO_STATE_KEY ) );
 
             // NbtUtils#readBlockState returns air default state if something goes wrong.
             // Replace with default cobblestone state if so.
@@ -95,20 +101,35 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
             saveTag.put( CAMO_STATE_KEY, NbtUtils.writeBlockState( camoState ) );
         }
     }
-    
-    public static void clientTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlyTrapBlockEntity blockEntity ) {
+
+    public static void clientTick(Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlyTrapBlockEntity blockEntity ) {
         blockEntity.getTrapLogic().clientTick( level, pos );
     }
     
     public static void serverTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlyTrapBlockEntity blockEntity ) {
         blockEntity.getTrapLogic().serverTick( (ServerLevel) level, pos );
     }
-    
-    public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create( this ); }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create( this );
+    }
     
     @Override
-    public CompoundTag getUpdateTag() { return saveWithoutMetadata(); }
-    
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = saveWithoutMetadata();
+
+        if ( camoState != null ) {
+            tag.put( CAMO_STATE_KEY, NbtUtils.writeBlockState( camoState ) );
+        }
+        return tag;
+    }
+
+    @Override
+    public void handleUpdateTag( CompoundTag tag ) {
+        super.handleUpdateTag(tag);
+    }
+
     @Override
     public boolean triggerEvent( int id, int type ) {
         return level != null && trapLogic.onEventTriggered( level, id ) ||
