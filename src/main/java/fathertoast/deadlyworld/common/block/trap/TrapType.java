@@ -151,6 +151,7 @@ public enum TrapType {
     POTION( "potion", ( dimConfig ) -> dimConfig.TRAPS.POTION ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+            PotionTrapBlockEntity potionTrap = (PotionTrapBlockEntity) trapEntity;
             TrapConfig.PotionTrapTypeCategory config = dimConfig.TRAPS.POTION;
 
             Level level = trapEntity.getLevel();
@@ -159,9 +160,15 @@ public enum TrapType {
             double y = trapEntity.getBlockPos().getY() + 1.1;
             double z = trapEntity.getBlockPos().getZ() + 0.5;
 
+            ItemStack potionStack;
+
             // Pick potion
-            ItemStack potionStack = TrapHelper.getPotionFromList( config.potionList.get(), level.random );
-            TrapHelper.setStackPotionColor( potionStack );
+            if ( potionTrap.isDynamic() ) {
+                potionStack = TrapHelper.getPotionFromList( config.potionList.get(), level.random );
+            }
+            else {
+                potionStack = TrapHelper.getPotionFromInstance( potionTrap.getPotionCopy() );
+            }
 
             // Spawn the thrown potion
             ThrownPotion potionEntity = new ThrownPotion( level, x, y, z );
@@ -171,6 +178,9 @@ public enum TrapType {
 
             level.playSound( null, x, y, z, SoundEvents.DISPENSER_LAUNCH, SoundSource.BLOCKS, 1.0F, 1.0F );
         }
+
+        @Override
+        public Supplier<DeadlyTrapBlock> getBlock() { return PotionTrapBlock::new; }
     },
     
     LAVA( "lava", ( dimConfig ) -> dimConfig.TRAPS.LAVA ) {

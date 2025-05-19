@@ -2,6 +2,8 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
+import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -20,7 +22,7 @@ public final class DWBlocks {
     
     public static final List<RegistryObject<DeadlySpawnerBlock>> SPAWNERS;
     public static final List<RegistryObject<DeadlyTrapBlock>> TRAPS;
-    //    public static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
+    public static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
     
     //    public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
     //    public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock( "sewer_bedrock", () -> new Block( AbstractBlock.Properties.of( Material.STONE, MaterialColor.COLOR_GRAY ).strength( -1.0F, 3600000.0F ).noDrops().sound( SoundType.STONE ) ), ItemGroup.TAB_BUILDING_BLOCKS );
@@ -40,12 +42,12 @@ public final class DWBlocks {
         floorTraps.trimToSize();
         TRAPS = Collections.unmodifiableList( floorTraps );
         
-        //        final ArrayList<RegistryObject<TowerDispenserBlock>> towerDispensers = new ArrayList<>();
-        //        for( TowerType type : TowerType.values() ) {
-        //            towerDispensers.add( type.ordinal(), registerTowerDispenser( type ) );
-        //        }
-        //        towerDispensers.trimToSize();
-        //        TOWER_DISPENSERS = Collections.unmodifiableList( towerDispensers );
+        final ArrayList<RegistryObject<TowerDispenserBlock>> towerDispensers = new ArrayList<>();
+        for( TowerType type : TowerType.values() ) {
+            towerDispensers.add( type.ordinal(), registerBlock( type + "_tower_dispenser", type.getBlock() ) );
+        }
+        towerDispensers.trimToSize();
+        TOWER_DISPENSERS = Collections.unmodifiableList( towerDispensers );
     }
     
     /** @return The block registry object for a particular spawner type. */
@@ -54,8 +56,8 @@ public final class DWBlocks {
     /** @return The block registry object for a particular floor trap type. */
     public static RegistryObject<DeadlyTrapBlock> trap( TrapType type ) { return TRAPS.get( type.ordinal() ); }
     
-    //    /** @return The block registry object for a particular tower dispenser type. */
-    //    public static RegistryObject<TowerDispenserBlock> towerDispenser( TowerType type ) { return TOWER_DISPENSERS.get( type.ordinal() ); }
+    /** @return The block registry object for a particular tower dispenser type. */
+    public static RegistryObject<TowerDispenserBlock> towerDispenser( TowerType type ) { return TOWER_DISPENSERS.get( type.ordinal() ); }
     
     /** Registers a block with a simple item. */
     private static <T extends Block> RegistryObject<T> registerBlock( String name, Supplier<T> blockSupplier ) {

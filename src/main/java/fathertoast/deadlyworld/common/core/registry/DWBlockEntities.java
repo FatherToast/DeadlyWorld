@@ -1,8 +1,12 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.block.spawner.*;
+import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
+import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,9 +29,11 @@ public final class DWBlockEntities {
     
     public static final RegistryObject<BlockEntityType<DeadlyTrapBlockEntity>> DEADLY_TRAP = registerMultiple(
             "deadly_trap", DeadlyTrapBlockEntity::new, DWBlockEntities::getStandardTrapBlocks );
+    public static final RegistryObject<BlockEntityType<PotionTrapBlockEntity>> POTION_TRAP = register(
+            "potion_trap", PotionTrapBlockEntity::new, DWBlocks.trap( TrapType.POTION ) );
     
-    //    public static final RegistryObject<BlockEntityType<TowerDispenserBlockEntity>> TOWER_DISPENSER = register(
-    //            "tower_dispenser", TowerDispenserBlockEntity::new, DWBlocks.TOWER_DISPENSERS );
+    public static final RegistryObject<BlockEntityType<TowerDispenserBlockEntity>> TOWER_DISPENSER = registerMultiple(
+            "tower_dispenser", TowerDispenserBlockEntity::new, DWBlockEntities::getStandardTowerDisBlocks );
     
     //    public static final RegistryObject<BlockEntityType<StormDrainBlockEntity>> STORM_DRAIN = register( "storm_drain",
     //            () -> BlockEntityType.Builder.of( StormDrainBlockEntity::new, DWBlocks.STORM_DRAIN.get() ).build( null ) );
@@ -72,5 +78,13 @@ public final class DWBlockEntities {
             if( DeadlyTrapBlock.class.equals( block.get().getClass() ) ) blocks.add( block.get() );
         }
         return blocks.toArray( new DeadlyTrapBlock[0] );
+    }
+
+    private static TowerDispenserBlock[] getStandardTowerDisBlocks() {
+        List<TowerDispenserBlock> blocks = new ArrayList<>();
+        for( RegistryObject<TowerDispenserBlock> block : DWBlocks.TOWER_DISPENSERS ) {
+            if( TowerDispenserBlock.class.equals( block.get().getClass() ) ) blocks.add( block.get() );
+        }
+        return blocks.toArray( new TowerDispenserBlock[0] );
     }
 }

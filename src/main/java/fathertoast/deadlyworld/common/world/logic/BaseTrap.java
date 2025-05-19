@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
  * The base logic for Deadly World's traps.
  */
 public abstract class BaseTrap {
+
     public enum State {
         /** The trap has exhausted its ammo/activations and is incapable of functioning. */
         DISABLED,
@@ -61,7 +62,7 @@ public abstract class BaseTrap {
     protected int maxTriggerDelay;
     
     // Logic
-    private final TrapType trapType;
+    protected final TrapType trapType;
     /** The entity that tripped this trap. Usually (but not always) non-null when triggering and null in all other states. */
     @Nullable
     protected Entity tripEntity;
@@ -85,7 +86,7 @@ public abstract class BaseTrap {
     
     public BaseTrap( TrapType trapType, BlockEntity block, ITrapObject trapObj ) { this( trapType, null, block, trapObj ); }
     
-    private BaseTrap( TrapType trapType, @Nullable Entity entity, @Nullable BlockEntity block, ITrapObject trapObj ) {
+    protected BaseTrap( TrapType trapType, @Nullable Entity entity, @Nullable BlockEntity block, ITrapObject trapObj ) {
         this.trapType = trapType;
         mobileEntity = entity;
         blockEntity = block;

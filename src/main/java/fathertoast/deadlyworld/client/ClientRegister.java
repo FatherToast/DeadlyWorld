@@ -42,6 +42,7 @@ public class ClientRegister {
         BlockEntityRenderers.register( DWBlockEntities.DEADLY_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
         BlockEntityRenderers.register( DWBlockEntities.MINI_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
         BlockEntityRenderers.register( DWBlockEntities.DEADLY_TRAP.get(), DeadlyTrapBlockEntityRenderer::new );
+        BlockEntityRenderers.register( DWBlockEntities.POTION_TRAP.get(), DeadlyTrapBlockEntityRenderer::new );
         //        BlockEntityRenderers.register( DWBlockEntities.STORM_DRAIN.get(), StormDrainBlockEntityRenderer::new );
     }
     

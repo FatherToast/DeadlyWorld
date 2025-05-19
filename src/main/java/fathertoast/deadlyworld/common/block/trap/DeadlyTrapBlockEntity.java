@@ -1,21 +1,19 @@
 package fathertoast.deadlyworld.common.block.trap;
 
-import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;
 import fathertoast.deadlyworld.common.world.logic.ITrapObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DropperBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,7 +52,9 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
      * Loops through adjacent block states and picks the first suitable one.<br>
      * Directions are shuffled so the same direction isn't necessarily always picked.
      */
-    private void pickCamoState() {
+    protected void pickCamoState() {
+        if ( camoState != null ) return;
+
         List<Direction> dirs = Arrays.asList( Direction.values() );
         Collections.shuffle( dirs );
 
@@ -70,7 +70,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
             }
         }
         if ( camoState == null )
-            camoState = Blocks.COBBLESTONE.defaultBlockState();
+            camoState = Blocks.DROPPER.defaultBlockState().setValue( DropperBlock.FACING, Direction.UP );
     }
 
     @Nonnull

@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.util;
 
+import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -149,8 +150,19 @@ public final class TrapHelper {
         MobEffectInstance effectInstance = potionList.next( random );
 
         if ( effectInstance != null ) {
-            PotionUtils.setCustomEffects(potionStack, List.of(effectInstance));
+            PotionUtils.setCustomEffects( potionStack, List.of( effectInstance ) );
         }
+        setStackPotionColor( potionStack );
+        return potionStack;
+    }
+
+    public static ItemStack getPotionFromInstance( @Nullable MobEffectInstance effectInstance ) {
+        ItemStack potionStack = new ItemStack( Items.SPLASH_POTION );
+
+        if ( effectInstance != null ) {
+            PotionUtils.setCustomEffects( potionStack, List.of( effectInstance ) );
+        }
+        setStackPotionColor( potionStack );
         return potionStack;
     }
     

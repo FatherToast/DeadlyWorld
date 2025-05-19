@@ -31,7 +31,7 @@ public class TrapConfig extends FeatureConfig {
         SPEC.newLine();
         SPEC.describeEntityList();
         
-        //SPEC.newLine();
+        SPEC.newLine();
         //SPEC.describePotionList();
         
         TNT = new TntTrapTypeCategory( this, TrapType.TNT, 0.4, DEPTH_LAVA, DEPTH_0, 0.3,
@@ -40,7 +40,7 @@ public class TrapConfig extends FeatureConfig {
         TNT_MOB = new TntMobTrapTypeCategory( this, TrapType.TNT_MOB, 0.08, DEPTH_LAVA, DEPTH_2, 0.3,
                 5.0, true, 20, 60, 80, 180, 3, 0.6 );
         
-        POTION = new PotionTrapTypeCategory( this, TrapType.POTION, 0.4, DEPTH_LAVA, DEPTH_0, 0.3,
+        POTION = new PotionTrapTypeCategory( this, TrapType.POTION, 0.4, DEPTH_LAVA, DEPTH_0, 0.2, 0.3,
                 5.0, true, 20, 60 );
         
         LAVA = new TrapTypeCategory( this, TrapType.LAVA, 0.16, DEPTH_LAVA, DEPTH_3, 0.3,
@@ -181,20 +181,26 @@ public class TrapConfig extends FeatureConfig {
     }
     
     public static class PotionTrapTypeCategory extends TrapTypeCategory {
-        
+
+        public final DoubleField dynamicChance;
         public final WeightedPotionListField potionList;
         
-        PotionTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double chestCh,
+        PotionTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double dynamicCh, double chestCh,
                                 double activationRng, boolean checkSight, int minResetTime, int maxResetTime ) {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight, minResetTime, maxResetTime );
-            
+
             potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList(),
                     "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when hurling splash potions. One of these is chosen",
                     "at random when the trap is generated. If the trap is generated as 'dynamicChance' it will pick again",
                     "between each potion effect." ) );
+
+            dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
+                    "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamicChance'.",
+                    "Dynamic potion traps pick a new potion every time they trigger.",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
         }
         
-        /** @return The default spawn list to use for this spawner type and dimension. */
+        /** @return The default potion list to use for this trap type and dimension. */
         @SuppressWarnings( "ConstantConditions" )
         protected WeightedPotionList makeDefaultPotionList() {
             if( isNetherDimension( ) ) {
