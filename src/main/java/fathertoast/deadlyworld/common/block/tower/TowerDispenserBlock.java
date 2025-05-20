@@ -1,8 +1,11 @@
 package fathertoast.deadlyworld.common.block.tower;
 
+import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -20,6 +23,12 @@ public class TowerDispenserBlock extends BaseEntityBlock {
     public TowerDispenserBlock( TowerType type ) {
         super( Config.BLOCKS.get( type ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.DISPENSER ) ) );
         towerType = type;
+    }
+
+    public void initializeTrap(ServerLevel level, BlockPos pos, RandomSource random ) {
+        if( level.getBlockEntity( pos ) instanceof TowerDispenserBlockEntity towerBlockEntity ) {
+           // towerBlockEntity.getTowerLogic().initializeTrap( level, pos, random );
+        }
     }
 
     @Override

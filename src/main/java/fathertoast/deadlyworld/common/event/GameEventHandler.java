@@ -4,6 +4,7 @@ package fathertoast.deadlyworld.common.event;
 import com.mojang.math.Axis;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -15,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -79,11 +81,16 @@ public final class GameEventHandler {
     public static void onEntityPlaceBlock( BlockEvent.EntityPlaceEvent event ) {
         if( event.getLevel() instanceof ServerLevel level ) {
             // Initialize placed blocks with configured settings
+            // TODO - probably better to make a generic interface for traps that need to be
+            //        initialized on placement instead of doing instanceof checks for each block type
             if( event.getPlacedBlock().getBlock() instanceof DeadlySpawnerBlock spawner ) {
                 spawner.initializeSpawner( level, event.getPos(), level.getRandom() );
             }
             else if( event.getPlacedBlock().getBlock() instanceof DeadlyTrapBlock trap ) {
                 trap.initializeTrap( level, event.getPos(), level.getRandom() );
+            }
+            else if ( event.getPlacedBlock().getBlock() instanceof TowerDispenserBlock towerDispenser ) {
+                towerDispenser.initializeTrap( level, event.getPos(), level.getRandom() );
             }
         }
     }
@@ -132,10 +139,14 @@ public final class GameEventHandler {
                     chestMimic.setPos( pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5 );
                     chestMimic.setYHeadRot( facing.toYRot() );
 
+                    // Copy items from chest and save them to the mimic
+                    chestMimic.setItems( chest.getItems() );
+                    chest.getItems().clear();
+
                     event.getLevel().addFreshEntity( chestMimic );
+                    event.getLevel().removeBlock( pos, false );
 
                     if ( chestMimic.isAddedToWorld() ) {
-                        event.getLevel().removeBlock( pos, false );
                         chestMimic.setTarget( event.getEntity() );
 
                         if ( level instanceof ServerLevel serverLevel ) {

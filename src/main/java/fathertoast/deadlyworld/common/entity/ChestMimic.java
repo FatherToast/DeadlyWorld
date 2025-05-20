@@ -1,9 +1,16 @@
 package fathertoast.deadlyworld.common.entity;
 
+import fathertoast.deadlyworld.common.core.registry.DWItems;
+import fathertoast.deadlyworld.common.util.ItemHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -12,15 +19,22 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ChestMimic extends Monster {
 
     public static final EntityDataAccessor<BlockState> DISGUISE_BLOCK_STATE = SynchedEntityData.defineId( ChestMimic.class, EntityDataSerializers.BLOCK_STATE );
+
+    private NonNullList<ItemStack> items = NonNullList.of( ItemStack.EMPTY );
+
 
     public ChestMimic(EntityType<? extends Monster> entityType, Level level ) {
         super( entityType, level );
@@ -51,7 +65,36 @@ public class ChestMimic extends Monster {
         targetSelector.addGoal( 1, new HurtByTargetGoal( this ) );
         targetSelector.addGoal( 2, new NearestAttackableTargetGoal<>( this, Player.class, true ) );
     }
-    
+
+    @Override
+    public void addAdditionalSaveData( CompoundTag saveTag ) {
+        super.addAdditionalSaveData( saveTag );
+
+        if ( items != null )
+            ContainerHelper.saveAllItems( saveTag, items );
+    }
+
+    @Override
+    public void readAdditionalSaveData( CompoundTag compoundTag ) {
+        super.readAdditionalSaveData( compoundTag );
+
+        items = ItemHelper.loadAllItems( compoundTag, items );
+    }
+
+    @Override
+    protected void dropCustomDeathLoot( DamageSource damageSource, int lootingLevel, boolean recentlyHurtBy ) {
+        super.dropCustomDeathLoot( damageSource, lootingLevel, recentlyHurtBy );
+
+        if ( items != null && !items.isEmpty() ) {
+            for ( ItemStack itemStack : items ) {
+                // Do not drop mimic cores. They should be lost and instead let the loot table
+                // have a chance of dropping one.
+                if ( !itemStack.isEmpty() && itemStack.getItem() != DWItems.MIMIC_CORE.get() )
+                    spawnAtLocation( itemStack );
+            }
+        }
+    }
+
     @SuppressWarnings( "deprecation" ) // New Forge method falls back to this one, no need to override both
     @Override
     public boolean canBreatheUnderwater() { return true; }
@@ -62,5 +105,13 @@ public class ChestMimic extends Monster {
 
     public void setDisguiseState( @Nonnull BlockState blockState ) {
         entityData.set( DISGUISE_BLOCK_STATE, blockState );
+    }
+
+    public void setItems( NonNullList<ItemStack> inventory ) {
+        this.items = NonNullList.of( ItemStack.EMPTY, inventory.toArray( new ItemStack[0] ) );
+    }
+
+    public NonNullList<ItemStack> getItems() {
+        return items;
     }
 }
