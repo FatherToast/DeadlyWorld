@@ -45,16 +45,16 @@
         "value": "deadlyworld:worldgen/minecraft/overworld/spawners:brutal_spawners.spawn_range"
       }
     },
-    "spawner_provider": {
-      "type": "minecraft:simple_state_provider",
-      "state": {
-        "Name": "deadlyworld:brutal_deadly_spawner"
-      }
-    },
     "topper_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
         "Name": "minecraft:chiseled_stone_bricks"
+      }
+    },
+    "trap_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "deadlyworld:brutal_deadly_spawner"
       }
     },
     "vines_decoration": true

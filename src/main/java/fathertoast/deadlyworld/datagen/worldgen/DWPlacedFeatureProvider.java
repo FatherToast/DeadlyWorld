@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
@@ -43,10 +44,21 @@ public class DWPlacedFeatureProvider {
         registerLoneSpawner( context, getter, BRUTAL_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, MINI_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, SILVERFISH_NEST, overworldConfigs, netherConfigs );
+
+        // Standard floor trap placements
+        registerFloorTrap( context, getter, TNT_TRAP, overworldConfigs, netherConfigs );
+        registerFloorTrap( context, getter, TNT_MOB_TRAP, overworldConfigs, netherConfigs );
+        registerFloorTrap( context, getter, POTION_TRAP, overworldConfigs, netherConfigs );
+        registerFloorTrap( context, getter, LAVA_TRAP, overworldConfigs, netherConfigs );
     }
     
     /** @return Modifiers for a lone spawner feature. */
     protected static List<PlacementModifier> loneSpawner( SpawnerType type, DimensionConfigGroup dimConfigs ) {
+        return floorFeature( type.getFeatureConfig( dimConfigs ) );
+    }
+
+    /** @return Modifiers for a floor trap feature. */
+    protected static List<PlacementModifier> floorTrap( TrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getFeatureConfig( dimConfigs ) );
     }
     
@@ -91,6 +103,13 @@ public class DWPlacedFeatureProvider {
                                                FeatureKeys.Spawner feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         register( context, getter, feature.overworldKeys, loneSpawner( feature.spawnerType, overworldConfigs ) );
         register( context, getter, feature.netherKeys, loneSpawner( feature.spawnerType, netherConfigs ) );
+    }
+
+    /** Registers a placed floor trap type feature to each supported dimension. */
+    protected static void registerFloorTrap( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
+                                             FeatureKeys.Trap feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        register( context, getter, feature.overworldKeys, floorTrap( feature.trapType, overworldConfigs ) );
+        register( context, getter, feature.netherKeys, floorTrap( feature.trapType, netherConfigs ) );
     }
     
     /** Registers a placed feature. */

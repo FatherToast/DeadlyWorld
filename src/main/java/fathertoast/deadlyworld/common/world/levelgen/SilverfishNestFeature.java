@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.world.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;

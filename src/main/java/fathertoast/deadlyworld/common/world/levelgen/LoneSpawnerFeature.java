@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.world.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -28,7 +29,7 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
             boolean vinesDecoration
     ) implements FeatureConfiguration {
         public static final Codec<Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
-                BlockStateProvider.CODEC.fieldOf( "spawner_provider" ).forGetter( Configuration::spawnerProvider ),
+                BlockStateProvider.CODEC.fieldOf( "trap_provider" ).forGetter( Configuration::spawnerProvider ),
                 BlockStateProvider.CODEC.fieldOf( "topper_provider" ).forGetter( Configuration::topperProvider ),
                 SpawnerSettings.CODEC.fieldOf( "spawner" ).forGetter( Configuration::spawnerSettings ),
                 TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( Configuration::cannotReplace ),

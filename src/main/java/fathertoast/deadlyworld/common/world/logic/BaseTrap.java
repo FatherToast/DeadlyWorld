@@ -6,12 +6,16 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.util.TrapHelper;
+import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
+import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
+import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
@@ -102,17 +106,32 @@ public abstract class BaseTrap {
     
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
-    
+
+    public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random, FloorTrapSettings trapSettings ) {
+        final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+        DeadlyFeature.debugMarkerIfEnabled( level, pos, trapConfig );
+
+        initializeTrap( getLevel(), pos, random,
+                trapSettings.requiredPlayerRange().sample( random ),
+                trapSettings.checkSightChance().sample( random ),
+                trapSettings.resetTime().getMinValue(),
+                trapSettings.resetTime().getMaxValue(),
+                -1,
+                roll( random, trapSettings.decoyChance().sample( random ) )
+        );
+    }
+
     public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {
         final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level ) );
         initializeTrap( level, pos, random,
                 trapConfig.activationRange.get(), (float) trapConfig.checkSightChance.get(),
-                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), -1 // TODO - config thingy, for now just endless triggers
+                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), -1, trapConfig.decoyChance.rollChance( random )
+                // TODO - config thingy, for now just endless triggers
         );
     }
 
     public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random, double activationRange,
-                                float checkSightChance, int minResetTime, int maxResetTime, int triggersRemaining ) {
+                                float checkSightChance, int minResetTime, int maxResetTime, int triggersRemaining, boolean spawnDecoy ) {
         this.checkSight = roll( random, checkSightChance );
         this.activationRange = activationRange;
         this.minResetTime = minResetTime;
@@ -120,7 +139,7 @@ public abstract class BaseTrap {
         this.triggersRemaining = triggersRemaining;
     }
 
-    private static boolean roll( RandomSource random, float chance ) { return chance >= 1.0F || chance > 0.0F && random.nextFloat() < chance; }
+    protected static boolean roll( RandomSource random, float chance ) { return chance >= 1.0F || chance > 0.0F && random.nextFloat() < chance; }
 
     public double getActivationRange() { return activationRange; }
     

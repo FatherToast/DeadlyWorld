@@ -1,0 +1,47 @@
+package fathertoast.deadlyworld.common.world.levelgen.settings;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.world.level.WorldGenLevel;
+
+public record FloorTrapSettings(
+        FloatProvider requiredPlayerRange, FloatProvider checkSightChance,
+        IntProvider resetTime, FloatProvider decoyChance
+) {
+    public static final Codec<FloorTrapSettings> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
+            FloatProvider.CODEC.fieldOf( "required_player_range" ).forGetter( FloorTrapSettings::requiredPlayerRange ),
+            FloatProvider.CODEC.fieldOf( "activation_sight_check" ).forGetter( FloorTrapSettings::checkSightChance ),
+            IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( FloorTrapSettings::resetTime ),
+            FloatProvider.CODEC.fieldOf( "decoy_chance" ).forGetter( FloorTrapSettings::decoyChance )
+    ).apply( instance, FloorTrapSettings::new ) );
+
+    public static FloorTrapSettings of( TrapType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
+
+    public static FloorTrapSettings of( TrapConfig.TrapTypeCategory config ) {
+        return new FloorTrapSettings(
+                ConfigConstantFloatProvider.of( config.activationRange ),
+                ConfigConstantFloatProvider.of( config.checkSightChance ),
+
+                ConfigUniformIntProvider.of( config.resetTimeMin, config.resetTimeMax ),
+
+                ConfigConstantFloatProvider.of( config.decoyChance )
+        );
+    }
+
+    public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random ) {
+        if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
+            trapBlockEntity.getTrapLogic().initializeTrap( level, pos, random, this );
+        }
+    }
+}

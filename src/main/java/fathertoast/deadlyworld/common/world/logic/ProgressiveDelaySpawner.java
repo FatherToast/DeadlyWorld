@@ -11,7 +11,7 @@ import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
-import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
+import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

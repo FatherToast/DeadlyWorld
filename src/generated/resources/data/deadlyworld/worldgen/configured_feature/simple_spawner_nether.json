@@ -45,16 +45,16 @@
         "value": "deadlyworld:worldgen/minecraft/the_nether/spawners:simple_spawners.spawn_range"
       }
     },
-    "spawner_provider": {
-      "type": "minecraft:simple_state_provider",
-      "state": {
-        "Name": "deadlyworld:simple_deadly_spawner"
-      }
-    },
     "topper_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
         "Name": "minecraft:air"
+      }
+    },
+    "trap_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "deadlyworld:simple_deadly_spawner"
       }
     },
     "vines_decoration": false

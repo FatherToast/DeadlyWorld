@@ -5,6 +5,10 @@
     "deadlyworld:swarm_spawner_nether",
     "deadlyworld:brutal_spawner_nether",
     "deadlyworld:mini_spawner_nether",
-    "deadlyworld:silverfish_nest_nether"
+    "deadlyworld:silverfish_nest_nether",
+    "deadlyworld:tnt_trap_nether",
+    "deadlyworld:tnt_mob_trap_nether",
+    "deadlyworld:potion_trap_nether",
+    "deadlyworld:lava_trap_nether"
   ]
 }

@@ -264,9 +264,9 @@
             {
               "enchantments": [
                 "minecraft:silk_touch",
-                "minecraft:looting",
-                "minecraft:bane_of_arthropods",
                 "minecraft:fortune",
+                "minecraft:bane_of_arthropods",
+                "minecraft:looting",
                 "minecraft:luck_of_the_sea"
               ],
               "function": "minecraft:enchant_randomly"

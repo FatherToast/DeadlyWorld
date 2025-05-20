@@ -29,9 +29,9 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         for( TrapType type : TrapType.values() ) {
             add( DWBlocks.trap( type ), buildFloorTrapLoot( type ) );
         }
-        //        for( TowerType type : TowerType.values() ) {
-        //            add( DWBlocks.towerDispenser( type ), buildTowerDispenserLoot( type ) );
-        //        }
+        for( TowerType type : TowerType.values() ) {
+            add( DWBlocks.towerDispenser( type ), buildTowerDispenserLoot( type ) );
+        }
     }
     
     @Override
@@ -71,6 +71,10 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) { //TODO
             case SIMPLE -> { }
+            case FIRE -> { }
+            case POTION -> { }
+            case FIREBALL -> { }
+            case GATLING -> { }
             default ->
                     throw new IllegalArgumentException( "Tower type \"" + type + "\" is missing block loot table data gen code!" );
         }

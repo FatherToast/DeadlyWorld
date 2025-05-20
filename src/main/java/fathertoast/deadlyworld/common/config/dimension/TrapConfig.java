@@ -35,16 +35,16 @@ public class TrapConfig extends FeatureConfig {
         //SPEC.describePotionList();
         
         TNT = new TntTrapTypeCategory( this, TrapType.TNT, 0.4, DEPTH_LAVA, DEPTH_0, 0.3,
-                6.0, true, 20, 60, 80, 180, 3, 2.0 );
+                6.0, true, 20, 60, 80, 180, 3, 2.0, 0.05 );
         
         TNT_MOB = new TntMobTrapTypeCategory( this, TrapType.TNT_MOB, 0.08, DEPTH_LAVA, DEPTH_2, 0.3,
-                5.0, true, 20, 60, 80, 180, 3, 0.6 );
+                5.0, true, 20, 60, 80, 180, 3, 0.6, 0.05 );
         
         POTION = new PotionTrapTypeCategory( this, TrapType.POTION, 0.4, DEPTH_LAVA, DEPTH_0, 0.2, 0.3,
-                5.0, true, 20, 60 );
+                5.0, true, 20, 60, 0.05 );
         
         LAVA = new TrapTypeCategory( this, TrapType.LAVA, 0.16, DEPTH_LAVA, DEPTH_3, 0.3,
-                4.0, true, 20, 60 );
+                4.0, true, 20, 60, 0.05 );
     }
     
     public static class TrapTypeCategory extends FeatureTypeCategory {
@@ -53,13 +53,16 @@ public class TrapConfig extends FeatureConfig {
         
         public final DoubleField activationRange;
         public final DoubleField checkSightChance;
-        
+
+        public final DoubleField decoyChance;
+
         public final IntField.RandomRange resetTime;
         public final IntField resetTimeMin, resetTimeMax; // TODO delete after Crust update
         
         TrapTypeCategory( FeatureConfig parent, TrapType type,
                           double placements, int minHeight, int maxHeight, double ignoredChestCh,
-                          double activationRng, boolean checkSight, int minResetTime, int maxResetTime ) {
+                          double activationRng, boolean checkSight, int minResetTime,
+                          int maxResetTime, double decoyCh ) {
             super( parent, type.toString(), placements, minHeight, maxHeight );
             
             //if( isSubfeature() ) { TODO decide whether to re-add this
@@ -77,7 +80,14 @@ public class TrapConfig extends FeatureConfig {
             
             activationRange = SPEC.define( standardActivationRangeField( activationRng ) );
             checkSightChance = SPEC.define( standardCheckSightField( checkSight ) );
-            
+
+            SPEC.newLine();
+
+            decoyChance = SPEC.define( new DoubleField( "decoy_chance", decoyCh, DoubleField.Range.PERCENT,
+                    "The chance for " + FEATURE_TYPE_NAME + " to generate with a decoy above it.",
+                    "Decoys range from fake cakes, illusionary mobs and other visual distractions that are not real.",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
+
             SPEC.newLine();
             
             resetTime = new IntField.RandomRange(
@@ -99,8 +109,9 @@ public class TrapConfig extends FeatureConfig {
         public final DoubleField launchSpeed;
         
         TntTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double chestCh,
-                             double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int minFuseTime, int maxFuseTime, int tntCnt, double launchSpd ) {
-            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight, minResetTime, maxResetTime );
+                             double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int minFuseTime, int maxFuseTime,
+                             int tntCnt, double launchSpd, double decoyCh ) {
+            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight, minResetTime, maxResetTime, decoyCh );
             
             SPEC.newLine();
             
@@ -131,9 +142,10 @@ public class TrapConfig extends FeatureConfig {
         public final DoubleField healthMultiplier;
         
         TntMobTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double chestCh,
-                                double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int minFuseTime, int maxFuseTime, int tntCnt, double launchSpd ) {
+                                double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int minFuseTime, int maxFuseTime,
+                                int tntCnt, double launchSpd, double decoyCh ) {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight,
-                    minResetTime, maxResetTime, minFuseTime, maxFuseTime, tntCnt, launchSpd );
+                    minResetTime, maxResetTime, minFuseTime, maxFuseTime, tntCnt, launchSpd, decoyCh );
             
             spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList(),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + ". One of these is chosen " +
@@ -186,13 +198,14 @@ public class TrapConfig extends FeatureConfig {
         public final WeightedPotionListField potionList;
         
         PotionTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double dynamicCh, double chestCh,
-                                double activationRng, boolean checkSight, int minResetTime, int maxResetTime ) {
-            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight, minResetTime, maxResetTime );
+                                double activationRng, boolean checkSight, int minResetTime, int maxResetTime, double decoyCh ) {
+            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight, minResetTime, maxResetTime, decoyCh );
 
             potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList(),
                     "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when hurling splash potions. One of these is chosen",
                     "at random when the trap is generated. If the trap is generated as 'dynamicChance' it will pick again",
-                    "between each potion effect." ) );
+                    "between each potion effect.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
 
             dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
                     "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamicChance'.",

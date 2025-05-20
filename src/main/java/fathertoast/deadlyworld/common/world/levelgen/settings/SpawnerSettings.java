@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.world.levelgen;
+package fathertoast.deadlyworld.common.world.levelgen.settings;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

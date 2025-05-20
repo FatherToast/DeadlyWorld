@@ -1,0 +1,31 @@
+{
+  "type": "deadlyworld:floor_trap",
+  "config": {
+    "cannot_replace": "#minecraft:features_cannot_replace",
+    "trap": {
+      "activation_sight_check": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/overworld/traps:tnt_traps.sight_check_chance"
+      },
+      "decoy_chance": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/overworld/traps:tnt_traps.decoy_chance"
+      },
+      "required_player_range": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/overworld/traps:tnt_traps.required_player_range"
+      },
+      "reset_time": {
+        "type": "deadlyworld:config_uniform_int",
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/traps:tnt_traps.reset_time.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/traps:tnt_traps.reset_time.min"
+      }
+    },
+    "trap_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "deadlyworld:tnt_deadly_trap"
+      }
+    }
+  }
+}

@@ -1,13 +1,16 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.world.levelgen.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.LoneSpawnerFeature;
+import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.SilverfishNestFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public final class DWFeatures {
@@ -15,7 +18,8 @@ public final class DWFeatures {
     
     public static RegistryObject<LoneSpawnerFeature> LONE_SPAWNER = register( "lone_spawner", LoneSpawnerFeature::new );
     public static RegistryObject<SilverfishNestFeature> SILVERFISH_NEST = register( "silverfish_nest", SilverfishNestFeature::new );
-    //public static List<RegistryObject<FloorTrapFeature>> FLOOR_TRAPS = registerFloorTraps();
+    public static RegistryObject<FloorTrapFeature> FLOOR_TRAP = register( "floor_trap", FloorTrapFeature::new );
+    public static RegistryObject<PotionFloorTrapFeature> POTION_FLOOR_TRAP = register( "potion_floor_trap", PotionFloorTrapFeature::new );
     
     static {
         //        for( SpawnerType spawnerType : SpawnerType.values() ) {

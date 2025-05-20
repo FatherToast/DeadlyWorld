@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.trap.TrapType;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -36,6 +37,21 @@ public class FeatureKeys {
         
         protected Spawner( SpawnerType type, FeatureKeys overworld, FeatureKeys nether ) {
             spawnerType = type;
+            overworldKeys = overworld;
+            netherKeys = nether;
+        }
+    }
+
+    public static class Trap {
+
+        public static Trap of( TrapType type, String name ) { return new Trap( type, overworld( name ), nether( name ) ); }
+
+        public final TrapType trapType;
+        public final FeatureKeys overworldKeys;
+        public final FeatureKeys netherKeys;
+
+        protected Trap( TrapType type, FeatureKeys overworld, FeatureKeys nether ) {
+            trapType = type;
             overworldKeys = overworld;
             netherKeys = nether;
         }
