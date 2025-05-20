@@ -7,6 +7,7 @@ import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public enum TowerType {
     
@@ -126,8 +127,8 @@ public enum TowerType {
         return DeadlyWorld.resourceLoc( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
     }
     
-    //    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
-    //    public Supplier<TowerDispenserBlock> getBlock() { return () -> new TowerDispenserBlock( this ); }
+    /** @return A Supplier of the Spawner Block to register for this Spawner Type */
+    public Supplier<TowerDispenserBlock> getBlock() { return () -> new TowerDispenserBlock( this ); }
     
     public final TowerDispenserConfig.TowerDispenserTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
     

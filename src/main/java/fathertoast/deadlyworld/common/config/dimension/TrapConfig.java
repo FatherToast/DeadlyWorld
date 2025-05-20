@@ -203,7 +203,7 @@ public class TrapConfig extends FeatureConfig {
 
             potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList(),
                     "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when hurling splash potions. One of these is chosen",
-                    "at random when the trap is generated. If the trap is generated as 'dynamicChance' it will pick again",
+                    "at random when the trap is generated. If the trap is generated as 'dynamic_chance' it will pick again",
                     "between each potion effect.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
 
