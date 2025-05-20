@@ -24,8 +24,14 @@ public class DWBlockTagsProvider extends BlockTagsProvider {
     @Override
     public void addTags( HolderLookup.Provider holderLookup ) {
         addAll( DWTags.Blocks.SPAWNERS, DWBlocks.SPAWNERS );
+        addAll( DWTags.Blocks.TRAPS, DWBlocks.TRAPS );
+        addAll( DWTags.Blocks.TOWER_DISPENSERS, DWBlocks.TOWER_DISPENSERS );
         
-        addTags( BlockTags.MINEABLE_WITH_PICKAXE, DWTags.Blocks.SPAWNERS.get() );
+        addTags( BlockTags.MINEABLE_WITH_PICKAXE,
+                DWTags.Blocks.SPAWNERS.get(),
+                DWTags.Blocks.TRAPS.get(),
+                DWTags.Blocks.TOWER_DISPENSERS.get()
+        );
         addTags( BlockTags.NEEDS_IRON_TOOL, DWTags.Blocks.SPAWNERS.get() );
     }
     

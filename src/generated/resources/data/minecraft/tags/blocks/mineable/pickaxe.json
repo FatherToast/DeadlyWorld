@@ -1,5 +1,7 @@
 {
   "values": [
-    "#deadlyworld:spawners"
+    "#deadlyworld:spawners",
+    "#deadlyworld:traps",
+    "#deadlyworld:tower_dispensers"
   ]
 }

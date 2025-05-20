@@ -6,12 +6,20 @@ import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
+import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
@@ -56,11 +64,10 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     
     private LootTableBuilder buildFloorTrapLoot( TrapType type ) {
         final LootTableBuilder loot = new LootTableBuilder();
-        switch( type ) { //TODO
-            case TNT -> { }
-            case TNT_MOB -> { }
-            case POTION -> { }
-            case LAVA -> { }
+        switch( type ) {
+            case TNT, TNT_MOB -> loot.addPool( buildTNTFloorTrapLootPool() );
+            case POTION -> loot.addPool( buildPotionFloorTrapLootPool() );
+            case LAVA -> loot.addPool( buildLavaFloorTrapLootPool() );
             default ->
                     throw new IllegalArgumentException( "Floor trap type \"" + type + "\" is missing block loot table data gen code!" );
         }
@@ -84,6 +91,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     protected <T extends Block> void add( Supplier<T> block, LootTableBuilder builder ) {
         add( block.get(), builder.toLootTable() );
     }
+
     
     private LootPool.Builder buildBasicSpawnerLootPool() {
         return new DWLootPoolBuilder( "spawner" ).setRolls( 4 )
@@ -105,6 +113,47 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
                 .addItem( Items.EXPERIENCE_BOTTLE, 5 )
                 .addEnchantedBook( 1, 10, 30, true )
                 .toLootPool();
+    }
+
+    private LootPool.Builder buildLavaFloorTrapLootPool() {
+        return floorTrapLootPoolBuilder()
+                .addItem( Items.LAVA_BUCKET, 10 )
+                .toLootPool();
+    }
+
+    private LootPool.Builder buildTNTFloorTrapLootPool() {
+        return floorTrapLootPoolBuilder()
+                .addItem( Items.TNT, 10 )
+                .addItemClusterSmall( Items.GUNPOWDER, 10 )
+                .toLootPool();
+    }
+
+    private LootPool.Builder buildPotionFloorTrapLootPool() {
+        return floorTrapLootPoolBuilder()
+                .addEntry( potionEntry( Items.POTION, 2, Potions.AWKWARD ) )
+                .addEntry( potionEntry( Items.POTION, 2, Potions.WEAKNESS ) )
+                .addEntry( potionEntry( Items.POTION, 2, Potions.SWIFTNESS ) )
+
+                .addEntry( potionEntry( Items.SPLASH_POTION, 2, Potions.AWKWARD ) )
+                .addEntry( potionEntry( Items.SPLASH_POTION, 2, Potions.POISON ) )
+                .addEntry( potionEntry( Items.SPLASH_POTION, 2, Potions.LONG_SLOWNESS ) )
+
+                .addEntry( potionEntry( Items.LINGERING_POTION, 1, Potions.AWKWARD ) )
+
+                .toLootPool();
+    }
+
+    private DWLootPoolBuilder floorTrapLootPoolBuilder() {
+        return new DWLootPoolBuilder( "floor_trap" ).setRolls( 3 )
+                .addItem( Items.APPLE, 5 )
+                .addItem( Items.COOKIE, 5 )
+                .addItem( Items.CAKE, 2 )
+
+                .addItemClusterSmall( Items.STICK, 4 )
+                .addItemClusterSmall( Items.CACTUS, 1 )
+                .addItemClusterSmall( Items.COBWEB, 2 )
+
+                .addExplorerMapBuriedTreasure( 1 );
     }
     
     private LootPool.Builder buildExplorationLootPool() {
@@ -279,5 +328,16 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
                 .addEnchantedBook( 2, Enchantments.BLOCK_FORTUNE, Enchantments.MOB_LOOTING,
                         Enchantments.FISHING_LUCK, Enchantments.BANE_OF_ARTHROPODS, Enchantments.SILK_TOUCH )
                 .toLootPool();
+    }
+
+    private static LootPoolEntryContainer.Builder<?> potionEntry( Item potionItem, int weight, Potion potion ) {
+        CompoundTag tag = new CompoundTag();
+        tag.putString( "Potion", ForgeRegistries.POTIONS.getKey( potion ).toString() );
+
+        LootEntryItemBuilder builder = new LootEntryItemBuilder( potionItem )
+                .setWeight( weight )
+                .setNBTTag( tag );
+
+        return builder.toLootEntry();
     }
 }
