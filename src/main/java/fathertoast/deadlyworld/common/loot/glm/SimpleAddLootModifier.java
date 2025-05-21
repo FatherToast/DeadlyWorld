@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 public class SimpleAddLootModifier extends LootModifier {
 
-    private static final ListCodec<ResourceLocation> RL_LIST_CODEC = new ListCodec<>(ResourceLocation.CODEC);
+    private static final ListCodec<ResourceLocation> RL_LIST_CODEC = new ListCodec<>( ResourceLocation.CODEC );
 
     public final Item itemToAdd;
     public final double chance;
