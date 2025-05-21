@@ -78,5 +78,8 @@
   "block.deadlyworld.feature_tester.tooltip.tower.gatling": "Gatling Arrow Tower",
 
   "death.attack.deadlyworld.vortex": "%1$s was swooshed by a vortex",
-  "death.attack.deadlyworld.vortex.player": "%1$s got swooshed by a vortex while fighting %2$s"
+  "death.attack.deadlyworld.vortex.player": "%1$s got swooshed by a vortex while fighting %2$s",
+
+  "sound_event.deadlyworld.subtitle.chest_mimic.hurt": "Chest Mimic hurts",
+  "sound_event.deadlyworld.subtitle.chest_mimic.death": "Chest Mimic dies"
 }

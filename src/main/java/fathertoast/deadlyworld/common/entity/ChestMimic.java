@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.entity;
 
 import fathertoast.deadlyworld.common.core.registry.DWItems;
+import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import fathertoast.deadlyworld.common.entity.ai.PeacefulHurtByTargetGoal;
 import fathertoast.deadlyworld.common.entity.ai.PeacefulNearestAttackableTargetGoal;
 import fathertoast.deadlyworld.common.util.ItemHelper;
@@ -11,6 +12,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -114,6 +117,16 @@ public class ChestMimic extends Monster {
     @Override
     public boolean requiresCustomPersistence() {
         return true;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return DWSoundEvents.CHEST_MIMIC_DEATH.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound( DamageSource damageSource ) {
+        return DWSoundEvents.CHEST_MIMIC_HURT.get();
     }
 
     /** Gets the mimic's "camo" block state. Should normally be a chest of some sort */

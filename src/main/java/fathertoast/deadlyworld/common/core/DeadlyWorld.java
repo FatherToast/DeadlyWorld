@@ -176,6 +176,7 @@ public class DeadlyWorld {
         DWItems.REGISTRY.register( eventBus );
         DWCreativeModeTabs.REGISTRY.register( eventBus );
         DWEntities.REGISTRY.register( eventBus );
+        DWSoundEvents.REGISTRY.register( eventBus );
         DWBlockEntities.REGISTRY.register( eventBus );
         DWLootModifiers.REGISTRY.register( eventBus );
         //        DWBiomes.REGISTRY.register( eventBus );

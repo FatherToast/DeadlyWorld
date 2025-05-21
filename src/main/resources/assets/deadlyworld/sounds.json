@@ -1,8 +1,16 @@
 {
-  "biome.sewer.sewer_ambience": {
-    "subtitle": "sound_event.deadlyworld.subtitle.sewer_ambience",
+  "entity.chest_mimic.hurt": {
+    "subtitle": "sound_event.deadlyworld.subtitle.chest_mimic.hurt",
     "sounds": [
-      "deadlyworld:biome/sewer/sewer_ambience"
+      "minecraft:dig/wood1"
+    ]
+  },
+  "entity.chest_mimic.death": {
+    "subtitle": "sound_event.deadlyworld.subtitle.chest_mimic.death",
+    "sounds": [
+      "minecraft:block/chest/close1",
+      "minecraft:block/chest/close2",
+      "minecraft:block/chest/close3"
     ]
   }
 }
