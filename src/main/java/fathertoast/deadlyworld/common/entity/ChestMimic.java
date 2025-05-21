@@ -1,6 +1,8 @@
 package fathertoast.deadlyworld.common.entity;
 
 import fathertoast.deadlyworld.common.core.registry.DWItems;
+import fathertoast.deadlyworld.common.entity.ai.PeacefulHurtByTargetGoal;
+import fathertoast.deadlyworld.common.entity.ai.PeacefulNearestAttackableTargetGoal;
 import fathertoast.deadlyworld.common.util.ItemHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +25,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.DungeonHooks;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nonnull;
@@ -62,8 +66,8 @@ public class ChestMimic extends Monster {
         goalSelector.addGoal( 5, new LookAtPlayerGoal( this, Player.class, 8.0F ) );
         goalSelector.addGoal( 5, new RandomLookAroundGoal( this ) );
         
-        targetSelector.addGoal( 1, new HurtByTargetGoal( this ) );
-        targetSelector.addGoal( 2, new NearestAttackableTargetGoal<>( this, Player.class, true ) );
+        targetSelector.addGoal( 1, new PeacefulHurtByTargetGoal( this ) );
+        targetSelector.addGoal( 2, new PeacefulNearestAttackableTargetGoal<>( this, Player.class, true ) );
     }
 
     @Override
@@ -81,6 +85,7 @@ public class ChestMimic extends Monster {
         items = ItemHelper.loadAllItems( compoundTag, items );
     }
 
+    /** Drops any additional custom loot after the loot table has been dropped. */
     @Override
     protected void dropCustomDeathLoot( DamageSource damageSource, int lootingLevel, boolean recentlyHurtBy ) {
         super.dropCustomDeathLoot( damageSource, lootingLevel, recentlyHurtBy );
@@ -99,10 +104,27 @@ public class ChestMimic extends Monster {
     @Override
     public boolean canBreatheUnderwater() { return true; }
 
+    /** Does not despawn in peaceful, but becomes completely passive. */
+    @Override
+    protected boolean shouldDespawnInPeaceful() {
+        return false;
+    }
+
+    /** Does not despawn naturally. */
+    @Override
+    public boolean requiresCustomPersistence() {
+        return true;
+    }
+
+    /** Gets the mimic's "camo" block state. Should normally be a chest of some sort */
     public BlockState getDisguiseState() {
         return entityData.get( DISGUISE_BLOCK_STATE );
     }
 
+    /**
+     * Sets the mimic's "camo" block state.<br>
+     * Called from {@link fathertoast.deadlyworld.common.event.GameEventHandler#onRightClickChest(PlayerInteractEvent.RightClickBlock)}
+     */
     public void setDisguiseState( @Nonnull BlockState blockState ) {
         entityData.set( DISGUISE_BLOCK_STATE, blockState );
     }
