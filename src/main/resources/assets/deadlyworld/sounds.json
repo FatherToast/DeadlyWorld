@@ -2,7 +2,9 @@
   "entity.chest_mimic.hurt": {
     "subtitle": "sound_event.deadlyworld.subtitle.chest_mimic.hurt",
     "sounds": [
-      "minecraft:dig/wood1"
+      "minecraft:block/wooden_trapdoor/close1",
+      "minecraft:block/wooden_trapdoor/close2",
+      "minecraft:block/wooden_trapdoor/close3"
     ]
   },
   "entity.chest_mimic.death": {

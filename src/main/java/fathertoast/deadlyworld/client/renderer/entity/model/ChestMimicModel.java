@@ -3,14 +3,12 @@ package fathertoast.deadlyworld.client.renderer.entity.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import fathertoast.deadlyworld.common.entity.ChestMimic;
-import net.minecraft.client.model.*;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChestMimicModel extends EntityModel<ChestMimic> {
 
@@ -98,16 +96,19 @@ public class ChestMimicModel extends EntityModel<ChestMimic> {
     // TODO - maybe shine up this animation a bit. Its just a wonky copy of the spider model's animation
     @Override
     public void setupAnim( ChestMimic chestMimic, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch ) {
-        top.xRot = (0.1F * Mth.sin(ageInTicks * 0.15F)) - 0.25F;
+        //top.xRot = Mth.sin( (ageInTicks * 0.1F) + ( Mth.cos( limbSwing * 0.6662F ) * limbSwingAmount ) ) - 0.25F;
 
-        final float buttYRot = -(Mth.cos( limbSwing * 0.6662F * 2.0F + 0.0F) * 0.4F ) * limbSwingAmount;
-        final float backYRot = -(Mth.cos( limbSwing * 0.6662F * 2.0F + (float) Math.PI) * 0.4F ) * limbSwingAmount;
-        final float midYRot = -(Mth.cos( limbSwing * 0.6662F * 2.0F + ( (float) Math.PI / 2F ) ) * 0.4F ) * limbSwingAmount;
-        final float frontYRot = -(Mth.cos( limbSwing * 0.6662F * 2.0F + ( (float) Math.PI * 1.5F ) ) * 0.4F ) * limbSwingAmount;
-        final float buttZRot = Math.abs(Mth.sin( limbSwing * 0.6662F + 0.0F) * 0.4F ) * limbSwingAmount;
-        final float backZRot = Math.abs(Mth.sin( limbSwing * 0.6662F + (float) Math.PI) * 0.4F ) * limbSwingAmount;
-        final float midZRot = Math.abs(Mth.sin( limbSwing * 0.6662F + ( (float) Math.PI / 2F ) ) * 0.4F ) * limbSwingAmount;
-        final float frontZRot = Math.abs(Mth.sin( limbSwing * 0.6662F + ( (float) Math.PI * 1.5F ) ) * 0.4F ) * limbSwingAmount;
+        //top.xRot = ( 0.1F * idleOscillate + Mth.cos( limbSwing * 0.6662F ) * limbSwingAmount ) - 0.25F;
+        top.xRot = ( Mth.cos( limbSwing * 0.5F ) * (limbSwingAmount * 0.3F) ) - 0.25F;
+
+        final float buttYRot = -( Mth.cos( limbSwing * 0.6662F * 2.0F + 0.0F) * 0.4F ) * limbSwingAmount;
+        final float backYRot = -( Mth.cos( limbSwing * 0.6662F * 2.0F + (float) Math.PI) * 0.4F ) * limbSwingAmount;
+        final float midYRot = -( Mth.cos( limbSwing * 0.6662F * 2.0F + ( (float) Math.PI / 2F ) ) * 0.4F ) * limbSwingAmount;
+        final float frontYRot = -( Mth.cos( limbSwing * 0.6662F * 2.0F + ( (float) Math.PI * 1.5F ) ) * 0.4F ) * limbSwingAmount;
+        final float buttZRot = Math.abs( Mth.sin( limbSwing * 0.6662F + 0.0F) * 0.4F ) * limbSwingAmount;
+        final float backZRot = Math.abs( Mth.sin( limbSwing * 0.6662F + (float) Math.PI) * 0.4F ) * limbSwingAmount;
+        final float midZRot = Math.abs( Mth.sin( limbSwing * 0.6662F + ( (float) Math.PI / 2F ) ) * 0.4F ) * limbSwingAmount;
+        final float frontZRot = Math.abs( Mth.sin( limbSwing * 0.6662F + ( (float) Math.PI * 1.5F ) ) * 0.4F ) * limbSwingAmount;
 
         legLButt.yRot = buttYRot;
         legRButt.yRot = buttYRot;
