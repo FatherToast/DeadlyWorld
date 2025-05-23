@@ -6,6 +6,7 @@ import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.PotionTrapBlock;
 import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.settings.PotionFloorTrapSettings;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -42,15 +43,18 @@ public class PotionFloorTrapFeature extends DeadlyFeature<PotionFloorTrapFeature
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
 
+        // Offset by one below to place the trap in the ground
+        BlockPos below = context.origin().below();
+
         // Make sure the spawner block at least can be placed
-        if( !predicate.test( level.getBlockState( context.origin() ) ) ) return false;
+        if( !predicate.test( level.getBlockState( below ) ) ) return false;
 
         // Place the trap
-        BlockState trapBlock = config.trapProvider.getState( random, context.origin() );
-        setBlock( level, context.origin(), trapBlock);
+        BlockState trapBlock = config.trapProvider.getState( random, below );
+        setBlock( level, below, trapBlock);
 
         if( trapBlock.getBlock() instanceof PotionTrapBlock ) {
-            config.trapSettings.initializeTrap( level, context.origin(), random );
+            config.trapSettings.initializeTrap( level, below, random );
         }
         return true;
     }

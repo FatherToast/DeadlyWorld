@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -40,15 +41,18 @@ public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configurati
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
 
+        // Offset by one below to place the trap in the ground
+        BlockPos below = context.origin().below();
+
         // Make sure the spawner block at least can be placed
-        if( !predicate.test( level.getBlockState( context.origin() ) ) ) return false;
+        if( !predicate.test( level.getBlockState( below ) ) ) return false;
 
         // Place the trap
-        BlockState trapBlock = config.trapProvider.getState( random, context.origin() );
-        setBlock( level, context.origin(), trapBlock);
+        BlockState trapBlock = config.trapProvider.getState( random, below );
+        setBlock( level, below, trapBlock);
 
         if( trapBlock.getBlock() instanceof DeadlyTrapBlock ) {
-            config.trapSettings.initializeTrap( level, context.origin(), random );
+            config.trapSettings.initializeTrap( level, below, random );
         }
         return true;
     }
