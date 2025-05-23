@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.block.spawner;
 
 import fathertoast.crust.api.lib.NBTHelper;
+import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import net.minecraft.ChatFormatting;
@@ -33,7 +34,7 @@ import java.util.Optional;
 /**
  * Modified copy-paste of {@link net.minecraft.world.level.block.SpawnerBlock}.
  */
-public class DeadlySpawnerBlock extends BaseEntityBlock {
+public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock {
     
     private final SpawnerType spawnerType;
     
@@ -43,8 +44,9 @@ public class DeadlySpawnerBlock extends BaseEntityBlock {
     }
     
     public final SpawnerType getSpawnerType() { return spawnerType; }
-    
-    public void initializeSpawner( ServerLevel level, BlockPos pos, RandomSource random ) {
+
+    @Override
+    public void initDeadly(ServerLevel level, BlockPos pos, RandomSource random) {
         if( level.getBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
             spawnerBlockEntity.getSpawnerLogic().initializeSpawner( level, pos, random );
         }

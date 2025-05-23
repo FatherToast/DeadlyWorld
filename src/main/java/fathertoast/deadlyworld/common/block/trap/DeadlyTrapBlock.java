@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.block.trap;
 
 import fathertoast.crust.api.lib.NBTHelper;
+import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.config.BlocksConfig;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class DeadlyTrapBlock extends BaseEntityBlock implements ICamoTrap {
+public class DeadlyTrapBlock extends BaseEntityBlock implements ICamoTrap, IDeadlyBlock {
 
     private final TrapType trapType;
 
@@ -53,13 +54,14 @@ public class DeadlyTrapBlock extends BaseEntityBlock implements ICamoTrap {
             }
         };
     }
-    
-    public void initializeTrap( ServerLevel level, BlockPos pos, RandomSource random ) {
+
+    @Override
+    public void initDeadly(ServerLevel level, BlockPos pos, RandomSource random) {
         if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
             trapBlockEntity.getTrapLogic().initializeTrap( level, pos, random );
         }
     }
-    
+
     @Override
     public BlockEntity newBlockEntity( BlockPos pos, BlockState state ) { return new DeadlyTrapBlockEntity( pos, state ); }
     

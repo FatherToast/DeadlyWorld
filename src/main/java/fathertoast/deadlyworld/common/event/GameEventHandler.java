@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.event;
 
 
 import com.mojang.math.Axis;
+import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
@@ -81,16 +82,8 @@ public final class GameEventHandler {
     public static void onEntityPlaceBlock( BlockEvent.EntityPlaceEvent event ) {
         if( event.getLevel() instanceof ServerLevel level ) {
             // Initialize placed blocks with configured settings
-            // TODO - probably better to make a generic interface for traps that need to be
-            //        initialized on placement instead of doing instanceof checks for each block type
-            if( event.getPlacedBlock().getBlock() instanceof DeadlySpawnerBlock spawner ) {
-                spawner.initializeSpawner( level, event.getPos(), level.getRandom() );
-            }
-            else if( event.getPlacedBlock().getBlock() instanceof DeadlyTrapBlock trap ) {
-                trap.initializeTrap( level, event.getPos(), level.getRandom() );
-            }
-            else if ( event.getPlacedBlock().getBlock() instanceof TowerDispenserBlock towerDispenser ) {
-                towerDispenser.initializeTrap( level, event.getPos(), level.getRandom() );
+            if ( event.getPlacedBlock().getBlock() instanceof IDeadlyBlock deadlyBlock ) {
+                deadlyBlock.initDeadly( level, event.getPos(), level.getRandom() );
             }
         }
     }

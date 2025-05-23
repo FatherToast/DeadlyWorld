@@ -5,8 +5,20 @@
       "bonus_rolls": 0.0,
       "entries": [
         {
-          "type": "minecraft:loot_table",
-          "name": "minecraft:blocks/chest"
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "deadlyworld:mimic_core",
+          "weight": 100
         }
       ],
       "name": "chest",

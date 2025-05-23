@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import com.mojang.serialization.Codec;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.loot.glm.ChestMimicLootModifier;
 import fathertoast.deadlyworld.common.loot.glm.SimpleAddLootModifier;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.registries.DeferredRegister;
@@ -16,6 +17,7 @@ public class DWLootModifiers {
 
 
     public static final RegistryObject<Codec<SimpleAddLootModifier>> SIMPLE_ADD = register( "simple_add", SimpleAddLootModifier.CODEC );
+    public static final RegistryObject<Codec<ChestMimicLootModifier>> CHEST_MIMIC = register( "chest_mimic", ChestMimicLootModifier.CODEC );
 
 
     private static <T extends Codec<? extends IGlobalLootModifier>> RegistryObject<T> register( String name, Supplier<T> supplier ) {

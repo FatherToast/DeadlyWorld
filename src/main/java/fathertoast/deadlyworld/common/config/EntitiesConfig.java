@@ -4,9 +4,14 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.AttributeListField;
+import fathertoast.crust.api.config.common.field.StringListField;
 import fathertoast.crust.api.config.common.value.AttributeEntry;
 import fathertoast.crust.api.config.common.value.AttributeList;
+import fathertoast.deadlyworld.common.config.field.RLValueListField;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+
+import java.util.List;
 
 public class EntitiesConfig extends AbstractConfigFile {
     
@@ -64,6 +69,9 @@ public class EntitiesConfig extends AbstractConfigFile {
     public static class Mimics extends AbstractConfigCategory<EntitiesConfig> {
 
         public final AttributeListField chestAttributes;
+        public final RLValueListField chestTargetLootTables;
+
+
         public final AttributeListField jukeboxAttributes;
 
         Mimics( EntitiesConfig parent ) {
@@ -71,7 +79,42 @@ public class EntitiesConfig extends AbstractConfigFile {
                     "Options to customize misc global settings." );
 
             chestAttributes = mimicAttributes( "chest" );
+
+            chestTargetLootTables = SPEC.define( new RLValueListField( "chest_target_loot_tables",
+                    1, defaultChestMimicLootTables(),
+                    "List of IDs for loot tables that can have a Mimic Core item added to them by Deadly World.",
+                    "Each ID is paired with a chance value (the chance for a Mimic Core to be added to the loot table).",
+                    "Chance is in percents, so it should range from 0.0 to 1.0.",
+                    "Mimic Cores are what makes chests come alive and become Chest Mimics, so if one exists in a chest's inventory,",
+                    "be it either because of a loot modifier or because someone put it there, the chest will come alive when opened.") );
+
+            SPEC.newLine();
+
             jukeboxAttributes = mimicAttributes( "jukebox" );
+        }
+
+        private List<String> defaultChestMimicLootTables() {
+            return List.of(
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/abandoned_mineshaft" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/ancient_city" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/bastion_bridge" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/bastion_treasure" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/desert_pyramid" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/end_city_treasure" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/igloo_chest" ), 0.1 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/jungle_temple" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/nether_bridge" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/ruined_portal" ), 0.1 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/simple_dungeon" ), 0.3 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/spawn_bonus_chest" ), 0.5 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/stronghold_corridor" ), 0.3 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/jungle_temple" ), 0.2 ),
+                    chestMimicLootTableEntry( new ResourceLocation( "chests/woodland_mansion" ), 0.1 )
+            );
+        }
+
+        private static String chestMimicLootTableEntry( ResourceLocation lootTableId, double chance ) {
+            return lootTableId + " " + chance;
         }
 
         private AttributeListField mimicAttributes( String key ) {

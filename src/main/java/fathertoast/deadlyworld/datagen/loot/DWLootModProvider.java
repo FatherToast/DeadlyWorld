@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
+import fathertoast.deadlyworld.common.loot.glm.ChestMimicLootModifier;
 import fathertoast.deadlyworld.common.loot.glm.SimpleAddLootModifier;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -18,16 +19,6 @@ public class DWLootModProvider extends GlobalLootModifierProvider {
 
     @Override
     protected void start() {
-        add("mimic", new SimpleAddLootModifier(
-                new LootItemCondition[]{},
-                DWItems.MIMIC_CORE.get(),
-                0.1D,
-                Arrays.asList(
-                        new ResourceLocation("chests/simple_dungeon"),
-                        new ResourceLocation("chests/desert_pyramid"),
-                        new ResourceLocation("chests/jungle_temple"),
-                        new ResourceLocation("chests/abandoned_mineshaft")
-                ))
-        );
+        add( "chest_mimic", new ChestMimicLootModifier( new LootItemCondition[]{} ) );
     }
 }

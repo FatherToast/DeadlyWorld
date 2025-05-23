@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+/**
+ *  Simple implementation of a loot modifier that adds an item stack with
+ *  variable size to a list of loot table IDs.
+ */
 public class SimpleAddLootModifier extends LootModifier {
 
     private static final ListCodec<ResourceLocation> RL_LIST_CODEC = new ListCodec<>( ResourceLocation.CODEC );
@@ -49,12 +53,6 @@ public class SimpleAddLootModifier extends LootModifier {
             .apply( inst, SimpleAddLootModifier::new )
     );
 
-    /**
-     * Constructs a LootModifier.<br>
-     * Variable minimum and maximum stack size.
-     *
-     * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
-     */
     public SimpleAddLootModifier( LootItemCondition[] conditionsIn, Item itemToAdd, double chance, int maxStackCount, int minStackCount, List<ResourceLocation> lootTables ) {
         super(conditionsIn);
         this.itemToAdd = itemToAdd;
@@ -64,12 +62,6 @@ public class SimpleAddLootModifier extends LootModifier {
         this.lootTables = lootTables;
     }
 
-    /**
-     * Constructs a LootModifier.<br>
-     * The resulting loot stack will always have a size of 1.
-     *
-     * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
-     */
     public SimpleAddLootModifier( LootItemCondition[] conditionsIn, Item itemToAdd, double chance, List<ResourceLocation> lootTables ) {
         super(conditionsIn);
         this.itemToAdd = itemToAdd;

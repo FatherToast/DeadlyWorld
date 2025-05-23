@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.block.tower;
 
+import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class TowerDispenserBlock extends BaseEntityBlock {
+public class TowerDispenserBlock extends BaseEntityBlock implements IDeadlyBlock {
 
     private final TowerType towerType;
 
@@ -25,9 +26,10 @@ public class TowerDispenserBlock extends BaseEntityBlock {
         towerType = type;
     }
 
-    public void initializeTrap(ServerLevel level, BlockPos pos, RandomSource random ) {
+    @Override
+    public void initDeadly(ServerLevel level, BlockPos pos, RandomSource random) {
         if( level.getBlockEntity( pos ) instanceof TowerDispenserBlockEntity towerBlockEntity ) {
-           // towerBlockEntity.getTowerLogic().initializeTrap( level, pos, random );
+            // towerBlockEntity.getTowerLogic().initializeTrap( level, pos, random );
         }
     }
 

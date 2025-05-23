@@ -24,7 +24,9 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -93,6 +95,14 @@ public class ChestMimic extends Monster {
     protected void dropCustomDeathLoot( DamageSource damageSource, int lootingLevel, boolean recentlyHurtBy ) {
         super.dropCustomDeathLoot( damageSource, lootingLevel, recentlyHurtBy );
 
+        // Try dropping the chest this mimic is "made of"
+        ItemStack chest = null;
+        try { chest = new ItemStack( entityData.get( DISGUISE_BLOCK_STATE ).getBlock().asItem() ); }
+        catch ( Exception ignored ) { }
+
+        if ( chest != null ) spawnAtLocation( chest );
+
+        // Drop chest contents, if any
         if ( items != null && !items.isEmpty() ) {
             for ( ItemStack itemStack : items ) {
                 // Do not drop mimic cores. They should be lost and instead let the loot table

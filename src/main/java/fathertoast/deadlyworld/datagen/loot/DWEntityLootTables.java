@@ -1,7 +1,9 @@
 package fathertoast.deadlyworld.datagen.loot;
 
+import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,8 +21,13 @@ public class DWEntityLootTables extends EntityLootSubProvider {
     @Override
     public void generate() {
         // New mobs
-        add( DWEntities.CHEST_MIMIC, new LootTableBuilder().addLootTable( "chest", Blocks.CHEST.getLootTable() ) );
-        // TODO - proper jukebox mimic loot
+        add( DWEntities.CHEST_MIMIC, new LootTableBuilder().addPool( new DWLootPoolBuilder( "chest" )
+                .addEntry( new LootEntryItemBuilder( DWItems.MIMIC_CORE.get() )
+                        .setWeight( 100 )
+                        .setCount( 0, 1 )
+                        .toLootEntry() )
+                .toLootPool() )
+        );
         add( DWEntities.JUKEBOX_MIMIC, new LootTableBuilder().addLootTable( "jukebox", Blocks.JUKEBOX.getLootTable() ) );
         
         // Mini mobs
