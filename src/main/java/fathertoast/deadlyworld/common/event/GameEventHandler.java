@@ -13,6 +13,7 @@ import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import fathertoast.deadlyworld.common.entity.ChestMimic;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
+import fathertoast.deadlyworld.common.util.MimicHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -38,6 +39,7 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -88,13 +90,29 @@ public final class GameEventHandler {
         }
     }
 
+    @SubscribeEvent( priority = EventPriority.HIGH )
+    public static void onDestroyBlock( BlockEvent.BreakEvent event ) {
+        if ( event.getLevel() instanceof ServerLevel serverLevel ) {
+            BlockPos pos = event.getPos();
+            BlockState state = serverLevel.getBlockState( pos );
+            BlockEntity blockEntity = serverLevel.getExistingBlockEntity( pos );
+
+            if ( blockEntity instanceof ChestBlockEntity chest ) {
+                if ( MimicHelper.spawnChestMimicFrom( serverLevel, pos, state, chest, event.getPlayer() ) ) {
+                    serverLevel.removeBlock( pos, false );
+                    event.setCanceled( true );
+                }
+            }
+        }
+    }
+
     /**
      * This event is fired on both sides whenever the player right clicks while targeting a block.<br><br>
      * This specific handler method checks when the player right-clicks a chest, and if a Chest Mimic should spawn.
      *
      * @param event The event data.
      */
-    @SubscribeEvent
+    @SubscribeEvent( priority = EventPriority.HIGHEST )
     public static void onRightClickChest( PlayerInteractEvent.RightClickBlock event ) {
         // Prevent spectators from generating loot tables and/or spawning mimics
         if ( event.getEntity().isSpectator() ) return;
@@ -104,59 +122,9 @@ public final class GameEventHandler {
         BlockState state = level.getBlockState( pos );
         BlockEntity blockEntity = level.getExistingBlockEntity( pos );
 
-        if ( blockEntity instanceof ChestBlockEntity chest ) {
-            // Unpack loot table early so we can check the items
-            chest.unpackLootTable( event.getEntity() );
-            boolean spawnMimic = false;
-
-            // If inventory contains mimic core, do mimic stuff
-            for ( ItemStack itemStack : chest.getItems() ) {
-                if ( itemStack.getItem() == DWItems.MIMIC_CORE.get() ) {
-                    spawnMimic = true;
-                    break;
-                }
-            }
-
-            // Spawn mimic!
-            if ( !level.isClientSide && spawnMimic ) {
-                ChestMimic chestMimic = DWEntities.CHEST_MIMIC.get().create( event.getLevel() );
-
-                if ( chestMimic != null ) {
-                    chestMimic.setDisguiseState( state );
-
-                    Direction facing = Direction.NORTH;
-
-                    if ( state.hasProperty( ChestBlock.FACING ) ) {
-                        facing = state.getValue( ChestBlock.FACING );
-                    }
-                    chestMimic.setPos( pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5 );
-                    chestMimic.setYHeadRot( facing.toYRot() );
-
-                    // Copy items from chest and save them to the mimic
-                    chestMimic.setItems( chest.getItems() );
-                    chest.getItems().clear();
-
-                    event.getLevel().addFreshEntity( chestMimic );
-                    event.getLevel().removeBlock( pos, false );
-
-                    if ( chestMimic.isAddedToWorld() ) {
-                        chestMimic.setTarget( event.getEntity() );
-
-                        if ( level instanceof ServerLevel serverLevel ) {
-                            serverLevel.sendParticles(
-                                    ParticleTypes.CLOUD,
-                                    pos.getX() + 0.5,
-                                    pos.getY() + 0.5,
-                                    pos.getZ() + 0.5,
-                                    10,
-                                    serverLevel.random.nextGaussian(),
-                                    serverLevel.random.nextGaussian(),
-                                    serverLevel.random.nextGaussian(),
-                                    0.1
-                            );
-                        }
-                    }
-                }
+        if ( level instanceof ServerLevel serverLevel && blockEntity instanceof ChestBlockEntity chest ) {
+            if ( MimicHelper.spawnChestMimicFrom( serverLevel, pos, state, chest, event.getEntity() ) ) {
+                level.removeBlock( pos, false );
             }
         }
     }

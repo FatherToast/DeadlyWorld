@@ -1,4 +1,13 @@
 {
+  "entity.chest_mimic.appear": {
+    "subtitle": "sound_event.deadlyworld.subtitle.chest_mimic.appear",
+    "sounds": [
+      "minecraft:entity/shulker/shoot1",
+      "minecraft:entity/shulker/shoot2",
+      "minecraft:entity/shulker/shoot3",
+      "minecraft:entity/shulker/shoot4"
+    ]
+  },
   "entity.chest_mimic.hurt": {
     "subtitle": "sound_event.deadlyworld.subtitle.chest_mimic.hurt",
     "sounds": [
