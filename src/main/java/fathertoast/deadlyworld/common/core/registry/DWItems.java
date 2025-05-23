@@ -5,6 +5,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SimpleFoiledItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
@@ -17,7 +19,9 @@ public final class DWItems {
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create( ForgeRegistries.ITEMS, DeadlyWorld.MOD_ID );
     
     //public static final RegistryObject<DeviceBlueprintItem> DEVICE_BLUEPRINT = register( "device_blueprint", DeviceBlueprintItem::new );
-    public static final RegistryObject<Item> MIMIC_CORE = registerSimple("mimic_core" );
+    public static final RegistryObject<Item> MIMIC_CORE = register("mimic_core", () -> new SimpleFoiledItem( new Item.Properties()
+            .stacksTo( 1 )
+            .rarity( Rarity.UNCOMMON ) ) );
     
     // Spawn eggs
     public static final RegistryObject<ForgeSpawnEggItem> MIMIC_SPAWN_EGG = registerSpawnEgg(
