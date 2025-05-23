@@ -4,7 +4,6 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.AttributeListField;
-import fathertoast.crust.api.config.common.field.StringListField;
 import fathertoast.crust.api.config.common.value.AttributeEntry;
 import fathertoast.crust.api.config.common.value.AttributeList;
 import fathertoast.deadlyworld.common.config.field.RLValueListField;

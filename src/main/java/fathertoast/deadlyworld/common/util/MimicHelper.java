@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ChestBlock;
@@ -29,8 +28,6 @@ public class MimicHelper {
      * @return True if the mimic was successfully spawned, false if not.
      */
     public static boolean spawnChestMimicFrom( ServerLevel level, BlockPos pos, BlockState state, ChestBlockEntity chestBlockEntity, @Nullable Player player ) {
-        boolean spawned = false;
-
         chestBlockEntity.unpackLootTable( player );
         boolean spawnMimic = false;
 
@@ -66,7 +63,6 @@ public class MimicHelper {
             level.addFreshEntity( chestMimic );
 
             if ( chestMimic.isAddedToWorld() ) {
-                spawned = true;
                 if ( player != null )
                     chestMimic.setTarget( player );
 
@@ -84,8 +80,9 @@ public class MimicHelper {
                         level.random.nextGaussian(),
                         0.1
                 );
+                return true;
             }
         }
-        return spawned;
+        return false;
     }
 }
