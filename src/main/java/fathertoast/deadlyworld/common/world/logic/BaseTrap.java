@@ -116,7 +116,7 @@ public abstract class BaseTrap {
                 trapSettings.checkSightChance().sample( random ),
                 trapSettings.resetTime().getMinValue(),
                 trapSettings.resetTime().getMaxValue(),
-                -1,
+                trapSettings.triggersRemaining().sample( random ),
                 roll( random, trapSettings.decoyChance().sample( random ) )
         );
     }
@@ -125,8 +125,7 @@ public abstract class BaseTrap {
         final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level ) );
         initializeTrap( level, pos, random,
                 trapConfig.activationRange.get(), (float) trapConfig.checkSightChance.get(),
-                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), -1, trapConfig.decoyChance.rollChance( random )
-                // TODO - config thingy, for now just endless triggers
+                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), trapConfig.triggersRemaining.get(), trapConfig.decoyChance.rollChance( random )
         );
     }
 

@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
 import fathertoast.deadlyworld.common.world.logic.PotionTrap;
 import net.minecraft.core.BlockPos;
@@ -15,12 +16,13 @@ import net.minecraft.world.level.WorldGenLevel;
 
 public record PotionFloorTrapSettings(
         FloatProvider requiredPlayerRange, FloatProvider checkSightChance,
-        IntProvider resetTime, FloatProvider decoyChance, FloatProvider dynamicChance
+        IntProvider resetTime, IntProvider triggersRemaining, FloatProvider decoyChance, FloatProvider dynamicChance
 ) {
     public static final Codec<PotionFloorTrapSettings> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
             FloatProvider.CODEC.fieldOf( "required_player_range" ).forGetter( PotionFloorTrapSettings::requiredPlayerRange ),
             FloatProvider.CODEC.fieldOf( "activation_sight_check" ).forGetter( PotionFloorTrapSettings::checkSightChance ),
             IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( PotionFloorTrapSettings::resetTime ),
+            IntProvider.CODEC.fieldOf( "triggers_remaining" ).forGetter( PotionFloorTrapSettings::triggersRemaining ),
             FloatProvider.CODEC.fieldOf( "decoy_chance" ).forGetter( PotionFloorTrapSettings::decoyChance ),
             FloatProvider.CODEC.fieldOf( "dynamic_chance" ).forGetter( PotionFloorTrapSettings::dynamicChance )
     ).apply( instance, PotionFloorTrapSettings::new ) );
@@ -31,6 +33,7 @@ public record PotionFloorTrapSettings(
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
 
                 ConfigUniformIntProvider.of( config.resetTimeMin, config.resetTimeMax ),
+                ConfigConstantIntProvider.of( config.triggersRemaining ),
 
                 ConfigConstantFloatProvider.of( config.decoyChance ),
                 ConfigConstantFloatProvider.of( config.dynamicChance )

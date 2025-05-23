@@ -19,6 +19,10 @@
         "type": "deadlyworld:config_uniform_int",
         "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/traps:tnt_mob_traps.reset_time.max",
         "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/traps:tnt_mob_traps.reset_time.min"
+      },
+      "triggers_remaining": {
+        "type": "deadlyworld:config_constant_int",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/traps:tnt_mob_traps.triggers"
       }
     },
     "trap_provider": {

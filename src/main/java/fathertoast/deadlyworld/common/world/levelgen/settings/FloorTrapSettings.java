@@ -8,6 +8,7 @@ import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -17,12 +18,13 @@ import net.minecraft.world.level.WorldGenLevel;
 
 public record FloorTrapSettings(
         FloatProvider requiredPlayerRange, FloatProvider checkSightChance,
-        IntProvider resetTime, FloatProvider decoyChance
+        IntProvider resetTime, IntProvider triggersRemaining, FloatProvider decoyChance
 ) {
     public static final Codec<FloorTrapSettings> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
             FloatProvider.CODEC.fieldOf( "required_player_range" ).forGetter( FloorTrapSettings::requiredPlayerRange ),
             FloatProvider.CODEC.fieldOf( "activation_sight_check" ).forGetter( FloorTrapSettings::checkSightChance ),
             IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( FloorTrapSettings::resetTime ),
+            IntProvider.CODEC.fieldOf( "triggers_remaining" ).forGetter( FloorTrapSettings::triggersRemaining ),
             FloatProvider.CODEC.fieldOf( "decoy_chance" ).forGetter( FloorTrapSettings::decoyChance )
     ).apply( instance, FloorTrapSettings::new ) );
 
@@ -34,6 +36,7 @@ public record FloorTrapSettings(
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
 
                 ConfigUniformIntProvider.of( config.resetTimeMin, config.resetTimeMax ),
+                ConfigConstantIntProvider.of( config.triggersRemaining ),
 
                 ConfigConstantFloatProvider.of( config.decoyChance )
         );

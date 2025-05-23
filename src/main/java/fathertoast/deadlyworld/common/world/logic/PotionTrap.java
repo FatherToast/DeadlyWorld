@@ -46,7 +46,7 @@ public class PotionTrap extends BaseTrap {
                 trapSettings.checkSightChance().sample( random ),
                 trapSettings.resetTime().getMinValue(),
                 trapSettings.resetTime().getMaxValue(),
-                -1,
+                trapSettings.triggersRemaining().sample( random ),
                 roll( random, trapSettings.dynamicChance().sample( random ) ),
                 trapConfig.potionList.get().next( random ),
                 roll( random, trapSettings.decoyChance().sample( random ) )
@@ -57,7 +57,7 @@ public class PotionTrap extends BaseTrap {
         final TrapConfig.PotionTrapTypeCategory trapConfig = (TrapConfig.PotionTrapTypeCategory) TrapType.POTION.getFeatureConfig( Config.getDimensionConfigs( level ) );
         initializeTrap( level, pos, random,
                 trapConfig.activationRange.get(), (float) trapConfig.checkSightChance.get(),
-                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), -1,
+                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), trapConfig.triggersRemaining.get(),
                 trapConfig.dynamicChance.rollChance( random ), trapConfig.potionList.get().next( random ),
                 trapConfig.decoyChance.rollChance( random )
         );
