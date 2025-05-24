@@ -286,12 +286,23 @@ public class SpawnerConfig extends FeatureConfig {
         /** @return The default spawn list to use for this spawner type and dimension. */
         @Override
         protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
-            return new WeightedEntityList(
-                    new EntityEntry( null, DWEntities.MINI_ZOMBIE.getId(), true, 200 ),
-                    new EntityEntry( null, DWEntities.MINI_SKELETON.getId(), true, 100 ),
-                    new EntityEntry( null, DWEntities.MINI_SPIDER.getId(), true, 100 ),
-                    new EntityEntry( null, DWEntities.MINI_CREEPER.getId(), true, 50 )
-            );
+            if ( isNetherDimension() ) {
+                return new WeightedEntityList(
+                        new EntityEntry( null, DWEntities.MINI_ZOMBIE.getId(), true, 200 ),
+                        new EntityEntry( null, DWEntities.MINI_SKELETON.getId(), true, 100 ),
+                        new EntityEntry( null, DWEntities.MINI_SPIDER.getId(), true, 100 ),
+                        new EntityEntry( null, DWEntities.MINI_CREEPER.getId(), true, 50 ),
+                        new EntityEntry( null, DWEntities.MICRO_GHAST.getId(), true, 40 )
+                );
+            }
+            else {
+                return new WeightedEntityList(
+                        new EntityEntry( null, DWEntities.MINI_ZOMBIE.getId(), true, 200 ),
+                        new EntityEntry( null, DWEntities.MINI_SKELETON.getId(), true, 100 ),
+                        new EntityEntry( null, DWEntities.MINI_SPIDER.getId(), true, 100 ),
+                        new EntityEntry( null, DWEntities.MINI_CREEPER.getId(), true, 50 )
+                );
+            }
         }
     }
 }
