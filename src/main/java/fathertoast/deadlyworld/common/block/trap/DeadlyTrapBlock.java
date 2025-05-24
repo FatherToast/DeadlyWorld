@@ -1,23 +1,13 @@
 package fathertoast.deadlyworld.common.block.trap;
 
-import fathertoast.crust.api.lib.NBTHelper;
+import fathertoast.deadlyworld.common.block.ICamoTrap;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
-import fathertoast.deadlyworld.common.config.BlocksConfig;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -27,11 +17,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
 
 public class DeadlyTrapBlock extends BaseEntityBlock implements ICamoTrap, IDeadlyBlock {
 

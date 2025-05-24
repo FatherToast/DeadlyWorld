@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.block.trap;
 
+import fathertoast.deadlyworld.common.block.ICamoTrap;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;
@@ -62,7 +63,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
             BlockPos pos = getBlockPos().relative( direction );
             BlockState neighborState = level.getBlockState( pos );
 
-            if ( neighborState.getBlock() instanceof ICamoTrap ) continue;
+            if ( neighborState.getBlock() instanceof ICamoTrap) continue;
 
             if ( neighborState.isSolidRender( level, pos ) ) {
                 camoState = neighborState;
