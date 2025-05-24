@@ -125,9 +125,9 @@ public abstract class FeatureConfig extends AbstractConfigFile {
         protected DoubleField standardCheckSightField( boolean defaultValue ) {
             return new DoubleField( "sight_check_chance", defaultValue ? 1.0 : 0.0, DoubleField.Range.PERCENT,
                     "The chance for " + FEATURE_TYPE_NAME + " to generate as requiring a sight check.",
-                    "When the sight check is enabled, " + FEATURE_TYPE_NAME + " will only spawn when they have " +
-                            "direct line-of-sight to a player within activation range. The spawner's delay will continue to " +
-                            "tick down, but it will wait to actually spawn until it has line-of-sight.",
+                    "When the sight check is enabled, " + FEATURE_TYPE_NAME + " will only activate when they have " +
+                            "direct line-of-sight to a player within activation range. The " + FEATURE_TYPE_NAME + "'s delay will continue to " +
+                            "tick down, but it will wait to actually activate until it has line-of-sight.",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE );
         }
     }

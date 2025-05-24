@@ -18,23 +18,33 @@ import javax.annotation.Nullable;
 public class TowerDispenserConfig extends FeatureConfig {
     
     public final TowerDispenserConfig.TowerDispenserTypeCategory SIMPLE;
+    public final TowerDispenserConfig.TowerDispenserTypeCategory FIRE;
     public final TowerDispenserConfig.PotionTowerDispenserTypeCategory POTION;
-    
+    public final TowerDispenserConfig.TowerDispenserTypeCategory GATLING;
+    public final TowerDispenserConfig.TowerDispenserTypeCategory FIREBALL;
+
+
     /** Builds the config spec that should be used for this config. */
     TowerDispenserConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "tower dispenser" );
         
         SPEC.newLine();
-        SPEC.describeEntityList();
-        
-        //SPEC.newLine();
         //SPEC.describePotionList();
         
         SIMPLE = new TowerDispenserTypeCategory( this, TowerType.SIMPLE, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
-                9.0, true, 20, 40, 2.0, 1.0, 0.08 );
-        
+                9.0, true, 20, 40, 3.0, 1.0, 0.08 );
+
+        FIRE = new TowerDispenserTypeCategory( this, TowerType.FIRE, 0.3, DEPTH_LAVA, DEPTH_0, 0.3,
+                9.0, true, 20, 40, 1.0, 1.2, 0.08 );
+
         POTION = new PotionTowerDispenserTypeCategory( this, TowerType.POTION, 0.4, DEPTH_LAVA, DEPTH_0, 0.3,
-                9.0, true, 20, 40, 0.0, 1.0, 0.2 );
+                9.0, true, 20, 40, 0.5, 1.0, 0.2, 0.2 );
+
+        GATLING = new TowerDispenserTypeCategory( this, TowerType.GATLING, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
+                11.0, true, 5, 7, 1.0, 1.0, 0.08 );
+
+        FIREBALL = new TowerDispenserTypeCategory( this, TowerType.FIREBALL, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
+                15.0, true, 20, 40, 2.0, 1.3, 0.15 );
     }
     
     public static class TowerDispenserTypeCategory extends FeatureTypeCategory {
@@ -43,7 +53,7 @@ public class TowerDispenserConfig extends FeatureConfig {
         
         public final DoubleField activationRange;
         public final DoubleField checkSightChance;
-        
+
         public final IntField.RandomRange attackDelay;
         public final IntField attackDelayMin, attackDelayMax; // TODO delete after Crust update
         @Nullable
@@ -76,7 +86,7 @@ public class TowerDispenserConfig extends FeatureConfig {
             checkSightChance = SPEC.define( standardCheckSightField( checkSight ) );
             
             SPEC.newLine();
-            
+
             attackDelay = new IntField.RandomRange(
                     attackDelayMin = SPEC.define( new IntField( "attack_delay.min", minAttackDelay, 0, Short.MAX_VALUE,
                             "The minimum and maximum (inclusive) delay between attacks, in ticks. (20 ticks = 1 second)",
@@ -102,20 +112,26 @@ public class TowerDispenserConfig extends FeatureConfig {
     public static class PotionTowerDispenserTypeCategory extends TowerDispenserTypeCategory {
         
         public final WeightedPotionListField potionList;
+        public final DoubleField dynamicChance;
         
         PotionTowerDispenserTypeCategory( FeatureConfig parent, TowerType type, double
                 placements, int minHeight, int maxHeight, double chestCh, double activationRange, boolean checkSight, int minAttackDelay,
-                                          int maxAttackDelay, double attackDamage, double projectileSpeed, double projectileVariance ) {
-            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRange, checkSight, minAttackDelay, maxAttackDelay, attackDamage, projectileSpeed, projectileVariance );
+                                          int maxAttackDelay, double attackDamage, double projectileSpeed, double projectileVariance, double dynamicCh ) {
+            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRange, checkSight, minAttackDelay, maxAttackDelay,
+                    attackDamage, projectileSpeed, projectileVariance );
             
             SPEC.newLine();
 
-
             potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList(),
-                    "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when hurling splash potions. One of these is chosen",
-                    "at random when the trap is generated. If the trap is generated as 'dynamic_chance' it will pick again",
+                    "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when shooting tipped arrows. One of these is chosen",
+                    "at random when the tower dispenser is generated. If the tower dispenser is generated as 'dynamic_chance' it will pick again",
                     "between each potion effect.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
+
+            dynamicChance = SPEC.define( new DoubleField( "dynamic_chance", dynamicCh, DoubleField.Range.PERCENT,
+                    "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamicChance'.",
+                    "Dynamic potion towers pick a new potion every time they shoot a tipped arrow.",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
         }
 
         /** @return The default spawn list to use for this spawner type and dimension. */

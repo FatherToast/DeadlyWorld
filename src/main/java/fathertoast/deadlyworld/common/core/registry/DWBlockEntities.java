@@ -1,8 +1,10 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.block.spawner.*;
+import fathertoast.deadlyworld.common.block.tower.PotionTowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlockEntity;
+import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
@@ -34,6 +36,8 @@ public final class DWBlockEntities {
     
     public static final RegistryObject<BlockEntityType<TowerDispenserBlockEntity>> TOWER_DISPENSER = registerMultiple(
             "tower_dispenser", TowerDispenserBlockEntity::new, DWBlockEntities::getStandardTowerDisBlocks );
+    public static final RegistryObject<BlockEntityType<PotionTowerDispenserBlockEntity>> POTION_TOWER = register(
+            "potion_tower_dispenser", PotionTowerDispenserBlockEntity::new, DWBlocks.towerDispenser( TowerType.POTION ) );
     
     //    public static final RegistryObject<BlockEntityType<StormDrainBlockEntity>> STORM_DRAIN = register( "storm_drain",
     //            () -> BlockEntityType.Builder.of( StormDrainBlockEntity::new, DWBlocks.STORM_DRAIN.get() ).build( null ) );

@@ -28,8 +28,8 @@ public class PotionTrap extends BaseTrap {
     private MobEffectInstance potion;
 
 
-    public PotionTrap( DeadlyTrapBlockEntity block ) {
-        super( TrapType.POTION, block, block );
+    public PotionTrap( DeadlyTrapBlockEntity trap ) {
+        super( TrapType.POTION, trap, trap );
     }
 
 

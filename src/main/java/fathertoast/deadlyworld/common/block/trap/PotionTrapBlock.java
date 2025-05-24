@@ -25,7 +25,7 @@ public class PotionTrapBlock extends DeadlyTrapBlock {
         return new PotionTrap( blockEntity ) {
             @Override
             public void triggerTrap(ServerLevel level, BlockPos pos ) {
-                TrapType.POTION.triggerTrap( Config.getDimensionConfigs( level ), blockEntity );
+                trapType.triggerTrap( Config.getDimensionConfigs( level ), blockEntity );
             }
         };
     }
