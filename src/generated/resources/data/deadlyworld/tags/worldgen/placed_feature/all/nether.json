@@ -9,6 +9,7 @@
     "deadlyworld:tnt_trap_nether",
     "deadlyworld:tnt_mob_trap_nether",
     "deadlyworld:potion_trap_nether",
-    "deadlyworld:lava_trap_nether"
+    "deadlyworld:lava_trap_nether",
+    "deadlyworld:fire_trap_nether"
   ]
 }

@@ -68,6 +68,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
             case TNT, TNT_MOB -> loot.addPool( buildTNTFloorTrapLootPool() );
             case POTION -> loot.addPool( buildPotionFloorTrapLootPool() );
             case LAVA -> loot.addPool( buildLavaFloorTrapLootPool() );
+            case FIRE -> loot.addPool( buildFireFloorTrapLootPool() );
             default ->
                     throw new IllegalArgumentException( "Floor trap type \"" + type + "\" is missing block loot table data gen code!" );
         }
@@ -118,6 +119,14 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     private LootPool.Builder buildLavaFloorTrapLootPool() {
         return floorTrapLootPoolBuilder()
                 .addItem( Items.LAVA_BUCKET, 10 )
+                .toLootPool();
+    }
+
+    private LootPool.Builder buildFireFloorTrapLootPool() {
+        return floorTrapLootPoolBuilder()
+                .addItem( Items.FLINT_AND_STEEL, 10 )
+                .addItem( Items.FIRE_CORAL, 5 )
+                .addItem( Items.RED_CANDLE, 6 )
                 .toLootPool();
     }
 

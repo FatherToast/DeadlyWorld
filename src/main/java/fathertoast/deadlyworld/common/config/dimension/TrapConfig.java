@@ -22,8 +22,9 @@ public class TrapConfig extends FeatureConfig {
     public final TrapConfig.TntTrapTypeCategory TNT;
     public final TrapConfig.TntMobTrapTypeCategory TNT_MOB;
     public final TrapConfig.PotionTrapTypeCategory POTION;
+    public final TrapConfig.FireTrapTypeCategory FIRE;
     public final TrapTypeCategory LAVA;
-    
+
     /** Builds the config spec that should be used for this config. */
     TrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "trap" );
@@ -45,6 +46,9 @@ public class TrapConfig extends FeatureConfig {
         
         LAVA = new TrapTypeCategory( this, TrapType.LAVA, 0.16, DEPTH_LAVA, DEPTH_3, 0.3,
                 4.0, true, 20, 60, 1, 0.05 );
+
+        FIRE = new FireTrapTypeCategory( this, TrapType.FIRE, 0.08, DEPTH_VOID, DEPTH_1, 0.3,
+                4.0, false, 4, 7, -1, 4.0D, 0.05 );
     }
     
     public static class TrapTypeCategory extends FeatureTypeCategory {
@@ -243,6 +247,21 @@ public class TrapConfig extends FeatureConfig {
                     new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.HARM ), 20, 1, 1 ),
                     new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.HUNGER ), 20, 500, 1 )
             );
+        }
+    }
+
+    public static class FireTrapTypeCategory extends TrapTypeCategory {
+
+        public final DoubleField throwPower;
+
+        FireTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double chestCh,
+                                double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, double thrPower, double decoyCh ) {
+            super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight,
+                    minResetTime, maxResetTime, triggers, decoyCh );
+
+            throwPower = SPEC.define( new DoubleField( "throw_power", thrPower, 1.0D, 20.0D,
+                    "Determines the speed at which fire blocks are launched from this trap.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
     }
 }

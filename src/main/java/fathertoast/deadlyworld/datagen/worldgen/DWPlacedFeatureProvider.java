@@ -50,6 +50,7 @@ public class DWPlacedFeatureProvider {
         registerFloorTrap( context, getter, TNT_MOB_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, POTION_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, LAVA_TRAP, overworldConfigs, netherConfigs );
+        registerFloorTrap( context, getter, FIRE_TRAP, overworldConfigs, netherConfigs );
     }
     
     /** @return Modifiers for a lone spawner feature. */

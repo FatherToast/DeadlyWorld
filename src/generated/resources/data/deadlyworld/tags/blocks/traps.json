@@ -3,6 +3,7 @@
     "deadlyworld:tnt_deadly_trap",
     "deadlyworld:tnt_mob_deadly_trap",
     "deadlyworld:potion_deadly_trap",
-    "deadlyworld:lava_deadly_trap"
+    "deadlyworld:lava_deadly_trap",
+    "deadlyworld:fire_deadly_trap"
   ]
 }

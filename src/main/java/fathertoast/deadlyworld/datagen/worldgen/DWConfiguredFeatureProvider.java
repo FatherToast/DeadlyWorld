@@ -40,6 +40,7 @@ public class DWConfiguredFeatureProvider {
     static final FeatureKeys.Trap TNT_MOB_TRAP = FeatureKeys.Trap.of( TrapType.TNT_MOB, "tnt_mob_trap" );
     static final FeatureKeys.Trap POTION_TRAP = FeatureKeys.Trap.of( TrapType.POTION, "potion_trap" );
     static final FeatureKeys.Trap LAVA_TRAP = FeatureKeys.Trap.of( TrapType.LAVA, "lava_trap" );
+    static final FeatureKeys.Trap FIRE_TRAP = FeatureKeys.Trap.of( TrapType.FIRE, "fire_trap" );
 
 
     /** Called by registry set builder to generate our configured features. */
@@ -76,6 +77,7 @@ public class DWConfiguredFeatureProvider {
         registerFloorTrap( context, TNT_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, TNT_MOB_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, LAVA_TRAP, overworldConfigs, netherConfigs );
+        registerFloorTrap( context, FIRE_TRAP, overworldConfigs, netherConfigs );
 
         // Potion floor trap
         register( context, POTION_TRAP.overworldKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(

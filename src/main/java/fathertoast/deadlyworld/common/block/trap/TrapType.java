@@ -9,11 +9,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
@@ -202,6 +204,36 @@ public enum TrapType {
             if( placedLava ) {
                 level.playSound( null, pos, SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F );
             }
+        }
+    },
+
+    FIRE("fire", ( dimConfig ) -> dimConfig.TRAPS.FIRE ) {
+        @Override
+        public void triggerTrap(DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity) {
+            TrapConfig.FireTrapTypeCategory config = dimConfig.TRAPS.FIRE;
+
+            Level level = trapEntity.getLevel();
+            BlockPos pos = trapEntity.getBlockPos();
+
+            FallingBlockEntity fire = new FallingBlockEntity( level, pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, Blocks.FIRE.defaultBlockState() );
+            fire.time = 1; // Prevent the entity from instantly dying
+            fire.dropItem = false;
+            fire.fallDistance = 3.0F;
+            fire.blocksBuilding = false; // Make it somewhat possible to break the trap from above
+
+            final float throwPower = config.throwPower.getFloat();
+
+            final float speed = ( throwPower * 0.7F + level.random.nextFloat() * throwPower ) / 20.0F;
+            final float pitch = level.random.nextFloat() * (float) Math.PI;
+            final float yaw = level.random.nextFloat() * 2.0F * (float) Math.PI;
+
+            fire.setDeltaMovement(
+                    Mth.cos( yaw ) * speed,
+                    Mth.sin( pitch ) * (throwPower + level.random.nextFloat() * throwPower) / 18.0F,
+                    Mth.sin( yaw ) * speed );
+            level.addFreshEntity( fire );
+
+            level.playSound( null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, 1.0F );
         }
     };
     

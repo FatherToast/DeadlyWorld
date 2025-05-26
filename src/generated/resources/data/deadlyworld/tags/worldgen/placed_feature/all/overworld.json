@@ -9,6 +9,7 @@
     "deadlyworld:tnt_trap",
     "deadlyworld:tnt_mob_trap",
     "deadlyworld:potion_trap",
-    "deadlyworld:lava_trap"
+    "deadlyworld:lava_trap",
+    "deadlyworld:fire_trap"
   ]
 }
