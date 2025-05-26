@@ -10,6 +10,8 @@ import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -29,9 +31,9 @@ public abstract class BaseTower {
     public enum State {
         /** The tower dispenser has exhausted its ammo/activations and is incapable of functioning. */
         DISABLED,
-        /** The trap is on cooldown, temporarily incapable of functioning. */
+        /** The tower dispenser is on cooldown, temporarily incapable of functioning. */
         RESETTING,
-        /** The trap is waiting to be activated. */
+        /** The tower dispenser is waiting to be activated. */
         READY,
         /** The tower dispenser is now active and firing. */
         ACTIVE
@@ -58,13 +60,13 @@ public abstract class BaseTower {
     private final ITowerObject towerObject;
 
     // Settings
-    /** True if line of sight is required to trip this trap. */
+    /** True if line of sight is required to activate this tower dispenser. */
     protected boolean checkSight;
-    /** The maximum distance at which players trip this trap. */
+    /** The maximum distance at which players activates this tower dispenser. */
     protected double activationRange;
-    /** The minimum ticks this trap takes to reset (become able to trip again after triggering). */
+    /** The minimum ticks this tower dispenser takes to reset (become able to attack again after triggering). */
     protected int minAttackDelay;
-    /** The maximum ticks this trap takes to reset (become able to trip again after triggering). */
+    /** The maximum ticks this tower dispenser takes to reset (become able to attack again after triggering). */
     protected int maxAttackDelay;
     /** The amount of damage this tower's projectiles should deal to targets. -1 for towers that don't use this field. */
     protected float attackDamage;
@@ -75,14 +77,14 @@ public abstract class BaseTower {
 
     // Logic
     protected final TowerType towerType;
-    /** The entity that tripped this trap. Usually (but not always) non-null when triggering and null in all other states. */
+    /** The entity that activated this tower dispenser. Usually (but not always) non-null when triggering and null in all other states. */
     @Nullable
     protected Entity towerTarget;
     protected boolean disabled = false;
 
     /**
-     * Counts up each tick until it hits -1 where the trap waits until to be tripped (which sets this >= 0),
-     * then counts up to the max trigger delay and triggers the trap (which sets this < 0).
+     * Counts up each tick until it hits -1 where the tower dispenser waits until to be activated (which sets this >= 0),
+     * then counts up to the max trigger delay and triggers the tower dispenser (which sets this < 0).
      */
     protected int delay = -1;
 
@@ -104,7 +106,7 @@ public abstract class BaseTower {
         towerObject = towerObj;
     }
 
-    /** @return The current state of this trap. */
+    /** @return The current state of this tower dispenser. */
     public State getState() {
         if ( disabled ) return State.DISABLED;
         if( delay == -1 ) return State.READY;
@@ -165,13 +167,13 @@ public abstract class BaseTower {
         }
     }
 
-    /** Called each server tick while this trap is disabled. */
+    /** Called each server tick while this tower is disabled. */
     protected void disabledTick( ServerLevel level, BlockPos pos ) { }
 
-    /** Called each server tick while this trap is resetting. */
+    /** Called each server tick while this tower is resetting. */
     protected void resettingTick( ServerLevel level, BlockPos pos ) { delay++; }
 
-    /** Called each server tick while this trap is ready. */
+    /** Called each server tick while this tower is ready. */
     protected void readyTick( ServerLevel level, BlockPos pos ) {
         if( targetCheckDelay > 0 ) {
             targetCheckDelay--;
@@ -184,7 +186,8 @@ public abstract class BaseTower {
             targetCheckDelay = checkSight ? 4 + level.random.nextInt( 7 ) : 2 + level.random.nextInt( 4 );
         }
         else {
-            tripTrap( level, pos, target );
+            delay = maxAttackDelay <= 1 ? 0 : level.random.nextInt( maxAttackDelay );
+            towerTarget = target;
         }
     }
 
@@ -221,10 +224,11 @@ public abstract class BaseTower {
         double distanceH = Math.sqrt( vecToTarget.x * vecToTarget.x + vecToTarget.z * vecToTarget.z );
 
         // Determine the offset to spawn the arrow at so it doesn't clip the dispenser block
-        Vec3 offset = getOffset(vecToTarget, distanceH);
+        Vec3 offset = getOffset( vecToTarget, distanceH );
 
         activateTower( level, pos, towerTarget, centerPos, offset, vecToTarget, distanceH );
         newAttackDelay( level.random );
+        level.playSound( null, pos, SoundEvents.EGG_THROW, SoundSource.BLOCKS, 1.0F, 1.0F );
     }
 
     @Nonnull
@@ -254,14 +258,14 @@ public abstract class BaseTower {
         return offset;
     }
 
-    /** Disables this trap. */
-    public void disableTrap() {
+    /** Disables this tower dispenser. */
+    public void disableTower() {
         disabled = true;
         newAttackDelay( null );
     }
 
     /**
-     * Resets the trap with a randomized duration (between minimum and maximum reset times).
+     * Resets the tower dispenser with a randomized duration (between minimum and maximum reset times).
      * If the random is null, the duration will be the maximum reset time.
      */
     public void newAttackDelay( @Nullable RandomSource random ) {
@@ -270,16 +274,11 @@ public abstract class BaseTower {
         towerTarget = null;
     }
 
-    /** Trips this trap. */
-    public void tripTrap( ServerLevel level, BlockPos pos, @Nullable Entity target ) {
-        delay = maxAttackDelay <= 1 ? 0 : level.random.nextInt( maxAttackDelay );
-        towerTarget = target;
-    }
-
     /** Activates this tower. */
     public abstract void activateTower( ServerLevel level, BlockPos pos, Entity target,
                                        Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance );
 
+    /** Helper method for shooting arrows. */
     public void shootArrow( Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH, float velocity, float variance, AbstractArrow arrow ) {
         final double spawnOffset = 0.6;
 
@@ -332,10 +331,4 @@ public abstract class BaseTower {
     public boolean onEventTriggered( Level level, int eventId ) {
         return false;
     }
-
-    @Nullable
-    public Entity getSpawnerEntity() { return mobileEntity; }
-
-    @Nullable
-    public BlockEntity getSpawnerBlockEntity() { return blockEntity; }
 }
