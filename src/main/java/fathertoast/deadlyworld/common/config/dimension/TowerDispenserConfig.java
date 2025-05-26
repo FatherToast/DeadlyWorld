@@ -41,10 +41,10 @@ public class TowerDispenserConfig extends FeatureConfig {
                 9.0, true, 20, 40, 0.5, 1.0, 0.2, 0.2 );
 
         GATLING = new TowerDispenserTypeCategory( this, TowerType.GATLING, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
-                11.0, true, 5, 7, 1.0, 1.0, 0.08 );
+                11.0, true, 6, 7, 1.0, 1.0, 0.08 );
 
         FIREBALL = new TowerDispenserTypeCategory( this, TowerType.FIREBALL, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
-                15.0, true, 20, 40, 2.0, 1.3, 0.15 );
+                15.0, true, 20, 40, 2.0, 1.3, 0.4 );
     }
     
     public static class TowerDispenserTypeCategory extends FeatureTypeCategory {
