@@ -93,11 +93,11 @@ public class DWConfiguredFeatureProvider {
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
 
         // Tower dispensers
-        registerTowerDispenser( context, SIMPLE_TOWER, overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, FIRE_TOWER, overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, POTION_TOWER, overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, GATLING_TOWER, overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, FIREBALL_TOWER, overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, SIMPLE_TOWER, block( Blocks.COBBLESTONE_WALL ), overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, FIRE_TOWER, block( Blocks.GRANITE_WALL ), overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, POTION_TOWER, block( Blocks.MUD_BRICK_WALL ), overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, GATLING_TOWER, block( Blocks.MOSSY_STONE_BRICK_WALL ), overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, FIREBALL_TOWER, block( Blocks.RED_SANDSTONE_WALL ), overworldConfigs, netherConfigs );
     }
     
     /** Convenience method for making a simple block state provider. */
@@ -144,17 +144,17 @@ public class DWConfiguredFeatureProvider {
 
     /** Registers a configured lone spawner type feature to each supported dimension. */
     protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature,
-                                             DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        registerTowerDispenser( context, feature.overworldKeys, feature.towerType, overworldConfigs );
-        registerTowerDispenser( context, feature.netherKeys, feature.towerType, netherConfigs );
+                                             BlockStateProvider baseProvider, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        registerTowerDispenser( context, feature.overworldKeys, feature.towerType, baseProvider, overworldConfigs );
+        registerTowerDispenser( context, feature.netherKeys, feature.towerType, baseProvider, netherConfigs );
     }
 
     /** Registers a configured floor trap type feature. */
     protected static void registerTowerDispenser(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                                 TowerType type, DimensionConfigGroup dimConfigs ) {
+                                                 TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER_DISPENSER.get(),
                 new SimpleTowerDispenserFeature.Configuration(
-                        block( Blocks.COBBLESTONE ),
+                        baseProvider,
                         block( DWBlocks.towerDispenser( type ) ),
                         TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );

@@ -4,7 +4,15 @@
     "base_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "minecraft:cobblestone"
+        "Name": "minecraft:red_sandstone_wall",
+        "Properties": {
+          "east": "none",
+          "north": "none",
+          "south": "none",
+          "up": "true",
+          "waterlogged": "false",
+          "west": "none"
+        }
       }
     },
     "cannot_replace": "#minecraft:features_cannot_replace",

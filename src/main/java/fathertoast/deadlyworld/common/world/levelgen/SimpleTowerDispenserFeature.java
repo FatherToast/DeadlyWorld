@@ -46,7 +46,18 @@ public class SimpleTowerDispenserFeature extends DeadlyFeature<SimpleTowerDispen
         final BlockPos basePos = context.origin();
         final BlockPos dispenserPos = basePos.above();
 
-        // Make sure the spawner block at least can be placed
+        // Make sure there is some "open" space around the tower
+        // so we don't generate in super cramped places
+        for ( BlockPos pos : BlockPos.betweenClosed(
+                basePos.offset( -1, 0, -1 ),
+                basePos.offset( 1, 2, 1 ) ) ) {
+            BlockState state = level.getBlockState( pos );
+
+            if ( state.blocksMotion() )
+                return false;
+        }
+
+        // Make sure the dispenser and base block can be placed
         if( !predicate.test( level.getBlockState( basePos ))
                 || !predicate.test( level.getBlockState( dispenserPos )))
             return false;
