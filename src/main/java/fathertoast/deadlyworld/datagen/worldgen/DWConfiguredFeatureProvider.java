@@ -1,19 +1,18 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
-import fathertoast.deadlyworld.common.world.levelgen.FloorTrapFeature;
-import fathertoast.deadlyworld.common.world.levelgen.LoneSpawnerFeature;
-import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapFeature;
-import fathertoast.deadlyworld.common.world.levelgen.SilverfishNestFeature;
+import fathertoast.deadlyworld.common.world.levelgen.*;
 import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.settings.PotionFloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
+import fathertoast.deadlyworld.common.world.levelgen.settings.TowerDispenserSettings;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -41,6 +40,12 @@ public class DWConfiguredFeatureProvider {
     static final FeatureKeys.Trap POTION_TRAP = FeatureKeys.Trap.of( TrapType.POTION, "potion_trap" );
     static final FeatureKeys.Trap LAVA_TRAP = FeatureKeys.Trap.of( TrapType.LAVA, "lava_trap" );
     static final FeatureKeys.Trap FIRE_TRAP = FeatureKeys.Trap.of( TrapType.FIRE, "fire_trap" );
+
+    static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower_dispenser" );
+    static final FeatureKeys.TowerDispenser FIRE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIRE, "fire_tower_dispenser" );
+    static final FeatureKeys.TowerDispenser POTION_TOWER = FeatureKeys.TowerDispenser.of( TowerType.POTION, "potion_tower_dispenser" );
+    static final FeatureKeys.TowerDispenser GATLING_TOWER = FeatureKeys.TowerDispenser.of( TowerType.GATLING, "gatling_tower_dispenser" );
+    static final FeatureKeys.TowerDispenser FIREBALL_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIREBALL, "fireball_tower_dispenser" );
 
 
     /** Called by registry set builder to generate our configured features. */
@@ -86,6 +91,13 @@ public class DWConfiguredFeatureProvider {
         register( context, POTION_TRAP.netherKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
                 block( DWBlocks.trap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( netherConfigs.TRAPS.POTION ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+
+        // Tower dispensers
+        registerTowerDispenser( context, SIMPLE_TOWER, overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, FIRE_TOWER, overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, POTION_TOWER, overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, GATLING_TOWER, overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, FIREBALL_TOWER, overworldConfigs, netherConfigs );
     }
     
     /** Convenience method for making a simple block state provider. */
@@ -127,6 +139,24 @@ public class DWConfiguredFeatureProvider {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
                 new FloorTrapFeature.Configuration( block( DWBlocks.trap( type ) ),
                         FloorTrapSettings.of( type.getFeatureConfig( dimConfigs ) ),
+                        BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+    }
+
+    /** Registers a configured lone spawner type feature to each supported dimension. */
+    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature,
+                                             DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        registerTowerDispenser( context, feature.overworldKeys, feature.towerType, overworldConfigs );
+        registerTowerDispenser( context, feature.netherKeys, feature.towerType, netherConfigs );
+    }
+
+    /** Registers a configured floor trap type feature. */
+    protected static void registerTowerDispenser(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                                 TowerType type, DimensionConfigGroup dimConfigs ) {
+        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER_DISPENSER.get(),
+                new SimpleTowerDispenserFeature.Configuration(
+                        block( Blocks.COBBLESTONE ),
+                        block( DWBlocks.towerDispenser( type ) ),
+                        TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
     

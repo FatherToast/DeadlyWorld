@@ -56,7 +56,7 @@ public class TowerDispenserConfig extends FeatureConfig {
 
         public final IntField.RandomRange attackDelay;
         public final IntField attackDelayMin, attackDelayMax; // TODO delete after Crust update
-        @Nullable
+
         public final DoubleField attackDamage;
         
         public final DoubleField projectileSpeed;
@@ -116,9 +116,9 @@ public class TowerDispenserConfig extends FeatureConfig {
         
         PotionTowerDispenserTypeCategory( FeatureConfig parent, TowerType type, double
                 placements, int minHeight, int maxHeight, double chestCh, double activationRange, boolean checkSight, int minAttackDelay,
-                                          int maxAttackDelay, double attackDamage, double projectileSpeed, double projectileVariance, double dynamicCh ) {
+                                          int maxAttackDelay, double damage, double projectileSpeed, double projectileVariance, double dynamicCh ) {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRange, checkSight, minAttackDelay, maxAttackDelay,
-                    attackDamage, projectileSpeed, projectileVariance );
+                    damage, projectileSpeed, projectileVariance );
             
             SPEC.newLine();
 

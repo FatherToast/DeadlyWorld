@@ -1,0 +1,45 @@
+{
+  "type": "deadlyworld:tower_dispenser",
+  "config": {
+    "base_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:cobblestone"
+      }
+    },
+    "cannot_replace": "#minecraft:features_cannot_replace",
+    "dispenser": {
+      "activation_sight_check": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:potion_tower_dispensers.sight_check_chance"
+      },
+      "attack_damage": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:potion_tower_dispensers.attack_damage"
+      },
+      "attack_delay": {
+        "type": "deadlyworld:config_uniform_int",
+        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:potion_tower_dispensers.attack_delay.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:potion_tower_dispensers.attack_delay.min"
+      },
+      "projectile_speed": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:potion_tower_dispensers.projectile_speed"
+      },
+      "projectile_variance": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:potion_tower_dispensers.projectile_variance"
+      },
+      "required_player_range": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:potion_tower_dispensers.required_player_range"
+      }
+    },
+    "dispenser_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "deadlyworld:potion_tower_dispenser"
+      }
+    }
+  }
+}

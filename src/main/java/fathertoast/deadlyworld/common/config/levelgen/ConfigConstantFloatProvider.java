@@ -7,6 +7,7 @@ import fathertoast.deadlyworld.common.core.registry.DWFieldProviders;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.util.valueproviders.FloatProviderType;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Modified copy-paste of {@link net.minecraft.util.valueproviders.ConstantFloat}.
@@ -17,6 +18,10 @@ public class ConfigConstantFloatProvider extends FloatProvider {
     ).apply( instance, ConfigConstantFloatProvider::new ) );
     
     public static ConfigConstantFloatProvider of( DoubleField value ) {
+        return new ConfigConstantFloatProvider( new FloatFieldSetting( value ) );
+    }
+
+    public static ConfigConstantFloatProvider ofNullable( @Nullable DoubleField value ) {
         return new ConfigConstantFloatProvider( new FloatFieldSetting( value ) );
     }
     

@@ -7,6 +7,7 @@ import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
+import fathertoast.deadlyworld.common.world.levelgen.settings.TowerDispenserSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -116,19 +117,19 @@ public abstract class BaseTower {
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
 
-    public void initializeTower(WorldGenLevel level, BlockPos pos, RandomSource random, FloorTrapSettings trapSettings ) {
+    public void initializeTower(WorldGenLevel level, BlockPos pos, RandomSource random, TowerDispenserSettings settings ) {
         final TowerDispenserConfig.TowerDispenserTypeCategory towerConfig = towerType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, towerConfig );
 
-        /*
         initializeTower( getLevel(), pos, random,
-                trapSettings.requiredPlayerRange().sample( random ),
-                trapSettings.checkSightChance().sample( random ),
-                trapSettings.resetTime().getMinValue(),
-                trapSettings.resetTime().getMaxValue()
+                settings.requiredPlayerRange().sample( random ),
+                settings.checkSightChance().sample( random ),
+                settings.attackDelay().getMinValue(),
+                settings.attackDelay().getMaxValue(),
+                settings.attackDamage().sample( random ),
+                settings.projectileSpeed().sample( random ),
+                settings.projectileVariance().sample( random )
         );
-
-         */
     }
 
     public void initializeTower( @Nullable Level level, BlockPos pos, RandomSource random ) {
