@@ -6,6 +6,7 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -214,6 +216,10 @@ public enum TrapType {
 
             Level level = trapEntity.getLevel();
             BlockPos pos = trapEntity.getBlockPos();
+
+            // Abort if there is something blocking the trap above
+            if ( level.getBlockState( pos.above()).isFaceSturdy( level, pos.above(), Direction.DOWN, SupportType.CENTER ) )
+                return;
 
             FallingBlockEntity fire = new FallingBlockEntity( level, pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, Blocks.FIRE.defaultBlockState() );
             fire.time = 1; // Prevent the entity from instantly dying
