@@ -77,12 +77,12 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     
     private LootTableBuilder buildTowerDispenserLoot( TowerType type ) {
         final LootTableBuilder loot = new LootTableBuilder();
-        switch( type ) { //TODO
-            case SIMPLE -> { }
-            case FIRE -> { }
-            case POTION -> { }
-            case FIREBALL -> { }
-            case GATLING -> { }
+        switch( type ) { //TODO - Revisit these later, for now just the same loot as misc floor traps
+            case SIMPLE -> loot.addPool( buildBasicSpawnerLootPool() );
+            case FIRE -> loot.addPool( buildBasicSpawnerLootPool() );
+            case POTION -> loot.addPool( buildPotionFloorTrapLootPool() );
+            case FIREBALL -> loot.addPool( buildFieryLootPool() );
+            case GATLING -> loot.addPool( buildBasicSpawnerLootPool() );
             default ->
                     throw new IllegalArgumentException( "Tower type \"" + type + "\" is missing block loot table data gen code!" );
         }

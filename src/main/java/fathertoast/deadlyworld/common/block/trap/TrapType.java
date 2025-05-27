@@ -211,7 +211,7 @@ public enum TrapType {
 
     FIRE("fire", ( dimConfig ) -> dimConfig.TRAPS.FIRE ) {
         @Override
-        public void triggerTrap(DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity) {
+        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
             TrapConfig.FireTrapTypeCategory config = dimConfig.TRAPS.FIRE;
 
             Level level = trapEntity.getLevel();
