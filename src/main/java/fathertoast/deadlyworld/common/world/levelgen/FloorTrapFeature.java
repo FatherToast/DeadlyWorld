@@ -41,6 +41,9 @@ public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configurati
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
 
+        // TODO - replace with something less bad
+        if ( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
+
         // Offset by one below to place the trap in the ground
         BlockPos below = context.origin().below();
 

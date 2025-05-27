@@ -31,19 +31,19 @@ public class TowerDispenserConfig extends FeatureConfig {
         SPEC.newLine();
         //SPEC.describePotionList();
         
-        SIMPLE = new TowerDispenserTypeCategory( this, TowerType.SIMPLE, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
+        SIMPLE = new TowerDispenserTypeCategory( this, TowerType.SIMPLE, 0.6, DEPTH_LAVA, DEPTH_0, 0.3,
                 9.0, true, 20, 40, 3.0, 1.0, 0.08 );
 
-        FIRE = new TowerDispenserTypeCategory( this, TowerType.FIRE, 0.3, DEPTH_LAVA, DEPTH_0, 0.3,
+        FIRE = new TowerDispenserTypeCategory( this, TowerType.FIRE, 0.2, DEPTH_LAVA, DEPTH_0, 0.3,
                 9.0, true, 20, 40, 1.0, 1.2, 0.08 );
 
-        POTION = new PotionTowerDispenserTypeCategory( this, TowerType.POTION, 0.4, DEPTH_LAVA, DEPTH_0, 0.3,
+        POTION = new PotionTowerDispenserTypeCategory( this, TowerType.POTION, 0.3, DEPTH_LAVA, DEPTH_0, 0.3,
                 9.0, true, 20, 40, 0.5, 1.0, 0.2, 0.2 );
 
-        GATLING = new TowerDispenserTypeCategory( this, TowerType.GATLING, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
+        GATLING = new TowerDispenserTypeCategory( this, TowerType.GATLING, 0.6, DEPTH_LAVA, DEPTH_0, 0.3,
                 11.0, true, 6, 7, 1.0, 1.0, 0.08 );
 
-        FIREBALL = new TowerDispenserTypeCategory( this, TowerType.FIREBALL, 0.8, DEPTH_LAVA, DEPTH_0, 0.3,
+        FIREBALL = new TowerDispenserTypeCategory( this, TowerType.FIREBALL, 0.6, DEPTH_LAVA, DEPTH_0, 0.3,
                 15.0, true, 20, 40, 2.0, 1.3, 0.4 );
     }
     

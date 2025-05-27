@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
+import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
@@ -45,6 +46,27 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
             level.setBlock( cursor, state, Block.UPDATE_CLIENTS );
             cursor.move( 0, 1, 0 );
         }
+    }
+
+    // TODO - This is a temporary solution, and not a very good one
+    /**
+     *  Checks for other nearby blocks that extend {@link fathertoast.deadlyworld.common.block.IDeadlyBlock}
+     *  to help prevent bizarre clumping of traps.<br><br>
+     *
+     * @param diameter The "diameter" for the bounds (we are searching in a cube).
+     *                 Larger values will make generation slow.
+     *
+     * @return True if nearby traps/spawners were found inside the given bounds.
+     */
+    public static boolean hasNearbyTraps( WorldGenLevel level, BlockPos origin, int diameter ) {
+        for ( BlockPos blockPos : BlockPos.betweenClosed(
+                origin.offset( -diameter, -diameter, -diameter ),
+                origin.offset( diameter, diameter, diameter ) ) ) {
+
+            if ( level.getBlockState( blockPos ).getBlock() instanceof IDeadlyBlock )
+                return true;
+        }
+        return false;
     }
     
     public DeadlyFeature( Codec<FC> codec ) { super( codec ); }

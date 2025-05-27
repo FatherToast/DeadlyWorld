@@ -41,7 +41,10 @@ public class SilverfishNestFeature extends DeadlyFeature<SilverfishNestFeature.C
         final RandomSource random = context.random();
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
-        
+
+        // TODO - replace with something less bad
+        if ( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
+
         // Make sure the spawner block at least can be placed
         if( !predicate.test( level.getBlockState( context.origin() ) ) ) return false;
         

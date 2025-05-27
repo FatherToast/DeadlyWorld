@@ -46,6 +46,9 @@ public class SimpleTowerDispenserFeature extends DeadlyFeature<SimpleTowerDispen
         final BlockPos basePos = context.origin();
         final BlockPos dispenserPos = basePos.above();
 
+        // TODO - replace with something less bad
+        if ( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
+
         // Make sure there is some "open" space around the tower
         // so we don't generate in super cramped places
         for ( BlockPos pos : BlockPos.betweenClosed(
