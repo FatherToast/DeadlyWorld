@@ -3,6 +3,8 @@ package fathertoast.deadlyworld.common.core;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -180,7 +182,6 @@ public class DeadlyWorld {
         DWBlockEntities.REGISTRY.register( eventBus );
         DWLootModifiers.REGISTRY.register( eventBus );
         //        DWBiomes.REGISTRY.register( eventBus );
-        //        DWSounds.REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
         
         Config.initialize();

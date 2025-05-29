@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
@@ -61,6 +62,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     public static final String TAG_CHECK_SIGHT = "CheckSight";
     public static final String TAG_DELAY_PROGRESSION = "DelayProgression";
     public static final String TAG_DELAY_RECOVERY = "DelayRecovery";
+    public static final String TAG_USE_FORGE_HOOK_SPAWNS = "ForgeHookSpawns";
     // Logic tags
     public static final String TAG_DELAY_BUILDUP = "DelayBuildup";
     public static final String TAG_SPAWNS_REMAINING = "SpawnsRemaining";
@@ -84,6 +86,11 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     protected int spawnDelayProgression;
     /** The amount the delay time decreases each tick while no players are within range. */
     protected float spawnDelayRecovery;
+    /**
+     *  Overrides {@link ProgressiveDelaySpawner#dynamicSpawnList} and fetches
+     *  spawns via {@link net.minecraftforge.common.DungeonHooks#getRandomDungeonMob(RandomSource)} instead.
+     */
+    protected boolean useForgeHookSpawnList;
     
     // Logic
     /** Number of entities this spawner can spawn. If negative, spawns are unlimited. */
@@ -377,12 +384,17 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         }
         
         if( dynamicSpawnList != null && !dynamicSpawnList.isDisabled() ) {
-            EntityType<?> nextType = dynamicSpawnList.next( level.random );
-            if( nextType == null ) {
-                DeadlyWorld.LOG.warn( "Failed to fetch next random entity entry in a weighted entity list?" );
+            if ( useForgeHookSpawnList ) {
+                setEntityId( DungeonHooks.getRandomDungeonMob( level.random ), level, level.random, pos );
             }
             else {
-                setEntityId( nextType, level, level.random, pos );
+                EntityType<?> nextType = dynamicSpawnList.next( level.random );
+                if ( nextType == null ) {
+                    DeadlyWorld.LOG.warn( "Failed to fetch next random entity entry in a weighted entity list?" );
+                }
+                else {
+                    setEntityId( nextType, level, level.random, pos );
+                }
             }
         }
         else {
@@ -405,7 +417,9 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             spawnDelayProgression = loadTag.getShort( TAG_DELAY_PROGRESSION );
         if( NBTHelper.containsNumber( loadTag, TAG_DELAY_RECOVERY ) )
             spawnDelayRecovery = loadTag.getFloat( TAG_DELAY_RECOVERY );
-        
+        if ( NBTHelper.containsNumber( loadTag, TAG_USE_FORGE_HOOK_SPAWNS ) )
+            useForgeHookSpawnList = loadTag.getBoolean( TAG_USE_FORGE_HOOK_SPAWNS );
+
         if( NBTHelper.containsNumber( loadTag, TAG_DELAY_BUILDUP ) )
             spawnDelayBuildup = loadTag.getFloat( TAG_DELAY_BUILDUP );
         if( NBTHelper.containsNumber( loadTag, TAG_SPAWNS_REMAINING ) )
@@ -444,6 +458,10 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     protected SpawnData getOrCreateNextSpawnData( @Nullable Level level, RandomSource random, BlockPos pos ) {
         if( nextSpawnData == null ) {
             setNextSpawnData( level, pos, spawnPotentials.getRandom( random ).map( WeightedEntry.Wrapper::getData ).orElseGet( SpawnData::new ) );
+
+            if ( useForgeHookSpawnList ) {
+                setEntityId( DungeonHooks.getRandomDungeonMob( random ), level, random, pos );
+            }
         }
         return nextSpawnData;
     }
@@ -460,6 +478,16 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             if( level.isClientSide ) displayEntity = null;
         }
         return super.onEventTriggered( level, eventId );
+    }
+
+    /**
+     *  Sets this spawner to get a random entity to spawn from {@link DungeonHooks#getRandomDungeonMob(RandomSource)}.<br>
+     *  If dynamic spawning is enabled, a new type is picked from the Forge hook for every spawn.<br>
+     *  This is primarily used by the Dungeon Monster spawner sub-feature.
+     */
+    public void enableUseForgeHook( Level level, BlockPos pos ) {
+        useForgeHookSpawnList = true;
+        setEntityId( DungeonHooks.getRandomDungeonMob( level.random ), getLevel(), level.random, pos );
     }
     
     @Override

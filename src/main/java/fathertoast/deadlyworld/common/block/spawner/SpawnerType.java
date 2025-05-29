@@ -48,7 +48,9 @@ public enum SpawnerType {
     },
     
     // Subfeatures
-    DUNGEON( "dungeon", true, ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON );
+    DUNGEON( "dungeon", true, ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON ) {
+
+    };
     
     /** The path for loot tables associated with these types. */
     public static final String LOOT_TABLE_PATH = "deadly_spawners/";

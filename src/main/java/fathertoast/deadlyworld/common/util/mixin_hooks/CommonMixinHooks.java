@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.util.mixin_hooks;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
 import net.minecraft.core.BlockPos;
@@ -44,6 +45,9 @@ public class CommonMixinHooks {
         if ( worldgenlevel.getBlockEntity( blockpos ) instanceof DeadlySpawnerBlockEntity spawner ) {
             SpawnerSettings settings = SpawnerSettings.of( SpawnerType.DUNGEON, Config.getDimensionConfigs( worldgenlevel.getLevel().dimension() ) );
             spawner.getSpawnerLogic().initializeSpawner( worldgenlevel, blockpos, randomsource, settings );
+
+            if ( Config.getDimensionConfigs( worldgenlevel.getLevel().dimension() ).SPAWNERS.DUNGEON.useForgeHookEntities.get() )
+                spawner.getSpawnerLogic().enableUseForgeHook( worldgenlevel.getLevel(), blockpos );
         }
         cir.setReturnValue( true );
     }

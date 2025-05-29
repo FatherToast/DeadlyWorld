@@ -28,7 +28,7 @@ public class SpawnerConfig extends FeatureConfig {
     public final SpawnerTypeCategory NEST;
     public final SpawnerTypeCategory MINI;
     
-    public final SubfeatureSpawnerCategory DUNGEON;
+    public final DungeonSpawnerCategory DUNGEON;
     
     /** Builds the config spec that should be used for this config. */
     SpawnerConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
@@ -69,7 +69,7 @@ public class SpawnerConfig extends FeatureConfig {
         MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.08, DEPTH_LAVA, DEPTH_0, 0.3,
                 16, false, 100, 400, 20, 6, 4, 0.1 );
         
-        DUNGEON = new SubfeatureSpawnerCategory( this, SpawnerType.DUNGEON,
+        DUNGEON = new DungeonSpawnerCategory( this, SpawnerType.DUNGEON,
                 16, false, 200, 800, 40, 4, 4, 0.1 );
     }
     
@@ -229,6 +229,28 @@ public class SpawnerConfig extends FeatureConfig {
                                    int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
             super( parent, type, 0.0, 0, 0, 0.0, activationRng, checkSight,
                     minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+        }
+    }
+
+    public static class DungeonSpawnerCategory extends SubfeatureSpawnerCategory implements SubfeatureCategory {
+
+        public final BooleanField useForgeHookEntities;
+
+        DungeonSpawnerCategory( FeatureConfig parent, SpawnerType type,
+                                   int activationRng, boolean checkSight,
+                                   int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
+            super( parent, type, activationRng, checkSight,
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+
+            SPEC.newLine();
+
+            useForgeHookEntities = SPEC.define( new BooleanField( "use_forge_hook_entities", false,
+                    "If true, the type of monster to spawn is picked from Forge's internal weighted list of entity types that can spawn" +
+                            " in monster rooms/simple dungeons.",
+                    "This setting takes priority over this spawner's spawn list config.",
+                    "Also, if this spawner is 'dynamic' and picks a new type of monster to spawn every time it spawns, a new type will be picked from " +
+                            "the weighted Forge list instead of this spawner's spawn list config.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
     }
     
