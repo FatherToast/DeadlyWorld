@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.CountPlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
@@ -29,7 +30,13 @@ public class DWPlacedFeatureProvider {
     public static final List<ResourceKey<PlacedFeature>> OVERWORLD_FEATURES = new ArrayList<>();
     /** List of all placements that should generate in nether biomes. */
     public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
-    
+    /**
+     * List of all placements that don't care about dimension type and should generate anywhere.
+     * Any restrictions are handled in the feature itself, usually config based.
+     */
+    public static final List<ResourceKey<PlacedFeature>> ANY_DIMENSION_FEATURES = new ArrayList<>();
+
+
     private static final BlockPredicate PREDICATE_ANY_FLUID = BlockPredicate.not( BlockPredicate.noFluid() );
     
     /** Called by registry set builder to generate our placed features. */
@@ -59,6 +66,9 @@ public class DWPlacedFeatureProvider {
         registerTowerDispenser( context, getter, POTION_TOWER, overworldConfigs, netherConfigs );
         registerTowerDispenser( context, getter, GATLING_TOWER, overworldConfigs, netherConfigs );
         registerTowerDispenser( context, getter, FIREBALL_TOWER, overworldConfigs, netherConfigs );
+
+        // Buried liquids
+        register( context, getter, BURIED_LIQUID_ANY_DIMENSION, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
     }
     
     /** @return Modifiers for a lone spawner feature. */
@@ -174,6 +184,12 @@ public class DWPlacedFeatureProvider {
     protected static ResourceKey<PlacedFeature> netherKey( String name ) {
         final ResourceKey<PlacedFeature> key = key( name + "_nether" );
         NETHER_FEATURES.add( key );
+        return key;
+    }
+
+    protected static ResourceKey<PlacedFeature> anyDimKey( String name ) {
+        final ResourceKey<PlacedFeature> key = key( name + "_any_dimension" );
+        ANY_DIMENSION_FEATURES.add( key );
         return key;
     }
     

@@ -1,0 +1,6 @@
+{
+  "type": "deadlyworld:buried_liquid",
+  "config": {
+    "cannot_replace": "#minecraft:features_cannot_replace"
+  }
+}

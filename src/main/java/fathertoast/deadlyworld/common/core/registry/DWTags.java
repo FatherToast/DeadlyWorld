@@ -24,8 +24,6 @@ public final class DWTags {
             return new BlockWithItem( BlockTags.create( DeadlyWorld.resourceLoc( name ) ),
                     ItemTags.create( DeadlyWorld.resourceLoc( name ) ) );
         }
-        
-        private static void initialize() { }
     }
     
     public static final class EntityTypes {
@@ -46,14 +44,12 @@ public final class DWTags {
         private static TagKey<EntityType<?>> sharedTag( String name ) {
             return TagKey.create( Registries.ENTITY_TYPE, new ResourceLocation( "forge", name ) );
         }
-        
-        private static void initialize() { }
     }
     
     public static final class Features {
-        public static final TagKey<PlacedFeature> ALL = tag( "all" );
-        public static final TagKey<PlacedFeature> OVERWORLD = tag( "all/overworld" );
-        public static final TagKey<PlacedFeature> THE_NETHER = tag( "all/nether" );
+        public static final TagKey<PlacedFeature> OVERWORLD = tag( "overworld" );
+        public static final TagKey<PlacedFeature> THE_NETHER = tag( "nether" );
+        public static final TagKey<PlacedFeature> ANY_DIMENSION = tag( "any_dimension" );
         
         //        public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
         //        public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );

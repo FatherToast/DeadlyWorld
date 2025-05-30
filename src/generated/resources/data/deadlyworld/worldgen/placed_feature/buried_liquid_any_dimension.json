@@ -1,0 +1,9 @@
+{
+  "feature": "deadlyworld:buried_liquid_any_dimension",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 1
+    }
+  ]
+}

@@ -22,6 +22,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 import java.util.function.Supplier;
@@ -46,6 +48,8 @@ public class DWConfiguredFeatureProvider {
     static final FeatureKeys.TowerDispenser POTION_TOWER = FeatureKeys.TowerDispenser.of( TowerType.POTION, "potion_tower_dispenser" );
     static final FeatureKeys.TowerDispenser GATLING_TOWER = FeatureKeys.TowerDispenser.of( TowerType.GATLING, "gatling_tower_dispenser" );
     static final FeatureKeys.TowerDispenser FIREBALL_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIREBALL, "fireball_tower_dispenser" );
+
+    public static final FeatureKeys BURIED_LIQUID_ANY_DIMENSION = FeatureKeys.anyDimension( "buried_liquid" );
 
 
     /** Called by registry set builder to generate our configured features. */
@@ -98,6 +102,11 @@ public class DWConfiguredFeatureProvider {
         registerTowerDispenser( context, POTION_TOWER, block( Blocks.MUD_BRICK_WALL ), overworldConfigs, netherConfigs );
         registerTowerDispenser( context, GATLING_TOWER, block( Blocks.MOSSY_STONE_BRICK_WALL ), overworldConfigs, netherConfigs );
         registerTowerDispenser( context, FIREBALL_TOWER, block( Blocks.RED_SANDSTONE_WALL ), overworldConfigs, netherConfigs );
+
+        // Special stuff
+        register( context, BURIED_LIQUID_ANY_DIMENSION,
+                new ConfiguredFeature<>( DWFeatures.BURIED_LIQUID.get(),
+                        new BuriedLiquidFeature.Configuration( BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
     
     /** Convenience method for making a simple block state provider. */
@@ -150,7 +159,7 @@ public class DWConfiguredFeatureProvider {
     }
 
     /** Registers a configured floor trap type feature. */
-    protected static void registerTowerDispenser(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
                                                  TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER_DISPENSER.get(),
                 new SimpleTowerDispenserFeature.Configuration(
@@ -159,7 +168,8 @@ public class DWConfiguredFeatureProvider {
                         TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
-    
+
+
     /** Registers a configured feature. */
     protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys, ConfiguredFeature<?, ?> configuredFeature ) {
         context.register( featureKeys.configuredKey, configuredFeature );
@@ -175,7 +185,10 @@ public class DWConfiguredFeatureProvider {
     
     /** Creates a configured feature key. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> netherKey( String name ) { return key( name + "_nether" ); }
-    
+
+    /** Creates a configured feature key. */
+    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimKey( String name ) { return key( name + "_any_dimension" ); }
+
     /** Creates a configured feature key. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> key( String name ) {
         return ResourceKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.resourceLoc( name ) );

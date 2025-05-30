@@ -17,34 +17,9 @@ public final class DWFeatures {
     public static RegistryObject<FloorTrapFeature> FLOOR_TRAP = register( "floor_trap", FloorTrapFeature::new );
     public static RegistryObject<PotionFloorTrapFeature> POTION_FLOOR_TRAP = register( "potion_floor_trap", PotionFloorTrapFeature::new );
     public static RegistryObject<SimpleTowerDispenserFeature> TOWER_DISPENSER = register("tower_dispenser", SimpleTowerDispenserFeature::new);
-    
-    static {
-        //        for( SpawnerType spawnerType : SpawnerType.values() ) {
-        //            register( spawnerType.toString() + "_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner( spawnerType ) ) );
-        //        }
-    }
-    
-    //    private static List<RegistryObject<SpawnerFeature>> registerSpawners() {
-    //        List<RegistryObject<SpawnerFeature>> list = new ArrayList<>();
-    //
-    //        for( SpawnerType spawnerType : SpawnerType.values() ) {
-    //            String name = spawnerType.toString();
-    //            RegistryObject<SpawnerFeature> feature = register( name + "_spawner", () -> new SpawnerFeature( NoFeatureConfig.CODEC, DWBlocks.spawner( spawnerType ) ) );
-    //            list.add( feature );
-    //        }
-    //        return list;
-    //    }
-    
-    //    private static List<RegistryObject<FloorTrapFeature>> registerFloorTraps() {
-    //        List<RegistryObject<FloorTrapFeature>> list = new ArrayList<>();
-    //
-    //        for( FloorTrapType trapType : FloorTrapType.values() ) {
-    //            String name = trapType.toString();
-    //            RegistryObject<FloorTrapFeature> feature = register( name + "_floor_trap", () -> new FloorTrapFeature( NoFeatureConfig.CODEC, DWBlocks.floorTrap( trapType ) ) );
-    //            list.add( feature );
-    //        }
-    //        return list;
-    //    }
+
+    public static RegistryObject<BuriedLiquidFeature> BURIED_LIQUID = register( "buried_liquid", BuriedLiquidFeature::new );
+
     
     private static <T extends Feature<?>> RegistryObject<T> register( String name, Supplier<T> featureSupplier ) {
         return REGISTRY.register( name, featureSupplier );

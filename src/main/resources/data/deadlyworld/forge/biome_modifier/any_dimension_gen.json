@@ -1,0 +1,5 @@
+{
+  "type": "deadlyworld:global_add_features",
+  "features": "#deadlyworld:any_dimension",
+  "step": "underground_decoration"
+}

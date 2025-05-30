@@ -6,6 +6,7 @@ import fathertoast.deadlyworld.common.block.trap.TrapType;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraftforge.common.world.ForgeBiomeModifiers;
 
 /** Used to link and simplify configured features and placed features that are one-to-one. */
 public class FeatureKeys {
@@ -18,6 +19,11 @@ public class FeatureKeys {
     public static FeatureKeys nether( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.netherKey( name ),
                 DWPlacedFeatureProvider.netherKey( name ) );
+    }
+
+    public static FeatureKeys anyDimension( String name ) {
+        return new FeatureKeys( DWConfiguredFeatureProvider.anyDimKey( name ),
+                DWPlacedFeatureProvider.anyDimKey( name ) );
     }
     
     public final ResourceKey<ConfiguredFeature<?, ?>> configuredKey;

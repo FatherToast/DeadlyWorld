@@ -181,6 +181,7 @@ public class DeadlyWorld {
         DWSoundEvents.REGISTRY.register( eventBus );
         DWBlockEntities.REGISTRY.register( eventBus );
         DWLootModifiers.REGISTRY.register( eventBus );
+        DWBiomeModifiers.REGISTRY.register( eventBus );
         //        DWBiomes.REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
         

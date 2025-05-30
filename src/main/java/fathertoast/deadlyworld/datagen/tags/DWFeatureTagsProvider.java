@@ -25,8 +25,7 @@ public class DWFeatureTagsProvider extends TagsProvider<PlacedFeature> {
     protected void addTags( HolderLookup.Provider holderLookup ) {
         addAll( DWTags.Features.OVERWORLD, DWPlacedFeatureProvider.OVERWORLD_FEATURES );
         addAll( DWTags.Features.THE_NETHER, DWPlacedFeatureProvider.NETHER_FEATURES );
-        
-        addTags( DWTags.Features.ALL, DWTags.Features.OVERWORLD, DWTags.Features.THE_NETHER );
+        addAll( DWTags.Features.ANY_DIMENSION, DWPlacedFeatureProvider.ANY_DIMENSION_FEATURES );
     }
     
     /** Add all features in a list to a tag. */
