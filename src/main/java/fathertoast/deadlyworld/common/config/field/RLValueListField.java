@@ -103,7 +103,8 @@ public class RLValueListField extends StringListField {
             format.deleteCharAt( format.length() - 1 ).append( "\", ... ]" );
             fieldFormat = format.toString();
         }
-        comment.add( TomlHelper.fieldInfoFormat( "Resource Location value List", valueDefault, fieldFormat ) );
+        // Hiding default values so info is readable in GUI
+        comment.add( TomlHelper.fieldInfoFormat( "Resource Location value List", "N/A", fieldFormat ) );
     }
 
     @Override
