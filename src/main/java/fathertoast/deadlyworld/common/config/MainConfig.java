@@ -3,9 +3,7 @@ package fathertoast.deadlyworld.common.config;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.crust.api.config.common.field.BooleanField;
-import fathertoast.crust.api.config.common.field.RestartNote;
-import fathertoast.crust.api.config.common.field.StringListField;
+import fathertoast.crust.api.config.common.field.*;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -13,6 +11,7 @@ import java.util.List;
 public class MainConfig extends AbstractConfigFile {
     
     public final General GENERAL;
+    public final StalactiteOverhaul STALACTITE_OVERHAUL;
     
     /** Builds the config spec that should be used for this config. */
     MainConfig( ConfigManager manager, String fileName ) {
@@ -21,6 +20,7 @@ public class MainConfig extends AbstractConfigFile {
         );
         
         GENERAL = new General( this );
+        STALACTITE_OVERHAUL = new StalactiteOverhaul( this );
     }
     
     public static class General extends AbstractConfigCategory<MainConfig> {
@@ -31,9 +31,6 @@ public class MainConfig extends AbstractConfigFile {
         public final BooleanField activateSpawnersVsCreative;
         
         public final StringListField extraDimensions;
-
-        public final BooleanField pointedDripstoneSniping;
-        public final BooleanField spookyStalactites;
 
         
         General( MainConfig parent ) {
@@ -65,19 +62,42 @@ public class MainConfig extends AbstractConfigFile {
             ), RestartNote.GAME );
 
             SPEC.newLine();
+        }
+    }
+
+    public static class StalactiteOverhaul extends AbstractConfigCategory<MainConfig> {
+
+        public final BooleanField pointedDripstoneSniping;
+
+        public final BooleanField spookyStalactites;
+        public final DoubleField triggerChance;
+        public final IntField scanHeight;
+
+
+        StalactiteOverhaul( MainConfig parent ) {
+            super( parent, "stalactite_overhaul",
+                    "Misc settings related to interactions with Pointed Dripstone in the world." );
 
             pointedDripstoneSniping = SPEC.define( new BooleanField("pointed_dripstone_sniping", true,
                     "If enabled, pointed dripstone blocks will break when hit with any projectile entity tagged as 'minecraft:impact_projectiles'.",
                     "In vanilla, only thrown tridents can break pointed dripstone, but this setting allows entities like arrows, snowballs and others to also do so.") );
 
+            SPEC.newLine();
+
             spookyStalactites = SPEC.define( new BooleanField( "spooky_stalactites", true,
                     "If enabled, there is a chance for nearby pointed dripstone (stalactites) in the ceiling to break off and fall when the player " +
                             "is breaking blocks.",
-                    "Here are a list of conditions that must be met for stalactites to fall:",
-                    "A random number between 0 to 9 is picked. If it is 0, proceed (10% chance per block broken).",
-                    "Skylight level must be less than 3, and position of block broken must be below sea level.",
-                    "Lastly, stalactites must be within 10 block range above the broken block."
-                    ) );
+                    "Skylight level must be less than 3, and the position of the destroyed block must be below sea level.",
+                    "Also, stalactites must be pointing downwards and be within scan range (specified in the below field \"scan_height\")."
+            ) );
+
+            triggerChance = SPEC.define( new DoubleField( "trigger_chance", 0.1D, DoubleField.Range.PERCENT,
+                    "If \"spooky_stalactites\" is enabled, this field determines the chance for nearby stalactites to break off and fall " +
+                            "when the player breaks a block." ) );
+
+            scanHeight = SPEC.define( new IntField( "scan_height", 10, IntField.Range.POSITIVE,
+                    "If \"spooky_stalactites\" is enabled, this determines the vertical scan height used when checking for " +
+                            "Pointed Dripstone above the player." ) );
 
             SPEC.newLine();
         }

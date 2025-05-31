@@ -27,7 +27,7 @@ public class EnvHazardConfig extends AbstractConfigFile {
 
 
     public EnvHazardConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
-        super( manager, dir + ConfigUtil.noSpaces( "environmental hazard" ),
+        super( manager, dir + ConfigUtil.noSpaces( "environmental hazards" ),
                 "This config contains options for misc environmental hazard features specific to the " +
                         dimConfigs.longDimensionName() + "." );
         DIMENSION_CONFIGS = dimConfigs;

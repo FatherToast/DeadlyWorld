@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 public class CommonMixinHooks {
 
     public static void pointedDripstoneProjectileHit( Level level, BlockState state, BlockHitResult hitResult, Projectile projectile, CallbackInfo ci ) {
-        if ( !Config.MAIN.GENERAL.pointedDripstoneSniping.get() ) return;
+        if ( !Config.MAIN.STALACTITE_OVERHAUL.pointedDripstoneSniping.get() ) return;
 
         BlockPos pos = hitResult.getBlockPos();
 

@@ -159,17 +159,17 @@ public final class GameEventHandler {
      */
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void onBlockBreak( BlockEvent.BreakEvent event ) {
-        if ( !Config.MAIN.GENERAL.spookyStalactites.get() ) return;
+        if ( !Config.MAIN.STALACTITE_OVERHAUL.spookyStalactites.get() ) return;
 
         Level level = (Level) event.getLevel();
         BlockPos pos = event.getPos();
         
         // Below ocean and no skylight? Likely we are in a cave!
         if( level.getBrightness( LightLayer.SKY, pos ) <= 2 && pos.getY() < level.getSeaLevel() ) {
-            // Perform check a bit rarely, hopefully lowering the player's guard a bit
-            if( level.getRandom().nextInt( 10 ) == 0 ) {
-                // Move up until we hit something solid or reach an offset of 10
-                for( int offset = 1; offset < 10; offset++ ) {
+
+            if( Config.MAIN.STALACTITE_OVERHAUL.triggerChance.rollChance( level.random ) ) {
+                // Move up until we hit something solid or reach the max height specified in config
+                for( int offset = 1; offset < Config.MAIN.STALACTITE_OVERHAUL.scanHeight.get(); offset++ ) {
                     BlockState aboveState = level.getBlockState( pos.above( offset ) );
                     
                     // Assume we hit the roof of a cave, check surrounding blocks

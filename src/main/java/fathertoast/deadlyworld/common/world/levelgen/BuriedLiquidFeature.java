@@ -53,7 +53,7 @@ public class BuriedLiquidFeature extends DeadlyFeature<BuriedLiquidFeature.Confi
             for ( RegistryValueEntry<Block> entry : category.buriedLiquids.get().getEntries() ) {
                 final BlockState liquid = ForgeRegistries.BLOCKS.getValue(entry.REG_KEY).defaultBlockState();
                 final int minY = Math.max( (int) entry.VALUES[0], level.getMinBuildHeight() );
-                final int maxY = (int) entry.VALUES[1];
+                final int maxY = Math.min( (int) entry.VALUES[1], level.getMaxBuildHeight() );
                 final boolean areYEqual = minY >= maxY;
                 final int placementTries = (int) entry.VALUES[2];
 
