@@ -1,0 +1,4 @@
+{
+  "type": "minecraft:entity",
+  "random_sequence": "deadlyworld:entities/mini_spawner_mimic"
+}
