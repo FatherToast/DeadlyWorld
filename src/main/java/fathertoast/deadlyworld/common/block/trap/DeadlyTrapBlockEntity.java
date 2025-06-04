@@ -51,7 +51,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
 
     /**
      * Loops through adjacent block states and picks the first suitable one.<br>
-     * Directions are shuffled so the same direction isn't necessarily always picked.
+     * Directions are shuffled to get a random result.
      */
     protected void pickCamoState() {
         if ( camoState != null ) return;

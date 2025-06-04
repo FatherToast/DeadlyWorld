@@ -288,9 +288,9 @@
           "functions": [
             {
               "enchantments": [
+                "minecraft:looting",
                 "minecraft:bane_of_arthropods",
                 "minecraft:silk_touch",
-                "minecraft:looting",
                 "minecraft:luck_of_the_sea",
                 "minecraft:fortune"
               ],

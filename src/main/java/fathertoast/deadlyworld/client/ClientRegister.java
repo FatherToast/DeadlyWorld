@@ -6,6 +6,8 @@ import fathertoast.deadlyworld.client.renderer.entity.*;
 import fathertoast.deadlyworld.client.renderer.entity.layer.ChestMimicChestLayer;
 import fathertoast.deadlyworld.client.renderer.entity.model.ChestMimicModel;
 import fathertoast.deadlyworld.client.renderer.entity.model.JukeboxMimicModel;
+import fathertoast.deadlyworld.client.renderer.entity.model.MiniSpawnerMimicModel;
+import fathertoast.deadlyworld.client.renderer.entity.model.SpawnerMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
@@ -50,7 +52,8 @@ public class ClientRegister {
     public static void registerLayerDefs( EntityRenderersEvent.RegisterLayerDefinitions event ) {
         event.registerLayerDefinition( DWModelLayers.JUKEBOX_MIMIC, JukeboxMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.CHEST_MIMIC, ChestMimicModel::createBodyLayer );
-        //event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
+        event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
+        event.registerLayerDefinition( DWModelLayers.MINI_SPAWNER_MIMIC, MiniSpawnerMimicModel::createBodyLayer );
 
         event.registerLayerDefinition( DWModelLayers.DEADLY_TRAP_OVERLAY, DeadlyTrapBlockEntityRenderer::createOverlayLayer );
     }
@@ -60,6 +63,8 @@ public class ClientRegister {
         // New mobs
         event.registerEntityRenderer( DWEntities.CHEST_MIMIC.get(), ChestMimicRenderer::new );
         event.registerEntityRenderer( DWEntities.JUKEBOX_MIMIC.get(), JukeboxMimicRenderer::new );
+        event.registerEntityRenderer( DWEntities.SPAWNER_MIMIC.get(), SpawnerMimicRenderer::new );
+        event.registerEntityRenderer( DWEntities.MINI_SPAWNER_MIMIC.get(), MiniSpawnerMimicRenderer::new );
         
         // Mini mobs
         event.registerEntityRenderer( DWEntities.MINI_CREEPER.get(), MiniCreeperRenderer::new );

@@ -26,6 +26,8 @@
 
   "item.deadlyworld.chest_mimic_spawn_egg": "Chest Mimic Spawn Egg",
   "item.deadlyworld.jukebox_mimic_spawn_egg": "Jukebox Mimic Spawn Egg",
+  "item.deadlyworld.spawner_mimic_spawn_egg": "Spawner Mimic Spawn Egg",
+  "item.deadlyworld.mini_spawner_mimic_spawn_egg": "Mini Spawner Mimic Spawn Egg",
   "item.deadlyworld.mini_creeper_spawn_egg": "Mini Creeper Spawn Egg",
   "item.deadlyworld.mini_zombie_spawn_egg": "Mini Zombie Spawn Egg",
   "item.deadlyworld.mini_skeleton_spawn_egg": "Mini Skeleton Spawn Egg",
@@ -37,6 +39,8 @@
 
   "entity.deadlyworld.chest_mimic": "Mimic",
   "entity.deadlyworld.jukebox_mimic": "Mimic",
+  "entity.deadlyworld.spawner_mimic": "Mimic",
+  "entity.deadlyworld.mini_spawner_mimic": "Mimic",
   "entity.deadlyworld.mini_creeper": "Mini Creeper",
   "entity.deadlyworld.mini_zombie": "Mini Zombie",
   "entity.deadlyworld.mini_skeleton": "Mini Skeleton",
@@ -81,7 +85,7 @@
   "death.attack.deadlyworld.vortex": "%1$s was swooshed by a vortex",
   "death.attack.deadlyworld.vortex.player": "%1$s got swooshed by a vortex while fighting %2$s",
 
-  "sound_event.deadlyworld.subtitle.chest_mimic.appear": "Chest Mimic appears",
+  "sound_event.deadlyworld.subtitle.mimic.appear": "Mimic appears",
   "sound_event.deadlyworld.subtitle.chest_mimic.hurt": "Chest Mimic hurts",
   "sound_event.deadlyworld.subtitle.chest_mimic.death": "Chest Mimic dies"
 }

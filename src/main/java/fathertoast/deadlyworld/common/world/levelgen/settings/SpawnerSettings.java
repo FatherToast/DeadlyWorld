@@ -18,7 +18,7 @@ import net.minecraft.world.level.WorldGenLevel;
 public record SpawnerSettings(
         IntProvider requiredPlayerRange, FloatProvider checkSightChance, IntProvider maxNearbyEntities,
         IntProvider spawnDelay, IntProvider spawnDelayProgression, FloatProvider spawnDelayRecovery,
-        IntProvider maxSpawns, IntProvider spawnCount, IntProvider spawnRange, FloatProvider dynamicChance
+        IntProvider maxSpawns, IntProvider spawnCount, IntProvider spawnRange, FloatProvider dynamicChance, FloatProvider mimicChance
         //???Provider spawnList TODO allow override for entity list config setting here
 ) {
     private static final Codec<IntProvider> SHORT_CODEC = IntProvider.codec( 0, Short.MAX_VALUE );
@@ -34,7 +34,9 @@ public record SpawnerSettings(
             SHORT_CODEC.fieldOf( "max_spawns" ).forGetter( SpawnerSettings::maxSpawns ),
             SHORT_CODEC.fieldOf( "spawn_count" ).forGetter( SpawnerSettings::spawnCount ),
             SHORT_CODEC.fieldOf( "spawn_range" ).forGetter( SpawnerSettings::spawnRange ),
-            FloatProvider.CODEC.fieldOf( "dynamic_chance" ).forGetter( SpawnerSettings::dynamicChance )
+
+            FloatProvider.CODEC.fieldOf( "dynamic_chance" ).forGetter( SpawnerSettings::dynamicChance ),
+            FloatProvider.CODEC.fieldOf( "mimic_chance" ).forGetter( SpawnerSettings::mimicChance )
     ).apply( instance, SpawnerSettings::new ) );
     
     public static SpawnerSettings of( SpawnerType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
@@ -52,7 +54,9 @@ public record SpawnerSettings(
                 ConfigConstantIntProvider.of( config.maxSpawns ),
                 ConfigConstantIntProvider.of( config.spawnCount ),
                 ConfigConstantIntProvider.of( config.spawnRange ),
-                ConfigConstantFloatProvider.of( config.dynamicChance )
+
+                ConfigConstantFloatProvider.of( config.dynamicChance ),
+                ConfigConstantFloatProvider.of( config.mimicChance )
         );
     }
     

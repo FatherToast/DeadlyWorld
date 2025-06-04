@@ -19,6 +19,7 @@ public class DWEntityTypeTagsProvider extends EntityTypeTagsProvider {
     
     @Override
     protected void addTags( HolderLookup.Provider holderLookup ) {
+        // Minis
         tag( DWTags.EntityTypes.MINI ).add(
                 DWEntities.MINI_CREEPER.get(), DWEntities.MICRO_GHAST.get(),
                 DWEntities.MINI_SKELETON.get(), DWEntities.MINI_SPIDER.get(),
@@ -31,13 +32,20 @@ public class DWEntityTypeTagsProvider extends EntityTypeTagsProvider {
         tag( DWTags.EntityTypes.SPIDERS ).add( DWEntities.MINI_SPIDER.get() );
         tag( DWTags.EntityTypes.ZOMBIES ).add( DWEntities.MINI_ZOMBIE.get() );
 
+        // Mimics
         tag( DWTags.EntityTypes.MIMIC ).add(
-                DWEntities.CHEST_MIMIC.get(), DWEntities.JUKEBOX_MIMIC.get()
+                DWEntities.CHEST_MIMIC.get(), DWEntities.JUKEBOX_MIMIC.get(),
+                DWEntities.SPAWNER_MIMIC.get(), DWEntities.MINI_SPAWNER_MIMIC.get()
         );
         
         // Projectiles
         tag( EntityTypeTags.ARROWS ).add( DWEntities.MINI_ARROW.get() );
         tag( DWTags.EntityTypes.FIREBALLS ).add( DWEntities.MICRO_FIREBALL.get() );
         tag( EntityTypeTags.IMPACT_PROJECTILES ).addTag( DWTags.EntityTypes.FIREBALLS );
+
+        // Freeze immune
+        tag( EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES ).add(
+                DWEntities.SPAWNER_MIMIC.get(), DWEntities.MINI_SPAWNER_MIMIC.get()
+        );
     }
 }

@@ -30,6 +30,12 @@ public final class DWEntities {
     public static final RegistryObject<EntityType<JukeboxMimic>> JUKEBOX_MIMIC = register( "jukebox_mimic",
             EntityType.Builder.of( JukeboxMimic::new, MobCategory.MONSTER )
                     .sized( 1.0F, 1.625F ).clientTrackingRange( 8 ) );
+    public static final RegistryObject<EntityType<SpawnerMimic>> SPAWNER_MIMIC = register( "spawner_mimic",
+            EntityType.Builder.of( SpawnerMimic::new, MobCategory.MONSTER )
+                    .sized( 1.0F, 1.55F ).clientTrackingRange( 8 ) );
+    public static final RegistryObject<EntityType<MiniSpawnerMimic>> MINI_SPAWNER_MIMIC = register( "mini_spawner_mimic",
+            EntityType.Builder.of( MiniSpawnerMimic::new, MobCategory.MONSTER )
+                    .sized( 0.5F, 0.8F ).clientTrackingRange( 8 ) );
     
     // Mini mobs
     public static final RegistryObject<EntityType<MiniCreeper>> MINI_CREEPER = register( "mini_creeper",
@@ -61,6 +67,8 @@ public final class DWEntities {
         // Mimics
         createConfigAttributes( event, CHEST_MIMIC, Config.ENTITIES.MIMICS.chestAttributes, ChestMimic.createChestMimicAttributes() );
         createConfigAttributes( event, JUKEBOX_MIMIC, Config.ENTITIES.MIMICS.jukeboxAttributes, JukeboxMimic.createJukeboxMimicAttributes() );
+        createConfigAttributes( event, SPAWNER_MIMIC, Config.ENTITIES.MIMICS.spawnerAttributes, SpawnerMimic.createSpawnerMimicAttributes() );
+        createConfigAttributes( event, MINI_SPAWNER_MIMIC, Config.ENTITIES.MIMICS.miniSpawnerAttributes, MiniSpawnerMimic.createSpawnerMimicAttributes() );
         
         // Mini mobs
         createConfigAttributes( event, MINI_CREEPER, Config.ENTITIES.MINIS.creeperAttributes, MiniCreeper.createAttributes() );

@@ -17,9 +17,6 @@ import net.minecraft.world.level.Level;
 
 public class JukeboxMimic extends PathfinderMob implements Enemy {
 
-    public final AnimationState idleAnimationState = new AnimationState();
-
-
     public JukeboxMimic( EntityType<? extends PathfinderMob> entityType, Level level ) {
         super( entityType, level );
         // Lol!
@@ -45,15 +42,6 @@ public class JukeboxMimic extends PathfinderMob implements Enemy {
         targetSelector.addGoal( 0, new HurtByTargetGoal( this ) );
         targetSelector.addGoal( 1, new NearestAttackableTargetGoal<>( this, Player.class, true ) );
     }
-
-    @Override
-    public void tick() {
-        if (level().isClientSide) {
-            idleAnimationState.startIfStopped(tickCount);
-        }
-        super.tick();
-    }
-
     @Override
     protected SoundEvent getHurtSound( DamageSource damageSource ) {
         return super.getHurtSound( damageSource );

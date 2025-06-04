@@ -32,6 +32,10 @@
         "type": "deadlyworld:config_constant_int",
         "value": "deadlyworld:worldgen/minecraft/the_nether/spawners:mini_spawners.max_spawns"
       },
+      "mimic_chance": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/spawners:mini_spawners.mimic_chance"
+      },
       "required_player_range": {
         "type": "deadlyworld:config_constant_int",
         "value": "deadlyworld:worldgen/minecraft/the_nether/spawners:mini_spawners.required_player_range"

@@ -24,10 +24,14 @@ public final class DWItems {
             .rarity( Rarity.UNCOMMON ) ) );
     
     // Spawn eggs
-    public static final RegistryObject<ForgeSpawnEggItem> MIMIC_SPAWN_EGG = registerSpawnEgg(
+    public static final RegistryObject<ForgeSpawnEggItem> CHEST_MIMIC_SPAWN_EGG = registerSpawnEgg(
             DWEntities.CHEST_MIMIC, 0xAB792D, 0x443C30 );
     public static final RegistryObject<ForgeSpawnEggItem> JUKEBOX_MIMIC_SPAWN_EGG = registerSpawnEgg(
             DWEntities.JUKEBOX_MIMIC, 0x945D41, 0x412818 );
+    public static final RegistryObject<ForgeSpawnEggItem> SPAWNER_MIMIC_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.SPAWNER_MIMIC, 0x2A4455, 0x6E0453 );
+    public static final RegistryObject<ForgeSpawnEggItem> MINI_SPAWNER_MIMIC_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MINI_SPAWNER_MIMIC, 0x2A4455, 0x6E0453 );
     public static final RegistryObject<ForgeSpawnEggItem> MINI_CREEPER_SPAWN_EGG = registerSpawnEgg(
             DWEntities.MINI_CREEPER, 0xDA70B, 0x000000 );
     public static final RegistryObject<ForgeSpawnEggItem> MINI_ZOMBIE_SPAWN_EGG = registerSpawnEgg(

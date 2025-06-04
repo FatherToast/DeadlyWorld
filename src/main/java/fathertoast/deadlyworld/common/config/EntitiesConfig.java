@@ -70,8 +70,11 @@ public class EntitiesConfig extends AbstractConfigFile {
         public final AttributeListField chestAttributes;
         public final RLValueListField chestTargetLootTables;
 
-
         public final AttributeListField jukeboxAttributes;
+
+        public final AttributeListField spawnerAttributes;
+
+        public final AttributeListField miniSpawnerAttributes;
 
         Mimics( EntitiesConfig parent ) {
             super( parent, "mimics",
@@ -90,6 +93,14 @@ public class EntitiesConfig extends AbstractConfigFile {
             SPEC.newLine();
 
             jukeboxAttributes = mimicAttributes( "jukebox" );
+
+            SPEC.newLine();
+
+            spawnerAttributes = mimicAttributes( "spawner" );
+
+            SPEC.newLine();
+
+            miniSpawnerAttributes = miniMimicAttributes( "mini", "mini_mimics" );;
         }
 
         private List<String> defaultChestMimicLootTables() {
@@ -125,6 +136,16 @@ public class EntitiesConfig extends AbstractConfigFile {
                     AttributeEntry.add( Attributes.MAX_HEALTH, 15.0D ),
                     AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.0 ),
                     AttributeEntry.add( Attributes.ATTACK_DAMAGE, 2.0 )
+            );
+            return SPEC.define( new AttributeListField( key + "_attributes", defaults,
+                    "Attribute modifiers for " + name + "." ) );
+        }
+
+        private AttributeListField miniMimicAttributes( String key, String name ) {
+            AttributeList defaults = new AttributeList(
+                    AttributeEntry.add( Attributes.MAX_HEALTH, 10.0D ),
+                    AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.25 ),
+                    AttributeEntry.add( Attributes.ATTACK_DAMAGE, 1.5 )
             );
             return SPEC.define( new AttributeListField( key + "_attributes", defaults,
                     "Attribute modifiers for " + name + "." ) );

@@ -1,8 +1,11 @@
 package fathertoast.deadlyworld.common.block.spawner;
 
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
+import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.entity.SpawnerMimic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -49,11 +52,16 @@ public class MiniSpawnerBlock extends DeadlySpawnerBlock implements SimpleWaterl
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockState state, BlockEntityType<T> type ) {
         return getTicker( level, type, DWBlockEntities.MINI_SPAWNER.get() );
     }
-    
+
+    @Override
+    protected EntityType<? extends SpawnerMimic> getMimicType() {
+        return DWEntities.MINI_SPAWNER_MIMIC.get();
+    }
+
     @Override
     @SuppressWarnings( "deprecation" )
     public VoxelShape getShape( BlockState state, BlockGetter world, BlockPos pos, CollisionContext selectionContext ) {
-        return SHAPES[state.getValue( FACING ).get3DDataValue()];
+        return SHAPES[ state.getValue( FACING ).get3DDataValue() ];
     }
     
     @Override
@@ -81,6 +89,6 @@ public class MiniSpawnerBlock extends DeadlySpawnerBlock implements SimpleWaterl
     
     @Override
     protected void createBlockStateDefinition( StateDefinition.Builder<Block, BlockState> stateBuilder ) {
-        stateBuilder.add( FACING ).add( WATERLOGGED );
+        stateBuilder.add( FACING, WATERLOGGED );
     }
 }

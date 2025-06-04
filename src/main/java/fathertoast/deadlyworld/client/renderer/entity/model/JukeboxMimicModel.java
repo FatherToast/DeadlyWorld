@@ -49,7 +49,7 @@ public class JukeboxMimicModel<T extends JukeboxMimic> extends HierarchicalModel
     }
 
     @Override
-    public void setupAnim( JukeboxMimic mimic, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch ) {
+    public void setupAnim( JukeboxMimic jukeboxMimic, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch ) {
         root().getAllParts().forEach(ModelPart::resetPose);
 
         body.xRot = headPitch * ( (float) Math.PI / 180F );

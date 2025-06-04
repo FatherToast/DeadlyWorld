@@ -52,25 +52,25 @@ public class SpawnerConfig extends FeatureConfig {
                         "spawners by nbt editing." );
         
         SIMPLE = new SpawnerTypeCategory( this, SpawnerType.SIMPLE, 0.6, DEPTH_LAVA, DEPTH_0, 0.3,
-                16, false, 200, 800, 40, 4, 4, 0.1 );
+                16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
         
         STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.2, DEPTH_LAVA, DEPTH_1, 1.0,
-                16, true, 0, 400, 10, 1, 2, 0.95 );
+                16, true, 0, 400, 10, 1, 2, 0.95, 0.05 );
         
         SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.12, DEPTH_LAVA, DEPTH_2, 1.0,
-                20, true, 400, 2400, 100, 12, 8, 0.05 );
+                20, true, 400, 2400, 100, 12, 8, 0.05, 0.05 );
         
         BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.06, DEPTH_LAVA, DEPTH_3, 1.0,
-                16, true, 200, 800, 100, 2, 3, 0.05 );
+                16, true, 200, 800, 100, 2, 3, 0.05, 0.05 );
         
         NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.52, DEPTH_LAVA, DEPTH_0, 0.3,
-                16, false, 100, 400, 20, 6, 6, 0.0 );
+                16, false, 100, 400, 20, 6, 6, 0.0, 0.05 );
         
         MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.08, DEPTH_LAVA, DEPTH_0, 0.3,
-                16, false, 100, 400, 20, 6, 4, 0.1 );
+                16, false, 100, 400, 20, 6, 4, 0.1, 0.05 );
         
         DUNGEON = new DungeonSpawnerCategory( this, SpawnerType.DUNGEON,
-                16, false, 200, 800, 40, 4, 4, 0.1 );
+                16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
     }
     
     public static class SpawnerTypeCategory extends FeatureTypeCategory {
@@ -92,13 +92,15 @@ public class SpawnerConfig extends FeatureConfig {
         
         public final DoubleField dynamicChance;
         public final WeightedEntityListField spawnList;
+
+        public final DoubleField mimicChance;
         
         public final AttributeListField attributeAdjustments;
         
         SpawnerTypeCategory( FeatureConfig parent, SpawnerType type,
                              double placements, int minHeight, int maxHeight, double ignoredChestCh,
                              int activationRng, boolean checkSight, int minDelay, int maxDelay, int delayPrgr,
-                             int spawnCnt, int spawnRng, double dynamicCh ) {
+                             int spawnCnt, int spawnRng, double dynamicCh, double mimicCh ) {
             super( parent, type.toString(), placements, minHeight, maxHeight );
             
             //if( isSubfeature() ) { TODO decide whether to re-add this
@@ -167,6 +169,12 @@ public class SpawnerConfig extends FeatureConfig {
                     DimensionConfigHelper.MESSAGE_WORK_IN_PROGRESS_OVERRIDE ) ); // TODO
             
             SPEC.newLine();
+
+            mimicChance = SPEC.define( new DoubleField( "mimic_chance", mimicCh, DoubleField.Range.PERCENT,
+                    "The chance for a spawner of this type to generate as a Spawner Mimic.",
+                    "The mimic reveals itself when the spawner block is destroyed." ) );
+
+            SPEC.newLine();
             
             attributeAdjustments = SPEC.define( new AttributeListField( "attribute_adjustments", makeDefaultAttributeList( type ),
                     "Base attribute adjustments applied to entities spawned by " + FEATURE_TYPE_NAME + ", if applicable.",
@@ -226,9 +234,9 @@ public class SpawnerConfig extends FeatureConfig {
     public static class SubfeatureSpawnerCategory extends SpawnerTypeCategory implements SubfeatureCategory {
         SubfeatureSpawnerCategory( FeatureConfig parent, SpawnerType type,
                                    int activationRng, boolean checkSight,
-                                   int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
+                                   int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh, double mimicCh ) {
             super( parent, type, 0.0, 0, 0, 0.0, activationRng, checkSight,
-                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh, mimicCh );
         }
     }
 
@@ -238,9 +246,9 @@ public class SpawnerConfig extends FeatureConfig {
 
         DungeonSpawnerCategory( FeatureConfig parent, SpawnerType type,
                                    int activationRng, boolean checkSight,
-                                   int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
+                                   int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh, double mimicCh ) {
             super( parent, type, activationRng, checkSight,
-                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh, mimicCh );
 
             SPEC.newLine();
 
@@ -262,9 +270,9 @@ public class SpawnerConfig extends FeatureConfig {
         
         BrutalSpawnerCategory( FeatureConfig parent, SpawnerType type,
                                double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean checkSight,
-                               int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
+                               int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh, double mimicCh ) {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight,
-                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh, mimicCh );
             
             SPEC.newLine();
             
@@ -285,9 +293,9 @@ public class SpawnerConfig extends FeatureConfig {
     public static class NestSpawnerCategory extends SpawnerTypeCategory {
         NestSpawnerCategory( FeatureConfig parent, SpawnerType type,
                              double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean checkSight,
-                             int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
+                             int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh, double mimicCh ) {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight,
-                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh, mimicCh );
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */
@@ -300,9 +308,9 @@ public class SpawnerConfig extends FeatureConfig {
     public static class MiniSpawnerCategory extends SpawnerTypeCategory {
         MiniSpawnerCategory( FeatureConfig parent, SpawnerType type,
                              double placements, int minHeight, int maxHeight, double chestCh, int activationRng, boolean checkSight,
-                             int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh ) {
+                             int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh, double mimicCh ) {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight,
-                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh );
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh, mimicCh );
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */

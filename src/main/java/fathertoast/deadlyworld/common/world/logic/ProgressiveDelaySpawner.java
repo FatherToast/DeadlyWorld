@@ -63,6 +63,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     public static final String TAG_DELAY_PROGRESSION = "DelayProgression";
     public static final String TAG_DELAY_RECOVERY = "DelayRecovery";
     public static final String TAG_USE_FORGE_HOOK_SPAWNS = "ForgeHookSpawns";
+    public static final String TAG_IS_MIMIC = "IsMimic";
     // Logic tags
     public static final String TAG_DELAY_BUILDUP = "DelayBuildup";
     public static final String TAG_SPAWNS_REMAINING = "SpawnsRemaining";
@@ -98,6 +99,9 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     /** Weighted list of entities to pick from for each spawn batch, if present. */
     @Nullable
     protected WeightedEntityList dynamicSpawnList;
+
+    /** True if this spawner logic belongs to a spawner mimic. */
+    protected boolean isMimic = false;
     
     /** Whether this spawner is active. Reduces the number of times we need to iterate over the player list. */
     protected boolean activated;
@@ -145,6 +149,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
                 spawnerSettings.spawnDelayProgression().sample( random ), spawnerSettings.spawnDelayRecovery().sample( random ),
                 spawnerSettings.maxSpawns().sample( random ), spawnerSettings.spawnCount().sample( random ),
                 spawnerSettings.spawnRange().sample( random ), spawnerSettings.dynamicChance().sample( random ),
+                spawnerSettings.mimicChance().sample( random ),
                 spawnerConfig.spawnList.get() ); // TODO replace with data driven value
     }
     
@@ -156,14 +161,14 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
                 spawnerConfig.delay.getMin(), spawnerConfig.delay.getMax(),
                 spawnerConfig.delayProgression.get(), (float) spawnerConfig.delayRecovery.get(),
                 spawnerConfig.maxSpawns.get(), spawnerConfig.spawnCount.get(),
-                spawnerConfig.spawnRange.get(), (float) spawnerConfig.dynamicChance.get(),
+                spawnerConfig.spawnRange.get(), (float) spawnerConfig.dynamicChance.get(), (float) spawnerConfig.mimicChance.get(),
                 spawnerConfig.spawnList.get() );
     }
     
     public void initializeSpawner( @Nullable Level level, @SuppressWarnings( "unused" ) BlockPos pos, RandomSource random,
                                    int activationRange, float checkSightChance, int maxNearby,
                                    int delayMin, int delayMax, int delayProgression, float delayRecovery,
-                                   int maxSpawns, int count, int range, float dynamicChance, WeightedEntityList spawnList ) {
+                                   int maxSpawns, int count, int range, float dynamicChance, float mimicChance, WeightedEntityList spawnList ) {
         requiredPlayerRange = activationRange;
         checkSight = roll( random, checkSightChance );
         maxNearbyEntities = maxNearby;
@@ -176,7 +181,9 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         spawnsRemaining = maxSpawns == 0 ? -1 : maxSpawns; // 0 would have no meaning in the config, but here it means "disabled"
         spawnCount = count;
         spawnRange = range;
+
         dynamicSpawnList = !spawnList.isDisabled() && roll( random, dynamicChance ) ? spawnList : null;
+        isMimic = roll( random, mimicChance );
         
         EntityType<?> toSpawn = spawnList.next( random );
         setEntityId( toSpawn, level, random,
@@ -199,7 +206,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     @Override
     public void clientTick( Level level, BlockPos pos ) {
         updateActivationStatus( level, pos );
-        
+
         if( !activated ) {
             oSpin = spin;
         }
@@ -424,6 +431,9 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             spawnDelayBuildup = loadTag.getFloat( TAG_DELAY_BUILDUP );
         if( NBTHelper.containsNumber( loadTag, TAG_SPAWNS_REMAINING ) )
             spawnsRemaining = loadTag.getShort( TAG_SPAWNS_REMAINING );
+
+        if ( NBTHelper.containsNumber( loadTag, TAG_IS_MIMIC ) )
+            isMimic = loadTag.getBoolean( TAG_IS_MIMIC );
         if( NBTHelper.containsList( loadTag, TAG_DYNAMIC_SPAWN_LIST ) )
             dynamicSpawnList = WeightedEntityListField.fromNBT( loadTag.getList( TAG_DYNAMIC_SPAWN_LIST, Tag.TAG_STRING ),
                     1, 0.0, Double.MAX_VALUE );
@@ -439,6 +449,9 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         
         saveTag.putFloat( TAG_DELAY_BUILDUP, spawnDelayBuildup );
         saveTag.putShort( TAG_SPAWNS_REMAINING, (short) spawnsRemaining );
+
+        saveTag.putBoolean( TAG_IS_MIMIC, isMimic );
+
         if( dynamicSpawnList != null && !dynamicSpawnList.isDisabled() )
             saveTag.put( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList.toNBT( new ListTag() ) );
         
@@ -488,6 +501,18 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     public void enableUseForgeHook( Level level, BlockPos pos ) {
         useForgeHookSpawnList = true;
         setEntityId( DungeonHooks.getRandomDungeonMob( level.random ), getLevel(), level.random, pos );
+    }
+
+    public void setUnlimitedSpawns() {
+        spawnsRemaining = -1;
+    }
+
+    public boolean isMimic() {
+        return isMimic;
+    }
+
+    public SpawnerType getSpawnerType() {
+        return spawnerType;
     }
     
     @Override

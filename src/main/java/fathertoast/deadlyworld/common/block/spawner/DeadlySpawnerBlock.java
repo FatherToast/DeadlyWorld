@@ -3,21 +3,33 @@ package fathertoast.deadlyworld.common.block.spawner;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
+import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
+import fathertoast.deadlyworld.common.entity.SpawnerMimic;
+import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,6 +37,9 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -37,7 +52,7 @@ import java.util.Optional;
 public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock {
     
     private final SpawnerType spawnerType;
-    
+
     public DeadlySpawnerBlock( SpawnerType type ) {
         super( Config.BLOCKS.get( type ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.SPAWNER ) ) );
         spawnerType = type;
@@ -66,12 +81,116 @@ public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock 
         return createTickerHelper( type, expectedType,
                 level.isClientSide ? DeadlySpawnerBlockEntity::clientTick : DeadlySpawnerBlockEntity::serverTick );
     }
-    
+
+    /**
+     * Usually, mimics spawn when the block is left-clicked/hit by the player, but
+     * if for some reason it shouldn't be detected, we fall back to checking when
+     * the block is destroyed.
+     * @see #attack(BlockState, Level, BlockPos, Player)
+     */
+    @Override
+    public void playerWillDestroy( Level level, BlockPos pos, BlockState state, Player player ) {
+        if ( !level.isClientSide && level.getExistingBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
+            if ( createSpawnerMimic( (ServerLevel) level, pos, true, spawnerBlockEntity ) ) {
+                level.removeBlock( pos, false );
+                return;
+            }
+        }
+        super.playerWillDestroy( level, pos, state, player );
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void attack( BlockState state, Level level, BlockPos pos, Player player ) {
+        super.attack( state, level, pos, player);
+
+        if ( !level.isClientSide && level.getExistingBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
+            if ( createSpawnerMimic( (ServerLevel) level, pos, true, spawnerBlockEntity ) ) {
+                level.removeBlock( pos, false );
+            }
+        }
+    }
+
+    @Override
+    public void onBlockExploded( BlockState state, Level level, BlockPos pos, Explosion explosion ) {
+        super.onBlockExploded(state, level, pos, explosion);
+
+        if ( !level.isClientSide && level.getExistingBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity spawnerBlockEntity ) {
+            createSpawnerMimic( (ServerLevel) level, pos, true, spawnerBlockEntity );
+        }
+    }
+
+    /**
+     * Attempts to spawn a spawner mimic at the given location, with the same
+     * spawner logic as the provided deadly spawner block entity.
+     *
+     * @param pos The block position to spawn the mimic at.
+     * @param clearAbove If true, the block at the position above the given block pos will be destroyed
+     *                   to prevent the mimic from getting stuck.
+     * @param spawnerBlockEntity The spawner block entity that this mimic should inherit its
+     *                           spawner logic from.
+     *
+     * @return True if a mimic was successfully spawned.
+     */
+    protected final boolean createSpawnerMimic( ServerLevel level, BlockPos pos, boolean clearAbove, DeadlySpawnerBlockEntity spawnerBlockEntity ) {
+        if ( !spawnerBlockEntity.spawnerLogic.isMimic() ) return false;
+
+        SpawnerMimic spawnerMimic = getMimicType().create( level );
+
+        if ( spawnerMimic == null ) return false;
+
+        ForgeEventFactory.onFinalizeSpawn( spawnerMimic, level, level.getCurrentDifficultyAt( pos ),
+                MobSpawnType.TRIGGERED, null, null );
+
+        spawnerMimic.setPos( pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5 );
+        ProgressiveDelaySpawner spawner = spawnerBlockEntity.spawnerLogic;
+        spawnerMimic.setSpawner( spawner );
+
+        level.addFreshEntity( spawnerMimic );
+
+        if ( spawnerMimic.isAddedToWorld() ) {
+            // Destroy above block for mimics
+            // taller than one block, if clearAbove
+            if ( clearAbove && spawnerMimic.getBoundingBox().getYsize() > 1.0 ) {
+                BlockState aboveState = level.getBlockState( pos.above() );
+                // Only destroy if there is collision
+                if ( aboveState.blocksMotion() )
+                    level.destroyBlock( pos.above(), false );
+            }
+
+            // Funny sound
+            spawnerMimic.playSound( DWSoundEvents.MIMIC_APPEAR.get() );
+
+            // Poof cloud
+            level.sendParticles(
+                    ParticleTypes.CLOUD,
+                    pos.getX() + 0.5,
+                    pos.getY() + 0.5,
+                    pos.getZ() + 0.5,
+                    10,
+                    level.random.nextGaussian(),
+                    level.random.nextGaussian(),
+                    level.random.nextGaussian(),
+                    0.1
+            );
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return The spawner mimic entity type to spawn when creating
+     *         a mimic for this spawner block.
+     */
+    protected EntityType<? extends SpawnerMimic> getMimicType() {
+        return DWEntities.SPAWNER_MIMIC.get();
+    }
+
     @Override
     public int getExpDrop( BlockState state, LevelReader level, RandomSource random, BlockPos pos, int fortune, int silkTouch ) {
         return 15 + random.nextInt( 15 ) + random.nextInt( 15 );
     }
-    
+
     @Override
     public RenderShape getRenderShape( BlockState state ) { return RenderShape.MODEL; }
     

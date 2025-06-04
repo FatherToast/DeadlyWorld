@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.core;
 
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.*;
+import fathertoast.deadlyworld.common.network.PacketHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.DungeonHooks;
@@ -160,15 +161,15 @@ public class DeadlyWorld {
     /** The logger used by this mod. */
     public static final Logger LOG = LogManager.getLogger( MOD_ID );
     
-    //    /** Packet handler instance */
-    //    public PacketHandler packetHandler = new PacketHandler();
+    /** Packet handler instance */
+    public PacketHandler packetHandler = new PacketHandler();
     
     
     public DeadlyWorld() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         
         //        DWDamageSources.init();
-        //        packetHandler.registerMessages();
+        packetHandler.registerMessages();
         
         eventBus.addListener( DWEntities::createAttributes );
         eventBus.addListener( this::onCommonSetup );
@@ -193,11 +194,6 @@ public class DeadlyWorld {
     }
     
     public void onCommonSetup( FMLCommonSetupEvent event ) {
-        //event.enqueueWork( () -> {
-        //  DWStructures.setupStructures();
-        //  DWConfiguredStructures.register();
-        //  DWStructureProcessors.register();
-        //} );
     }
     
     /** @return A ResourceLocation with the mod's modid. */
@@ -206,10 +202,7 @@ public class DeadlyWorld {
     public static String logPrefix( Class<?> clazz ) {
         return "[" + MOD_ID + "/" + clazz.getSimpleName() + "] ";
     }
-    
-    //** @return Returns a Forge registry entry as a string, or "null" if it is null. */
-    //public static String toString( @Nullable ForgeRegistryEntry<?> regEntry ) { return regEntry == null ? "null" : toString( regEntry.getRegistryName() ); }
-    
+
     /** @return Returns the resource location as a string, or "null" if it is null. */
     public static String toString( @Nullable ResourceLocation res ) { return res == null ? "null" : res.toString(); }
 }

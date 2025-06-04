@@ -29,6 +29,8 @@ public class DWEntityLootTables extends EntityLootSubProvider {
                 .toLootPool() )
         );
         add( DWEntities.JUKEBOX_MIMIC, new LootTableBuilder().addLootTable( "jukebox", Blocks.JUKEBOX.getLootTable() ) );
+        add( DWEntities.SPAWNER_MIMIC, new LootTableBuilder() );
+        add( DWEntities.MINI_SPAWNER_MIMIC, new LootTableBuilder() );
         
         // Mini mobs
         addVanillaLike( DWEntities.MINI_CREEPER, EntityType.CREEPER );
