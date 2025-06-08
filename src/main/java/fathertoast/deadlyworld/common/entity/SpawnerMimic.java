@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.entity;
 import com.google.common.graph.Network;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
+import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.world.logic.ISpawnerObject;
 import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
@@ -129,10 +130,9 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         return true;
     }
 
-    // TODO - Give mimics their own unique sound events that instead point to the vanilla sounds we want
     @Override
     protected SoundEvent getHurtSound( DamageSource damageSource ) {
-        return SoundEvents.ANVIL_BREAK;
+        return DWSoundEvents.SPAWNER_MIMIC_HURT.get();
     }
 
     @Override
@@ -142,12 +142,12 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
 
     @Override
     protected void playStepSound( BlockPos pos, BlockState state ) {
-        playSound( SoundEvents.CHAIN_STEP, 0.15F, 1.0F );
+        playSound( DWSoundEvents.SPAWNER_MIMIC_STEP.get(), 0.15F, 1.0F );
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.CHAIN_BREAK;
+        return DWSoundEvents.SPAWNER_MIMIC_DEATH.get();
     }
 
     /** Sets the spawner logic for this mimic. */

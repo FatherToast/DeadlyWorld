@@ -23,5 +23,34 @@
       "minecraft:block/chest/close2",
       "minecraft:block/chest/close3"
     ]
+  },
+  "entity.spawner_mimic.step": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      "minecraft:block/chain/step1",
+      "minecraft:block/chain/step2",
+      "minecraft:block/chain/step3",
+      "minecraft:block/chain/step4",
+      "minecraft:block/chain/step5",
+      "minecraft:block/chain/step6"
+    ]
+  },
+  "entity.spawner_mimic.hurt": {
+    "subtitle": "sound_event.deadlyworld.subtitle.spawner_mimic.hurt",
+    "sounds": [
+      "minecraft:dig/stone1",
+      "minecraft:dig/stone2",
+      "minecraft:dig/stone3",
+      "minecraft:dig/stone4"
+    ]
+  },
+  "entity.spawner_mimic.death": {
+    "subtitle": "sound_event.deadlyworld.subtitle.spawner_mimic.death",
+    "sounds": [
+      "minecraft:block/chain/break1",
+      "minecraft:block/chain/break2",
+      "minecraft:block/chain/break3",
+      "minecraft:block/chain/break4"
+    ]
   }
 }

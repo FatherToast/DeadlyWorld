@@ -86,6 +86,8 @@
   "death.attack.deadlyworld.vortex.player": "%1$s got swooshed by a vortex while fighting %2$s",
 
   "sound_event.deadlyworld.subtitle.mimic.appear": "Mimic appears",
-  "sound_event.deadlyworld.subtitle.chest_mimic.hurt": "Chest Mimic hurts",
-  "sound_event.deadlyworld.subtitle.chest_mimic.death": "Chest Mimic dies"
+  "sound_event.deadlyworld.subtitle.chest_mimic.hurt": "Mimic hurts",
+  "sound_event.deadlyworld.subtitle.chest_mimic.death": "Mimic dies",
+  "sound_event.deadlyworld.subtitle.spawner_mimic.hurt": "Mimic hurts",
+  "sound_event.deadlyworld.subtitle.spawner_mimic.death": "Mimic dies"
 }
