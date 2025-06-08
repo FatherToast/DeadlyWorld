@@ -19,9 +19,10 @@ public class ClientWork {
         if ( entity instanceof SpawnerMimic spawnerMimic ) {
             try {
                 spawnerMimic.getSpawner().getOrCreateDisplayEntity(level, level.random, entity.blockPosition());
+                spawnerMimic.getSpawner().setRemainingSpawns( message.remainingSpawns );
             }
             catch ( Exception e ) {
-                DeadlyWorld.LOG.error( "Failed to update display entity for spawner mimic at position {}!",
+                DeadlyWorld.LOG.error( "Failed server-client sync for spawner mimic at position {}!",
                         entity.blockPosition().toString() );
             }
         }

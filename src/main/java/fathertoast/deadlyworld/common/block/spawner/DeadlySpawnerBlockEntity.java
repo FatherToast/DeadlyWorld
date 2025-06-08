@@ -80,7 +80,8 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     
     @Override
     public boolean onlyOpCanSetNbt() { return true; }
-    
+
+
     @Override // ISpawnerObject
     public void broadcastEvent( ProgressiveDelaySpawner spawner, Level level, BlockPos pos, int eventId ) {
         level.blockEvent( pos, DWBlocks.spawner( spawnerType ).get(), eventId, 0 );

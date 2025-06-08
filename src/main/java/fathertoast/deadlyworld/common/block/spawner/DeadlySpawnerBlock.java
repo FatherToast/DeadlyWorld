@@ -143,8 +143,11 @@ public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock 
                 MobSpawnType.TRIGGERED, null, null );
 
         spawnerMimic.setPos( pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5 );
-        ProgressiveDelaySpawner spawner = spawnerBlockEntity.spawnerLogic;
-        spawnerMimic.setSpawner( spawner );
+
+        ProgressiveDelaySpawner oldSpawner = spawnerBlockEntity.spawnerLogic;
+        ProgressiveDelaySpawner newSpawner = new ProgressiveDelaySpawner( oldSpawner.getSpawnerType(), spawnerMimic, spawnerMimic );
+        newSpawner.load( level, pos, oldSpawner.save( new CompoundTag() ) );
+        spawnerMimic.setSpawner( newSpawner );
 
         level.addFreshEntity( spawnerMimic );
 

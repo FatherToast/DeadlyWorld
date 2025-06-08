@@ -8,7 +8,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 public class MiniSpawnerMimic extends SpawnerMimic {
 
@@ -29,5 +28,20 @@ public class MiniSpawnerMimic extends SpawnerMimic {
         double z = (double) pos.getZ() + 0.25 + random.nextDouble() / 2.0;
         level.addParticle( ParticleTypes.SMOKE, x, y, z, 0.0, 0.0, 0.0 );
         level.addParticle( ParticleTypes.FLAME, x, y, z, 0.0, 0.0, 0.0 );
+    }
+
+    /**
+     *  Spawns "panic" particles when the mimic's
+     *  spawner logic is disabled/has run out of spawns.
+     */
+    @Override
+    protected void ohMyGoshWhatDoIDoWHATDOIDO( Level level, BlockPos pos ) {
+        if( (level.getGameTime() & 0b11) != 0 ) return; // Only spawn every 4th tick
+
+        RandomSource random = level.getRandom();
+        double x = (double) pos.getX() + 0.25 + random.nextDouble() / 2.0;
+        double y = (double) pos.getY() + 0.3 + random.nextDouble() / 2.0;
+        double z = (double) pos.getZ() + 0.25 + random.nextDouble() / 2.0;
+        level.addParticle( ParticleTypes.RAIN, x, y, z, 0.0, 0.0, 0.0 );
     }
 }

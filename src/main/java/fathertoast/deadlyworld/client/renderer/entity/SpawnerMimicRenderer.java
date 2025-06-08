@@ -5,6 +5,7 @@ import fathertoast.deadlyworld.client.DWModelLayers;
 import fathertoast.deadlyworld.client.renderer.entity.model.SpawnerMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.SpawnerMimic;
+import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.SpawnerRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -28,6 +29,17 @@ public class SpawnerMimicRenderer extends MobRenderer<SpawnerMimic, SpawnerMimic
     @Override
     public void render( SpawnerMimic spawnerMimic, float f, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight ) {
         super.render( spawnerMimic, f, partialTick, poseStack, bufferSource, packedLight );
+        // TODO - Maybe render the display entity inside the mimic
         spawnerMimic.getSpawner().getOrCreateDisplayEntity( spawnerMimic.level(), spawnerMimic.getRandom(), spawnerMimic.blockPosition() );
+    }
+
+    @Override
+    protected boolean isShaking( SpawnerMimic spawnerMimic ) {
+        ProgressiveDelaySpawner spawner = spawnerMimic.getSpawner();
+
+        if ( spawner != null && spawner.isDisabled() )
+            return true;
+
+        return super.isShaking( spawnerMimic );
     }
 }

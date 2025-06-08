@@ -11,11 +11,11 @@ import java.util.Objects;
 public final class NetworkHelper {
 
 
-    public static void setSpawnerMimicDE( @Nonnull ServerLevel level, @Nonnull SpawnerMimic spawnerMimic ) {
+    public static void updateSpawnerMimic( @Nonnull ServerLevel level, @Nonnull SpawnerMimic spawnerMimic ) {
         Objects.requireNonNull( level );
         Objects.requireNonNull( spawnerMimic );
 
-        S2CSetSpawnerMimicDE message = new S2CSetSpawnerMimicDE( spawnerMimic.getId() );
+        S2CSetSpawnerMimicDE message = new S2CSetSpawnerMimicDE( spawnerMimic.getId(), spawnerMimic.getSpawner().getRemainingSpawns() );
 
         for ( ServerPlayer player : level.players() ) {
             PacketHandler.sendToClient( message, player );

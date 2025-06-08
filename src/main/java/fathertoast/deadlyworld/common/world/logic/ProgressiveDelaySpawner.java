@@ -9,6 +9,8 @@ import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.entity.SpawnerMimic;
+import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
@@ -216,7 +218,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             if( spawnDelay > 0 ) spawnDelay--;
             
             oSpin = spin;
-            spin = (spin + 1000.0F / (spawnDelay + 200.0F)) % 360.0;
+            spin = ( spin + 1000.0F / ( spawnDelay + 200.0F ) ) % 360.0;
         }
     }
     
@@ -349,12 +351,18 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             // Tell client that we did the thing
             LevelEventHelper.SMOKE_AND_FLAME.play( level, pos );
             level.gameEvent( entity, GameEvent.ENTITY_PLACE, spawnPos );
+
             if( entity instanceof Mob ) ((Mob) entity).spawnAnim();
             
             // Keep track of successful spawns
             spawns++;
             if( spawnsRemaining > 0 ) {
                 spawnsRemaining--;
+
+                // If the spawner object is an entity, allow for manual sync
+                if ( spawnerObject instanceof Entity )
+                    spawnerObject.entitySync( this, level, pos );
+
                 if( spawnsRemaining <= 0 ) {
                     disableSpawner();
                     break;
@@ -414,6 +422,10 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     public void disableSpawner() {
         spawnsRemaining = 0;
         activated = false;
+    }
+
+    public boolean isDisabled() {
+        return spawnsRemaining == 0 && !activated;
     }
     
     @Override
@@ -505,6 +517,15 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
 
     public void setUnlimitedSpawns() {
         spawnsRemaining = -1;
+    }
+
+    /** Used for server-client sync. */
+    public void setRemainingSpawns( int spawns ) {
+        spawnsRemaining = spawns;
+    }
+
+    public int getRemainingSpawns() {
+        return spawnsRemaining;
     }
 
     public boolean isMimic() {

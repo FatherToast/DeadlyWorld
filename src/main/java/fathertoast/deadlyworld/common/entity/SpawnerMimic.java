@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.entity;
 
+import com.google.common.graph.Network;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.network.NetworkHelper;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -66,10 +68,15 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         super.tick();
 
         if ( spawner != null ) {
-            if ( level().isClientSide )
-                spawner.clientTick( level(), blockPosition() );
-            else
-                spawner.serverTick( (ServerLevel) level(), blockPosition() );
+            if ( level().isClientSide ) {
+                spawner.clientTick(level(), blockPosition());
+
+                if ( spawner.isDisabled() )
+                    ohMyGoshWhatDoIDoWHATDOIDO( level(), blockPosition() );
+            }
+            else {
+                spawner.serverTick((ServerLevel) level(), blockPosition());
+            }
         }
     }
 
@@ -94,6 +101,10 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         }
     }
 
+    /**
+     * Overridden to return the loot table of the spawner block of the spawner type
+     * this mimic's spawner logic uses.
+     */
     @Override
     protected ResourceLocation getDefaultLootTable() {
         if ( spawner != null ) {
@@ -118,6 +129,7 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         return true;
     }
 
+    // TODO - Give mimics their own unique sound events that instead point to the vanilla sounds we want
     @Override
     protected SoundEvent getHurtSound( DamageSource damageSource ) {
         return SoundEvents.ANVIL_BREAK;
@@ -138,24 +150,31 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         return SoundEvents.CHAIN_BREAK;
     }
 
+    /** Sets the spawner logic for this mimic. */
     public void setSpawner( ProgressiveDelaySpawner spawnerLogic ) {
         this.spawner = spawnerLogic;
     }
 
+    /**
+     * @return The current spawner logic for this mimic.
+     *         Generally SHOULDN'T be null, but might be.
+     */
     @Nullable
     public ProgressiveDelaySpawner getSpawner() {
         return spawner;
     }
 
-    @Override
-    public void broadcastEvent( ProgressiveDelaySpawner spawner, Level level, BlockPos pos, int eventId ) {
-        // Can't really fire a block event for a non-block, so send a packet instead
-        if ( !level.isClientSide && eventId == 1 ) {
-            NetworkHelper.setSpawnerMimicDE( (ServerLevel) level, this );
-        }
+    @Override // ISpawnerObject
+    public void entitySync( ProgressiveDelaySpawner spawner, ServerLevel level, BlockPos pos ) {
+        NetworkHelper.updateSpawnerMimic( level, this );
     }
 
-    @Override
+    @Override // ISpawnerObject
+    public void broadcastEvent( ProgressiveDelaySpawner spawner, Level level, BlockPos pos, int eventId ) {
+        // Can't really fire a block event for a non-block
+    }
+
+    @Override // ISpawnerObject
     public void spawnEffectParticle( ProgressiveDelaySpawner spawner, Level level, BlockPos pos ) {
         RandomSource random = level.getRandom();
         double x = (double) pos.getX() + random.nextDouble();
@@ -165,11 +184,31 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         level.addParticle( ParticleTypes.FLAME, x, y, z, 0.0, 0.0, 0.0 );
     }
 
+    /**
+     *  Spawns "panic" particles when the mimic's
+     *  spawner logic is disabled/has run out of spawns.
+     */
+    protected void ohMyGoshWhatDoIDoWHATDOIDO( Level level, BlockPos pos ) {
+        if( (level.getGameTime() & 0b11) != 0 ) return; // Only spawn every 4th tick
+
+        RandomSource random = level.getRandom();
+        double x = getX() + random.nextGaussian() / 2;
+        double y = (double) pos.getY() + getBoundingBox().getYsize() + 0.2D;
+        double z = getZ() + random.nextGaussian() / 2;
+        level.addParticle( ParticleTypes.RAIN, x, y, z, 0.0, 0.0, 0.0 );
+    }
+
+    /** Overridden to make use of additional spawn data. */
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket( this );
     }
 
+    /**
+     * Called on server to write additional
+     * data that should be synced to the client
+     * when this entity is spawned in the world.
+     */
     @Override
     public void writeSpawnData( FriendlyByteBuf buffer ) {
         if ( spawner != null ) {
@@ -178,13 +217,14 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         }
     }
 
+    /** Called on client when a spawn packet is received from the server. */
     @Override
     public void readSpawnData( FriendlyByteBuf additionalData ) {
         SpawnerType spawnerType = SpawnerType.getFromID( additionalData.readUtf() );
         CompoundTag spawnerTag = additionalData.readNbt();
 
-        ProgressiveDelaySpawner spwnr = new ProgressiveDelaySpawner( spawnerType, this );
-        spwnr.load( level(), blockPosition(), spawnerTag );
-        setSpawner( spwnr );
+        ProgressiveDelaySpawner spawner = new ProgressiveDelaySpawner( spawnerType, this );
+        spawner.load( level(), blockPosition(), spawnerTag );
+        setSpawner( spawner );
     }
 }
