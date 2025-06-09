@@ -1,4 +1,10 @@
 {
+  "block.tower_dispenser.shoot": {
+    "subtitle": "sound_event.deadlyworld.subtitle.tower_dispenser.shoot",
+    "sounds": [
+      "minecraft:random/bow"
+    ]
+  },
   "entity.mimic.appear": {
     "subtitle": "sound_event.deadlyworld.subtitle.mimic.appear",
     "sounds": [

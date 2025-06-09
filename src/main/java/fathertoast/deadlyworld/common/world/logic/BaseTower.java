@@ -4,14 +4,13 @@ import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;
+import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
-import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.settings.TowerDispenserSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -229,7 +228,7 @@ public abstract class BaseTower {
 
         activateTower( level, pos, towerTarget, centerPos, offset, vecToTarget, distanceH );
         newAttackDelay( level.random );
-        level.playSound( null, pos, SoundEvents.EGG_THROW, SoundSource.BLOCKS, 1.0F, 1.0F );
+        level.playSound( null, pos, DWSoundEvents.TOWER_DISPENSER_SHOOT.get(), SoundSource.BLOCKS, 1.0F, 1.0F );
     }
 
     @Nonnull

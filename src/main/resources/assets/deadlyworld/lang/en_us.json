@@ -85,6 +85,7 @@
   "death.attack.deadlyworld.vortex": "%1$s was swooshed by a vortex",
   "death.attack.deadlyworld.vortex.player": "%1$s got swooshed by a vortex while fighting %2$s",
 
+  "sound_event.deadlyworld.subtitle.tower_dispenser.shoot": "Tower dispenser shoots",
   "sound_event.deadlyworld.subtitle.mimic.appear": "Mimic appears",
   "sound_event.deadlyworld.subtitle.chest_mimic.hurt": "Mimic hurts",
   "sound_event.deadlyworld.subtitle.chest_mimic.death": "Mimic dies",

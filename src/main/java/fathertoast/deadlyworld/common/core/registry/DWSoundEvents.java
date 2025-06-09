@@ -2,7 +2,6 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -10,6 +9,9 @@ import net.minecraftforge.registries.RegistryObject;
 public class DWSoundEvents {
 
     public static final DeferredRegister<SoundEvent> REGISTRY = DeferredRegister.create( ForgeRegistries.SOUND_EVENTS, DeadlyWorld.MOD_ID );
+
+
+    public static final RegistryObject<SoundEvent> TOWER_DISPENSER_SHOOT = register( "block.tower_dispenser.shoot" );
 
     public static final RegistryObject<SoundEvent> MIMIC_APPEAR = register( "entity.mimic.appear" );
 
