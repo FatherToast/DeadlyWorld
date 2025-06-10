@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * The core of the mod. Contains basic info about the mod, initializes configs, and hooks into FML.
@@ -183,10 +185,14 @@ public class DeadlyWorld {
         DWBlockEntities.REGISTRY.register( eventBus );
         DWLootModifiers.REGISTRY.register( eventBus );
         DWBiomeModifiers.REGISTRY.register( eventBus );
+        DWFishingPranks.REGISTRY.register( eventBus );
         //        DWBiomes.REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
         
-        Config.initialize();
+        Config.initializeEarly();
+        DeferredWorkQueue.lookup( Optional.of( ModLoadingStage.COMMON_SETUP ) ).ifPresent(
+                (workQueue) -> workQueue.enqueueWork( ModList.get().getModContainerById( MOD_ID ).orElseThrow(), Config::initialize )
+        );
         
         DWFieldProviders.register( eventBus );
         DWFeatures.REGISTRY.register( eventBus );
@@ -194,6 +200,7 @@ public class DeadlyWorld {
     }
     
     public void onCommonSetup( FMLCommonSetupEvent event ) {
+
     }
     
     /** @return A ResourceLocation with the mod's modid. */

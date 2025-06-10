@@ -1,29 +1,22 @@
 package fathertoast.deadlyworld.common.event;
 
 
-import com.mojang.math.Axis;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
-import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.registry.DWEntities;
-import fathertoast.deadlyworld.common.core.registry.DWItems;
-import fathertoast.deadlyworld.common.entity.ChestMimic;
+import fathertoast.deadlyworld.api.FishingPrank;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
 import fathertoast.deadlyworld.common.util.MimicHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.ContainerHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorStandItem;
+import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.context.UseOnContext;
@@ -32,15 +25,13 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.ExplosionEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -186,6 +177,34 @@ public final class GameEventHandler {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent( priority = EventPriority.LOW )
+    public static void onFish( ItemFishedEvent event ) {
+        if ( !event.getEntity().level().isClientSide && Config.MAIN.FISHING_PRANKS.prankChance.rollChance( event.getEntity().getRandom() ) ) {
+            ServerPlayer player = (ServerPlayer) event.getEntity();
+            ServerLevel level = (ServerLevel) player.level();
+            FishingHook hook = event.getHookEntity();
+
+            FishingPrank prank = Config.MAIN.FISHING_PRANKS.prankList.get().next( level.random );
+
+            // Either prank can't be executed here or there are no valid available pranks
+            if ( prank == null || !prank.canUse( level, player, hook.position() ) ) return;
+
+            final double xDist = player.getX() - hook.getX();
+            final double yDist = player.getY() - hook.getY();
+            final double zDist = player.getZ() - hook.getZ();
+            final double mul = 0.1D;
+
+            Vec3 moveVec = new Vec3(
+                    xDist * mul,
+                    yDist * mul + Math.sqrt( Math.sqrt( xDist * xDist + yDist * yDist + zDist * zDist ) ) * 0.08D,
+                    zDist * mul
+            );
+            // Its prank time!
+            prank.prank( level, player, hook.position(), moveVec );
+            event.setCanceled( true );
         }
     }
     

@@ -1,17 +1,13 @@
 package fathertoast.deadlyworld.common.util;
 
-import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;

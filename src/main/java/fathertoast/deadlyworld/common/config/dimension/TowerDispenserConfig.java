@@ -11,9 +11,8 @@ import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import static fathertoast.deadlyworld.common.util.References.*;
-
-import javax.annotation.Nullable;
+import static fathertoast.deadlyworld.common.util.References.DEPTH_0;
+import static fathertoast.deadlyworld.common.util.References.DEPTH_LAVA;
 
 public class TowerDispenserConfig extends FeatureConfig {
     

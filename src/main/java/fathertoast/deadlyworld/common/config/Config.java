@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.config;
 
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,9 +19,9 @@ import java.util.HashMap;
  * configurable value.
  */
 public class Config {
-    private static final ConfigManager MANAGER = ConfigManager.create( "DeadlyWorld" );
+    private static final ConfigManager MANAGER = ConfigManager.create( "DeadlyWorld", DeadlyWorld.MOD_ID );
     
-    public static final MainConfig MAIN = new MainConfig( MANAGER, "_main" );
+    public static MainConfig MAIN;
     
     public static final BlocksConfig BLOCKS = new BlocksConfig( MANAGER, "blocks" );
     public static final EntitiesConfig ENTITIES = new EntitiesConfig( MANAGER, "entities" );
@@ -55,14 +56,26 @@ public class Config {
         if( DEFAULT_CONFIGS == null )
             throw new IllegalStateException( "Attempted to access dimension configs before any have been loaded." );
     }
-    
-    /** Performs loading of configs in this mod. Called by the mod's constructor. */
-    public static void initialize() {
+
+    /**
+     * Performs loading of configs in this mod with values that are
+     * needed early in the mod loading cycle. Called by the mod's constructor
+     */
+    public static void initializeEarly() {
         MANAGER.freezeFileWatcher = true;
-        
-        MAIN.SPEC.initialize();
+
         BLOCKS.SPEC.initialize();
         ENTITIES.SPEC.initialize();
+
+        MANAGER.freezeFileWatcher = false;
+    }
+    
+    /** Performs loading of configs in this mod. Added to deferred work queue at common setup. */
+    public static void initialize() {
+        MANAGER.freezeFileWatcher = true;
+
+        MAIN = new MainConfig( MANAGER, "_main" );
+        MAIN.SPEC.initialize();
         
         DEFAULT_CONFIGS = new DimensionConfigGroup( MANAGER, Level.OVERWORLD );
         DEFAULT_CONFIGS.initialize();
