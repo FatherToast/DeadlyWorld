@@ -15,6 +15,7 @@ import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.entity.TntRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ItemSupplier;
@@ -76,6 +77,9 @@ public class ClientRegister {
         // Projectiles
         event.registerEntityRenderer( DWEntities.MINI_ARROW.get(), MiniArrowRenderer::new );
         registerThrownRenderer( DWEntities.MICRO_FIREBALL.get(), 0.15F, true, event );
+
+        // Misc
+        event.registerEntityRenderer( DWEntities.YEET_TNT.get(), TntRenderer::new );
     }
     
     private static <T extends Entity & ItemSupplier> void registerThrownRenderer( EntityType<T> entityType, float scale, boolean fullBright, EntityRenderersEvent.RegisterRenderers event ) {

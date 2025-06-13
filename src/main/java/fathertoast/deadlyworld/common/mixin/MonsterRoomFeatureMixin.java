@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.function.Predicate;
 
-// TODO - Re-enable mixin before building; mixins can break hotswap
 @Mixin(MonsterRoomFeature.class)
 public abstract class MonsterRoomFeatureMixin extends Feature<NoneFeatureConfiguration> {
 

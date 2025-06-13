@@ -20,8 +20,10 @@ import java.util.HashMap;
  */
 public class Config {
     private static final ConfigManager MANAGER = ConfigManager.create( "DeadlyWorld", DeadlyWorld.MOD_ID );
-    
+
+    // Initialized later to avoid accessing custom registries too early.
     public static MainConfig MAIN;
+    public static FishingPrankConfig FISHING_PRANKS;
     
     public static final BlocksConfig BLOCKS = new BlocksConfig( MANAGER, "blocks" );
     public static final EntitiesConfig ENTITIES = new EntitiesConfig( MANAGER, "entities" );
@@ -76,11 +78,14 @@ public class Config {
 
         MAIN = new MainConfig( MANAGER, "_main" );
         MAIN.SPEC.initialize();
+        FISHING_PRANKS = new FishingPrankConfig( MANAGER, "fishing_pranks" );
+        FISHING_PRANKS.SPEC.initialize();
         
         DEFAULT_CONFIGS = new DimensionConfigGroup( MANAGER, Level.OVERWORLD );
         DEFAULT_CONFIGS.initialize();
         DIMENSIONS = new HashMap<>();
         DIMENSIONS.put( Level.OVERWORLD, DEFAULT_CONFIGS );
+
         for( String dimension : MAIN.GENERAL.extraDimensions.get() ) {
             ResourceKey<Level> key = ResourceKey.create( Registries.DIMENSION, new ResourceLocation( dimension ) );
             if( DIMENSIONS.containsKey( key ) ) continue;

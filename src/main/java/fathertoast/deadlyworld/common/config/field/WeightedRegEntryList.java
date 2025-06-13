@@ -55,13 +55,6 @@ public class WeightedRegEntryList<T> extends RegistryEntryValueList<T> {
         TOTAL_WEIGHT = weight;
     }
 
-    public ListTag toNBT(ListTag tag ) {
-        for( int i = 0; i < ENTRIES.length; i++ ) {
-            tag.addTag( i, StringTag.valueOf( ENTRIES[i].toString() ) );
-        }
-        return tag;
-    }
-
     @Override
     public WeightedRegEntryList<T> setMultiValue( int numberOfValues ) {
         throw new UnsupportedOperationException( "Weighted registry entry lists must support exactly 1 value." );

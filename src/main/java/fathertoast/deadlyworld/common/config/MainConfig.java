@@ -4,12 +4,6 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.*;
-import fathertoast.crust.api.config.common.value.RegistryValueEntry;
-import fathertoast.deadlyworld.api.DWRegistries;
-import fathertoast.deadlyworld.common.config.field.WeightedRegEntryList;
-import fathertoast.deadlyworld.common.config.field.WeightedRegEntryListField;
-import fathertoast.deadlyworld.common.core.registry.DWFishingPranks;
-import fathertoast.deadlyworld.api.FishingPrank;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -18,7 +12,6 @@ public class MainConfig extends AbstractConfigFile {
     
     public final General GENERAL;
     public final StalactiteOverhaul STALACTITE_OVERHAUL;
-    public final FishingPranks FISHING_PRANKS;
     
     /** Builds the config spec that should be used for this config. */
     MainConfig( ConfigManager manager, String fileName ) {
@@ -28,7 +21,6 @@ public class MainConfig extends AbstractConfigFile {
         
         GENERAL = new General( this );
         STALACTITE_OVERHAUL = new StalactiteOverhaul( this );
-        FISHING_PRANKS = new FishingPranks( this );
     }
     
     public static class General extends AbstractConfigCategory<MainConfig> {
@@ -108,38 +100,6 @@ public class MainConfig extends AbstractConfigFile {
                             "Pointed Dripstone above the player." ) );
 
             SPEC.newLine();
-        }
-    }
-
-    public static class FishingPranks extends AbstractConfigCategory<MainConfig> {
-
-        public final DoubleField prankChance;
-
-        public final WeightedRegEntryListField<FishingPrank> prankList;
-
-
-        FishingPranks( MainConfig parent ) {
-            super( parent, "fishing_pranks",
-                    "Settings related to traps and pranks that may trigger when reeling in your catch." );
-
-            prankChance = SPEC.define( new DoubleField("prank_chance", 0.05, DoubleField.Range.PERCENT,
-                    "The chance for a \"prank\" to trigger when the player is fishing and right-clicks to reel in their catch",
-                    "Setting this to 0.0 effectively disabled fishing pranks." ) );
-
-            SPEC.newLine();
-
-            prankList = SPEC.define( new WeightedRegEntryListField<>( "prank_list", makeDefaultPrankList(),
-                    "Weighted list of fishing pranks to pick from when pranking a player that is fishing.",
-                    "Note that some pranks have custom checks to see if they can be executed under the current circumstances.",
-                    "If the prank cannot be executed, nothing happens.") );
-
-            SPEC.newLine();
-        }
-
-        private WeightedRegEntryList<FishingPrank> makeDefaultPrankList() {
-            return new WeightedRegEntryList<>( DWRegistries.FISHING_PRANKS_REGISTRY,
-                    new RegistryValueEntry<>( DWFishingPranks.SINGLE_TNT.getId(), 10 )
-            );
         }
     }
 }

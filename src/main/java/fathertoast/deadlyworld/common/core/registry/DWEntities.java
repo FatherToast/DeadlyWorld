@@ -61,6 +61,12 @@ public final class DWEntities {
     public static final RegistryObject<EntityType<MicroFireball>> MICRO_FIREBALL = register( "micro_fireball",
             EntityType.Builder.<MicroFireball>of( MicroFireball::new, MobCategory.MISC )
                     .sized( 0.1F, 0.1F ).clientTrackingRange( 4 ).updateInterval( 20 ) );
+
+    // Misc
+    public static final RegistryObject<EntityType<YeetTnt>> YEET_TNT = register( "yeet_tnt",
+            EntityType.Builder.<YeetTnt>of( YeetTnt::new, MobCategory.MISC )
+                    .sized( 1.0F, 1.0F ).clientTrackingRange( 10 ).updateInterval( 10 ) );
+
     
     /** Sets the default attributes for entity types, such as max health, attack damage etc. */
     public static void createAttributes( EntityAttributeCreationEvent event ) {

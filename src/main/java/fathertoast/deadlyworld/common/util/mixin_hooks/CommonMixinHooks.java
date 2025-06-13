@@ -5,10 +5,12 @@ import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
+import fathertoast.deadlyworld.common.entity.YeetTnt;
 import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
@@ -50,5 +52,12 @@ public class CommonMixinHooks {
                 spawner.getSpawnerLogic().enableUseForgeHook( worldgenlevel.getLevel(), blockpos );
         }
         cir.setReturnValue( true );
+    }
+
+    public static double modifyExplosionKnockback( Entity source, double original ) {
+        if ( source instanceof YeetTnt ) {
+            return original * 15.0;
+        }
+        return original;
     }
 }

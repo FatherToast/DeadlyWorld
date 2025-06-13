@@ -8,6 +8,7 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.api.FishingPrank;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
+import fathertoast.deadlyworld.common.entity.YeetTnt;
 import fathertoast.deadlyworld.common.util.MimicHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,6 +33,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -61,8 +63,13 @@ public final class GameEventHandler {
     public static void onLivingDamage( LivingDamageEvent event ) {
         // Too lazy to override the on hit method for the mini arrow entity, setting damage to 1.0 here instead
         // Note, this kinda makes them ignore armor/enchant damage reduction, but still consumes durability
-        if( event.getAmount() > 0.0F && event.getSource().getDirectEntity() instanceof MiniArrow ) {
+        if( event.getSource().getDirectEntity() instanceof MiniArrow && event.getAmount() > 0.0F ) {
             event.setAmount( 1.0F );
+        }
+
+        // Negate all damage from Yeet TNT
+        else if ( event.getSource().getDirectEntity() instanceof YeetTnt ) {
+            event.setAmount( 0.0F );
         }
     }
     
@@ -182,12 +189,12 @@ public final class GameEventHandler {
 
     @SubscribeEvent( priority = EventPriority.LOW )
     public static void onFish( ItemFishedEvent event ) {
-        if ( !event.getEntity().level().isClientSide && Config.MAIN.FISHING_PRANKS.prankChance.rollChance( event.getEntity().getRandom() ) ) {
+        if ( !event.getEntity().level().isClientSide && Config.FISHING_PRANKS.GENERAL.prankChance.rollChance( event.getEntity().getRandom() ) ) {
             ServerPlayer player = (ServerPlayer) event.getEntity();
             ServerLevel level = (ServerLevel) player.level();
             FishingHook hook = event.getHookEntity();
 
-            FishingPrank prank = Config.MAIN.FISHING_PRANKS.prankList.get().next( level.random );
+            FishingPrank prank = Config.FISHING_PRANKS.GENERAL.prankList.get().next( level.random );
 
             // Either prank can't be executed here or there are no valid available pranks
             if ( prank == null || !prank.canUse( level, player, hook.position() ) ) return;
@@ -207,7 +214,7 @@ public final class GameEventHandler {
             event.setCanceled( true );
         }
     }
-    
+
     /**
      * Modified copy-paste of the spawner portion of {@link SpawnEggItem#useOn(UseOnContext)}.
      */
