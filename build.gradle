@@ -17,6 +17,10 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: "org.spongepowered.mixin"
 
+mixin {
+    add sourceSets.main, "deadlyworld.refmap.json"
+}
+
 // The mod's version and id
 version = "${mc_version}-${mod_version}"
 archivesBaseName = 'deadlyworld'
@@ -125,6 +129,10 @@ publishing {
             url "file:///${project.projectDir}/mcmodsrepo"
         }
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
 idea {

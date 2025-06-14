@@ -11,9 +11,9 @@ version = "${file.jarVersion}"
 displayName = "Deadly World"
 modId = "deadlyworld"
 description = '''
-Deadly World is a world generation mod to spice up your underground.
+Deadly World is a world generation mod to spice up the dangers of your travels.
 
-This mod is highly configurable and each feature has at least one config option associated with it.
+This mod is highly configurable and most features has at least one config option associated with it.
 Browsing the configs will provide information on all the mod's features. If more in-depth information is needed, ask in the Discord server.
 
 
