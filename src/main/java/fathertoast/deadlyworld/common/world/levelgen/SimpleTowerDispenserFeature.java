@@ -65,6 +65,8 @@ public class SimpleTowerDispenserFeature extends DeadlyFeature<SimpleTowerDispen
                 || !predicate.test( level.getBlockState( dispenserPos )))
             return false;
 
+        // Don't replace blocks with block entities
+        if ( level.getExistingBlockEntity( dispenserPos ) != null ) return false;
 
         // Place the trap
         BlockState baseBlock = config.baseProvider.getState( random, basePos );

@@ -51,6 +51,8 @@ public class PotionFloorTrapFeature extends DeadlyFeature<PotionFloorTrapFeature
 
         // Make sure the spawner block at least can be placed
         if( !predicate.test( level.getBlockState( below ) ) ) return false;
+        // Don't replace blocks with block entities
+        if ( level.getExistingBlockEntity( below ) != null ) return false;
 
         // Place the trap
         BlockState trapBlock = config.trapProvider.getState( random, below );

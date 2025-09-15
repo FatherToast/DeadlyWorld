@@ -70,7 +70,7 @@ public class BuriedLiquidFeature extends DeadlyFeature<BuriedLiquidFeature.Confi
 
                     for ( Direction dir : Direction.values() ) {
                         BlockPos neighborPos = pos.relative( dir );
-                        if (!level.getBlockState( neighborPos ).isSolidRender( level, neighborPos ) ) {
+                        if ( level.getExistingBlockEntity( neighborPos ) != null || !level.getBlockState( neighborPos ).isSolidRender( level, neighborPos ) ) {
                             canPlace = false;
                             break;
                         }

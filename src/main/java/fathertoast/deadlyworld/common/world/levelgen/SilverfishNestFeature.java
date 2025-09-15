@@ -47,7 +47,9 @@ public class SilverfishNestFeature extends DeadlyFeature<SilverfishNestFeature.C
 
         // Make sure the spawner block at least can be placed
         if( !predicate.test( level.getBlockState( context.origin() ) ) ) return false;
-        
+        // Don't replace blocks with block entities
+        if ( level.getExistingBlockEntity( context.origin() ) != null ) return false;
+
         // Place the spawner
         BlockState spawnerBlock = config.spawnerProvider.getState( random, context.origin() );
         setBlock( level, context.origin(), spawnerBlock );

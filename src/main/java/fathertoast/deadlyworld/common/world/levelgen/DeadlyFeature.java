@@ -6,6 +6,7 @@ import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelWriter;
 import net.minecraft.world.level.WorldGenLevel;
@@ -70,7 +71,7 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
     }
     
     public DeadlyFeature( Codec<FC> codec ) { super( codec ); }
-    
+
     /** Convenience method for using safeSetBlock with a block state provider. */
     protected void safeSetBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random, @Nullable Predicate<BlockState> predicate ) {
         safeSetBlock( level, pos, stateProvider.getState( random, pos ), predicate );

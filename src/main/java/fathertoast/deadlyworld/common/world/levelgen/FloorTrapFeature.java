@@ -47,8 +47,10 @@ public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configurati
         // Offset by one below to place the trap in the ground
         BlockPos below = context.origin().below();
 
-        // Make sure the spawner block at least can be placed
+        // Make sure the trap at least can be placed
         if( !predicate.test( level.getBlockState( below ) ) ) return false;
+        // Don't replace blocks with block entities
+        if ( level.getExistingBlockEntity( below ) != null ) return false;
 
         // Place the trap
         BlockState trapBlock = config.trapProvider.getState( random, below );
