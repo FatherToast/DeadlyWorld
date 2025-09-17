@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.world.logic;
 
 import fathertoast.crust.api.lib.NBTHelper;
-import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;

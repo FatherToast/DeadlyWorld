@@ -2,15 +2,11 @@ package fathertoast.deadlyworld.common.world.levelgen.settings;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;
-import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;

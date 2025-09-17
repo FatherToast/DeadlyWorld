@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

@@ -1,5 +1,7 @@
 package fathertoast.deadlyworld.common.block.tower;
 
+import fathertoast.deadlyworld.common.block.entity.PotionTowerDispenserBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -26,7 +28,7 @@ public enum TowerType {
     
     SIMPLE( "simple", ( dimConfig ) -> dimConfig.TOWER_DISPENSERS.SIMPLE ) {
         @Override
-        public void triggerAttack( DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
+        public void triggerAttack(DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
                                   Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH ) {
             BlockPos pos = towerDispenser.getBlockPos();
             AbstractArrow arrow = new Arrow( towerDispenser.getLevel(), pos.getX(), pos.getY(), pos.getZ() );

@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.settings;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;

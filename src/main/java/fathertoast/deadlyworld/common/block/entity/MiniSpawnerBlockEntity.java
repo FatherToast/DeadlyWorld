@@ -1,6 +1,7 @@
-package fathertoast.deadlyworld.common.block.spawner;
+package fathertoast.deadlyworld.common.block.entity;
 
 import com.google.common.collect.ImmutableMap;
+import fathertoast.deadlyworld.common.block.spawner.MiniSpawnerBlock;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.core.BlockPos;
@@ -40,7 +41,7 @@ public class MiniSpawnerBlockEntity extends DeadlySpawnerBlockEntity {
         super.load( loadTag );
         
         BlockState state = getBlockState();
-        if( state.getBlock() instanceof MiniSpawnerBlock ) {
+        if( state.getBlock() instanceof MiniSpawnerBlock) {
             facing = getBlockState().getValue( BlockStateProperties.FACING );
         }
     }

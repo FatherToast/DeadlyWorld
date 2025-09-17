@@ -1,14 +1,11 @@
 package fathertoast.deadlyworld.common.block.tower;
 
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
-import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.entity.PotionTowerDispenserBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.world.logic.BaseTower;
-import fathertoast.deadlyworld.common.world.logic.BaseTrap;
 import fathertoast.deadlyworld.common.world.logic.PotionTower;
-import fathertoast.deadlyworld.common.world.logic.PotionTrap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.settings;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;

@@ -1,12 +1,11 @@
 package fathertoast.deadlyworld.common.world.logic;
 
 import fathertoast.crust.api.lib.NBTHelper;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
-import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.settings.PotionFloorTrapSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

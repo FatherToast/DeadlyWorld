@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.event;
 
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
-import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.api.FishingPrank;
@@ -33,7 +33,6 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

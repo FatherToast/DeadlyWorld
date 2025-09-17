@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import fathertoast.deadlyworld.client.DWModelLayers;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;

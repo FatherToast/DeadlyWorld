@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.settings;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;

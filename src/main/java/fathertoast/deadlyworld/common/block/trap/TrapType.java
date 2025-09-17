@@ -1,5 +1,7 @@
 package fathertoast.deadlyworld.common.block.trap;
 
+import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;

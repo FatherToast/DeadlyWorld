@@ -2,8 +2,8 @@ package fathertoast.deadlyworld.common.block.spawner;
 
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
+import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
@@ -17,19 +17,16 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,8 +34,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -77,7 +72,7 @@ public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock 
     }
     
     @Nullable
-    public <T extends BlockEntity, V extends DeadlySpawnerBlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockEntityType<T> type, BlockEntityType<V> expectedType ) {
+    public <T extends BlockEntity, V extends DeadlySpawnerBlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockEntityType<T> type, BlockEntityType<V> expectedType ) {
         return createTickerHelper( type, expectedType,
                 level.isClientSide ? DeadlySpawnerBlockEntity::clientTick : DeadlySpawnerBlockEntity::serverTick );
     }

@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.block.spawner;
 
+import fathertoast.deadlyworld.common.block.entity.MiniSpawnerBlockEntity;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.entity.SpawnerMimic;

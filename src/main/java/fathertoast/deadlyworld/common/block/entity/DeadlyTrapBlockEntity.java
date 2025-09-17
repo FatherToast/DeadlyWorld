@@ -1,6 +1,8 @@
-package fathertoast.deadlyworld.common.block.trap;
+package fathertoast.deadlyworld.common.block.entity;
 
 import fathertoast.deadlyworld.common.block.ICamoTrap;
+import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
+import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;

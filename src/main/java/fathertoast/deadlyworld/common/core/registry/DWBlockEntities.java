@@ -1,13 +1,15 @@
 package fathertoast.deadlyworld.common.core.registry;
 
+import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.MiniSpawnerBlockEntity;
 import fathertoast.deadlyworld.common.block.spawner.*;
-import fathertoast.deadlyworld.common.block.tower.PotionTowerDispenserBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.PotionTowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
-import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlockEntity;
-import fathertoast.deadlyworld.common.block.trap.PotionTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;

@@ -1,6 +1,8 @@
-package fathertoast.deadlyworld.common.block.spawner;
+package fathertoast.deadlyworld.common.block.entity;
 
 import fathertoast.crust.api.util.IBlockEntityBBProvider;
+import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.world.logic.ISpawnerObject;

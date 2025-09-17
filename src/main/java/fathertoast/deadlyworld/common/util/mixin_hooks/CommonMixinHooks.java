@@ -1,9 +1,8 @@
 package fathertoast.deadlyworld.common.util.mixin_hooks;
 
-import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
 import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.MonsterRoomFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

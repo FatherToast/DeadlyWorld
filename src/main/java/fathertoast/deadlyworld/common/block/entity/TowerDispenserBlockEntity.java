@@ -1,5 +1,7 @@
-package fathertoast.deadlyworld.common.block.tower;
+package fathertoast.deadlyworld.common.block.entity;
 
+import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
+import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.world.logic.BaseTower;
 import fathertoast.deadlyworld.common.world.logic.ITowerObject;
@@ -9,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TowerDispenserBlockEntity extends BlockEntity implements ITowerObject {
