@@ -1,6 +1,10 @@
-1.20.1-2.0.0
-    - Rewritten for the MC 1.20.1 update.
-    - Now requires Crust; as a result, the configs are way better.
+1.20.1-1.1.1
+    - Added safety check when generating features to prevent replacing blocks with block entities, hopefully preventing a rare crash
+1.20.1-1.1.0
+    - Fixed mixin refmap not being included in the jar (this version is actually playable!)
+1.20.1-1.0.0 (beta)
+    - Rewritten for MC 1.20.1, initial beta
+    - Now requires Crust (makes the configs a lot better amongst other things)
 1.1.1
     - Fixed a crash occurring on dedicated servers.
 1.1.0
