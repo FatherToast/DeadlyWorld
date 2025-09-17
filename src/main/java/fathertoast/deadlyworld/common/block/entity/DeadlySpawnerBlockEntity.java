@@ -1,6 +1,8 @@
 package fathertoast.deadlyworld.common.block.entity;
 
-import fathertoast.crust.api.util.IBlockEntityBBProvider;
+import fathertoast.crust.api.util.BoxShape;
+import fathertoast.crust.api.util.IBlockEntityDebugShapeProvider;
+import fathertoast.crust.api.util.IDebugShape;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
@@ -27,7 +29,7 @@ import java.util.List;
 /**
  * Modified copy-paste of {@link net.minecraft.world.level.block.entity.SpawnerBlockEntity}.
  */
-public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObject, IBlockEntityBBProvider {
+public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObject, IBlockEntityDebugShapeProvider {
     
     private static final Vec3 DEFAULT_EFFECT_OFFSETS = new Vec3( 0.0, 0.2, 0.0 );
     
@@ -111,9 +113,9 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     
     @Nullable
     @Override
-    public List<AABB> getBoundingBoxes() {
+    public List<IDebugShape> getDebugShapes() {
         // Show spawn range (activation range is spherical, so won't work yet)
-        return List.of( new AABB( worldPosition )
-                .inflate( spawnerLogic.getSpawnRange(), 1.0, spawnerLogic.getSpawnRange() ) );
+        return List.of( new BoxShape( new AABB( worldPosition )
+                .inflate( spawnerLogic.getSpawnRange(), 1.0, spawnerLogic.getSpawnRange() ) ) );
     }
 }
