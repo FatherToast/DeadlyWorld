@@ -128,7 +128,7 @@ public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock 
      * @return True if a mimic was successfully spawned.
      */
     protected final boolean createSpawnerMimic( ServerLevel level, BlockPos pos, boolean clearAbove, DeadlySpawnerBlockEntity spawnerBlockEntity ) {
-        if ( !spawnerBlockEntity.spawnerLogic.isMimic() ) return false;
+        if ( !spawnerBlockEntity.getSpawnerLogic().isMimic() ) return false;
 
         SpawnerMimic spawnerMimic = getMimicType().create( level );
 
@@ -139,7 +139,7 @@ public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock 
 
         spawnerMimic.setPos( pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5 );
 
-        ProgressiveDelaySpawner oldSpawner = spawnerBlockEntity.spawnerLogic;
+        ProgressiveDelaySpawner oldSpawner = spawnerBlockEntity.getSpawnerLogic();
         ProgressiveDelaySpawner newSpawner = new ProgressiveDelaySpawner( oldSpawner.getSpawnerType(), spawnerMimic, spawnerMimic );
         newSpawner.load( level, pos, oldSpawner.save( new CompoundTag() ) );
         spawnerMimic.setSpawner( newSpawner );
