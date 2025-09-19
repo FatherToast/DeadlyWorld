@@ -1,16 +1,20 @@
 package fathertoast.deadlyworld.common.world.logic;
 
 import fathertoast.crust.api.lib.NBTHelper;
+import fathertoast.deadlyworld.api.DWRegistries;
+import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
+import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -42,6 +46,7 @@ public abstract class BaseTrap {
     public static final String TAG_MIN_RESET_TIME = "MinResetTime";
     public static final String TAG_MAX_RESET_TIME = "MaxResetTime";
     public static final String TAG_MAX_TRIGGER_DELAY = "MaxTriggerDelay";
+    public static final String TAG_DECOY_TYPE = "DecoyType";
     // Logic tags
     public static final String TAG_TRIGGERS_REMAINING = "TriggersRemaining";
     public static final String TAG_DELAY = "Delay";
@@ -64,9 +69,13 @@ public abstract class BaseTrap {
     protected int maxResetTime;
     /** The maximum ticks this trap takes to trigger after tripping. */
     protected int maxTriggerDelay;
-    
+    /** The decoy type for this trap. Can be null */
+    @Nullable
+    protected DecoyType decoyType;
+
     // Logic
     protected final TrapType trapType;
+
     /** The entity that tripped this trap. Usually (but not always) non-null when triggering and null in all other states. */
     @Nullable
     protected Entity tripEntity;
@@ -136,6 +145,10 @@ public abstract class BaseTrap {
         this.minResetTime = minResetTime;
         this.maxResetTime = maxResetTime;
         this.triggersRemaining = triggersRemaining;
+
+        if ( spawnDecoy ) {
+            this.decoyType = DWDecoyTypes.getRandomType( random );
+        }
     }
 
     protected static boolean roll( RandomSource random, float chance ) { return chance >= 1.0F || chance > 0.0F && random.nextFloat() < chance; }
@@ -241,9 +254,16 @@ public abstract class BaseTrap {
             minResetTime = loadTag.getShort( TAG_MIN_RESET_TIME );
         if( NBTHelper.containsNumber( loadTag, TAG_MAX_RESET_TIME ) )
             maxResetTime = loadTag.getShort( TAG_MAX_RESET_TIME );
-        if( maxResetTime < minResetTime ) maxResetTime = minResetTime;
+        if( maxResetTime < minResetTime )
+            maxResetTime = minResetTime;
         if( NBTHelper.containsNumber( loadTag, TAG_MAX_TRIGGER_DELAY ) )
             maxTriggerDelay = loadTag.getShort( TAG_MAX_TRIGGER_DELAY );
+        if ( NBTHelper.containsString( loadTag, TAG_DECOY_TYPE ) ) {
+            ResourceLocation typeId = ResourceLocation.tryParse( loadTag.getString( TAG_DECOY_TYPE ) );
+
+            if ( typeId != null )
+                decoyType = DWRegistries.DECOY_TYPE_REGISTRY.get().getValue( typeId );
+        }
         
         if( NBTHelper.containsNumber( loadTag, TAG_TRIGGERS_REMAINING ) )
             triggersRemaining = loadTag.getShort( TAG_TRIGGERS_REMAINING );
@@ -257,11 +277,25 @@ public abstract class BaseTrap {
         saveTag.putShort( TAG_MIN_RESET_TIME, (short) minResetTime );
         saveTag.putShort( TAG_MAX_RESET_TIME, (short) maxResetTime );
         saveTag.putShort( TAG_MAX_TRIGGER_DELAY, (short) maxTriggerDelay );
+
+        if ( decoyType != null ) {
+            ResourceLocation typeId = DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType );
+            if ( typeId != null )
+                saveTag.putString( TAG_DECOY_TYPE, typeId.toString() );
+        }
         
         saveTag.putShort( TAG_TRIGGERS_REMAINING, (short) triggersRemaining );
         saveTag.putShort( TAG_DELAY, (short) delay );
         
         return saveTag;
+    }
+
+    public void writeToUpdateTag( CompoundTag updateTag ) {
+        if ( decoyType != null ) {
+            ResourceLocation typeId = DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType );
+            if ( typeId != null )
+                updateTag.putString( TAG_DECOY_TYPE, typeId.toString() );
+        }
     }
     
     public void broadcastEvent( Level level, BlockPos pos, int eventId ) {
@@ -277,4 +311,9 @@ public abstract class BaseTrap {
     
     @Nullable
     public BlockEntity getSpawnerBlockEntity() { return blockEntity; }
+
+    @Nullable
+    public DecoyType getDecoyType() {
+        return decoyType;
+    }
 }

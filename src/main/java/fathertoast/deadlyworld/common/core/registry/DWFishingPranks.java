@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-public class DWFishingPranks {
+public final class DWFishingPranks {
 
     public static final DeferredRegister<FishingPrank> REGISTRY = DeferredRegister.create( DeadlyWorld.resourceLoc( "fishing_pranks" ), DeadlyWorld.MOD_ID );
     static {

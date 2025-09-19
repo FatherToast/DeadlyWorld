@@ -1,5 +1,7 @@
 package fathertoast.deadlyworld.common.block.entity;
 
+import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.api.IDecoyProvider;
 import fathertoast.deadlyworld.common.block.ICamoTrap;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
@@ -20,13 +22,15 @@ import net.minecraft.world.level.block.DropperBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
+public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, IDecoyProvider {
 
     public static final String CAMO_STATE_KEY = "CamoState";
 
@@ -125,6 +129,8 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
         if ( camoState != null ) {
             tag.put( CAMO_STATE_KEY, NbtUtils.writeBlockState( camoState ) );
         }
+        trapLogic.writeToUpdateTag( tag );
+
         return tag;
     }
 
@@ -141,7 +147,13 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
     
     @Override
     public boolean onlyOpCanSetNbt() { return true; }
-    
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        // Return a bigger box to account for decoys
+        return new AABB( getBlockPos() ).inflate( 5.0D );
+    }
+
     @Override // ITrapObject
     public void broadcastEvent( BaseTrap trap, Level level, BlockPos pos, int eventId ) {
         level.blockEvent( pos, level.getBlockState( pos ).getBlock(), eventId, 0 );
@@ -151,4 +163,25 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject {
     public void spawnEffectParticle( BaseTrap trap, Level level, BlockPos pos ) { }
     
     public BaseTrap getTrapLogic() { return trapLogic; }
+
+    @Override
+    @Nullable // IDecoyProvider
+    public Level getProviderLevel() {
+        return getLevel();
+    }
+
+    @Override // IDecoyProvider
+    public BlockPos getProviderPos() {
+        return getBlockPos();
+    }
+
+    @Override // IDecoyProvider
+    public DecoyType getDecoyType() {
+        return getTrapLogic().getDecoyType();
+    }
+
+    @Override // IDecoyProvider
+    public boolean isDecoyActive() {
+        return getTrapLogic().getDecoyType() != null;
+    }
 }

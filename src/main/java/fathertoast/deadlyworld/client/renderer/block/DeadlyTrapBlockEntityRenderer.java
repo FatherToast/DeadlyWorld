@@ -1,7 +1,11 @@
 package fathertoast.deadlyworld.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import fathertoast.deadlyworld.api.DWRegistries;
+import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.api.client.IDecoyRenderer;
 import fathertoast.deadlyworld.client.DWModelLayers;
+import fathertoast.deadlyworld.client.DecoyRendererRegistry;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.client.Minecraft;
@@ -21,6 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.common.extensions.IForgeBlockEntity;
 
 import javax.annotation.Nullable;
 
@@ -29,6 +34,7 @@ public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<Deadly
     private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.resourceLoc("textures/misc/floor_trap_overlay.png" );
 
     private final ModelPart topOverlay;
+
 
     public DeadlyTrapBlockEntityRenderer( BlockEntityRendererProvider.Context renderContext ) {
         ModelPart root = renderContext.bakeLayer( DWModelLayers.DEADLY_TRAP_OVERLAY );
@@ -62,6 +68,23 @@ public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<Deadly
 
         renderTop( poseStack, level, pos, buffer, overlayTexture );
 
+        // Render decoy if trap has a decoy type
+        DecoyType decoyType = deadlyTrap.getDecoyType();
+
+        if ( decoyType != null && deadlyTrap.isDecoyActive() ) {
+            try {
+                IDecoyRenderer decoyRenderer = DecoyRendererRegistry.getRendererForType( deadlyTrap.getDecoyType() );
+
+                if ( decoyRenderer == null ) {
+                    throw new NullPointerException( "Decoy type with ID \" " + DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType )
+                            + " \"is missing decoy renderer!" );
+                }
+                decoyRenderer.render( deadlyTrap, poseStack, buffer, partialTick, packedLight );
+            }
+            catch ( Exception e ) {
+                e.printStackTrace();
+            }
+        }
         poseStack.popPose( );
     }
 

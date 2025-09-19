@@ -14,7 +14,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
-public class DWFieldProviders {
+public final class DWFieldProviders {
     public static final DeferredRegister<HeightProviderType<?>> HEIGHT_REGISTRY = DeferredRegister.create( BuiltInRegistries.HEIGHT_PROVIDER_TYPE.key(), DeadlyWorld.MOD_ID );
     public static final DeferredRegister<IntProviderType<?>> INT_REGISTRY = DeferredRegister.create( BuiltInRegistries.INT_PROVIDER_TYPE.key(), DeadlyWorld.MOD_ID );
     public static final DeferredRegister<FloatProviderType<?>> FLOAT_REGISTRY = DeferredRegister.create( BuiltInRegistries.FLOAT_PROVIDER_TYPE.key(), DeadlyWorld.MOD_ID );

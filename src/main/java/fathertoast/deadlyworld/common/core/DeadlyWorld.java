@@ -167,16 +167,14 @@ public class DeadlyWorld {
     public PacketHandler packetHandler = new PacketHandler();
     
     
-    public DeadlyWorld() {
+    public DeadlyWorld(  ) {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        
-        //        DWDamageSources.init();
+
         packetHandler.registerMessages();
         
         eventBus.addListener( DWEntities::createAttributes );
         eventBus.addListener( this::onCommonSetup );
         
-        //        MinecraftForge.EVENT_BUS.addListener( DWStructures::addDimensionalSpacing );
         DWBlocks.REGISTRY.register( eventBus );
         DWItems.REGISTRY.register( eventBus );
         DWCreativeModeTabs.REGISTRY.register( eventBus );
@@ -186,7 +184,7 @@ public class DeadlyWorld {
         DWLootModifiers.REGISTRY.register( eventBus );
         DWBiomeModifiers.REGISTRY.register( eventBus );
         DWFishingPranks.REGISTRY.register( eventBus );
-        //        DWBiomes.REGISTRY.register( eventBus );
+        DWDecoyTypes.REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
         
         Config.initializeEarly();
@@ -204,7 +202,7 @@ public class DeadlyWorld {
     }
     
     /** @return A ResourceLocation with the mod's modid. */
-    public static ResourceLocation resourceLoc( String path ) { return new ResourceLocation( MOD_ID, path ); }
+    public static ResourceLocation resourceLoc( String path ) { return ResourceLocation.fromNamespaceAndPath( MOD_ID, path ); }
     
     public static String logPrefix( Class<?> clazz ) {
         return "[" + MOD_ID + "/" + clazz.getSimpleName() + "] ";

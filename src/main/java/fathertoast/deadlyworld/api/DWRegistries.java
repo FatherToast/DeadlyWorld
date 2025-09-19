@@ -13,5 +13,12 @@ public final class DWRegistries {
      */
     public static Supplier<IForgeRegistry<FishingPrank>> FISHING_PRANKS_REGISTRY;
 
+    /**
+     * The forge registry for decoy types.
+     */
+    public static Supplier<IForgeRegistry<DecoyType>> DECOY_TYPE_REGISTRY;
+
+
+
     private DWRegistries() {}
 }

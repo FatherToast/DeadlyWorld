@@ -2,6 +2,8 @@ package fathertoast.deadlyworld.client;
 
 import fathertoast.deadlyworld.client.renderer.block.DeadlySpawnerBlockEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.block.DeadlyTrapBlockEntityRenderer;
+import fathertoast.deadlyworld.client.renderer.decoy.SimpleBlockDecoyRenderer;
+import fathertoast.deadlyworld.client.renderer.decoy.SimpleEntityDecoyRenderer;
 import fathertoast.deadlyworld.client.renderer.entity.*;
 import fathertoast.deadlyworld.client.renderer.entity.layer.ChestMimicChestLayer;
 import fathertoast.deadlyworld.client.renderer.entity.model.ChestMimicModel;
@@ -9,10 +11,7 @@ import fathertoast.deadlyworld.client.renderer.entity.model.JukeboxMimicModel;
 import fathertoast.deadlyworld.client.renderer.entity.model.MiniSpawnerMimicModel;
 import fathertoast.deadlyworld.client.renderer.entity.model.SpawnerMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
-import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
-import fathertoast.deadlyworld.common.core.registry.DWEntities;
-import fathertoast.deadlyworld.common.core.registry.DWItems;
+import fathertoast.deadlyworld.common.core.registry.*;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.TntRenderer;
@@ -21,14 +20,18 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
+import org.checkerframework.checker.signature.qual.SignatureBottom;
 
 @Mod.EventBusSubscriber( value = Dist.CLIENT, modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD )
 public class ClientRegister {
@@ -36,9 +39,20 @@ public class ClientRegister {
     @SubscribeEvent
     public static void onClientSetup( FMLClientSetupEvent event ) {
         MinecraftForge.EVENT_BUS.register( new ClientEvents() );
-        
+
+        DecoyRendererRegistry.registerDefaults();
         registerBlockEntityRenderers();
         ChestMimicChestLayer.validateChestTextures();
+    }
+
+    @SubscribeEvent
+    public static void onAddLayers( EntityRenderersEvent.AddLayers event ) {
+        // Sneak in decoy render setup here after entity renderers have been setup
+        DecoyRendererRegistry.setupDecoyRenderers();
+    }
+
+    @SubscribeEvent
+    public static void onRegisterReloadListeners( RegisterClientReloadListenersEvent event ) {
     }
 
     private static void registerBlockEntityRenderers() {
