@@ -32,8 +32,15 @@ public class DecoyRendererRegistry {
     /** Registers decoy renderer factories added by Deadly World. */
     protected static void registerDefaults() {
         register( DWDecoyTypes.CAKE.get(), () -> new SimpleBlockDecoyRenderer( Blocks.CAKE ) );
+        register( DWDecoyTypes.PIG.get(), () -> new SimpleEntityDecoyRenderer( EntityType.PIG ) );
         register( DWDecoyTypes.ZOMBIE.get(), () -> new SimpleEntityDecoyRenderer( EntityType.ZOMBIE ) );
         register( DWDecoyTypes.CREEPER.get(), () -> new SimpleEntityDecoyRenderer( EntityType.CREEPER ) );
+        register( DWDecoyTypes.SKELETON.get(), () -> new SimpleEntityDecoyRenderer( EntityType.SKELETON ) );
+        register( DWDecoyTypes.SPIDER.get(), () -> new SimpleEntityDecoyRenderer( EntityType.SPIDER ) );
+        register( DWDecoyTypes.SLIME.get(), () -> new SimpleEntityDecoyRenderer( EntityType.SLIME ) );
+        register( DWDecoyTypes.ZOMBIFIED_PIGLIN.get(), () -> new SimpleEntityDecoyRenderer( EntityType.ZOMBIFIED_PIGLIN ) );
+        register( DWDecoyTypes.WITHER_SKELETON.get(), () -> new SimpleEntityDecoyRenderer( EntityType.WITHER_SKELETON ) );
+        register( DWDecoyTypes.MAGMA_CUBE.get(), () -> new SimpleEntityDecoyRenderer( EntityType.MAGMA_CUBE ) );
     }
 
 

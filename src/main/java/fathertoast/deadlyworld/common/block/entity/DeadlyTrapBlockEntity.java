@@ -154,6 +154,8 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
         return new AABB( getBlockPos() ).inflate( 5.0D );
     }
 
+    public BaseTrap getTrapLogic() { return trapLogic; }
+
     @Override // ITrapObject
     public void broadcastEvent( BaseTrap trap, Level level, BlockPos pos, int eventId ) {
         level.blockEvent( pos, level.getBlockState( pos ).getBlock(), eventId, 0 );
@@ -161,8 +163,6 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     
     @Override // ITrapObject
     public void spawnEffectParticle( BaseTrap trap, Level level, BlockPos pos ) { }
-    
-    public BaseTrap getTrapLogic() { return trapLogic; }
 
     @Override
     @Nullable // IDecoyProvider
@@ -182,6 +182,6 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
 
     @Override // IDecoyProvider
     public boolean isDecoyActive() {
-        return getTrapLogic().getDecoyType() != null;
+        return trapLogic.getDecoyType() != null;
     }
 }

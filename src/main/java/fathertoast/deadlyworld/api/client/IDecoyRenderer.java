@@ -14,6 +14,7 @@ public interface IDecoyRenderer {
     /** Renders the decoy. */
     void render(IDecoyProvider decoyProvider, PoseStack poseStack, MultiBufferSource bufferSource, float partialTick, int packetLight );
 
+    /** Helper method for getting the packed light at the given block position. */
     default int getPackedLightCoords( Level level, BlockPos pos ) {
         int blockLight = level.getBrightness( LightLayer.BLOCK, pos );
         int skyLight = level.getBrightness( LightLayer.SKY, pos );

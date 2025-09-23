@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.client.renderer.decoy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import fathertoast.deadlyworld.api.IDecoyProvider;
 import fathertoast.deadlyworld.api.client.IDecoyRenderer;
 import net.minecraft.client.Minecraft;
@@ -44,16 +45,14 @@ public class SimpleEntityDecoyRenderer implements IDecoyRenderer {
         poseStack.pushPose();
         poseStack.translate( 0.5D, 1.0D, 0.5D );
 
+        // Apply "random" rotation from pos hash code
+        final float rot = Math.abs( pos.hashCode() ) % 360.0F;
+        poseStack.mulPose( Axis.YP.rotationDegrees( rot ) );
+
         int packedLightAbove = getPackedLightCoords( level, pos.above() );
-        entityRenderer.render( displayEntity, 0.0D, 0.0D, 0.0D, 0.0F, partialTick, poseStack, bufferSource, packedLightAbove );
+        // We avoid passing on partialTick here to avoid spastic animations
+        entityRenderer.render( displayEntity, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, poseStack, bufferSource, packedLightAbove );
 
         poseStack.popPose();
-    }
-
-    public final int getPackedLightCoords( Level level, BlockPos pos ) {
-        int blockLight = level.getBrightness( LightLayer.BLOCK, pos );
-        int skyLight = level.getBrightness( LightLayer.SKY, pos );
-
-        return LightTexture.pack( blockLight, skyLight );
     }
 }

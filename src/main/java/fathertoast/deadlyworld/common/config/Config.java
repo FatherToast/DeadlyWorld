@@ -87,7 +87,7 @@ public class Config {
         DIMENSIONS.put( Level.OVERWORLD, DEFAULT_CONFIGS );
 
         for( String dimension : MAIN.GENERAL.extraDimensions.get() ) {
-            ResourceKey<Level> key = ResourceKey.create( Registries.DIMENSION, new ResourceLocation( dimension ) );
+            ResourceKey<Level> key = ResourceKey.create( Registries.DIMENSION, ResourceLocation.parse( dimension ) );
             if( DIMENSIONS.containsKey( key ) ) continue;
             DimensionConfigGroup dimConfigs = new DimensionConfigGroup( MANAGER, key );
             dimConfigs.initialize();

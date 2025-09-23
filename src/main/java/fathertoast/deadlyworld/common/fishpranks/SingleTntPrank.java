@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.common.fishpranks;
 
-import fathertoast.deadlyworld.api.FishingPrank;
+import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
 import net.minecraft.server.level.ServerLevel;
@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.phys.Vec3;
 
-public class SingleTntPrank implements FishingPrank {
+public class SingleTntPrank implements IFishingPrank {
 
     @Override
     public void prank( ServerLevel level, ServerPlayer player, Vec3 hookPos, Vec3 moveVec ) {

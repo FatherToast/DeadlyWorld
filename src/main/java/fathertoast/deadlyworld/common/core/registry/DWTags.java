@@ -1,5 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
+import fathertoast.deadlyworld.api.DWRegistries;
+import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -42,7 +44,18 @@ public final class DWTags {
         }
         
         private static TagKey<EntityType<?>> sharedTag( String name ) {
-            return TagKey.create( Registries.ENTITY_TYPE, new ResourceLocation( "forge", name ) );
+            return TagKey.create( Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath( "forge", name ) );
+        }
+    }
+
+    public static final class DecoyTypes {
+
+        public static final TagKey<DecoyType> OVERWORLD = tag( "overworld" );
+        public static final TagKey<DecoyType> THE_NETHER = tag( "nether" );
+        public static final TagKey<DecoyType> ANY_DIMENSION = tag( "any_dimension" );
+
+        private static TagKey<DecoyType> tag( String name ) {
+            return DWDecoyTypes.REGISTRY.createTagKey( DeadlyWorld.resourceLoc( name ) );
         }
     }
     
@@ -51,14 +64,13 @@ public final class DWTags {
         public static final TagKey<PlacedFeature> THE_NETHER = tag( "nether" );
         public static final TagKey<PlacedFeature> ANY_DIMENSION = tag( "any_dimension" );
         
-        //        public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
-        //        public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );
-        
+        // public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
+        // public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );
+        // public static final TagKey<PlacedFeature> TOWER_DISPENSERS = tag( "tower_dispensers" );
+
         private static TagKey<PlacedFeature> tag( String name ) {
             return TagKey.create( Registries.PLACED_FEATURE, DeadlyWorld.resourceLoc( name ) );
         }
-        
-        private static void initialize() { }
     }
     
     public record BlockWithItem(TagKey<Block> blockTag, TagKey<Item> itemTag) implements Supplier<TagKey<Block>> {

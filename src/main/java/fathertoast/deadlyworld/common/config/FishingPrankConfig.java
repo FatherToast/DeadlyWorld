@@ -9,7 +9,7 @@ import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.crust.api.config.common.value.EntityEntry;
 import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.deadlyworld.api.DWRegistries;
-import fathertoast.deadlyworld.api.FishingPrank;
+import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.config.field.WeightedRegEntryList;
@@ -45,7 +45,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
 
         public final DoubleField prankChance;
 
-        public final WeightedRegEntryListField<FishingPrank> prankList;
+        public final WeightedRegEntryListField<IFishingPrank> prankList;
 
 
         General( FishingPrankConfig parent ) {
@@ -66,7 +66,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
             SPEC.newLine();
         }
 
-        private WeightedRegEntryList<FishingPrank> makeDefaultPrankList() {
+        private WeightedRegEntryList<IFishingPrank> makeDefaultPrankList() {
             return new WeightedRegEntryList<>( DWRegistries.FISHING_PRANKS_REGISTRY,
                     new RegistryValueEntry<>( DWFishingPranks.SINGLE_TNT.getId(), 100 ),
                     new RegistryValueEntry<>( DWFishingPranks.MOB.getId(), 150 )
@@ -77,7 +77,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
 
     private static class FishingPrankCategory extends AbstractConfigCategory<FishingPrankConfig> {
 
-        public FishingPrankCategory( FishingPrankConfig parent, RegistryObject<FishingPrank> regObj ) {
+        public FishingPrankCategory( FishingPrankConfig parent, RegistryObject<IFishingPrank> regObj ) {
             super(parent, regObj.getId().getPath(),
                     "Properties for the " + regObj.getId().toString() + " fishing prank." );
         }
@@ -90,7 +90,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
         public final BooleanField yeet;
 
 
-        SingleTnt( FishingPrankConfig parent, RegistryObject<FishingPrank> regObj ) {
+        SingleTnt( FishingPrankConfig parent, RegistryObject<IFishingPrank> regObj ) {
             super( parent, regObj );
 
             fuse = SPEC.define( new IntField("fuse", 60, IntField.Range.POSITIVE,
@@ -108,7 +108,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
         public final WeightedEntityListField mobList;
 
 
-        Mob( FishingPrankConfig parent, RegistryObject<FishingPrank> regObj ) {
+        Mob( FishingPrankConfig parent, RegistryObject<IFishingPrank> regObj ) {
             super( parent, regObj );
 
             mobList = SPEC.define( new WeightedEntityListField("mob_list", makeDefaultMobs(),

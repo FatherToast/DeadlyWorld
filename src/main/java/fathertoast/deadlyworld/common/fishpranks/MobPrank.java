@@ -1,7 +1,6 @@
 package fathertoast.deadlyworld.common.fishpranks;
 
-import fathertoast.deadlyworld.api.FishingPrank;
-import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +17,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import static fathertoast.deadlyworld.common.config.Config.FISHING_PRANKS;
 
-public class MobPrank implements FishingPrank {
+public class MobPrank implements IFishingPrank {
 
     @Override
     public void prank( ServerLevel level, ServerPlayer player, Vec3 hookPos, Vec3 moveVec ) {

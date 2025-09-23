@@ -11,7 +11,7 @@ public final class DWRegistries {
      * Note that any new pranks registered will not be picked in-game
      * unless a new entry is added in the Deadly World fishing pranks config.
      */
-    public static Supplier<IForgeRegistry<FishingPrank>> FISHING_PRANKS_REGISTRY;
+    public static Supplier<IForgeRegistry<IFishingPrank>> FISHING_PRANKS_REGISTRY;
 
     /**
      * The forge registry for decoy types.

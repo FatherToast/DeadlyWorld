@@ -8,12 +8,14 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
+import fathertoast.deadlyworld.common.core.registry.DWTags;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.registries.tags.ITag;
 
 import javax.annotation.Nullable;
 
@@ -147,7 +150,25 @@ public abstract class BaseTrap {
         this.triggersRemaining = triggersRemaining;
 
         if ( spawnDecoy ) {
-            this.decoyType = DWDecoyTypes.getRandomType( random );
+            // Pick a decoy suitable for the dimension we are in if level is not null
+            if ( level != null ) {
+                ResourceKey<Level> dimension = level.dimension();
+                ITag<DecoyType> tag;
+
+                if ( dimension.equals( Level.OVERWORLD ) ) {
+                    tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.OVERWORLD );
+                }
+                else if ( dimension.equals( Level.NETHER ) ) {
+                    tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.THE_NETHER );
+                }
+                else {
+                    tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.ANY_DIMENSION );
+                }
+                this.decoyType = tag.getRandomElement( random ).orElse( DWDecoyTypes.PIG.get() );
+            }
+            else {
+                this.decoyType = DWDecoyTypes.getRandomType(random);
+            }
         }
     }
 
