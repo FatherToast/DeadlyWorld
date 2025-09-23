@@ -1,12 +1,12 @@
 package fathertoast.deadlyworld.common.event;
 
 
+import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
-import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.api.FishingPrank;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
 import fathertoast.deadlyworld.common.util.MimicHelper;
@@ -23,7 +23,9 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -136,9 +138,11 @@ public final class GameEventHandler {
         if( !event.isCanceled() && event.getLevel() instanceof ServerLevel level ) {
             Player player = event.getEntity();
             ItemStack itemStack = player.getItemInHand( event.getHand() );
+
             if( itemStack.getItem() instanceof SpawnEggItem ) {
                 BlockPos pos = event.getPos();
                 BlockState blockState = level.getBlockState( pos );
+
                 if( blockState.getBlock() instanceof DeadlySpawnerBlock && level.getBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity blockEntity ) {
                     spawnEggUseOnDWSpawner( level, player, pos, itemStack, blockState, blockEntity );
                     // Cancel the event; we've fully handled the interaction
@@ -193,7 +197,7 @@ public final class GameEventHandler {
             ServerLevel level = (ServerLevel) player.level();
             FishingHook hook = event.getHookEntity();
 
-            FishingPrank prank = Config.FISHING_PRANKS.GENERAL.prankList.get().next( level.random );
+            IFishingPrank prank = Config.FISHING_PRANKS.GENERAL.prankList.get().next( level.random );
 
             // Either prank can't be executed here or there are no valid available pranks
             if ( prank == null || !prank.canUse( level, player, hook.position() ) ) return;

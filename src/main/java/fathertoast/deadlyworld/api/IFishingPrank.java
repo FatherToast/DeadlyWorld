@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
  * To register a new prank, create a deferred register using
  * {@link DWRegistries#FISHING_PRANKS_REGISTRY}
  */
-public interface FishingPrank {
+public interface IFishingPrank {
 
     /**
      * @param level The world we live in. Absolutely mad.
