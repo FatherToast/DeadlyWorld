@@ -4,8 +4,10 @@ import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
+import fathertoast.deadlyworld.common.core.registry.DWFluids;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
 import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -57,5 +60,10 @@ public class CommonMixinHooks {
             return original * 15.0;
         }
         return original;
+    }
+
+    public static void onIsInLava( boolean firstTick, Object2DoubleMap<FluidType> forgeFluidTypeHeight, CallbackInfoReturnable<Boolean> cir ) {
+        if ( forgeFluidTypeHeight.getDouble( DWFluids.RUNNY_LAVA_TYPE.get() ) > 0.0 )
+            cir.setReturnValue( !firstTick );
     }
 }

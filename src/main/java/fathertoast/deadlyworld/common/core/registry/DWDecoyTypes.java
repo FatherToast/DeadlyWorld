@@ -39,6 +39,10 @@ public final class DWDecoyTypes {
     public static final RegistryObject<DecoyType> MAGMA_CUBE = register( "magma_cube", THE_NETHER );
 
 
+    /**
+     *  Registers a decoy type and associates it with
+     *  the given tags for data gen.
+     */
     @SafeVarargs
     private static RegistryObject<DecoyType> register( String name, TagKey<DecoyType>... tags ) {
         RegistryObject<DecoyType> regObj = REGISTRY.register( name, DecoyType::new );
@@ -52,9 +56,15 @@ public final class DWDecoyTypes {
         return regObj;
     }
 
+    /** @return A random decoy type from the registry. */
     @Nullable
     public static DecoyType getRandomType( RandomSource random ) {
         DecoyType[] types = DWRegistries.DECOY_TYPE_REGISTRY.get().getValues().toArray( new DecoyType[0] );
+
+        if ( types.length < 2 ) {
+            DeadlyWorld.LOG.error( "Abnormal state for decoy type registry. Cannot pick a random type when registry contains less than 2 entries!" );
+            return null;
+        }
         return types[ random.nextInt( types.length ) ];
     }
 }

@@ -8,6 +8,7 @@ import fathertoast.crust.api.config.common.field.RegistryEntryValueListField;
 import fathertoast.crust.api.config.common.value.RegistryEntryValueList;
 import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -72,12 +73,12 @@ public class EnvHazardConfig extends AbstractConfigFile {
         private List<RegistryValueEntry<Block>> defaultBuriedLiquids(  ) {
             if ( Level.NETHER.equals( PARENT.DIMENSION_CONFIGS.DIMENSION ) ) {
                 return List.of(
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
+                    new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
                 );
             }
             return List.of(
                     new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_0, 20 ),
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_VOID, DEPTH_3, 10 )
+                    new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_VOID, DEPTH_3, 10 )
             );
         }
     }

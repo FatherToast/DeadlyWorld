@@ -11,6 +11,7 @@ import fathertoast.deadlyworld.datagen.worldgen.DWConfiguredFeatureProvider;
 import fathertoast.deadlyworld.datagen.worldgen.DWPlacedFeatureProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -63,6 +64,7 @@ public class DataGatherer {
             generator.addProvider( true, new DWEntityTypeTagsProvider( packOutput, lookupProvider, fileHelper ) );
             generator.addProvider( true, new DWFeatureTagsProvider( packOutput, builtInProvider.getRegistryProvider(), fileHelper ) );
             generator.addProvider( true, new DWDecoyTagsProvider( packOutput, builtInProvider.getRegistryProvider(), fileHelper ) );
+            generator.addProvider( true, new DWFluidTagsProvider( packOutput, lookupProvider, fileHelper ) );
         }
     }
 

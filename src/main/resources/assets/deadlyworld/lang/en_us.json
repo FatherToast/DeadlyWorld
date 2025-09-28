@@ -10,6 +10,7 @@
   "block.deadlyworld.nest_deadly_spawner": "Silverfish Nest",
   "block.deadlyworld.dungeon_deadly_spawner": "Dungeon Monster Spawner",
   "block.deadlyworld.mini_deadly_spawner": "Mini Monster Spawner",
+  "block.deadlyworld.runny_lava": "Runny Lava",
 
   "block.deadlyworld.tnt_deadly_trap": "Exploding Floor Trap",
   "block.deadlyworld.tnt_mob_deadly_trap": "Exploding Monster Floor Trap",
@@ -36,6 +37,7 @@
   "item.deadlyworld.device_blueprint": "Deadly Device Blueprint",
   "item.deadlyworld.event_item": "Deadly World Event Item",
   "item.deadlyworld.mimic_core": "Mimic Core",
+  "item.deadlyworld.runny_lava_bucket": "Runny Lava Bucket",
 
   "entity.deadlyworld.chest_mimic": "Mimic",
   "entity.deadlyworld.jukebox_mimic": "Mimic",

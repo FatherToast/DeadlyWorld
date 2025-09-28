@@ -27,7 +27,7 @@ Discussion: https://discord.gg/GFTzTdX/
 [[dependencies.deadlyworld]]
 modId = "forge"
 mandatory = true
-versionRange = "[47,)"
+versionRange = "[47.4,)"
 ordering = "NONE"
 side = "BOTH"
 

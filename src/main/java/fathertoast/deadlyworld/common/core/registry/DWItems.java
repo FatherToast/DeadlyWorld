@@ -1,17 +1,17 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.item.RunnyLavaBucketItem;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SimpleFoiledItem;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -22,7 +22,9 @@ public final class DWItems {
     public static final RegistryObject<Item> MIMIC_CORE = register("mimic_core", () -> new SimpleFoiledItem( new Item.Properties()
             .stacksTo( 1 )
             .rarity( Rarity.UNCOMMON ) ) );
-    
+
+    public static final RegistryObject<BucketItem> RUNNY_LAVA_BUCKET = register( "runny_lava_bucket", () -> new RunnyLavaBucketItem( DWFluids.RUNNY_LAVA_SOURCE, new Item.Properties().stacksTo( 1 ) ) );
+
     // Spawn eggs
     public static final RegistryObject<ForgeSpawnEggItem> CHEST_MIMIC_SPAWN_EGG = registerSpawnEgg(
             DWEntities.CHEST_MIMIC, 0xAB792D, 0x443C30 );

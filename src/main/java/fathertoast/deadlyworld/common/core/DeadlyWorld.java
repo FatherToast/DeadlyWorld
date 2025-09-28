@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.core;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.*;
 import fathertoast.deadlyworld.common.network.PacketHandler;
+import fathertoast.deadlyworld.common.util.DWDispenserBehavior;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.DungeonHooks;
@@ -167,8 +168,8 @@ public class DeadlyWorld {
     public PacketHandler packetHandler = new PacketHandler();
     
     
-    public DeadlyWorld(  ) {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public DeadlyWorld( FMLJavaModLoadingContext context ) {
+        IEventBus eventBus = context.getModEventBus();
 
         packetHandler.registerMessages();
         
@@ -185,6 +186,8 @@ public class DeadlyWorld {
         DWBiomeModifiers.REGISTRY.register( eventBus );
         DWFishingPranks.REGISTRY.register( eventBus );
         DWDecoyTypes.REGISTRY.register( eventBus );
+        DWFluids.REGISTRY.register( eventBus );
+        DWFluids.TYPE_REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
         
         Config.initializeEarly();
@@ -198,7 +201,10 @@ public class DeadlyWorld {
     }
     
     public void onCommonSetup( FMLCommonSetupEvent event ) {
-
+        event.enqueueWork( () -> {
+            DWFluids.registerFluidInteractions();
+            DWDispenserBehavior.register();
+        });
     }
     
     /** @return A ResourceLocation with the mod's modid. */

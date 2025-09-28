@@ -1,5 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
+import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
+import fathertoast.deadlyworld.common.block.fluid.RunnyLavaFluid;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
@@ -8,6 +10,12 @@ import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -19,14 +27,16 @@ import java.util.function.Supplier;
 
 public final class DWBlocks {
     public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create( ForgeRegistries.BLOCKS, DeadlyWorld.MOD_ID );
-    
+
     public static final List<RegistryObject<DeadlySpawnerBlock>> SPAWNERS;
     public static final List<RegistryObject<DeadlyTrapBlock>> TRAPS;
     public static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
     
     //    public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
     //    public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock( "sewer_bedrock", () -> new Block( AbstractBlock.Properties.of( Material.STONE, MaterialColor.COLOR_GRAY ).strength( -1.0F, 3600000.0F ).noDrops().sound( SoundType.STONE ) ), ItemGroup.TAB_BUILDING_BLOCKS );
-    
+    public static final RegistryObject<LiquidBlock> RUNNY_LAVA = registerBlockNoItem( "runny_lava", () -> new RunnyLavaBlock( DWFluids.RUNNY_LAVA_SOURCE ) );
+
+
     static {
         final ArrayList<RegistryObject<DeadlySpawnerBlock>> spawners = new ArrayList<>();
         for( SpawnerType type : SpawnerType.values() ) {
