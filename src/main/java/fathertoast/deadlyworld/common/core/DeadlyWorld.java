@@ -32,18 +32,17 @@ public class DeadlyWorld {
      *  o general
      *      - dimension-based configs
      *      o biome-based configs
-     *      - F3+B bounding box renderer for tile entities
      *  o blocks
      *      - configurable physical properties
      *      o procedurally generated silverfish blocks
      *      - deadly spawner
      *      - mini spawner
-     *      o floor trap
-     *      o tower dispenser
+     *      - floor trap
+     *      - tower dispenser
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
-     *      ? fast flowing lava
+     *      - fast flowing lava
      *      ? cake
      *  o items
      *      - spawn eggs
@@ -58,16 +57,16 @@ public class DeadlyWorld {
      *      - mini spider
      *      - micro ghast
      *          - micro fireball
-     *      o mimic chest
-     *      + mimic spawner
+     *      - mimic chest
+     *      - mimic spawner
      *      + mimic cake
      *      ? dispenser fish hook
      *      ? water monsters
      *      ? lava monsters
      *  o vein world gen
      *      o silverfish
-     *      o lava
-     *      o water
+     *      - fast lava (single block vein)
+     *      - water (single block vein)
      *      o sand
      *      o vanilla vein disables
      *      o vanilla vein replacements
@@ -96,15 +95,15 @@ public class DeadlyWorld {
      *      - brutal
      *      - silverfish nest
      *      - mini
-     *      + mimic
-     *      o dungeon-only version
+     *      - mimic
+     *      - dungeon-only version
      *      ? hanging from chain version (in large caves or perhaps elsewhere with high ceilings)
-     *  o tower world gen
-     *      o arrow
-     *      o fire arrow
-     *      o gatling arrow
-     *      o potion
-     *      o fireball
+     *  - tower world gen
+     *      - arrow
+     *      - fire arrow
+     *      - gatling arrow
+     *      - potion
+     *      - fireball
      *      + mini
      *      ? allow towers to generate on ceilings and/or walls
      *  ? combo world gen
@@ -117,10 +116,10 @@ public class DeadlyWorld {
      *      ? fire immune spawner + fire floor trap
      *      ? chicken spawner + egg tower
      *  o floor trap world gen
-     *      o tnt
-     *      o tnt mob
-     *      o potion
-     *      o fire (from pre-1.12.2 version)
+     *      - tnt
+     *      - tnt mob
+     *      - potion
+     *      - fire (from pre-1.12.2 version)
      *      + chicken
      *      + unique/boss mob
      *      ? ambush
