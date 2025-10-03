@@ -91,7 +91,7 @@ public class DWFluids {
 
     // Note: fluids require properties, and the properties require the fluids. Lol!
     static {
-        ForgeFlowingFluid.Properties runnyLavaProperties = new ForgeFlowingFluid.Properties( ForgeMod.LAVA_TYPE, RUNNY_LAVA_SOURCE, RUNNY_LAVA_FLOWING )
+        ForgeFlowingFluid.Properties runnyLavaProperties = new ForgeFlowingFluid.Properties( RUNNY_LAVA_TYPE, RUNNY_LAVA_SOURCE, RUNNY_LAVA_FLOWING )
                 .block( DWBlocks.RUNNY_LAVA )
                 .bucket( DWItems.RUNNY_LAVA_BUCKET )
                 .tickRate( 4 )
