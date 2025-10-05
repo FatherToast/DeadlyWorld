@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
 import fathertoast.deadlyworld.common.block.fluid.RunnyLavaFluid;
+import fathertoast.deadlyworld.common.block.misc.MiniChestBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
@@ -9,10 +10,17 @@ import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.item.MiniChestBlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -34,6 +42,11 @@ public final class DWBlocks {
     
     //    public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
     //    public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock( "sewer_bedrock", () -> new Block( AbstractBlock.Properties.of( Material.STONE, MaterialColor.COLOR_GRAY ).strength( -1.0F, 3600000.0F ).noDrops().sound( SoundType.STONE ) ), ItemGroup.TAB_BUILDING_BLOCKS );
+
+    public static final RegistryObject<Block> MINI_CHEST = registerBlock( "mini_chest",
+            () -> new MiniChestBlock( BlockBehaviour.Properties.of().mapColor( MapColor.WOOD ).instrument( NoteBlockInstrument.BASS ).strength( 2.5F ).sound( SoundType.WOOD ).ignitedByLava() ),
+            () -> new MiniChestBlockItem( DWBlocks.MINI_CHEST.get() ) );
+
     public static final RegistryObject<LiquidBlock> RUNNY_LAVA = registerBlockNoItem( "runny_lava", () -> new RunnyLavaBlock( DWFluids.RUNNY_LAVA_SOURCE ) );
 
 
@@ -73,6 +86,13 @@ public final class DWBlocks {
     private static <T extends Block> RegistryObject<T> registerBlock( String name, Supplier<T> blockSupplier ) {
         RegistryObject<T> block = registerBlockNoItem( name, blockSupplier );
         DWItems.registerBlockItem( name, block );
+        return block;
+    }
+
+    /** Registers a block with the given item. */
+    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> blockSupplier, Supplier<Item> blockItemSupplier ) {
+        RegistryObject<T> block = registerBlockNoItem( name, blockSupplier );
+        DWItems.register( name, blockItemSupplier );
         return block;
     }
     

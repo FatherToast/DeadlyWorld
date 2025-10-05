@@ -20,7 +20,6 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -231,7 +230,6 @@ public abstract class BaseTower {
         level.playSound( null, pos, DWSoundEvents.TOWER_DISPENSER_SHOOT.get(), SoundSource.BLOCKS, 1.0F, 1.0F );
     }
 
-    @Nonnull
     private static Vec3 getOffset( Vec3 vecToTarget, double distanceH ) {
         Vec3 offset;
         if( Math.abs( vecToTarget.x ) < Math.abs( vecToTarget.z ) ) {

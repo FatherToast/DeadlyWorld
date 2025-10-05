@@ -5,6 +5,20 @@
       "minecraft:random/bow"
     ]
   },
+  "block.mini_chest.open": {
+    "subtitle": "sound_event.deadlyworld.subtitle.mini_chest.open",
+    "sounds": [
+      "minecraft:block/chest/open"
+    ]
+  },
+  "block.mini_chest.close": {
+    "subtitle": "sound_event.deadlyworld.subtitle.mini_chest.close",
+    "sounds": [
+      "minecraft:block/chest/close1",
+      "minecraft:block/chest/close2",
+      "minecraft:block/chest/close3"
+    ]
+  },
   "entity.mimic.appear": {
     "subtitle": "sound_event.deadlyworld.subtitle.mimic.appear",
     "sounds": [

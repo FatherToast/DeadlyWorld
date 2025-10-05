@@ -46,7 +46,7 @@ public final class DWItems {
             DWEntities.MICRO_GHAST, 0xF9F9F9, 0xBCBCBC );
     
     /** Registers an item. */
-    private static <T extends Item> RegistryObject<T> register( String name, Supplier<T> supplier ) {
+    static <T extends Item> RegistryObject<T> register( String name, Supplier<T> supplier ) {
         return REGISTRY.register( name, supplier );
     }
 

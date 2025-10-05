@@ -22,6 +22,9 @@ public final class DWSoundEvents {
     public static final RegistryObject<SoundEvent> SPAWNER_MIMIC_HURT = register( "entity.spawner_mimic.hurt" );
     public static final RegistryObject<SoundEvent> SPAWNER_MIMIC_DEATH = register( "entity.spawner_mimic.death" );
 
+    public static final RegistryObject<SoundEvent> MINI_CHEST_OPEN = register( "block.mini_chest.open" );
+    public static final RegistryObject<SoundEvent> MINI_CHEST_CLOSE = register( "block.mini_chest.close" );
+
 
     private static RegistryObject<SoundEvent> register( String name ) {
         return REGISTRY.register( name, () -> SoundEvent.createVariableRangeEvent( DeadlyWorld.resourceLoc( name ) ) );

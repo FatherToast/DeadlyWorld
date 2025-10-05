@@ -2,8 +2,8 @@ package fathertoast.deadlyworld.client;
 
 import fathertoast.deadlyworld.client.renderer.block.DeadlySpawnerBlockEntityRenderer;
 import fathertoast.deadlyworld.client.renderer.block.DeadlyTrapBlockEntityRenderer;
-import fathertoast.deadlyworld.client.renderer.decoy.SimpleBlockDecoyRenderer;
-import fathertoast.deadlyworld.client.renderer.decoy.SimpleEntityDecoyRenderer;
+import fathertoast.deadlyworld.client.renderer.block.MiniChestBlockEntityRenderer;
+import fathertoast.deadlyworld.client.renderer.block.bewlr.BEWLRHolders;
 import fathertoast.deadlyworld.client.renderer.entity.*;
 import fathertoast.deadlyworld.client.renderer.entity.layer.ChestMimicChestLayer;
 import fathertoast.deadlyworld.client.renderer.entity.model.ChestMimicModel;
@@ -12,6 +12,7 @@ import fathertoast.deadlyworld.client.renderer.entity.model.MiniSpawnerMimicMode
 import fathertoast.deadlyworld.client.renderer.entity.model.SpawnerMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.TntRenderer;
@@ -20,7 +21,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
@@ -29,9 +29,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
-import org.checkerframework.checker.signature.qual.SignatureBottom;
 
 @Mod.EventBusSubscriber( value = Dist.CLIENT, modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD )
 public class ClientRegister {
@@ -41,7 +39,6 @@ public class ClientRegister {
         MinecraftForge.EVENT_BUS.register( new ClientEvents() );
 
         DecoyRendererRegistry.registerDefaults();
-        registerBlockEntityRenderers();
         ChestMimicChestLayer.validateChestTextures();
     }
 
@@ -60,7 +57,13 @@ public class ClientRegister {
         BlockEntityRenderers.register( DWBlockEntities.MINI_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
         BlockEntityRenderers.register( DWBlockEntities.DEADLY_TRAP.get(), DeadlyTrapBlockEntityRenderer::new );
         BlockEntityRenderers.register( DWBlockEntities.POTION_TRAP.get(), DeadlyTrapBlockEntityRenderer::new );
+        BlockEntityRenderers.register( DWBlockEntities.MINI_CHEST.get(), MiniChestBlockEntityRenderer::new );
         //        BlockEntityRenderers.register( DWBlockEntities.STORM_DRAIN.get(), StormDrainBlockEntityRenderer::new );
+
+        // Populate BEWLR holders
+        for ( BEWLRHolders.Holder holder : BEWLRHolders.HOLDERS ) {
+            holder.populate( Minecraft.getInstance().getBlockEntityRenderDispatcher() );
+        }
     }
     
     @SubscribeEvent
@@ -70,6 +73,7 @@ public class ClientRegister {
         event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.MINI_SPAWNER_MIMIC, MiniSpawnerMimicModel::createBodyLayer );
 
+        event.registerLayerDefinition( DWModelLayers.MINI_CHEST, MiniChestBlockEntityRenderer::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.DEADLY_TRAP_OVERLAY, DeadlyTrapBlockEntityRenderer::createOverlayLayer );
     }
     
@@ -94,6 +98,9 @@ public class ClientRegister {
 
         // Misc
         event.registerEntityRenderer( DWEntities.YEET_TNT.get(), TntRenderer::new );
+
+        // Block entities
+        registerBlockEntityRenderers();
     }
     
     private static <T extends Entity & ItemSupplier> void registerThrownRenderer( EntityType<T> entityType, float scale, boolean fullBright, EntityRenderersEvent.RegisterRenderers event ) {

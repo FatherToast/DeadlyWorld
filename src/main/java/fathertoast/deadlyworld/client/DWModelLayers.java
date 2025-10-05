@@ -10,6 +10,7 @@ public class DWModelLayers {
     public static final ModelLayerLocation JUKEBOX_MIMIC = create( "jukebox_mimic" );
     public static final ModelLayerLocation SPAWNER_MIMIC = create( "spawner_mimic" );
     public static final ModelLayerLocation MINI_SPAWNER_MIMIC = create( "mini_spawner_mimic" );
+    public static final ModelLayerLocation MINI_CHEST = create( "mini_chest" );
 
     public static final ModelLayerLocation DEADLY_TRAP_OVERLAY = create( "deadly_trap", "overlay" );
 

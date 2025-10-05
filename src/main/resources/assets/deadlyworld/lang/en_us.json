@@ -1,7 +1,11 @@
 {
   "itemGroup.deadlyworld": "Deadly World",
 
+
+
   "block.deadlyworld.sewer_bedrock": "Nasty Stone",
+  "block.deadlyworld.runny_lava": "Runny Lava",
+  "block.deadlyworld.mini_chest": "Mini Chest",
 
   "block.deadlyworld.simple_deadly_spawner": "Monster Spawner",
   "block.deadlyworld.stream_deadly_spawner": "Monster Stream Spawner",
@@ -10,7 +14,6 @@
   "block.deadlyworld.nest_deadly_spawner": "Silverfish Nest",
   "block.deadlyworld.dungeon_deadly_spawner": "Dungeon Monster Spawner",
   "block.deadlyworld.mini_deadly_spawner": "Mini Monster Spawner",
-  "block.deadlyworld.runny_lava": "Runny Lava",
 
   "block.deadlyworld.tnt_deadly_trap": "Exploding Floor Trap",
   "block.deadlyworld.tnt_mob_deadly_trap": "Exploding Monster Floor Trap",
@@ -24,6 +27,8 @@
   "block.deadlyworld.potion_tower_dispenser": "Magic Arrow Tower Dispenser",
   "block.deadlyworld.fireball_tower_dispenser": "Fireball Tower Dispenser",
   "block.deadlyworld.gatling_tower_dispenser": "Gatling Arrow Tower Dispenser",
+
+
 
   "item.deadlyworld.chest_mimic_spawn_egg": "Chest Mimic Spawn Egg",
   "item.deadlyworld.jukebox_mimic_spawn_egg": "Jukebox Mimic Spawn Egg",
@@ -39,6 +44,8 @@
   "item.deadlyworld.mimic_core": "Mimic Core",
   "item.deadlyworld.runny_lava_bucket": "Runny Lava Bucket",
 
+
+
   "entity.deadlyworld.chest_mimic": "Mimic",
   "entity.deadlyworld.jukebox_mimic": "Mimic",
   "entity.deadlyworld.spawner_mimic": "Mimic",
@@ -51,6 +58,8 @@
   "entity.deadlyworld.mini_arrow": "Mini Arrow",
   "entity.deadlyworld.micro_fireball": "Micro Fireball",
   "entity.deadlyworld.yeet_tnt": "YeetNT",
+
+
 
   "block.deadlyworld.deadly_silverfish.tooltip": "Infested",
   "block.deadlyworld.event_item.tooltip": "Event:",
@@ -85,13 +94,23 @@
   "block.deadlyworld.feature_tester.tooltip.tower.fireball": "Fireball Tower",
   "block.deadlyworld.feature_tester.tooltip.tower.gatling": "Gatling Arrow Tower",
 
+
+
   "death.attack.deadlyworld.vortex": "%1$s was swooshed by a vortex",
   "death.attack.deadlyworld.vortex.player": "%1$s got swooshed by a vortex while fighting %2$s",
 
+
+
   "sound_event.deadlyworld.subtitle.tower_dispenser.shoot": "Tower dispenser shoots",
+  "sound_event.deadlyworld.subtitle.mini_chest.open": "Mini Chest Opens",
+  "sound_event.deadlyworld.subtitle.mini_chest.close": "Mini Chest Closes",
   "sound_event.deadlyworld.subtitle.mimic.appear": "Mimic appears",
   "sound_event.deadlyworld.subtitle.chest_mimic.hurt": "Mimic hurts",
   "sound_event.deadlyworld.subtitle.chest_mimic.death": "Mimic dies",
   "sound_event.deadlyworld.subtitle.spawner_mimic.hurt": "Mimic hurts",
-  "sound_event.deadlyworld.subtitle.spawner_mimic.death": "Mimic dies"
+  "sound_event.deadlyworld.subtitle.spawner_mimic.death": "Mimic dies",
+
+
+
+  "container.deadlyworld.mini_chest": "Mini Chest"
 }

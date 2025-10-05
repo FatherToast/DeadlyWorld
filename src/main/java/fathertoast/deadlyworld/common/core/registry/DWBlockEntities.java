@@ -1,15 +1,10 @@
 package fathertoast.deadlyworld.common.core.registry;
 
-import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
-import fathertoast.deadlyworld.common.block.entity.MiniSpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.*;
 import fathertoast.deadlyworld.common.block.spawner.*;
-import fathertoast.deadlyworld.common.block.entity.PotionTowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
-import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
-import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
-import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
@@ -43,7 +38,12 @@ public final class DWBlockEntities {
     
     //    public static final RegistryObject<BlockEntityType<StormDrainBlockEntity>> STORM_DRAIN = register( "storm_drain",
     //            () -> BlockEntityType.Builder.of( StormDrainBlockEntity::new, DWBlocks.STORM_DRAIN.get() ).build( null ) );
-    
+
+    public static final RegistryObject<BlockEntityType<MiniChestBlockEntity>> MINI_CHEST = register(
+            "mini_chest", MiniChestBlockEntity::new, DWBlocks.MINI_CHEST );
+
+
+
     /** Registers a block entity to a list of blocks. */
     private static <T extends BlockEntity, B extends Block> RegistryObject<BlockEntityType<T>> register(
             String name, BlockEntityType.BlockEntitySupplier<T> blockEntity, Supplier<B> block ) {
