@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.ChestRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -74,10 +73,10 @@ public class MiniChestBlockEntityRenderer<T extends MiniChestBlockEntity> implem
         BlockState state = hasLevel ? miniChest.getBlockState() : DWBlocks.MINI_CHEST.get().defaultBlockState().setValue( ChestBlock.FACING, Direction.SOUTH );
 
         poseStack.pushPose();
-        float rotation = state.getValue( ChestBlock.FACING ).getOpposite().toYRot();
+        float rotation = state.getValue( ChestBlock.FACING ).toYRot();
         poseStack.translate( 0.5F, 1.5F, 0.5F );
-        poseStack.mulPose( Axis.XP.rotationDegrees( 180.0F ) );
         poseStack.mulPose( Axis.YP.rotationDegrees( -rotation ) );
+        poseStack.mulPose( Axis.XP.rotationDegrees( 180.0F ) );
 
         VertexConsumer buffer = bufferSource.getBuffer( RenderType.entityCutout( TEXTURE ) );
 
