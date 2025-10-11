@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.config.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.deadlyworld.common.config.levelgen.setting.IntFieldSetting;
 import fathertoast.deadlyworld.common.core.registry.DWFieldProviders;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;

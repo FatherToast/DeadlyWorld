@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.config.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.deadlyworld.common.config.levelgen.setting.IntFieldSetting;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWFieldProviders;
 import net.minecraft.util.Mth;
@@ -19,9 +20,8 @@ public class ConfigHeightProvider extends HeightProvider {
             IntFieldSetting.CODEC.fieldOf( "min_inclusive" ).forGetter( ConfigHeightProvider::getMinInclusive ),
             IntFieldSetting.CODEC.fieldOf( "max_inclusive" ).forGetter( ConfigHeightProvider::getMaxInclusive )
     ).apply( instance, ConfigHeightProvider::new ) );
-    
-    // TODO add when exporting to Crust (fields aren't visible in current Crust version)
-    //public static ConfigHeightProvider of( IntField.RandomRange range ) { return of( range.getMinField(), range.getMaxField() ); }
+
+    public static ConfigHeightProvider of( IntField.RandomRange range ) { return of( range.getMinField(), range.getMaxField() ); }
     
     public static ConfigHeightProvider of( IntField min, IntField max ) {
         return new ConfigHeightProvider( new IntFieldSetting( min ), new IntFieldSetting( max ) );

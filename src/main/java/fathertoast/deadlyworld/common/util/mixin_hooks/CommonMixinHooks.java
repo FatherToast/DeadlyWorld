@@ -6,7 +6,7 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFluids;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
-import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
+import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.EntityTypeTags;

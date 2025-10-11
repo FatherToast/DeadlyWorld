@@ -1,8 +1,8 @@
-package fathertoast.deadlyworld.common.world.levelgen;
+package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.world.levelgen.settings.TowerDispenserSettings;
+import fathertoast.deadlyworld.common.world.levelgen.TowerDispenserSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;

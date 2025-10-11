@@ -15,6 +15,7 @@ public class DimensionConfigGroup extends ConfigGroup {
     public final TrapConfig TRAPS;
     public final TowerDispenserConfig TOWER_DISPENSERS;
     public final EnvHazardConfig ENV_HAZARDS;
+    public final SimpleDungeonConfig SIMPLE_DUNGEONS;
     
     public DimensionConfigGroup( ConfigManager manager, ResourceKey<Level> dimension ) {
         DIMENSION = dimension;
@@ -26,6 +27,7 @@ public class DimensionConfigGroup extends ConfigGroup {
         TRAPS = group( new TrapConfig( manager, dir, this ) );
         TOWER_DISPENSERS = group( new TowerDispenserConfig( manager, dir, this ) );
         ENV_HAZARDS = group( new EnvHazardConfig( manager, dir, this ) );
+        SIMPLE_DUNGEONS = group( new SimpleDungeonConfig( manager, dir, this ) );
     }
     
     /** @return The short name for this dimension (e.g. "'the_nether' dimension"). */

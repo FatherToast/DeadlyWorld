@@ -44,7 +44,7 @@ public enum TrapType {
             double y = trapEntity.getBlockPos().getY() + 1;
             double z = trapEntity.getBlockPos().getZ() + 0.5;
 
-            int fuseRange = config.fuseTimeMax.get() - config.fuseTimeMin.get();
+            int fuseRange = config.fuseTime.getMax() - config.fuseTime.getMin();
             if( fuseRange <= 0 ) {
                 fuseRange = 1;
             }
@@ -53,7 +53,7 @@ public enum TrapType {
                 PrimedTnt tnt = new PrimedTnt( level, x, y, z, null );
 
                 float speed = (float) config.launchSpeed.get() * level.random.nextFloat() + 0.02F;
-                tnt.setFuse( config.fuseTimeMin.get() + level.random.nextInt( fuseRange ) );
+                tnt.setFuse( config.fuseTime.getMin() + level.random.nextInt( fuseRange ) );
                 tnt.getDeltaMovement().multiply( speed, 0.1F * level.random.nextDouble(), speed );
                 level.addFreshEntity( tnt );
             }
@@ -74,7 +74,7 @@ public enum TrapType {
             double y = trapEntity.getBlockPos().getY() + 1;
             double z = trapEntity.getBlockPos().getZ() + 0.5;
 
-            int fuseRange = config.fuseTimeMax.get() - config.fuseTimeMin.get();
+            int fuseRange = config.fuseTime.getMax() - config.fuseTime.getMin();
 
             if( fuseRange <= 0 ) {
                 fuseRange = 1;
@@ -145,7 +145,7 @@ public enum TrapType {
             // Make the tnt "hat"
             PrimedTnt tnt = new PrimedTnt( level, x, y, z, livingEntity );
             tnt.copyPosition( entity );
-            tnt.setFuse( config.fuseTimeMin.get() + level.random.nextInt( fuseRange ) );
+            tnt.setFuse( config.fuseTime.getMin() + level.random.nextInt( fuseRange ) );
             tnt.startRiding( entity, true );
 
             // Spawn the entities and play alert sound

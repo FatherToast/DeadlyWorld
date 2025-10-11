@@ -5,51 +5,47 @@ import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
-import fathertoast.deadlyworld.common.world.levelgen.*;
-import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
-import fathertoast.deadlyworld.common.world.levelgen.settings.PotionFloorTrapSettings;
-import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
-import fathertoast.deadlyworld.common.world.levelgen.settings.TowerDispenserSettings;
-import net.minecraft.core.registries.Registries;
+import fathertoast.deadlyworld.common.world.levelgen.dungeon.MiniDungeonFeature;
+import fathertoast.deadlyworld.common.world.levelgen.dungeon.SimpleDungeonFeature;
+import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedLiquidFeature;
+import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
+import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
+import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
 import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-import java.util.function.Supplier;
-
-public class DWConfiguredFeatureProvider {
+public class DWConfiguredFeatureProvider extends AbstractCFProvider {
     
-    static final FeatureKeys.Spawner SIMPLE_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.SIMPLE, "simple_spawner" );
-    static final FeatureKeys.Spawner STREAM_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.STREAM, "stream_spawner" );
-    static final FeatureKeys.Spawner SWARM_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.SWARM, "swarm_spawner" );
-    static final FeatureKeys.Spawner BRUTAL_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.BRUTAL, "brutal_spawner" );
-    static final FeatureKeys.Spawner MINI_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.MINI, "mini_spawner" );
-    static final FeatureKeys.Spawner SILVERFISH_NEST = FeatureKeys.Spawner.of( SpawnerType.NEST, "silverfish_nest" );
+    public static final FeatureKeys.Spawner SIMPLE_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.SIMPLE, "simple_spawner" );
+    public static final FeatureKeys.Spawner STREAM_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.STREAM, "stream_spawner" );
+    public static final FeatureKeys.Spawner SWARM_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.SWARM, "swarm_spawner" );
+    public static final FeatureKeys.Spawner BRUTAL_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.BRUTAL, "brutal_spawner" );
+    public static final FeatureKeys.Spawner MINI_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.MINI, "mini_spawner" );
+    public static final FeatureKeys.Spawner SILVERFISH_NEST = FeatureKeys.Spawner.of( SpawnerType.NEST, "silverfish_nest" );
 
-    static final FeatureKeys.Trap TNT_TRAP = FeatureKeys.Trap.of( TrapType.TNT, "tnt_trap" );
-    static final FeatureKeys.Trap TNT_MOB_TRAP = FeatureKeys.Trap.of( TrapType.TNT_MOB, "tnt_mob_trap" );
-    static final FeatureKeys.Trap POTION_TRAP = FeatureKeys.Trap.of( TrapType.POTION, "potion_trap" );
-    static final FeatureKeys.Trap LAVA_TRAP = FeatureKeys.Trap.of( TrapType.LAVA, "lava_trap" );
-    static final FeatureKeys.Trap FIRE_TRAP = FeatureKeys.Trap.of( TrapType.FIRE, "fire_trap" );
+    public static final FeatureKeys.Trap TNT_TRAP = FeatureKeys.Trap.of( TrapType.TNT, "tnt_trap" );
+    public static final FeatureKeys.Trap TNT_MOB_TRAP = FeatureKeys.Trap.of( TrapType.TNT_MOB, "tnt_mob_trap" );
+    public static final FeatureKeys.Trap POTION_TRAP = FeatureKeys.Trap.of( TrapType.POTION, "potion_trap" );
+    public static final FeatureKeys.Trap LAVA_TRAP = FeatureKeys.Trap.of( TrapType.LAVA, "lava_trap" );
+    public static final FeatureKeys.Trap FIRE_TRAP = FeatureKeys.Trap.of( TrapType.FIRE, "fire_trap" );
 
-    static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower_dispenser" );
-    static final FeatureKeys.TowerDispenser FIRE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIRE, "fire_tower_dispenser" );
-    static final FeatureKeys.TowerDispenser POTION_TOWER = FeatureKeys.TowerDispenser.of( TowerType.POTION, "potion_tower_dispenser" );
-    static final FeatureKeys.TowerDispenser GATLING_TOWER = FeatureKeys.TowerDispenser.of( TowerType.GATLING, "gatling_tower_dispenser" );
-    static final FeatureKeys.TowerDispenser FIREBALL_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIREBALL, "fireball_tower_dispenser" );
+    public static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower_dispenser" );
+    public static final FeatureKeys.TowerDispenser FIRE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIRE, "fire_tower_dispenser" );
+    public static final FeatureKeys.TowerDispenser POTION_TOWER = FeatureKeys.TowerDispenser.of( TowerType.POTION, "potion_tower_dispenser" );
+    public static final FeatureKeys.TowerDispenser GATLING_TOWER = FeatureKeys.TowerDispenser.of( TowerType.GATLING, "gatling_tower_dispenser" );
+    public static final FeatureKeys.TowerDispenser FIREBALL_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIREBALL, "fireball_tower_dispenser" );
 
     public static final FeatureKeys BURIED_LIQUID_ANY_DIMENSION = FeatureKeys.anyDimension( "buried_liquid" );
+
+    public static final FeatureKeys.SimpleDungeon SIMPLE_DUNGEON = FeatureKeys.SimpleDungeon.of( "simple_dungeon" );
+    public static final FeatureKeys.SimpleDungeon MINI_DUNGEON = FeatureKeys.SimpleDungeon.of( "mini_dungeon" );
+
 
 
     /** Called by registry set builder to generate our configured features. */
@@ -66,7 +62,7 @@ public class DWConfiguredFeatureProvider {
                 netherConfigs, block( Blocks.RED_NETHER_BRICKS ), false );
         registerLoneSpawner( context, SWARM_SPAWNER,
                 overworldConfigs, block( Blocks.CHISELED_SANDSTONE ), false,
-                netherConfigs, block( Blocks.CHISELED_RED_SANDSTONE ), false );
+                netherConfigs, block( Blocks.CHISELED_NETHER_BRICKS ), false );
         registerLoneSpawner( context, BRUTAL_SPAWNER,
                 overworldConfigs, block( Blocks.CHISELED_STONE_BRICKS ), true,
                 netherConfigs, block( Blocks.CHISELED_QUARTZ_BLOCK ), true );
@@ -101,96 +97,32 @@ public class DWConfiguredFeatureProvider {
         registerTowerDispenser( context, FIRE_TOWER, block( Blocks.GRANITE_WALL ), overworldConfigs, netherConfigs );
         registerTowerDispenser( context, POTION_TOWER, block( Blocks.MUD_BRICK_WALL ), overworldConfigs, netherConfigs );
         registerTowerDispenser( context, GATLING_TOWER, block( Blocks.MOSSY_STONE_BRICK_WALL ), overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, FIREBALL_TOWER, block( Blocks.RED_SANDSTONE_WALL ), overworldConfigs, netherConfigs );
+        registerTowerDispenser( context, FIREBALL_TOWER, block( Blocks.NETHER_BRICK_WALL ), overworldConfigs, netherConfigs );
 
         // Special stuff
         register( context, BURIED_LIQUID_ANY_DIMENSION,
                 new ConfiguredFeature<>( DWFeatures.BURIED_LIQUID.get(),
                         new BuriedLiquidFeature.Configuration( BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-    }
-    
-    /** Convenience method for making a simple block state provider. */
-    protected static BlockStateProvider block( Supplier<? extends Block> block ) { return block( block.get() ); }
-    
-    /** Convenience method for making a simple block state provider. */
-    protected static BlockStateProvider block( Block block ) { return block( block.defaultBlockState() ); }
-    
-    /** Convenience method for making a simple block state provider. */
-    protected static BlockStateProvider block( BlockState block ) { return BlockStateProvider.simple( block ); }
-    
-    /** Registers a configured lone spawner type feature to each supported dimension. */
-    protected static void registerLoneSpawner( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.Spawner feature,
-                                               DimensionConfigGroup overworldConfigs, BlockStateProvider overworldTopper, boolean overworldVines,
-                                               DimensionConfigGroup netherConfigs, BlockStateProvider netherTopper, boolean netherVines ) {
-        registerLoneSpawner( context, feature.overworldKeys, feature.spawnerType, overworldConfigs, overworldTopper, overworldVines );
-        registerLoneSpawner( context, feature.netherKeys, feature.spawnerType, netherConfigs, netherTopper, netherVines );
-    }
-    
-    /** Registers a configured lone spawner type feature. */
-    protected static void registerLoneSpawner( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                               SpawnerType type, DimensionConfigGroup dimConfigs, BlockStateProvider topper, boolean vines ) {
-        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.LONE_SPAWNER.get(),
-                new LoneSpawnerFeature.Configuration( block( DWBlocks.spawner( type ) ), topper,
-                        SpawnerSettings.of( type.getFeatureConfig( dimConfigs ) ),
-                        BlockTags.FEATURES_CANNOT_REPLACE, vines ) ) );
-    }
 
-    /** Registers a configured lone spawner type feature to each supported dimension. */
-    protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.Trap feature,
-                                               DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        registerFloorTrap( context, feature.overworldKeys, feature.trapType, overworldConfigs );
-        registerFloorTrap( context, feature.netherKeys, feature.trapType, netherConfigs );
-    }
+        // Simple dungeons
+        register( context, SIMPLE_DUNGEON.overworldKeys,
+                new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(),
+                        new SimpleDungeonFeature.Configuration( block( Blocks.COBBLESTONE ), block( Blocks.MOSSY_COBBLESTONE ),
+                                BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+        register( context, SIMPLE_DUNGEON.netherKeys,
+                new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(),
+                        new SimpleDungeonFeature.Configuration( block( Blocks.NETHER_BRICKS ), block( Blocks.CRACKED_NETHER_BRICKS ),
+                                BlockTags.FEATURES_CANNOT_REPLACE ) ) );
 
-    /** Registers a configured floor trap type feature. */
-    protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                              TrapType type, DimensionConfigGroup dimConfigs ) {
-        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
-                new FloorTrapFeature.Configuration( block( DWBlocks.trap( type ) ),
-                        FloorTrapSettings.of( type.getFeatureConfig( dimConfigs ) ),
-                        BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-    }
-
-    /** Registers a configured lone spawner type feature to each supported dimension. */
-    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature,
-                                             BlockStateProvider baseProvider, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        registerTowerDispenser( context, feature.overworldKeys, feature.towerType, baseProvider, overworldConfigs );
-        registerTowerDispenser( context, feature.netherKeys, feature.towerType, baseProvider, netherConfigs );
-    }
-
-    /** Registers a configured floor trap type feature. */
-    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                                 TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
-        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER_DISPENSER.get(),
-                new SimpleTowerDispenserFeature.Configuration(
-                        baseProvider,
-                        block( DWBlocks.towerDispenser( type ) ),
-                        TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
-                        BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-    }
-
-
-    /** Registers a configured feature. */
-    protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys, ConfiguredFeature<?, ?> configuredFeature ) {
-        context.register( featureKeys.configuredKey, configuredFeature );
-    }
-    
-    /** Registers a configured feature. */
-    protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> confFeatureKey, ConfiguredFeature<?, ?> configuredFeature ) {
-        context.register( confFeatureKey, configuredFeature );
-    }
-    
-    /** Creates a configured feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> overworldKey( String name ) { return key( name ); }
-    
-    /** Creates a configured feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> netherKey( String name ) { return key( name + "_nether" ); }
-
-    /** Creates a configured feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimKey( String name ) { return key( name + "_any_dimension" ); }
-
-    /** Creates a configured feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> key( String name ) {
-        return ResourceKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.resourceLoc( name ) );
+        register( context, MINI_DUNGEON.overworldKeys,
+                new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(),
+                        new MiniDungeonFeature.Configuration( block( Blocks.COBBLESTONE ), block( Blocks.MOSSY_COBBLESTONE ),
+                                SpawnerSettings.of( MINI_SPAWNER.spawnerType, overworldConfigs ),
+                                BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+        register( context, MINI_DUNGEON.netherKeys,
+                new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(),
+                        new MiniDungeonFeature.Configuration( block( Blocks.NETHER_BRICKS ), block( Blocks.CRACKED_NETHER_BRICKS ),
+                                SpawnerSettings.of( MINI_SPAWNER.spawnerType, netherConfigs ),
+                                BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
 }

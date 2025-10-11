@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.config.levelgen;
+package fathertoast.deadlyworld.common.config.levelgen.setting;
 
 import com.mojang.serialization.Codec;
 import fathertoast.crust.api.config.common.AbstractConfigFile;

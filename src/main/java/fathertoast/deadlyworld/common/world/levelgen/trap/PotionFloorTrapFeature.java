@@ -1,9 +1,9 @@
-package fathertoast.deadlyworld.common.world.levelgen;
+package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
-import fathertoast.deadlyworld.common.world.levelgen.settings.FloorTrapSettings;
+import fathertoast.deadlyworld.common.block.trap.PotionTrapBlock;
+import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -17,26 +17,26 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 
 import java.util.function.Predicate;
 
-public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configuration> {
+public class PotionFloorTrapFeature extends DeadlyFeature<PotionFloorTrapFeature.Configuration> {
     public record Configuration(
             BlockStateProvider trapProvider,
-            FloorTrapSettings trapSettings,
+            PotionFloorTrapSettings trapSettings,
             TagKey<Block> cannotReplace
     ) implements FeatureConfiguration {
-        public static final Codec<FloorTrapFeature.Configuration> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
-                BlockStateProvider.CODEC.fieldOf( "trap_provider" ).forGetter( FloorTrapFeature.Configuration::trapProvider ),
-                FloorTrapSettings.CODEC.fieldOf( "trap" ).forGetter( FloorTrapFeature.Configuration::trapSettings ),
-                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( FloorTrapFeature.Configuration::cannotReplace )
-        ).apply( instance, FloorTrapFeature.Configuration::new ) );
+        public static final Codec<PotionFloorTrapFeature.Configuration> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
+                BlockStateProvider.CODEC.fieldOf( "trap_provider" ).forGetter( PotionFloorTrapFeature.Configuration::trapProvider ),
+                PotionFloorTrapSettings.CODEC.fieldOf( "trap" ).forGetter( PotionFloorTrapFeature.Configuration::trapSettings ),
+                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( PotionFloorTrapFeature.Configuration::cannotReplace )
+        ).apply( instance, PotionFloorTrapFeature.Configuration::new ) );
     }
 
-    public FloorTrapFeature() { this( FloorTrapFeature.Configuration.CODEC ); }
+    public PotionFloorTrapFeature() { this( PotionFloorTrapFeature.Configuration.CODEC ); }
 
-    public FloorTrapFeature( Codec<FloorTrapFeature.Configuration> codec ) { super( codec ); }
+    public PotionFloorTrapFeature( Codec<PotionFloorTrapFeature.Configuration> codec ) { super( codec ); }
 
     @Override
-    public boolean place( FeaturePlaceContext<FloorTrapFeature.Configuration> context ) {
-        final FloorTrapFeature.Configuration config = context.config();
+    public boolean place( FeaturePlaceContext<PotionFloorTrapFeature.Configuration> context ) {
+        final PotionFloorTrapFeature.Configuration config = context.config();
         final RandomSource random = context.random();
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
@@ -47,7 +47,7 @@ public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configurati
         // Offset by one below to place the trap in the ground
         BlockPos below = context.origin().below();
 
-        // Make sure the trap at least can be placed
+        // Make sure the spawner block at least can be placed
         if( !predicate.test( level.getBlockState( below ) ) ) return false;
         // Don't replace blocks with block entities
         if ( level.getExistingBlockEntity( below ) != null ) return false;
@@ -56,7 +56,7 @@ public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configurati
         BlockState trapBlock = config.trapProvider.getState( random, below );
         setBlock( level, below, trapBlock);
 
-        if( trapBlock.getBlock() instanceof DeadlyTrapBlock ) {
+        if( trapBlock.getBlock() instanceof PotionTrapBlock ) {
             config.trapSettings.initializeTrap( level, below, random );
         }
         return true;

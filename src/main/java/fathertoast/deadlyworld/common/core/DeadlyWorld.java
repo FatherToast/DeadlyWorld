@@ -59,7 +59,6 @@ public class DeadlyWorld {
      *          - micro fireball
      *      - mimic chest
      *      - mimic spawner
-     *      + mimic cake
      *      ? dispenser fish hook
      *      ? water monsters
      *      ? lava monsters

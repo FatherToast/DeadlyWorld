@@ -41,7 +41,7 @@ side = "BOTH"
 [[dependencies.deadlyworld]]
 modId = "crust"
 mandatory = true
-versionRange = "[2.5.11,)"
+versionRange = "[4.8.14,)"
 ordering = "BEFORE"
 side = "BOTH"
 

@@ -82,7 +82,6 @@ public class SpawnerConfig extends FeatureConfig {
         public final IntField maxNearbyEntities;
         
         public final IntField.RandomRange delay;
-        public final IntField delayMin, delayMax; // TODO delete after Crust update
         public final IntField delayProgression;
         public final DoubleField delayRecovery;
         
@@ -126,13 +125,10 @@ public class SpawnerConfig extends FeatureConfig {
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             
             SPEC.newLine();
-            
-            delay = new IntField.RandomRange(
-                    delayMin = SPEC.define( new IntField( "delay.min", minDelay, 0, Short.MAX_VALUE,
-                            "The minimum and maximum (inclusive) delay between spawn batches, in ticks. (20 ticks = 1 second)",
-                            DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) ),
-                    delayMax = SPEC.define( new IntField( "delay.max", maxDelay, 0, Short.MAX_VALUE ) )
-            );
+
+            delay = new IntField.RandomRange( SPEC, "delay", minDelay, maxDelay, 0, Short.MAX_VALUE,
+                    "The minimum and maximum (inclusive) delay between spawn batches, in ticks. (20 ticks = 1 second)" );
+
             delayProgression = SPEC.define( new IntField( "delay.progression", delayPrgr, 0, Short.MAX_VALUE,
                     "Each spawn batch increases the spawner's delay buildup by this many ticks (" + ConfigUtil.PLUS_OR_MINUS +
                             "10%). Set this to 0 to revert to the vanilla spawner behavior (simple random between min and max delays).",
@@ -315,6 +311,7 @@ public class SpawnerConfig extends FeatureConfig {
         
         /** @return The default spawn list to use for this spawner type and dimension. */
         @Override
+        @SuppressWarnings( "ConstantConditions" )
         protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
             if ( isNetherDimension() ) {
                 return new WeightedEntityList(

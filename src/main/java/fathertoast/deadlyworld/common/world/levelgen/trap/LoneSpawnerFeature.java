@@ -1,14 +1,18 @@
-package fathertoast.deadlyworld.common.world.levelgen;
+package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
-import fathertoast.deadlyworld.common.world.levelgen.settings.SpawnerSettings;
+import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
@@ -16,24 +20,26 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 
 import java.util.function.Predicate;
 
-public class SilverfishNestFeature extends DeadlyFeature<SilverfishNestFeature.Configuration> {
+public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configuration> {
     public record Configuration(
             BlockStateProvider spawnerProvider,
-            BlockStateProvider nestProvider,
+            BlockStateProvider topperProvider,
             SpawnerSettings spawnerSettings,
-            TagKey<Block> cannotReplace
+            TagKey<Block> cannotReplace,
+            boolean vinesDecoration
     ) implements FeatureConfiguration {
         public static final Codec<Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
-                BlockStateProvider.CODEC.fieldOf( "spawner_provider" ).forGetter( Configuration::spawnerProvider ),
-                BlockStateProvider.CODEC.fieldOf( "nest_provider" ).forGetter( Configuration::nestProvider ),
+                BlockStateProvider.CODEC.fieldOf( "trap_provider" ).forGetter( Configuration::spawnerProvider ),
+                BlockStateProvider.CODEC.fieldOf( "topper_provider" ).forGetter( Configuration::topperProvider ),
                 SpawnerSettings.CODEC.fieldOf( "spawner" ).forGetter( Configuration::spawnerSettings ),
-                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( Configuration::cannotReplace )
+                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( Configuration::cannotReplace ),
+                Codec.BOOL.fieldOf( "vines_decoration" ).orElse( false ).forGetter( Configuration::vinesDecoration )
         ).apply( instance, Configuration::new ) );
     }
     
-    public SilverfishNestFeature() { this( Configuration.CODEC ); }
+    public LoneSpawnerFeature() { this( Configuration.CODEC ); }
     
-    public SilverfishNestFeature( Codec<Configuration> codec ) { super( codec ); }
+    public LoneSpawnerFeature( Codec<Configuration> codec ) { super( codec ); }
     
     @Override
     public boolean place( FeaturePlaceContext<Configuration> context ) {
@@ -57,19 +63,31 @@ public class SilverfishNestFeature extends DeadlyFeature<SilverfishNestFeature.C
             config.spawnerSettings.initializeSpawner( level, context.origin(), random );
         }
         
-        // Place the nest covering
-        for( int y = -1; y <= 1; y++ ) {
-            for( int x = -1; x <= 1; x++ ) {
-                for( int z = -1; z <= 1; z++ ) {
-                    int abs = Math.abs( x ) + Math.abs( y ) + Math.abs( z );
-                    if( abs != 0 && abs <= 2 ) {
-                        safeSetBlock( level, context.origin().offset( x, y, z ),
-                                config.nestProvider, random, predicate );
-                    }
-                }
-            }
+        // Optionally place the topper
+        BlockPos topperPos = context.origin().above();
+        BlockState topperBlock = config.topperProvider.getState( random, topperPos );
+        boolean hasTopper = !topperBlock.isAir();
+        if( hasTopper ) {
+            safeSetBlock( level, topperPos, topperBlock, predicate );
+        }
+        
+        // Optionally decorate the spawner with vines
+        if( config.vinesDecoration() ) {
+            final BlockPos.MutableBlockPos cursor = context.origin().mutable();
+            placeVinesAround( level, context.origin(), cursor, random );
+            if( hasTopper ) placeVinesAround( level, topperPos, cursor, random );
         }
         
         return true;
+    }
+    
+    protected void placeVinesAround( WorldGenLevel level, BlockPos center, BlockPos.MutableBlockPos cursor, RandomSource random ) {
+        for( Direction dir : Direction.Plane.HORIZONTAL ) {
+            if( random.nextInt( 4 ) == 0 ) {
+                cursor.setWithOffset( center, dir );
+                safeSetBlock( level, cursor, Blocks.VINE.defaultBlockState()
+                        .setValue( VineBlock.getPropertyForFace( dir.getOpposite() ), true ), IS_AIR );
+            }
+        }
     }
 }

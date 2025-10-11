@@ -1,0 +1,26 @@
+{
+  "feature": "deadlyworld:simple_dungeon",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "deadlyworld:config_count_int",
+        "count": "deadlyworld:worldgen/minecraft/overworld/simple_dungeons:normal_simple_dungeons.placements"
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "deadlyworld:config_uniform_height",
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/simple_dungeons:normal_simple_dungeons.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/simple_dungeons:normal_simple_dungeons.height.min"
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

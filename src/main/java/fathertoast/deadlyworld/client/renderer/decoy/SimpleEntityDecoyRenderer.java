@@ -45,12 +45,12 @@ public class SimpleEntityDecoyRenderer implements IDecoyRenderer {
         poseStack.pushPose();
         poseStack.translate( 0.5D, 1.0D, 0.5D );
 
-        // Apply "random" rotation from pos hash code
+        // Apply "random" rotation from BlockPos hash code
         final float rot = Math.abs( pos.hashCode() ) % 360.0F;
         poseStack.mulPose( Axis.YP.rotationDegrees( rot ) );
 
         int packedLightAbove = getPackedLightCoords( level, pos.above() );
-        // We avoid passing on partialTick here to avoid spastic animations
+        // We avoid passing partialTick here to avoid jittery animations
         entityRenderer.render( displayEntity, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, poseStack, bufferSource, packedLightAbove );
 
         poseStack.popPose();

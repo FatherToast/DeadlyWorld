@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.world.levelgen.settings;
+package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -32,7 +32,7 @@ public record PotionFloorTrapSettings(
                 ConfigConstantFloatProvider.of( config.activationRange ),
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
 
-                ConfigUniformIntProvider.of( config.resetTimeMin, config.resetTimeMax ),
+                ConfigUniformIntProvider.of( config.resetTime ),
                 ConfigConstantIntProvider.of( config.triggersRemaining ),
 
                 ConfigConstantFloatProvider.of( config.decoyChance ),

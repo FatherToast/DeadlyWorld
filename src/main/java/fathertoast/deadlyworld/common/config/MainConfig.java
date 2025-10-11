@@ -12,6 +12,7 @@ public class MainConfig extends AbstractConfigFile {
     
     public final General GENERAL;
     public final StalactiteOverhaul STALACTITE_OVERHAUL;
+    public final Misc MISC;
     
     /** Builds the config spec that should be used for this config. */
     MainConfig( ConfigManager manager, String fileName ) {
@@ -21,6 +22,9 @@ public class MainConfig extends AbstractConfigFile {
         
         GENERAL = new General( this );
         STALACTITE_OVERHAUL = new StalactiteOverhaul( this );
+        MISC = new Misc( this );
+
+        SPEC.newLine();
     }
     
     public static class General extends AbstractConfigCategory<MainConfig> {
@@ -76,7 +80,7 @@ public class MainConfig extends AbstractConfigFile {
 
         StalactiteOverhaul( MainConfig parent ) {
             super( parent, "stalactite_overhaul",
-                    "Misc settings related to interactions with Pointed Dripstone in the world." );
+                    "Settings related to interactions with Pointed Dripstone in the world." );
 
             pointedDripstoneSniping = SPEC.define( new BooleanField("pointed_dripstone_sniping", true,
                     "If enabled, pointed dripstone blocks will break when hit with any projectile entity tagged as 'minecraft:impact_projectiles'.",
@@ -100,6 +104,22 @@ public class MainConfig extends AbstractConfigFile {
                             "Pointed Dripstone above the player." ) );
 
             SPEC.newLine();
+        }
+    }
+
+    public static class Misc extends AbstractConfigCategory<MainConfig> {
+
+        public final BooleanField disableVanillaMonsterRooms;
+
+
+        Misc( MainConfig parent ) {
+            super( parent, "misc",
+                    "Miscellaneous settings." );
+
+            disableVanillaMonsterRooms = SPEC.define( new BooleanField( "disable_vanilla_monster_rooms", true,
+                    "If true, the vanilla monster room feature / dungeon that generates underground in the overworld will be disabled.",
+                    "Handy if you prefer only DeadlyWorld's dungeon room feature to generate instead." ),
+                    RestartNote.WORLD );
         }
     }
 }

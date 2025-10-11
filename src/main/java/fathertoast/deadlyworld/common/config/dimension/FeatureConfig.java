@@ -51,7 +51,6 @@ public abstract class FeatureConfig extends AbstractConfigFile {
         public final DoubleField countPerChunk;
         
         public final IntField.RandomRange heights;
-        public final IntField heightMin, heightMax; // TODO delete after Crust update
         
         /**
          * Creates a new feature or subfeature category.
@@ -69,8 +68,6 @@ public abstract class FeatureConfig extends AbstractConfigFile {
                 debugMarker = null;
                 countPerChunk = null;
                 heights = null;
-                heightMin = null;
-                heightMax = null;
             }
             else {
                 boolean isNether = isNetherDimension();
@@ -89,13 +86,12 @@ public abstract class FeatureConfig extends AbstractConfigFile {
                         DimensionConfigHelper.MESSAGE_PLACED_FEATURE_OVERRIDE ) );
                 
                 SPEC.newLine();
-                
-                heights = new IntField.RandomRange(
-                        heightMin = SPEC.define( new IntField( "height.min", isNether ? DEPTH_NETHER_LAVA : minHeight, IntField.Range.ANY,
-                                "The minimum and maximum (inclusive) heights/y-values " + FEATURE_TYPE_NAME + " can generate at.",
-                                DimensionConfigHelper.MESSAGE_PLACED_FEATURE_OVERRIDE ) ),
-                        heightMax = SPEC.define( new IntField( "height.max", isNether ? DEPTH_NETHER_CEIL : maxHeight, IntField.Range.ANY ) )
-                );
+
+                heights = new IntField.RandomRange( SPEC, "height",
+                        isNether ? DEPTH_NETHER_LAVA : minHeight,
+                        isNether ? DEPTH_NETHER_CEIL : maxHeight,
+                        IntField.Range.ANY,
+                        "The minimum and maximum (inclusive) heights/y-values \" + FEATURE_TYPE_NAME + \" can generate at." );
             }
         }
         

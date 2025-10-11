@@ -4,7 +4,7 @@
     "base_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "minecraft:red_sandstone_wall",
+        "Name": "minecraft:nether_brick_wall",
         "Properties": {
           "east": "none",
           "north": "none",

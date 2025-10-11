@@ -1,0 +1,65 @@
+{
+  "type": "deadlyworld:mini_dungeon",
+  "config": {
+    "base_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:cobblestone"
+      }
+    },
+    "cannot_replace": "#minecraft:features_cannot_replace",
+    "floor_mix_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:mossy_cobblestone"
+      }
+    },
+    "spawner": {
+      "activation_sight_check": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.sight_check_chance"
+      },
+      "delay": {
+        "type": "deadlyworld:config_uniform_int",
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.delay.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.delay.min"
+      },
+      "delay_progression": {
+        "type": "deadlyworld:config_constant_int",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.delay.progression"
+      },
+      "delay_recovery_rate": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.delay.recovery_rate"
+      },
+      "dynamic_chance": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.dynamic_chance"
+      },
+      "max_nearby_entities": {
+        "type": "deadlyworld:config_constant_int",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.max_nearby_entities"
+      },
+      "max_spawns": {
+        "type": "deadlyworld:config_constant_int",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.max_spawns"
+      },
+      "mimic_chance": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.mimic_chance"
+      },
+      "required_player_range": {
+        "type": "deadlyworld:config_constant_int",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.required_player_range"
+      },
+      "spawn_count": {
+        "type": "deadlyworld:config_constant_int",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.spawn_count"
+      },
+      "spawn_range": {
+        "type": "deadlyworld:config_constant_int",
+        "value": "deadlyworld:worldgen/minecraft/overworld/spawners:mini_spawners.spawn_range"
+      }
+    }
+  }
+}

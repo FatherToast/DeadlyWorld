@@ -6,8 +6,8 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;
 import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import fathertoast.deadlyworld.common.util.TrapHelper;
-import fathertoast.deadlyworld.common.world.levelgen.DeadlyFeature;
-import fathertoast.deadlyworld.common.world.levelgen.settings.TowerDispenserSettings;
+import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
+import fathertoast.deadlyworld.common.world.levelgen.TowerDispenserSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -115,7 +115,7 @@ public abstract class BaseTower {
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
 
-    public void initializeTower(WorldGenLevel level, BlockPos pos, RandomSource random, TowerDispenserSettings settings ) {
+    public void initializeTower( WorldGenLevel level, BlockPos pos, RandomSource random, TowerDispenserSettings settings ) {
         final TowerDispenserConfig.TowerDispenserTypeCategory towerConfig = towerType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, towerConfig );
 

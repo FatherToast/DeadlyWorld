@@ -1,7 +1,10 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.world.levelgen.*;
+import fathertoast.deadlyworld.common.world.levelgen.dungeon.MiniDungeonFeature;
+import fathertoast.deadlyworld.common.world.levelgen.dungeon.SimpleDungeonFeature;
+import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedLiquidFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.*;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -20,7 +23,10 @@ public final class DWFeatures {
 
     public static RegistryObject<BuriedLiquidFeature> BURIED_LIQUID = register( "buried_liquid", BuriedLiquidFeature::new );
 
-    
+    public static RegistryObject<SimpleDungeonFeature> SIMPLE_DUNGEON = register( "simple_dungeon", SimpleDungeonFeature::new );
+    public static RegistryObject<MiniDungeonFeature> MINI_DUNGEON = register( "mini_dungeon", MiniDungeonFeature::new );
+
+
     private static <T extends Feature<?>> RegistryObject<T> register( String name, Supplier<T> featureSupplier ) {
         return REGISTRY.register( name, featureSupplier );
     }

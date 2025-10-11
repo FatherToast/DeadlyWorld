@@ -54,7 +54,7 @@ public class PlacementBuilder {
     /** Randomizes the y coord of each placement based on the feature config's setting. */
     public PlacementBuilder spreadInHeights( FeatureConfig.FeatureTypeCategory config ) {
         //noinspection ConstantConditions
-        return spreadInHeights( ConfigHeightProvider.of( config.heightMin, config.heightMax ) ); // throws NPE if you use a subfeature
+        return spreadInHeights( ConfigHeightProvider.of( config.heights ) ); // throws NPE if you use a subfeature
     }
     
     /** Randomizes the y coord of each placement with a uniform distribution. */

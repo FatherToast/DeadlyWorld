@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import com.mojang.serialization.Codec;
+import fathertoast.deadlyworld.common.biome.modifier.ConfigRemoveFeaturesModifier;
 import fathertoast.deadlyworld.common.biome.modifier.GlobalAddFeaturesModifier;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraftforge.common.world.BiomeModifier;
@@ -16,6 +17,7 @@ public final class DWBiomeModifiers {
 
 
     public static final RegistryObject<Codec<GlobalAddFeaturesModifier>> GLOBAL_ADD_FEATURES = register( "global_add_features", GlobalAddFeaturesModifier.codecForRegistry() );
+    public static final RegistryObject<Codec<ConfigRemoveFeaturesModifier>> CONFIG_REMOVE_FEATURES = register( "config_remove_features", ConfigRemoveFeaturesModifier.codecForRegistry() );
 
 
     private static <T extends BiomeModifier> RegistryObject<Codec<T>> register( String name, Supplier<Codec<T>> supplier ) {

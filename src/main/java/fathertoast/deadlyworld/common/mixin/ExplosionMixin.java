@@ -10,18 +10,22 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(Explosion.class)
+//@Mixin( Explosion.class )
 public abstract class ExplosionMixin {
 
+    /*
     @Mutable
     @Final
     @Shadow
+
+     */
     private final Entity source;
 
     protected ExplosionMixin( Entity source ) {
         this.source = source;
     }
 
+    /*
     @ModifyVariable(
             method = "explode",
             at = @At(
@@ -31,6 +35,8 @@ public abstract class ExplosionMixin {
             ordinal = 7,
             index = 28
     )
+
+     */
     public double onExplode( double original ) {
         return CommonMixinHooks.modifyExplosionKnockback( source, original );
     }

@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.config.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.crust.api.config.common.field.DoubleField;
+import fathertoast.deadlyworld.common.config.levelgen.setting.FloatFieldSetting;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWFieldProviders;
 import net.minecraft.util.Mth;
@@ -18,9 +19,8 @@ public class ConfigUniformFloatProvider extends FloatProvider {
             FloatFieldSetting.CODEC.fieldOf( "min_inclusive" ).forGetter( ConfigUniformFloatProvider::getMinInclusive ),
             FloatFieldSetting.CODEC.fieldOf( "max_exclusive" ).forGetter( ConfigUniformFloatProvider::getMaxExclusive )
     ).apply( instance, ConfigUniformFloatProvider::new ) );
-    
-    // TODO add when exporting to Crust (fields aren't visible in current Crust version)
-    //public static ConfigUniformFloatProvider of( DoubleField.RandomRange range ) { return of( range.getMinField(), range.getMaxField() ); }
+
+    public static ConfigUniformFloatProvider of( DoubleField.RandomRange range ) { return of( range.getMinField(), range.getMaxField() ); }
     
     public static ConfigUniformFloatProvider of( DoubleField min, DoubleField max ) {
         return new ConfigUniformFloatProvider( new FloatFieldSetting( min ), new FloatFieldSetting( max ) );

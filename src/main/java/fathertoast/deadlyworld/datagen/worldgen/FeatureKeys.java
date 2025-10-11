@@ -78,4 +78,17 @@ public class FeatureKeys {
             netherKeys = nether;
         }
     }
+
+    public static class SimpleDungeon {
+
+        public static SimpleDungeon of( String name ) { return new SimpleDungeon( overworld( name ), nether( name ) ); }
+
+        public final FeatureKeys overworldKeys;
+        public final FeatureKeys netherKeys;
+
+        protected SimpleDungeon( FeatureKeys overworld, FeatureKeys nether ) {
+            overworldKeys = overworld;
+            netherKeys = nether;
+        }
+    }
 }

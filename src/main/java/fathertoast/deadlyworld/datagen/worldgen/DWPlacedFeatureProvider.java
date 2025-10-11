@@ -14,11 +14,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.placement.CountPlacement;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+import net.minecraft.world.level.levelgen.feature.MonsterRoomFeature;
+import net.minecraft.world.level.levelgen.placement.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +69,40 @@ public class DWPlacedFeatureProvider {
 
         // Buried liquids
         register( context, getter, BURIED_LIQUID_ANY_DIMENSION, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
+
+        // Simple dungeon
+        register( context, getter, SIMPLE_DUNGEON.overworldKeys,
+                new PlacementBuilder()
+                        .multiply( overworldConfigs.SIMPLE_DUNGEONS.NORMAL )
+                        .spreadInChunk()
+                        .spreadInHeights( overworldConfigs.SIMPLE_DUNGEONS.NORMAL )
+                        .requireBiome()
+                        .build()
+        );
+        register( context, getter, SIMPLE_DUNGEON.netherKeys,
+                new PlacementBuilder()
+                        .multiply( netherConfigs.SIMPLE_DUNGEONS.NORMAL )
+                        .spreadInChunk()
+                        .spreadInHeights( netherConfigs.SIMPLE_DUNGEONS.NORMAL )
+                        .requireBiome()
+                        .build()
+        );
+        register( context, getter, MINI_DUNGEON.overworldKeys,
+                new PlacementBuilder()
+                        .multiply( overworldConfigs.SIMPLE_DUNGEONS.MINI )
+                        .spreadInChunk()
+                        .spreadInHeights( overworldConfigs.SIMPLE_DUNGEONS.MINI )
+                        .requireBiome()
+                        .build()
+        );
+        register( context, getter, MINI_DUNGEON.netherKeys,
+                new PlacementBuilder()
+                        .multiply( netherConfigs.SIMPLE_DUNGEONS.MINI )
+                        .spreadInChunk()
+                        .spreadInHeights( netherConfigs.SIMPLE_DUNGEONS.MINI )
+                        .requireBiome()
+                        .build()
+        );
     }
     
     /** @return Modifiers for a lone spawner feature. */

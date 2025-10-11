@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.world.levelgen.settings;
+package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -37,7 +37,7 @@ public record TowerDispenserSettings(
                 ConfigConstantFloatProvider.of( config.activationRange ),
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
 
-                ConfigUniformIntProvider.of( config.attackDelayMin, config.attackDelayMax ),
+                ConfigUniformIntProvider.of( config.attackDelay ),
                 ConfigConstantFloatProvider.of( config.attackDamage ),
 
                 ConfigConstantFloatProvider.of( config.projectileSpeed ),

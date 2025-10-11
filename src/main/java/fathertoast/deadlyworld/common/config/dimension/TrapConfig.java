@@ -62,7 +62,6 @@ public class TrapConfig extends FeatureConfig {
 
         public final IntField triggersRemaining;
         public final IntField.RandomRange resetTime;
-        public final IntField resetTimeMin, resetTimeMax; // TODO delete after Crust update
         
         TrapTypeCategory( FeatureConfig parent, TrapType type,
                           double placements, int minHeight, int maxHeight, double ignoredChestCh,
@@ -98,20 +97,16 @@ public class TrapConfig extends FeatureConfig {
             triggersRemaining = SPEC.define( new IntField( "triggers", triggers, -1, Short.MAX_VALUE,
                     "How many times the trap can trigger before it gets \"used up\".",
                     "Setting this to -1 equals infinite triggers.") );
-            resetTime = new IntField.RandomRange(
-                    resetTimeMin = SPEC.define( new IntField( "reset_time.min", minResetTime, 0, Short.MAX_VALUE,
-                            "The minimum and maximum (inclusive) amount of time that must pass before a previously " +
-                                    "triggered trap resets, in ticks. (20 ticks = 1 second)",
-                            DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) ),
-                    resetTimeMax = SPEC.define( new IntField( "reset_time.max", maxResetTime, 0, Short.MAX_VALUE ) )
-            );
+
+            resetTime = new IntField.RandomRange( SPEC, "reset_time", minResetTime, maxResetTime, 0, Short.MAX_VALUE,
+                    "The minimum and maximum (inclusive) amount of time that must pass before a previously " +
+                            "triggered trap resets, in ticks. (20 ticks = 1 second)" );
         }
     }
     
     public static class TntTrapTypeCategory extends TrapTypeCategory {
         
         public final IntField.RandomRange fuseTime;
-        public final IntField fuseTimeMin, fuseTimeMax; // TODO delete after Crust update
         
         public final IntField tntCount;
         public final DoubleField launchSpeed;
@@ -122,14 +117,10 @@ public class TrapConfig extends FeatureConfig {
             super( parent, type, placements, minHeight, maxHeight, chestCh, activationRng, checkSight, minResetTime, maxResetTime, triggers, decoyCh );
             
             SPEC.newLine();
-            
-            fuseTime = new IntField.RandomRange(
-                    fuseTimeMin = SPEC.define( new IntField( "fuse_time.min", minFuseTime, 0, Short.MAX_VALUE,
-                            "The minimum and maximum (inclusive) fuse time set on TNT spawned by this trap, " +
-                                    "in ticks. (20 ticks = 1 second)",
-                            DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) ),
-                    fuseTimeMax = SPEC.define( new IntField( "fuse_time.max", maxFuseTime, 0, Short.MAX_VALUE ) )
-            );
+
+            fuseTime = new IntField.RandomRange( SPEC, "fuse_time", minFuseTime, maxFuseTime, 0, Short.MAX_VALUE,
+                    "The minimum and maximum (inclusive) fuse time set on TNT spawned by this trap, " +
+                            "in ticks. (20 ticks = 1 second)" );
             
             SPEC.newLine();
             
@@ -171,7 +162,7 @@ public class TrapConfig extends FeatureConfig {
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
         
-        /** @return The default spawn list to use for this spawner type and dimension. */
+        /** @return The default spawn list to use for this trap type and dimension. */
         protected WeightedEntityList makeDefaultSpawnList() {
             if( isNetherDimension() ) {
                 return new WeightedEntityList(

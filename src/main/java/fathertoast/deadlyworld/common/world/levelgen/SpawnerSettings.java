@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.world.levelgen.settings;
+package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -47,7 +47,7 @@ public record SpawnerSettings(
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
                 ConfigConstantIntProvider.of( config.maxNearbyEntities ),
                 
-                ConfigUniformIntProvider.of( config.delayMin, config.delayMax ),
+                ConfigUniformIntProvider.of( config.delay ),
                 ConfigConstantIntProvider.of( config.delayProgression ),
                 ConfigConstantFloatProvider.of( config.delayRecovery ),
                 

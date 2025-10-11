@@ -54,7 +54,6 @@ public class TowerDispenserConfig extends FeatureConfig {
         public final DoubleField checkSightChance;
 
         public final IntField.RandomRange attackDelay;
-        public final IntField attackDelayMin, attackDelayMax; // TODO delete after Crust update
 
         public final DoubleField attackDamage;
         
@@ -86,12 +85,9 @@ public class TowerDispenserConfig extends FeatureConfig {
             
             SPEC.newLine();
 
-            attackDelay = new IntField.RandomRange(
-                    attackDelayMin = SPEC.define( new IntField( "attack_delay.min", minAttackDelay, 0, Short.MAX_VALUE,
-                            "The minimum and maximum (inclusive) delay between attacks, in ticks. (20 ticks = 1 second)",
-                            DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) ),
-                    attackDelayMax = SPEC.define( new IntField( "attack_delay.max", maxAttackDelay, 0, Short.MAX_VALUE ) )
-            );
+            attackDelay = new IntField.RandomRange( SPEC, "attack_delay", minAttackDelay, maxAttackDelay, 0, Short.MAX_VALUE,
+                    "The minimum and maximum (inclusive) delay between attacks, in ticks. (20 ticks = 1 second)" );
+
             attackDamage = damage > 0.0 ? SPEC.define( new DoubleField( "attack_damage", damage, DoubleField.Range.NON_NEGATIVE,
                     "The base damage of attacks from " + FEATURE_TYPE_NAME + ".",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) ) : null;
@@ -133,7 +129,7 @@ public class TowerDispenserConfig extends FeatureConfig {
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
         }
 
-        /** @return The default spawn list to use for this spawner type and dimension. */
+        /** @return The default potion list to use for the potion tower dispenser config. */
         @SuppressWarnings( "ConstantConditions" )
         protected WeightedPotionList makeDefaultPotionList(  ) {
             if( isNetherDimension( ) ) {

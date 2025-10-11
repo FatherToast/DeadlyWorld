@@ -31,6 +31,8 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     /** Builds all loot tables for this provider. */
     @Override
     public void generate() {
+        dropSelf( DWBlocks.MINI_CHEST.get() );
+
         for( SpawnerType type : SpawnerType.values() ) {
             add( DWBlocks.spawner( type ), buildSpawnerLoot( type ) );
         }
