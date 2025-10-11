@@ -1,9 +1,7 @@
 package fathertoast.deadlyworld.datagen;
 
-import fathertoast.deadlyworld.api.DWRegistries;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
 import fathertoast.deadlyworld.datagen.loot.DWLootModProvider;
 import fathertoast.deadlyworld.datagen.loot.DWLootTableProvider;
 import fathertoast.deadlyworld.datagen.tags.*;
@@ -11,7 +9,6 @@ import fathertoast.deadlyworld.datagen.worldgen.DWConfiguredFeatureProvider;
 import fathertoast.deadlyworld.datagen.worldgen.DWPlacedFeatureProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -37,7 +34,7 @@ public class DataGatherer {
         // Ensure config is loaded before doing anything.
         // Many common mod lifecycle events are not fired when running data gen.
         Config.initialize();
-
+        
         final DataGenerator generator = event.getGenerator();
         final PackOutput packOutput = generator.getPackOutput();
         final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
@@ -53,21 +50,22 @@ public class DataGatherer {
         if( event.includeServer() ) {
             DatapackBuiltinEntriesProvider builtInProvider =
                     generator.addProvider( true, new DatapackBuiltinEntriesProvider( packOutput, lookupProvider, BUILDER, Set.of( DeadlyWorld.MOD_ID ) ) );
-
+            
             generator.addProvider( true, new DWLootTableProvider( packOutput ) );
             generator.addProvider( true, new DWLootModProvider( packOutput ) );
-
+            
             // Tags
             DWBlockTagsProvider blockTags =
                     generator.addProvider( true, new DWBlockTagsProvider( packOutput, lookupProvider, fileHelper ) );
             generator.addProvider( true, new DWItemTagsProvider( packOutput, lookupProvider, blockTags.contentsGetter(), fileHelper ) );
             generator.addProvider( true, new DWEntityTypeTagsProvider( packOutput, lookupProvider, fileHelper ) );
-            generator.addProvider( true, new DWFeatureTagsProvider( packOutput, builtInProvider.getRegistryProvider(), fileHelper ) );
+            generator.addProvider( true, new DWConfiguredFeatureTagsProvider( packOutput, builtInProvider.getRegistryProvider(), fileHelper ) );
+            generator.addProvider( true, new DWPlacedFeatureTagsProvider( packOutput, builtInProvider.getRegistryProvider(), fileHelper ) );
             generator.addProvider( true, new DWDecoyTagsProvider( packOutput, builtInProvider.getRegistryProvider(), fileHelper ) );
             generator.addProvider( true, new DWFluidTagsProvider( packOutput, lookupProvider, fileHelper ) );
         }
     }
-
+    
     /**
      * Many common mod lifecycle events are not fired when running datagen, so
      * we must make sure we load the configs before doing anything.

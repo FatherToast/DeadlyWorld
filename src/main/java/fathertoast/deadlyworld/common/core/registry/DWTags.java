@@ -1,6 +1,5 @@
 package fathertoast.deadlyworld.common.core.registry;
 
-import fathertoast.deadlyworld.api.DWRegistries;
 import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.registries.Registries;
@@ -11,6 +10,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 import java.util.function.Supplier;
@@ -21,7 +21,7 @@ public final class DWTags {
         public static final BlockWithItem SPAWNERS = tag( "spawners" );
         public static final BlockWithItem TRAPS = tag( "traps" );
         public static final BlockWithItem TOWER_DISPENSERS = tag( "tower_dispensers" );
-
+        
         private static BlockWithItem tag( String name ) {
             return new BlockWithItem( BlockTags.create( DeadlyWorld.resourceLoc( name ) ),
                     ItemTags.create( DeadlyWorld.resourceLoc( name ) ) );
@@ -47,19 +47,33 @@ public final class DWTags {
             return TagKey.create( Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath( "forge", name ) );
         }
     }
-
+    
     public static final class DecoyTypes {
-
+        
         public static final TagKey<DecoyType> OVERWORLD = tag( "overworld" );
         public static final TagKey<DecoyType> THE_NETHER = tag( "nether" );
         public static final TagKey<DecoyType> ANY_DIMENSION = tag( "any_dimension" );
-
+        
         private static TagKey<DecoyType> tag( String name ) {
             return DWDecoyTypes.REGISTRY.createTagKey( DeadlyWorld.resourceLoc( name ) );
         }
     }
     
-    public static final class Features {
+    public static final class ConfiguredFeatures {
+        public static final TagKey<ConfiguredFeature<?, ?>> OVERWORLD = tag( "overworld" );
+        public static final TagKey<ConfiguredFeature<?, ?>> THE_NETHER = tag( "nether" );
+        public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION = tag( "any_dimension" );
+        
+        // public static final TagKey<ConfiguredFeature<?, ?>> SPAWNERS = tag( "spawners" );
+        // public static final TagKey<ConfiguredFeature<?, ?>> TRAPS = tag( "traps" );
+        // public static final TagKey<ConfiguredFeature<?, ?>> TOWER_DISPENSERS = tag( "tower_dispensers" );
+        
+        private static TagKey<ConfiguredFeature<?, ?>> tag( String name ) {
+            return TagKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.resourceLoc( name ) );
+        }
+    }
+    
+    public static final class PlacedFeatures {
         public static final TagKey<PlacedFeature> OVERWORLD = tag( "overworld" );
         public static final TagKey<PlacedFeature> THE_NETHER = tag( "nether" );
         public static final TagKey<PlacedFeature> ANY_DIMENSION = tag( "any_dimension" );
@@ -67,7 +81,7 @@ public final class DWTags {
         // public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
         // public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );
         // public static final TagKey<PlacedFeature> TOWER_DISPENSERS = tag( "tower_dispensers" );
-
+        
         private static TagKey<PlacedFeature> tag( String name ) {
             return TagKey.create( Registries.PLACED_FEATURE, DeadlyWorld.resourceLoc( name ) );
         }
