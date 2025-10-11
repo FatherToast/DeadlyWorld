@@ -107,21 +107,28 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
         // Simple dungeons
         register( context, SIMPLE_DUNGEON.overworldKeys,
                 new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(),
-                        new SimpleDungeonFeature.Configuration( block( Blocks.COBBLESTONE ), block( Blocks.MOSSY_COBBLESTONE ),
+                        new SimpleDungeonFeature.Configuration(
+                                block( Blocks.COBBLESTONE ),
+                                block( Blocks.MOSSY_COBBLESTONE ),
                                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         register( context, SIMPLE_DUNGEON.netherKeys,
                 new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(),
-                        new SimpleDungeonFeature.Configuration( block( Blocks.NETHER_BRICKS ), block( Blocks.CRACKED_NETHER_BRICKS ),
+                        new SimpleDungeonFeature.Configuration(
+                                block( Blocks.NETHER_BRICKS ),
+                                block( Blocks.CRACKED_NETHER_BRICKS ),
                                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-
         register( context, MINI_DUNGEON.overworldKeys,
                 new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(),
-                        new MiniDungeonFeature.Configuration( block( Blocks.COBBLESTONE ), block( Blocks.MOSSY_COBBLESTONE ),
+                        new MiniDungeonFeature.Configuration(
+                                block( Blocks.COBBLESTONE ),
+                                block( Blocks.MOSSY_COBBLESTONE ),
                                 SpawnerSettings.of( MINI_SPAWNER.spawnerType, overworldConfigs ),
                                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         register( context, MINI_DUNGEON.netherKeys,
                 new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(),
-                        new MiniDungeonFeature.Configuration( block( Blocks.NETHER_BRICKS ), block( Blocks.CRACKED_NETHER_BRICKS ),
+                        new MiniDungeonFeature.Configuration(
+                                block( Blocks.NETHER_BRICKS ),
+                                block( Blocks.CRACKED_NETHER_BRICKS ),
                                 SpawnerSettings.of( MINI_SPAWNER.spawnerType, netherConfigs ),
                                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }

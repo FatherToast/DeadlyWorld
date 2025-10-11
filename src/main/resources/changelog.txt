@@ -1,9 +1,13 @@
 1.20.1-1.2.2
-    - Added trap decoys
-        - New Forge registry for DecoyTypes
-        - API for registering custom DecoyTypes and renderers
-    - Added Runny Lava fluid/block
-    - Added Mini Chest block
+    - Added trap decoys.
+        - New Forge registry for DecoyTypes.
+        - API for registering custom DecoyTypes and renderers.
+    - Added Runny Lava fluid / block.
+    - Added Mini Chest block.
+    - Dungeon / Monster Room overhaul.
+        - Added config option to disable vanilla monster room generation.
+        - Added custom simple dungeon feature in place of the vanilla dungeon.
+        - Added Mini Dungeon variant.
 1.20.1-1.1.1
     - Added safety check when generating features to prevent replacing blocks with block entities, hopefully preventing a rare crash
 1.20.1-1.1.0

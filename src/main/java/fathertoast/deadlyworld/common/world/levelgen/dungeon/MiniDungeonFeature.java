@@ -120,12 +120,11 @@ public class MiniDungeonFeature extends DeadlyFeature<MiniDungeonFeature.Configu
                     else if ( offsetPos.getY() >= level.getMinBuildHeight() && !level.getBlockState( offsetPos.below() ).isSolid() ) {
                         level.setBlock( offsetPos, AIR, 2 );
                     }
+                    // Build the walls and floor
                     else if ( state.isSolid() && !state.is( Blocks.CHEST ) ) {
-                        // Fill in the floor with a mix of mossy and normal cobble
                         if ( y == -1 && random.nextInt( 4 ) != 0 ) {
                             safeSetBlock( level, offsetPos, config.floorMixProvider.getState( random, offsetPos ), replaceable );
                         }
-                        // Build the cobble walls
                         else {
                             safeSetBlock(level, offsetPos, config.baseProvider.getState( random, offsetPos ), replaceable);
                         }

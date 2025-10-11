@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 /**
  * Modified copy-paste of {@link net.minecraft.world.level.levelgen.feature.MonsterRoomFeature}.
  * <br><br>
- * Generates the same way, except the spawner is replaced with sub-features.
+ * Generates mostly the same way, except a list of subfeatures is used to pick what generates in the middle.
  */
 public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Configuration> {
     public record Configuration(
@@ -170,7 +170,7 @@ public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Con
         // Generate debug marker if enabled
         debugMarkerIfEnabled( level, origin, Config.getDimensionConfigs( level.getLevel() ).SIMPLE_DUNGEONS.NORMAL );
 
-        // Lastly, try placing a subfeature in the middle of the room
+        // TODO - Make it so subfeatures can be specified via data pack
         try {
             final List<String> subfeatureList = Config.getDimensionConfigs( level.getLevel() ).SIMPLE_DUNGEONS.NORMAL.subfeatures.get();
 
