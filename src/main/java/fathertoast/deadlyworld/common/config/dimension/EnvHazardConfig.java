@@ -78,7 +78,8 @@ public class EnvHazardConfig extends AbstractConfigFile {
             }
             return List.of(
                     new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_0, 20 ),
-                    new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_VOID, DEPTH_3, 10 )
+                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_VOID, DEPTH_3, 7 ),
+                    new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_VOID, DEPTH_3, 3 )
             );
         }
     }

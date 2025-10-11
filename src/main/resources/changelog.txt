@@ -8,6 +8,7 @@
         - Added config option to disable vanilla monster room generation.
         - Added custom simple dungeon feature in place of the vanilla dungeon.
         - Added Mini Dungeon variant.
+    - Updated some default configs.
 1.20.1-1.1.1
     - Added safety check when generating features to prevent replacing blocks with block entities, hopefully preventing a rare crash
 1.20.1-1.1.0
