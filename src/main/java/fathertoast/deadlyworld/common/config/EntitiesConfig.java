@@ -21,7 +21,7 @@ public class EntitiesConfig extends AbstractConfigFile {
     /** Builds the config spec that should be used for this config. */
     EntitiesConfig( ConfigManager manager, String fileName ) {
         super( manager, fileName,
-                "This config contains options for miscellaneous features in the mod."
+                "This config contains options for the entities added by this mod."
         );
         
         SPEC.newLine();
@@ -41,7 +41,7 @@ public class EntitiesConfig extends AbstractConfigFile {
         
         Minis( EntitiesConfig parent ) {
             super( parent, "mini_mobs",
-                    "Options to customize misc global settings." );
+                    "Options to customize the \"mini\" entities; small versions of existing vanilla mobs." );
             
             creeperAttributes = miniAttributes( "creeper" );
             zombieAttributes = miniAttributes( "zombie" );
@@ -69,12 +69,12 @@ public class EntitiesConfig extends AbstractConfigFile {
     public static class Mimics extends AbstractConfigCategory<EntitiesConfig> {
         
         public final AttributeListField chestAttributes;
+        //public final AttributeListField miniChestAttributes;
         public final RLValueListField chestTargetLootTables;
         
         public final AttributeListField jukeboxAttributes;
         
         public final AttributeListField spawnerAttributes;
-        
         public final AttributeListField miniSpawnerAttributes;
         
         Mimics( EntitiesConfig parent ) {
@@ -82,14 +82,15 @@ public class EntitiesConfig extends AbstractConfigFile {
                     "Options to customize misc global settings." );
             
             chestAttributes = mimicAttributes( "chest" );
-            
+            //miniChestAttributes = miniMimicAttributes( "chest" );
             chestTargetLootTables = SPEC.define( new RLValueListField( "chest_target_loot_tables",
                     1, defaultChestMimicLootTables(),
                     "List of IDs for loot tables that can have a Mimic Core item added to them by Deadly World.",
-                    "Each ID is paired with a chance value (the chance for a Mimic Core to be added to the loot table).",
-                    "Chance is in percents, so it should range from 0.0 to 1.0.",
-                    "Mimic Cores are what makes chests come alive and become Chest Mimics, so if one exists in a chest's inventory,",
-                    "be it either because of a loot modifier or because someone put it there, the chest will come alive when opened." ) );
+                    "Each ID is paired with a chance value (the chance for a Mimic Core to be added to the loot table). " +
+                            "Chance is in percents, so it should range from 0.0 to 1.0.",
+                    "Mimic Cores are what make chests come alive and become Chest Mimics, so if one exists in a chest's " +
+                            "inventory, be it either because of a loot modifier or because someone put it there, the chest will " +
+                            "come alive when opened." ) );
             
             SPEC.newLine();
             
@@ -98,11 +99,7 @@ public class EntitiesConfig extends AbstractConfigFile {
             SPEC.newLine();
             
             spawnerAttributes = mimicAttributes( "spawner" );
-            
-            SPEC.newLine();
-            
-            miniSpawnerAttributes = miniMimicAttributes( "mini", "mini_mimics" );
-            ;
+            miniSpawnerAttributes = miniMimicAttributes( "spawner" );
         }
         
         private List<String> defaultChestMimicLootTables() {
@@ -119,7 +116,9 @@ public class EntitiesConfig extends AbstractConfigFile {
                     chestMimicLootTableEntry( BuiltInLootTables.RUINED_PORTAL, 0.1 ),
                     chestMimicLootTableEntry( BuiltInLootTables.SIMPLE_DUNGEON, 0.3 ),
                     chestMimicLootTableEntry( BuiltInLootTables.SPAWN_BONUS_CHEST, 0.5 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CORRIDOR, 0.3 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CORRIDOR, 0.1 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CROSSING, 0.1 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_LIBRARY, 0.3 ),
                     chestMimicLootTableEntry( BuiltInLootTables.WOODLAND_MANSION, 0.1 )
             );
         }
@@ -133,22 +132,22 @@ public class EntitiesConfig extends AbstractConfigFile {
         }
         
         private AttributeListField mimicAttributes( String key, String name ) {
-            AttributeList defaults = new AttributeList(
-                    AttributeEntry.add( Attributes.MAX_HEALTH, 15.0D ),
-                    AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.0 ),
-                    AttributeEntry.add( Attributes.ATTACK_DAMAGE, 2.0 )
-            );
+            AttributeList defaults = new AttributeList();
             return SPEC.define( new AttributeListField( key + "_attributes", defaults,
                     "Attribute modifiers for " + name + "." ) );
         }
         
+        private AttributeListField miniMimicAttributes( String key ) {
+            return miniMimicAttributes( key, "mini " + key + " mimics" );
+        }
+        
         private AttributeListField miniMimicAttributes( String key, String name ) {
             AttributeList defaults = new AttributeList(
-                    AttributeEntry.add( Attributes.MAX_HEALTH, 10.0D ),
-                    AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.25 ),
-                    AttributeEntry.add( Attributes.ATTACK_DAMAGE, 1.5 )
+                    AttributeEntry.mult( Attributes.MAX_HEALTH, 0.333 ),
+                    AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.3 ),
+                    AttributeEntry.mult( Attributes.ATTACK_DAMAGE, 0.5 )
             );
-            return SPEC.define( new AttributeListField( key + "_attributes", defaults,
+            return SPEC.define( new AttributeListField( "mini_" + key + "_attributes", defaults,
                     "Attribute modifiers for " + name + "." ) );
         }
     }

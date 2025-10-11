@@ -16,21 +16,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public class JukeboxMimic extends PathfinderMob implements Enemy {
-
+    
     public JukeboxMimic( EntityType<? extends PathfinderMob> entityType, Level level ) {
         super( entityType, level );
         // Lol!
         setMaxUpStep( 1.0F );
     }
-
-
+    
+    
     public static AttributeSupplier.Builder createJukeboxMimicAttributes() {
         return Monster.createMonsterAttributes()
-                .add( Attributes.MOVEMENT_SPEED, 0.30D )
-                .add( Attributes.MAX_HEALTH, 15.0D );
+                .add( Attributes.MAX_HEALTH, 15.0 )
+                .add( Attributes.MOVEMENT_SPEED, 0.35 )
+                .add( Attributes.ATTACK_DAMAGE, 4.0 );
     }
-
-
+    
+    
     @Override
     protected void registerGoals() {
         goalSelector.addGoal( 0, new FloatGoal( this ) );
@@ -38,20 +39,21 @@ public class JukeboxMimic extends PathfinderMob implements Enemy {
         goalSelector.addGoal( 2, new WaterAvoidingRandomStrollGoal( this, 0.8D ) );
         goalSelector.addGoal( 5, new LookAtPlayerGoal( this, Player.class, 8.0F ) );
         goalSelector.addGoal( 5, new RandomLookAroundGoal( this ) );
-
+        
         targetSelector.addGoal( 0, new HurtByTargetGoal( this ) );
         targetSelector.addGoal( 1, new NearestAttackableTargetGoal<>( this, Player.class, true ) );
     }
+    
     @Override
     protected SoundEvent getHurtSound( DamageSource damageSource ) {
         return super.getHurtSound( damageSource );
     }
-
+    
     @Override
     protected SoundEvent getAmbientSound() {
         return super.getAmbientSound();
     }
-
+    
     @Override
     protected SoundEvent getDeathSound() {
         return super.getDeathSound();
