@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import fathertoast.crust.api.lib.CrustMath;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -220,6 +222,12 @@ public class MiniArrow extends AbstractArrow {
             }
             return tippedArrow;
         }
+    }
+    
+    @Override
+    public void playSound( SoundEvent soundEvent, float volume, float pitch ) {
+        super.playSound( soundEvent, volume,
+                soundEvent == getHitGroundSoundEvent() ? pitch + References.MINI_PITCH_SHIFT : pitch );
     }
     
     @Override

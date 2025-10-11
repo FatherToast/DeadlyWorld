@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.entity;
 
+import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -18,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 
 public class MicroGhast extends Ghast {
-
+    
     public MicroGhast( EntityType<? extends Ghast> entityType, Level level ) {
         super( entityType, level );
         xpReward = 1;
@@ -40,18 +41,17 @@ public class MicroGhast extends Ghast {
     }
     
     @Override
-    protected float getSoundVolume() {
-        return 0.5F;
-    }
+    protected float getSoundVolume() { return 0.5F; }
     
     @Override
-    protected float getStandingEyeHeight( Pose pose, EntityDimensions dimensions ) {
-        return 0.04F;
-    }
+    public float getVoicePitch() { return super.getVoicePitch() + References.MINI_PITCH_SHIFT; }
+    
+    @Override
+    protected float getStandingEyeHeight( Pose pose, EntityDimensions dimensions ) { return 0.04F; }
     
     
     static class GhastLookGoal extends Goal {
-
+        
         private final Ghast ghast;
         
         public GhastLookGoal( Ghast ghast ) {
@@ -73,7 +73,7 @@ public class MicroGhast extends Ghast {
         public void tick() {
             if( ghast.getTarget() == null ) {
                 Vec3 vec3 = ghast.getDeltaMovement();
-                ghast.setYRot( -((float) Mth.atan2( vec3.x, vec3.z )) * ( 180F / (float) Math.PI ) );
+                ghast.setYRot( -((float) Mth.atan2( vec3.x, vec3.z )) * (180F / (float) Math.PI) );
                 ghast.yBodyRot = ghast.getYRot();
             }
             else {
@@ -83,7 +83,7 @@ public class MicroGhast extends Ghast {
                     double x = target.getX() - ghast.getX();
                     double z = target.getZ() - ghast.getZ();
                     
-                    ghast.setYRot( -((float) Mth.atan2( x, z ) ) * ( 180F / (float) Math.PI ) );
+                    ghast.setYRot( -((float) Mth.atan2( x, z )) * (180F / (float) Math.PI) );
                     ghast.yBodyRot = ghast.getYRot();
                 }
             }
@@ -91,7 +91,7 @@ public class MicroGhast extends Ghast {
     }
     
     static class MicroGhastMoveControl extends MoveControl {
-
+        
         private final Ghast ghast;
         private int floatDuration;
         
@@ -182,9 +182,9 @@ public class MicroGhast extends Ghast {
                     
                     if( chargeTime == 20 ) {
                         Vec3 viewVec = ghast.getViewVector( 1.0F ).multiply( 0.3, 0.0, 0.3 );
-                        double x = target.getX() - ( ghast.getX() + viewVec.x );
-                        double y = target.getY( 0.5D ) - (ghast.getY( 0.5D ) );
-                        double z = target.getZ() - ( ghast.getZ() + viewVec.z );
+                        double x = target.getX() - (ghast.getX() + viewVec.x);
+                        double y = target.getY( 0.5D ) - (ghast.getY( 0.5D ));
+                        double z = target.getZ() - (ghast.getZ() + viewVec.z);
                         
                         if( !ghast.isSilent() ) {
                             level.levelEvent( null, 1016, ghast.blockPosition(), 0 );
@@ -196,7 +196,7 @@ public class MicroGhast extends Ghast {
                         chargeTime = -40;
                     }
                 }
-                else if ( chargeTime > 0 ) {
+                else if( chargeTime > 0 ) {
                     --chargeTime;
                 }
                 ghast.setCharging( chargeTime > 10 );

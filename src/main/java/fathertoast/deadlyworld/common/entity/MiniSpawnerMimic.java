@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.entity;
 
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.util.References;
 import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -10,18 +11,18 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 
 public class MiniSpawnerMimic extends SpawnerMimic {
-
+    
     public MiniSpawnerMimic( EntityType<? extends PathfinderMob> entityType, Level level ) {
         super( entityType, level );
         // Is smol, can't take big steps like its older sibling
         setMaxUpStep( 0.5F );
         setSpawner( new ProgressiveDelaySpawner( SpawnerType.MINI, this ) );
     }
-
+    
     @Override
     public void spawnEffectParticle( ProgressiveDelaySpawner spawner, Level level, BlockPos pos ) {
         if( (level.getGameTime() & 0b11) != 0 ) return; // Only spawn every 4th tick
-
+        
         RandomSource random = level.getRandom();
         double x = (double) pos.getX() + 0.25 + random.nextDouble() / 2.0;
         double y = (double) pos.getY() + 0.3 + random.nextDouble() / 2.0;
@@ -29,19 +30,22 @@ public class MiniSpawnerMimic extends SpawnerMimic {
         level.addParticle( ParticleTypes.SMOKE, x, y, z, 0.0, 0.0, 0.0 );
         level.addParticle( ParticleTypes.FLAME, x, y, z, 0.0, 0.0, 0.0 );
     }
-
+    
     /**
-     *  Spawns "panic" particles when the mimic's
-     *  spawner logic is disabled/has run out of spawns.
+     * Spawns "panic" particles when the mimic's
+     * spawner logic is disabled/has run out of spawns.
      */
     @Override
     protected void ohMyGoshWhatDoIDoWHATDOIDO( Level level, BlockPos pos ) {
         if( (level.getGameTime() & 0b11) != 0 ) return; // Only spawn every 4th tick
-
+        
         RandomSource random = level.getRandom();
         double x = (double) pos.getX() + 0.25 + random.nextDouble() / 2.0;
         double y = (double) pos.getY() + 0.3 + random.nextDouble() / 2.0;
         double z = (double) pos.getZ() + 0.25 + random.nextDouble() / 2.0;
         level.addParticle( ParticleTypes.RAIN, x, y, z, 0.0, 0.0, 0.0 );
     }
+    
+    @Override
+    public float getVoicePitch() { return super.getVoicePitch() + References.MINI_PITCH_SHIFT; }
 }
