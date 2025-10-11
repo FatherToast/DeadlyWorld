@@ -9,21 +9,21 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Ghast;
 
 public class MicroGhastRenderer extends MobRenderer<Ghast, GhastModel<Ghast>> {
-
-    private static final ResourceLocation GHAST_LOCATION = new ResourceLocation( "textures/entity/ghast/ghast.png" );
-    private static final ResourceLocation GHAST_SHOOTING_LOCATION = new ResourceLocation( "textures/entity/ghast/ghast_shooting.png" );
-
+    
+    private static final ResourceLocation GHAST_LOCATION = ResourceLocation.withDefaultNamespace( "textures/entity/ghast/ghast.png" );
+    private static final ResourceLocation GHAST_SHOOTING_LOCATION = ResourceLocation.withDefaultNamespace( "textures/entity/ghast/ghast_shooting.png" );
+    
     public MicroGhastRenderer( EntityRendererProvider.Context context ) {
         super( context, new GhastModel<>( context.bakeLayer( ModelLayers.GHAST ) ), 0.1F );
     }
-
+    
     @Override
     public ResourceLocation getTextureLocation( Ghast microGhast ) {
         return microGhast.isCharging() ? GHAST_SHOOTING_LOCATION : GHAST_LOCATION;
     }
-
+    
     @Override
     protected void scale( Ghast microGhast, PoseStack poseStack, float partialTick ) {
-        poseStack.scale(0.1F, 0.1F, 0.1F);
+        poseStack.scale( 0.1F, 0.1F, 0.1F );
     }
 }

@@ -90,7 +90,7 @@ public class WeightedEntityListField extends EntityListField {
         }
         else {
             // Normal entry
-            regKey = new ResourceLocation( args[0].trim() );
+            regKey = ResourceLocation.parse( args[0].trim() );
         }
         final List<Double> valuesList = new ArrayList<>();
         final int actualValues = args.length - 1;
