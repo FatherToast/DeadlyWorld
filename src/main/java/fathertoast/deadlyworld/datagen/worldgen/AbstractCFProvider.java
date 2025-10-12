@@ -35,15 +35,24 @@ public abstract class AbstractCFProvider {
     /** List of all configurations that cannot be (reasonably) placed by a feature placer. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NOT_PLACEABLE = new ArrayList<>();
     
-    /** List of all configurations that should generate in overworld biomes. */
-    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_FEATURES = new ArrayList<>();
-    /** List of all configurations that should generate in nether biomes. */
-    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NETHER_FEATURES = new ArrayList<>();
     /**
      * List of all configurations that don't care about dimension type and should generate anywhere.
      * Any restrictions are handled in the feature itself, usually config based.
      */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> ANY_DIMENSION_FEATURES = new ArrayList<>();
+    /** List of all configurations that should generate in overworld biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_FEATURES = new ArrayList<>();
+    /** List of all configurations that should generate in nether biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NETHER_FEATURES = new ArrayList<>();
+    
+    /** List of all spawner configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> SPAWNER_FEATURES = new ArrayList<>();
+    /** List of all trap configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TRAP_FEATURES = new ArrayList<>();
+    /** List of all tower dispenser configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TOWER_DISPENSER_FEATURES = new ArrayList<>();
+    /** List of all dungeon configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> DUNGEON_FEATURES = new ArrayList<>();
     
     
     /** Convenience method for making a simple block state provider. */
