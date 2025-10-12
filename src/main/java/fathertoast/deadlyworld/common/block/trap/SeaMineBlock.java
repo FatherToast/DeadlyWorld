@@ -1,8 +1,10 @@
 package fathertoast.deadlyworld.common.block.trap;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -12,7 +14,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SeaMineBlock extends Block {
+import javax.annotation.Nullable;
+
+public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
 
     private static final VoxelShape SHAPE = Block.box( 3.0D, 3.0D, 3.0D, 13.0D, 13.0D, 13.0D );
 
@@ -28,6 +32,15 @@ public class SeaMineBlock extends Block {
     @SuppressWarnings( "deprecation" )
     public VoxelShape getShape( BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
         return SHAPE;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement( BlockPlaceContext context ) {
+        BlockPos pos = context.getClickedPos();
+        FluidState fluidState = context.getLevel().getFluidState( pos );
+
+        return defaultBlockState().setValue( WATERLOGGED, fluidState.is( Fluids.WATER ) );
     }
 
     @Override

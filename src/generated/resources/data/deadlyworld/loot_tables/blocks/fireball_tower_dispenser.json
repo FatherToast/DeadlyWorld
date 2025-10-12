@@ -158,8 +158,8 @@
             {
               "enchantments": [
                 "minecraft:fire_aspect",
-                "minecraft:fire_protection",
-                "minecraft:flame"
+                "minecraft:flame",
+                "minecraft:fire_protection"
               ],
               "function": "minecraft:enchant_randomly"
             }

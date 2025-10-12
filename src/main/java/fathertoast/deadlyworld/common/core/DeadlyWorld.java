@@ -5,10 +5,10 @@ import fathertoast.deadlyworld.common.core.registry.*;
 import fathertoast.deadlyworld.common.network.PacketHandler;
 import fathertoast.deadlyworld.common.util.DWDispenserBehavior;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.*;
+import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -72,11 +72,11 @@ public class DeadlyWorld {
      *      o user-defined veins
      *      ? new vein gen styles
      *  o dungeon (monster room) world gen
-     *      o spawner
-     *      o mini
-     *      o tower
+     *      - spawner
+     *      - mini
+     *      - tower
      *      ? other special dungeon types
-     *      o vanilla dungeon disable
+     *      - vanilla dungeon disable
      *  o chest world gen
      *      o default
      *      o valuable
@@ -125,8 +125,9 @@ public class DeadlyWorld {
      *      ? blackout ambush
      *      ? pit
      *  ? water trap world gen
-     *      + vortex
-     *      ? need more than just one!
+     *      + vortex (storm drain thingy)
+     *      + sea mines (puffer and guardian variants?)
+     *      ? need more than just two!
      *  + ceiling trap world gen
      *      + cave-in
      *      + lava
