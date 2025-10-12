@@ -71,7 +71,7 @@ public class DeadlyWorld {
      *      o vanilla vein replacements
      *      o user-defined veins
      *      ? new vein gen styles
-     *  o dungeon (monster room) world gen
+     *  - dungeon (monster room) world gen
      *      - spawner
      *      - mini
      *      - tower
@@ -114,7 +114,7 @@ public class DeadlyWorld {
      *      ? fire immune spawner + fireball tower
      *      ? fire immune spawner + fire floor trap
      *      ? chicken spawner + egg tower
-     *  o floor trap world gen
+     *  - floor trap world gen
      *      - tnt
      *      - tnt mob
      *      - potion
@@ -169,7 +169,7 @@ public class DeadlyWorld {
     
     public DeadlyWorld( FMLJavaModLoadingContext context ) {
         IEventBus eventBus = context.getModEventBus();
-
+        
         packetHandler.registerMessages();
         
         eventBus.addListener( DWEntities::createAttributes );
@@ -191,7 +191,7 @@ public class DeadlyWorld {
         
         Config.initializeEarly();
         DeferredWorkQueue.lookup( Optional.of( ModLoadingStage.COMMON_SETUP ) ).ifPresent(
-                (workQueue) -> workQueue.enqueueWork( ModList.get().getModContainerById( MOD_ID ).orElseThrow(), Config::initialize )
+                ( workQueue ) -> workQueue.enqueueWork( ModList.get().getModContainerById( MOD_ID ).orElseThrow(), Config::initialize )
         );
         
         DWFieldProviders.register( eventBus );
@@ -203,7 +203,7 @@ public class DeadlyWorld {
         event.enqueueWork( () -> {
             DWFluids.registerFluidInteractions();
             DWDispenserBehavior.register();
-        });
+        } );
     }
     
     /** @return A ResourceLocation with the mod's modid. */
@@ -212,7 +212,7 @@ public class DeadlyWorld {
     public static String logPrefix( Class<?> clazz ) {
         return "[" + MOD_ID + "/" + clazz.getSimpleName() + "] ";
     }
-
+    
     /** @return Returns the resource location as a string, or "null" if it is null. */
     public static String toString( @Nullable ResourceLocation res ) { return res == null ? "null" : res.toString(); }
 }

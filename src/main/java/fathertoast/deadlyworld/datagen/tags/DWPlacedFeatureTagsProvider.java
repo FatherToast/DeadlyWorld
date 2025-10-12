@@ -26,6 +26,11 @@ public class DWPlacedFeatureTagsProvider extends TagsProvider<PlacedFeature> {
         addAll( DWTags.PlacedFeatures.OVERWORLD, DWPlacedFeatureProvider.OVERWORLD_FEATURES );
         addAll( DWTags.PlacedFeatures.THE_NETHER, DWPlacedFeatureProvider.NETHER_FEATURES );
         addAll( DWTags.PlacedFeatures.ANY_DIMENSION, DWPlacedFeatureProvider.ANY_DIMENSION_FEATURES );
+        
+        addAll( DWTags.PlacedFeatures.SPAWNERS, DWPlacedFeatureProvider.SPAWNER_FEATURES );
+        addAll( DWTags.PlacedFeatures.TRAPS, DWPlacedFeatureProvider.TRAP_FEATURES );
+        addAll( DWTags.PlacedFeatures.TOWER_DISPENSERS, DWPlacedFeatureProvider.TOWER_DISPENSER_FEATURES );
+        addAll( DWTags.PlacedFeatures.DUNGEONS, DWPlacedFeatureProvider.DUNGEON_FEATURES );
     }
     
     /** Add all features in a list to a tag. */

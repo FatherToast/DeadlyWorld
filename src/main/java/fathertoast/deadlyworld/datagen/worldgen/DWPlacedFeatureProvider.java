@@ -26,17 +26,26 @@ import java.util.List;
 import static fathertoast.deadlyworld.datagen.worldgen.DWConfiguredFeatureProvider.*;
 
 public class DWPlacedFeatureProvider {
-    /** List of all placements that should generate in overworld biomes. */
-    public static final List<ResourceKey<PlacedFeature>> OVERWORLD_FEATURES = new ArrayList<>();
-    /** List of all placements that should generate in nether biomes. */
-    public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
     /**
      * List of all placements that don't care about dimension type and should generate anywhere.
      * Any restrictions are handled in the feature itself, usually config based.
      */
     public static final List<ResourceKey<PlacedFeature>> ANY_DIMENSION_FEATURES = new ArrayList<>();
-
-
+    /** List of all placements that should generate in overworld biomes. */
+    public static final List<ResourceKey<PlacedFeature>> OVERWORLD_FEATURES = new ArrayList<>();
+    /** List of all placements that should generate in nether biomes. */
+    public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
+    
+    /** List of all spawner placements. */
+    public static final List<ResourceKey<PlacedFeature>> SPAWNER_FEATURES = new ArrayList<>();
+    /** List of all trap placements. */
+    public static final List<ResourceKey<PlacedFeature>> TRAP_FEATURES = new ArrayList<>();
+    /** List of all tower dispenser placements. */
+    public static final List<ResourceKey<PlacedFeature>> TOWER_DISPENSER_FEATURES = new ArrayList<>();
+    /** List of all dungeon placements. */
+    public static final List<ResourceKey<PlacedFeature>> DUNGEON_FEATURES = new ArrayList<>();
+    
+    
     private static final BlockPredicate PREDICATE_ANY_FLUID = BlockPredicate.not( BlockPredicate.noFluid() );
     
     /** Called by registry set builder to generate our placed features. */
@@ -52,24 +61,24 @@ public class DWPlacedFeatureProvider {
         registerLoneSpawner( context, getter, BRUTAL_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, MINI_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, SILVERFISH_NEST, overworldConfigs, netherConfigs );
-
+        
         // Standard floor trap placements
         registerFloorTrap( context, getter, TNT_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, TNT_MOB_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, POTION_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, LAVA_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, FIRE_TRAP, overworldConfigs, netherConfigs );
-
+        
         // Standards tower dispenser placements
         registerTowerDispenser( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );
         registerTowerDispenser( context, getter, FIRE_TOWER, overworldConfigs, netherConfigs );
         registerTowerDispenser( context, getter, POTION_TOWER, overworldConfigs, netherConfigs );
         registerTowerDispenser( context, getter, GATLING_TOWER, overworldConfigs, netherConfigs );
         registerTowerDispenser( context, getter, FIREBALL_TOWER, overworldConfigs, netherConfigs );
-
+        
         // Buried liquids
         register( context, getter, BURIED_LIQUID_ANY_DIMENSION, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
-
+        
         // Simple dungeon
         register( context, getter, SIMPLE_DUNGEON.overworldKeys,
                 new PlacementBuilder()
@@ -109,12 +118,12 @@ public class DWPlacedFeatureProvider {
     protected static List<PlacementModifier> loneSpawner( SpawnerType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getFeatureConfig( dimConfigs ) );
     }
-
+    
     /** @return Modifiers for a floor trap feature. */
     protected static List<PlacementModifier> floorTrap( TrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getFeatureConfig( dimConfigs ) );
     }
-
+    
     /** @return Modifiers for a floor trap feature. */
     protected static List<PlacementModifier> towerDispenser( TowerType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getFeatureConfig( dimConfigs ) );
@@ -162,17 +171,17 @@ public class DWPlacedFeatureProvider {
         register( context, getter, feature.overworldKeys, loneSpawner( feature.spawnerType, overworldConfigs ) );
         register( context, getter, feature.netherKeys, loneSpawner( feature.spawnerType, netherConfigs ) );
     }
-
+    
     /** Registers a placed floor trap type feature to each supported dimension. */
     protected static void registerFloorTrap( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
                                              FeatureKeys.Trap feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         register( context, getter, feature.overworldKeys, floorTrap( feature.trapType, overworldConfigs ) );
         register( context, getter, feature.netherKeys, floorTrap( feature.trapType, netherConfigs ) );
     }
-
+    
     /** Registers a placed floor trap type feature to each supported dimension. */
     protected static void registerTowerDispenser( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                             FeatureKeys.TowerDispenser feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+                                                  FeatureKeys.TowerDispenser feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         register( context, getter, feature.overworldKeys, towerDispenser( feature.towerType, overworldConfigs ) );
         register( context, getter, feature.netherKeys, towerDispenser( feature.towerType, netherConfigs ) );
     }
@@ -220,7 +229,7 @@ public class DWPlacedFeatureProvider {
         NETHER_FEATURES.add( key );
         return key;
     }
-
+    
     protected static ResourceKey<PlacedFeature> anyDimKey( String name ) {
         final ResourceKey<PlacedFeature> key = key( name + "_any_dimension" );
         ANY_DIMENSION_FEATURES.add( key );

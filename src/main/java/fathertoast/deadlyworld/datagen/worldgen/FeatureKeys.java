@@ -51,6 +51,11 @@ public class FeatureKeys {
             spawnerType = type;
             overworldKeys = overworld;
             netherKeys = nether;
+            
+            AbstractCFProvider.SPAWNER_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.SPAWNER_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.SPAWNER_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.SPAWNER_FEATURES.add( nether.placedKey );
         }
     }
     
@@ -66,6 +71,11 @@ public class FeatureKeys {
             trapType = type;
             overworldKeys = overworld;
             netherKeys = nether;
+            
+            AbstractCFProvider.TRAP_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.TRAP_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.TRAP_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.TRAP_FEATURES.add( nether.placedKey );
         }
     }
     
@@ -81,6 +91,11 @@ public class FeatureKeys {
             towerType = type;
             overworldKeys = overworld;
             netherKeys = nether;
+            
+            AbstractCFProvider.TOWER_DISPENSER_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.TOWER_DISPENSER_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.TOWER_DISPENSER_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.TOWER_DISPENSER_FEATURES.add( nether.placedKey );
         }
     }
     
@@ -94,6 +109,11 @@ public class FeatureKeys {
         protected SimpleDungeon( FeatureKeys overworld, FeatureKeys nether ) {
             overworldKeys = overworld.notPlaceable();
             netherKeys = nether.notPlaceable();
+            
+            AbstractCFProvider.DUNGEON_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.DUNGEON_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.DUNGEON_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.DUNGEON_FEATURES.add( nether.placedKey );
         }
     }
 }

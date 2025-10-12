@@ -62,13 +62,14 @@ public final class DWTags {
     public static final class ConfiguredFeatures {
         public static final TagKey<ConfiguredFeature<?, ?>> NOT_PLACEABLE = tag( "not_placeable" );
         
+        public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION = tag( "any_dimension" );
         public static final TagKey<ConfiguredFeature<?, ?>> OVERWORLD = tag( "overworld" );
         public static final TagKey<ConfiguredFeature<?, ?>> THE_NETHER = tag( "nether" );
-        public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION = tag( "any_dimension" );
         
-        // public static final TagKey<ConfiguredFeature<?, ?>> SPAWNERS = tag( "spawners" );
-        // public static final TagKey<ConfiguredFeature<?, ?>> TRAPS = tag( "traps" );
-        // public static final TagKey<ConfiguredFeature<?, ?>> TOWER_DISPENSERS = tag( "tower_dispensers" );
+        public static final TagKey<ConfiguredFeature<?, ?>> SPAWNERS = tag( "spawners" );
+        public static final TagKey<ConfiguredFeature<?, ?>> TRAPS = tag( "traps" );
+        public static final TagKey<ConfiguredFeature<?, ?>> TOWER_DISPENSERS = tag( "tower_dispensers" );
+        public static final TagKey<ConfiguredFeature<?, ?>> DUNGEONS = tag( "dungeons" );
         
         private static TagKey<ConfiguredFeature<?, ?>> tag( String name ) {
             return TagKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.resourceLoc( name ) );
@@ -76,13 +77,14 @@ public final class DWTags {
     }
     
     public static final class PlacedFeatures {
+        public static final TagKey<PlacedFeature> ANY_DIMENSION = tag( "any_dimension" );
         public static final TagKey<PlacedFeature> OVERWORLD = tag( "overworld" );
         public static final TagKey<PlacedFeature> THE_NETHER = tag( "nether" );
-        public static final TagKey<PlacedFeature> ANY_DIMENSION = tag( "any_dimension" );
         
-        // public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
-        // public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );
-        // public static final TagKey<PlacedFeature> TOWER_DISPENSERS = tag( "tower_dispensers" );
+        public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
+        public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );
+        public static final TagKey<PlacedFeature> TOWER_DISPENSERS = tag( "tower_dispensers" );
+        public static final TagKey<PlacedFeature> DUNGEONS = tag( "dungeons" );
         
         private static TagKey<PlacedFeature> tag( String name ) {
             return TagKey.create( Registries.PLACED_FEATURE, DeadlyWorld.resourceLoc( name ) );
