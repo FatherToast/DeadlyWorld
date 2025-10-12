@@ -60,6 +60,8 @@ public final class DWTags {
     }
     
     public static final class ConfiguredFeatures {
+        public static final TagKey<ConfiguredFeature<?, ?>> NOT_PLACEABLE = tag( "not_placeable" );
+        
         public static final TagKey<ConfiguredFeature<?, ?>> OVERWORLD = tag( "overworld" );
         public static final TagKey<ConfiguredFeature<?, ?>> THE_NETHER = tag( "nether" );
         public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION = tag( "any_dimension" );

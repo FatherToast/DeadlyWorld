@@ -11,11 +11,16 @@ import fathertoast.deadlyworld.client.renderer.entity.model.JukeboxMimicModel;
 import fathertoast.deadlyworld.client.renderer.entity.model.MiniSpawnerMimicModel;
 import fathertoast.deadlyworld.client.renderer.entity.model.SpawnerMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.registry.*;
+import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
+import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
+import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.core.registry.DWItems;
+import fathertoast.deadlyworld.common.item.FeaturePlacerItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.TntRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ItemSupplier;
@@ -37,21 +42,21 @@ public class ClientRegister {
     @SubscribeEvent
     public static void onClientSetup( FMLClientSetupEvent event ) {
         MinecraftForge.EVENT_BUS.register( new ClientEvents() );
-
+        
         DecoyRendererRegistry.registerDefaults();
         ChestMimicChestLayer.validateChestTextures();
     }
-
+    
     @SubscribeEvent
     public static void onAddLayers( EntityRenderersEvent.AddLayers event ) {
         // Sneak in decoy render setup here after entity renderers have been setup
         DecoyRendererRegistry.setupDecoyRenderers();
     }
-
+    
     @SubscribeEvent
     public static void onRegisterReloadListeners( RegisterClientReloadListenersEvent event ) {
     }
-
+    
     private static void registerBlockEntityRenderers() {
         BlockEntityRenderers.register( DWBlockEntities.DEADLY_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
         BlockEntityRenderers.register( DWBlockEntities.MINI_SPAWNER.get(), DeadlySpawnerBlockEntityRenderer::new );
@@ -59,9 +64,9 @@ public class ClientRegister {
         BlockEntityRenderers.register( DWBlockEntities.POTION_TRAP.get(), DeadlyTrapBlockEntityRenderer::new );
         BlockEntityRenderers.register( DWBlockEntities.MINI_CHEST.get(), MiniChestBlockEntityRenderer::new );
         //        BlockEntityRenderers.register( DWBlockEntities.STORM_DRAIN.get(), StormDrainBlockEntityRenderer::new );
-
+        
         // Populate BEWLR holders
-        for ( BEWLRHolders.Holder holder : BEWLRHolders.HOLDERS ) {
+        for( BEWLRHolders.Holder holder : BEWLRHolders.HOLDERS ) {
             holder.populate( Minecraft.getInstance().getBlockEntityRenderDispatcher() );
         }
     }
@@ -72,7 +77,7 @@ public class ClientRegister {
         event.registerLayerDefinition( DWModelLayers.CHEST_MIMIC, ChestMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.MINI_SPAWNER_MIMIC, MiniSpawnerMimicModel::createBodyLayer );
-
+        
         event.registerLayerDefinition( DWModelLayers.MINI_CHEST, MiniChestBlockEntityRenderer::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.DEADLY_TRAP_OVERLAY, DeadlyTrapBlockEntityRenderer::createOverlayLayer );
     }
@@ -95,10 +100,10 @@ public class ClientRegister {
         // Projectiles
         event.registerEntityRenderer( DWEntities.MINI_ARROW.get(), MiniArrowRenderer::new );
         registerThrownRenderer( DWEntities.MICRO_FIREBALL.get(), 0.15F, true, event );
-
+        
         // Misc
         event.registerEntityRenderer( DWEntities.YEET_TNT.get(), TntRenderer::new );
-
+        
         // Block entities
         registerBlockEntityRenderers();
     }
@@ -114,10 +119,53 @@ public class ClientRegister {
                 event.accept( item.get() );
             }
         }
-        else if( event.getTabKey() == DWCreativeModeTabs.MOD_TAB.key() ) {
+        else if( event.getTabKey() == DWCreativeModeTabs.ALL.key() ) {
             for( RegistryObject<Item> item : DWItems.REGISTRY.getEntries() ) {
+                if( item.equals( DWItems.FEATURE_PLACER ) ) continue;
                 event.accept( item.get() );
             }
         }
+        else if( event.getTabKey() == DWCreativeModeTabs.PLACERS.key() ) {
+            for( String featureKey : featureKeys() ) {
+                event.accept( FeaturePlacerItem.of( ResourceLocation.parse( featureKey ) ) );
+            }
+        }
+    }
+    
+    private static String[] featureKeys() {
+        return new String[] {
+                "deadlyworld:simple_spawner",
+                "deadlyworld:stream_spawner",
+                "deadlyworld:swarm_spawner",
+                "deadlyworld:brutal_spawner",
+                "deadlyworld:mini_spawner",
+                "deadlyworld:silverfish_nest",
+                "deadlyworld:tnt_trap",
+                "deadlyworld:tnt_mob_trap",
+                "deadlyworld:potion_trap",
+                "deadlyworld:lava_trap",
+                "deadlyworld:fire_trap",
+                "deadlyworld:simple_tower_dispenser",
+                "deadlyworld:fire_tower_dispenser",
+                "deadlyworld:potion_tower_dispenser",
+                "deadlyworld:gatling_tower_dispenser",
+                "deadlyworld:fireball_tower_dispenser",
+                "deadlyworld:simple_spawner_nether",
+                "deadlyworld:stream_spawner_nether",
+                "deadlyworld:swarm_spawner_nether",
+                "deadlyworld:brutal_spawner_nether",
+                "deadlyworld:mini_spawner_nether",
+                "deadlyworld:silverfish_nest_nether",
+                "deadlyworld:tnt_trap_nether",
+                "deadlyworld:tnt_mob_trap_nether",
+                "deadlyworld:potion_trap_nether",
+                "deadlyworld:lava_trap_nether",
+                "deadlyworld:fire_trap_nether",
+                "deadlyworld:simple_tower_dispenser_nether",
+                "deadlyworld:fire_tower_dispenser_nether",
+                "deadlyworld:potion_tower_dispenser_nether",
+                "deadlyworld:gatling_tower_dispenser_nether",
+                "deadlyworld:fireball_tower_dispenser_nether"
+        };
     }
 }

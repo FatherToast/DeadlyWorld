@@ -7,12 +7,12 @@ import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
-import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
-import fathertoast.deadlyworld.common.world.levelgen.trap.LoneSpawnerFeature;
-import fathertoast.deadlyworld.common.world.levelgen.trap.SimpleTowerDispenserFeature;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import fathertoast.deadlyworld.common.world.levelgen.TowerDispenserSettings;
+import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.LoneSpawnerFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.SimpleTowerDispenserFeature;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,9 @@ import java.util.function.Supplier;
  * implementation doesn't get super bloated and insane looking.
  */
 public abstract class AbstractCFProvider {
+    /** List of all configurations that cannot be (reasonably) placed by a feature placer. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NOT_PLACEABLE = new ArrayList<>();
+    
     /** List of all configurations that should generate in overworld biomes. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_FEATURES = new ArrayList<>();
     /** List of all configurations that should generate in nether biomes. */

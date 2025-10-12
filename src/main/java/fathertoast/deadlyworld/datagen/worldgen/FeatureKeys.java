@@ -6,7 +6,6 @@ import fathertoast.deadlyworld.common.block.trap.TrapType;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.common.world.ForgeBiomeModifiers;
 
 /** Used to link and simplify configured features and placed features that are one-to-one. */
 public class FeatureKeys {
@@ -20,7 +19,7 @@ public class FeatureKeys {
         return new FeatureKeys( DWConfiguredFeatureProvider.netherKey( name ),
                 DWPlacedFeatureProvider.netherKey( name ) );
     }
-
+    
     public static FeatureKeys anyDimension( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.anyDimKey( name ),
                 DWPlacedFeatureProvider.anyDimKey( name ) );
@@ -32,6 +31,12 @@ public class FeatureKeys {
     protected FeatureKeys( ResourceKey<ConfiguredFeature<?, ?>> configured, ResourceKey<PlacedFeature> placed ) {
         configuredKey = configured;
         placedKey = placed;
+    }
+    
+    /** Marks the configured feature as 'not placeable' and returns itself for ease in constructing. */
+    public FeatureKeys notPlaceable() {
+        AbstractCFProvider.NOT_PLACEABLE.add( configuredKey );
+        return this;
     }
     
     public static class Spawner {
@@ -48,47 +53,47 @@ public class FeatureKeys {
             netherKeys = nether;
         }
     }
-
+    
     public static class Trap {
-
+        
         public static Trap of( TrapType type, String name ) { return new Trap( type, overworld( name ), nether( name ) ); }
-
+        
         public final TrapType trapType;
         public final FeatureKeys overworldKeys;
         public final FeatureKeys netherKeys;
-
+        
         protected Trap( TrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             trapType = type;
             overworldKeys = overworld;
             netherKeys = nether;
         }
     }
-
+    
     public static class TowerDispenser {
-
+        
         public static TowerDispenser of( TowerType type, String name ) { return new TowerDispenser( type, overworld( name ), nether( name ) ); }
-
+        
         public final TowerType towerType;
         public final FeatureKeys overworldKeys;
         public final FeatureKeys netherKeys;
-
+        
         protected TowerDispenser( TowerType type, FeatureKeys overworld, FeatureKeys nether ) {
             towerType = type;
             overworldKeys = overworld;
             netherKeys = nether;
         }
     }
-
+    
     public static class SimpleDungeon {
-
+        
         public static SimpleDungeon of( String name ) { return new SimpleDungeon( overworld( name ), nether( name ) ); }
-
+        
         public final FeatureKeys overworldKeys;
         public final FeatureKeys netherKeys;
-
+        
         protected SimpleDungeon( FeatureKeys overworld, FeatureKeys nether ) {
-            overworldKeys = overworld;
-            netherKeys = nether;
+            overworldKeys = overworld.notPlaceable();
+            netherKeys = nether.notPlaceable();
         }
     }
 }
