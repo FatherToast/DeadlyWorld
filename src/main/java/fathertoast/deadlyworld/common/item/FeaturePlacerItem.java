@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.item;
 
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
+import fathertoast.deadlyworld.common.core.registry.DWTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -10,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +56,29 @@ public class FeaturePlacerItem extends Item {
     private static ResourceLocation getFeatureKey( @Nullable CompoundTag tag ) {
         if( tag == null || !NBTHelper.containsString( tag, TAG_FEATURE ) ) return null;
         return ResourceLocation.tryParse( tag.getString( TAG_FEATURE ) );
+    }
+    
+    /** @return A list of all feature keys (as strings) of configured features that can be placed by a feature placer. */
+    public static List<String> buildFeatureKeysList( ServerLevel level ) {
+        final ArrayList<String> featureKeys = new ArrayList<>();
+        final Registry<ConfiguredFeature<?, ?>> registry = level.registryAccess().registryOrThrow( Registries.CONFIGURED_FEATURE );
+        
+        buildFeatureKeysFor( featureKeys, registry, DWTags.ConfiguredFeatures.ANY_DIMENSION );
+        buildFeatureKeysFor( featureKeys, registry, DWTags.ConfiguredFeatures.OVERWORLD );
+        buildFeatureKeysFor( featureKeys, registry, DWTags.ConfiguredFeatures.THE_NETHER );
+        
+        return featureKeys;
+    }
+    
+    private static void buildFeatureKeysFor( ArrayList<String> featureKeys, Registry<ConfiguredFeature<?, ?>> registry,
+                                             TagKey<ConfiguredFeature<?, ?>> tag ) {
+        registry.getTag( tag ).ifPresent( ( features ) -> features.forEach( ( feature ) -> {
+            if( !feature.is( DWTags.ConfiguredFeatures.NOT_PLACEABLE ) ) {
+                feature.unwrapKey().ifPresent( ( key ) ->
+                        featureKeys.add( key.location().toString() )
+                );
+            }
+        } ) );
     }
     
     

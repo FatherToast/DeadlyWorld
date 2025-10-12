@@ -23,6 +23,7 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
     
     @Override
     protected void addTags( HolderLookup.Provider holderLookup ) {
+        addAll( DWTags.ConfiguredFeatures.NOT_PLACEABLE, AbstractCFProvider.NOT_PLACEABLE );
         addAll( DWTags.ConfiguredFeatures.OVERWORLD, AbstractCFProvider.OVERWORLD_FEATURES );
         addAll( DWTags.ConfiguredFeatures.THE_NETHER, AbstractCFProvider.NETHER_FEATURES );
         addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION, AbstractCFProvider.ANY_DIMENSION_FEATURES );
