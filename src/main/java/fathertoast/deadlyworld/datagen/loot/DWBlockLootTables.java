@@ -32,6 +32,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     @Override
     public void generate() {
         dropSelf( DWBlocks.MINI_CHEST.get() );
+        add( DWBlocks.SEA_MINE.get(), noDrop() );
 
         for( SpawnerType type : SpawnerType.values() ) {
             add( DWBlocks.spawner( type ), buildSpawnerLoot( type ) );

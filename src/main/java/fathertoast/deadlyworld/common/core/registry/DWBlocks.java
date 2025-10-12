@@ -8,6 +8,7 @@ import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
+import fathertoast.deadlyworld.common.block.trap.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.item.MiniChestBlockItem;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -46,6 +48,8 @@ public final class DWBlocks {
     public static final RegistryObject<Block> MINI_CHEST = registerBlock( "mini_chest",
             () -> new MiniChestBlock( BlockBehaviour.Properties.of().mapColor( MapColor.WOOD ).instrument( NoteBlockInstrument.BASS ).strength( 2.5F ).sound( SoundType.WOOD ).ignitedByLava() ),
             () -> new MiniChestBlockItem( DWBlocks.MINI_CHEST.get() ) );
+
+    public static final RegistryObject<Block> SEA_MINE = registerBlock( "sea_mine", () -> new SeaMineBlock( BlockBehaviour.Properties.of().pushReaction( PushReaction.DESTROY ).instabreak() ) );
 
     public static final RegistryObject<LiquidBlock> RUNNY_LAVA = registerBlockNoItem( "runny_lava", () -> new RunnyLavaBlock( DWFluids.RUNNY_LAVA_SOURCE ) );
 
