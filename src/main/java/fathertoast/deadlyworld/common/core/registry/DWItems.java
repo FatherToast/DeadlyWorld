@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.item.FeaturePlacerItem;
 import fathertoast.deadlyworld.common.item.RunnyLavaBucketItem;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -19,12 +20,13 @@ public final class DWItems {
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create( ForgeRegistries.ITEMS, DeadlyWorld.MOD_ID );
     
     //public static final RegistryObject<DeviceBlueprintItem> DEVICE_BLUEPRINT = register( "device_blueprint", DeviceBlueprintItem::new );
-    public static final RegistryObject<Item> MIMIC_CORE = register("mimic_core", () -> new SimpleFoiledItem( new Item.Properties()
+    
+    public static final RegistryObject<Item> MIMIC_CORE = register( "mimic_core", () -> new SimpleFoiledItem( new Item.Properties()
             .stacksTo( 1 )
             .rarity( Rarity.UNCOMMON ) ) );
-
+    
     public static final RegistryObject<BucketItem> RUNNY_LAVA_BUCKET = register( "runny_lava_bucket", () -> new RunnyLavaBucketItem( DWFluids.RUNNY_LAVA_SOURCE, new Item.Properties().stacksTo( 1 ) ) );
-
+    
     // Spawn eggs
     public static final RegistryObject<ForgeSpawnEggItem> CHEST_MIMIC_SPAWN_EGG = registerSpawnEgg(
             DWEntities.CHEST_MIMIC, 0xAB792D, 0x443C30 );
@@ -45,11 +47,14 @@ public final class DWItems {
     public static final RegistryObject<ForgeSpawnEggItem> MICRO_GHAST_SPAWN_EGG = registerSpawnEgg(
             DWEntities.MICRO_GHAST, 0xF9F9F9, 0xBCBCBC );
     
+    public static final RegistryObject<FeaturePlacerItem> FEATURE_PLACER = register( "feature_placer",
+            () -> new FeaturePlacerItem( new Item.Properties().stacksTo( 1 ) ) );
+    
     /** Registers an item. */
     static <T extends Item> RegistryObject<T> register( String name, Supplier<T> supplier ) {
         return REGISTRY.register( name, supplier );
     }
-
+    
     private static RegistryObject<Item> registerSimple( String name ) {
         return REGISTRY.register( name, () -> new Item( new Item.Properties() ) );
     }
