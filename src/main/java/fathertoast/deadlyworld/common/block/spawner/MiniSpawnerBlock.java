@@ -41,7 +41,7 @@ public class MiniSpawnerBlock extends DeadlySpawnerBlock implements SimpleWaterl
     };
     
     public MiniSpawnerBlock() {
-        super( SpawnerType.MINI );
+        super( SpawnerType.MINI ); //TODO Make sound type SoundType.METAL, but mini
         registerDefaultState( stateDefinition.any().setValue( FACING, Direction.UP ).setValue( WATERLOGGED, false ) );
     }
     
@@ -53,16 +53,16 @@ public class MiniSpawnerBlock extends DeadlySpawnerBlock implements SimpleWaterl
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockState state, BlockEntityType<T> type ) {
         return getTicker( level, type, DWBlockEntities.MINI_SPAWNER.get() );
     }
-
+    
     @Override
     protected EntityType<? extends SpawnerMimic> getMimicType() {
         return DWEntities.MINI_SPAWNER_MIMIC.get();
     }
-
+    
     @Override
     @SuppressWarnings( "deprecation" )
     public VoxelShape getShape( BlockState state, BlockGetter world, BlockPos pos, CollisionContext selectionContext ) {
-        return SHAPES[ state.getValue( FACING ).get3DDataValue() ];
+        return SHAPES[state.getValue( FACING ).get3DDataValue()];
     }
     
     @Override

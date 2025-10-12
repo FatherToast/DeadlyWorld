@@ -139,23 +139,23 @@ public final class TrapHelper {
         }
         return true;
     }
-
+    
     /** @return A thrown potion item stack with a randomly picked effect instance from the given weighted potion list. */
     public static ItemStack getPotionFromList( WeightedPotionList potionList, RandomSource random ) {
         ItemStack potionStack = new ItemStack( Items.SPLASH_POTION );
         MobEffectInstance effectInstance = potionList.next( random );
-
-        if ( effectInstance != null ) {
+        
+        if( effectInstance != null ) {
             PotionUtils.setCustomEffects( potionStack, List.of( effectInstance ) );
         }
         setStackPotionColor( potionStack );
         return potionStack;
     }
-
+    
     public static ItemStack getPotionFromInstance( @Nullable MobEffectInstance effectInstance ) {
         ItemStack potionStack = new ItemStack( Items.SPLASH_POTION );
-
-        if ( effectInstance != null ) {
+        
+        if( effectInstance != null ) {
             PotionUtils.setCustomEffects( potionStack, List.of( effectInstance ) );
         }
         setStackPotionColor( potionStack );
@@ -169,34 +169,35 @@ public final class TrapHelper {
             potionStack.getOrCreateTag().putInt( PotionUtils.TAG_CUSTOM_POTION_COLOR, color );
         }
     }
-
+    
     // TODO - Might as well move this to Crust at some point
+    
     /**
-     *  Modified copy-paste of {@link net.minecraft.nbt.NbtUtils#readBlockState(HolderGetter, CompoundTag)}.<br>
-     *  Original implementation requires level access. This one checks the forge registry for blocks.
+     * Modified copy-paste of {@link net.minecraft.nbt.NbtUtils#readBlockState(HolderGetter, CompoundTag)}.<br>
+     * Original implementation requires level access. This one checks the forge registry for blocks.
      */
     public static BlockState readBlockState( CompoundTag compoundTag ) {
-        if ( !compoundTag.contains("Name", Tag.TAG_STRING) ) {
+        if( !compoundTag.contains( "Name", Tag.TAG_STRING ) ) {
             return Blocks.AIR.defaultBlockState();
         }
         else {
-            ResourceLocation blockId = new ResourceLocation( compoundTag.getString( "Name" ) );
+            ResourceLocation blockId = ResourceLocation.parse( compoundTag.getString( "Name" ) );
             Block block = ForgeRegistries.BLOCKS.getValue( blockId );
-
-            if ( block == null ) {
+            
+            if( block == null ) {
                 return Blocks.AIR.defaultBlockState();
             }
             else {
                 BlockState blockState = block.defaultBlockState();
-
-                if  ( compoundTag.contains( "Properties", Tag.TAG_COMPOUND ) ) {
+                
+                if( compoundTag.contains( "Properties", Tag.TAG_COMPOUND ) ) {
                     CompoundTag propertiesTag = compoundTag.getCompound( "Properties" );
                     StateDefinition<Block, BlockState> statedefinition = block.getStateDefinition();
-
-                    for ( String key : propertiesTag.getAllKeys() ) {
+                    
+                    for( String key : propertiesTag.getAllKeys() ) {
                         Property<?> property = statedefinition.getProperty( key );
-
-                        if (property != null) {
+                        
+                        if( property != null ) {
                             blockState = setValueHelper( blockState, property, key, propertiesTag, compoundTag );
                         }
                     }
@@ -205,13 +206,13 @@ public final class TrapHelper {
             }
         }
     }
-
+    
     private static <S extends StateHolder<?, S>, T extends Comparable<T>> S setValueHelper( S state, Property<T> property, String key,
                                                                                             CompoundTag propertiesTag, CompoundTag blockStateBlock ) {
         Optional<T> optional = property.getValue( propertiesTag.getString( key ) );
-
-        if ( optional.isPresent() ) {
-            return state.setValue( property , optional.get() );
+        
+        if( optional.isPresent() ) {
+            return state.setValue( property, optional.get() );
         }
         else {
             DeadlyWorld.LOG.warn( "Unable to read property: {} with value: {} for blockstate: {}", key, propertiesTag.getString( key ), blockStateBlock.toString() );

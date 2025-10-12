@@ -16,16 +16,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class DWFeatureTagsProvider extends TagsProvider<PlacedFeature> {
-    public DWFeatureTagsProvider( PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper ) {
+public class DWPlacedFeatureTagsProvider extends TagsProvider<PlacedFeature> {
+    public DWPlacedFeatureTagsProvider( PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper ) {
         super( output, Registries.PLACED_FEATURE, lookupProvider, DeadlyWorld.MOD_ID, existingFileHelper );
     }
     
     @Override
     protected void addTags( HolderLookup.Provider holderLookup ) {
-        addAll( DWTags.Features.OVERWORLD, DWPlacedFeatureProvider.OVERWORLD_FEATURES );
-        addAll( DWTags.Features.THE_NETHER, DWPlacedFeatureProvider.NETHER_FEATURES );
-        addAll( DWTags.Features.ANY_DIMENSION, DWPlacedFeatureProvider.ANY_DIMENSION_FEATURES );
+        addAll( DWTags.PlacedFeatures.OVERWORLD, DWPlacedFeatureProvider.OVERWORLD_FEATURES );
+        addAll( DWTags.PlacedFeatures.THE_NETHER, DWPlacedFeatureProvider.NETHER_FEATURES );
+        addAll( DWTags.PlacedFeatures.ANY_DIMENSION, DWPlacedFeatureProvider.ANY_DIMENSION_FEATURES );
     }
     
     /** Add all features in a list to a tag. */

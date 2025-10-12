@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.entity;
 
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -21,58 +22,58 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 
-@SuppressWarnings("resource")
+@SuppressWarnings( "resource" )
 public class MicroFireball extends Fireball {
-
-
+    
+    
     public MicroFireball( EntityType<? extends Fireball> entityType, Level level ) {
         super( entityType, level );
     }
-
+    
     public MicroFireball( double x, double y, double z, double xPower, double yPower, double zPower, Level level ) {
         super( DWEntities.MICRO_FIREBALL.get(), x, y, z, xPower, yPower, zPower, level );
     }
-
+    
     public MicroFireball( LivingEntity shooter, double xPower, double yPower, double zPower, Level level ) {
-        super( DWEntities.MICRO_FIREBALL.get(), shooter, xPower, yPower, zPower, level);
+        super( DWEntities.MICRO_FIREBALL.get(), shooter, xPower, yPower, zPower, level );
     }
-
+    
     /** Overridden to fix particle trail and some other small things. */
     @Override
     public void tick() {
         Entity owner = getOwner();
-
-        if ( level().isClientSide || ( owner == null || !owner.isRemoved() ) && level().hasChunkAt( blockPosition() ) ) {
+        
+        if( level().isClientSide || (owner == null || !owner.isRemoved()) && level().hasChunkAt( blockPosition() ) ) {
             // Mark projectile as shot first tick
-            if ( !hasBeenShot ) {
+            if( !hasBeenShot ) {
                 gameEvent( GameEvent.PROJECTILE_SHOOT, getOwner() );
                 hasBeenShot = true;
             }
-
-            if ( !leftOwner ) {
+            
+            if( !leftOwner ) {
                 leftOwner = checkLeftOwner();
             }
             baseTick();
             // Set always on fire
             setSecondsOnFire( 1 );
-
+            
             HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector( this, this::canHitEntity );
-
-            if ( hitResult.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact( this, hitResult ) ) {
+            
+            if( hitResult.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact( this, hitResult ) ) {
                 onHit( hitResult );
             }
             checkInsideBlocks();
-
+            
             Vec3 deltaMovement = getDeltaMovement();
             double newX = getX() + deltaMovement.x;
             double newY = getY() + deltaMovement.y;
             double newZ = getZ() + deltaMovement.z;
             ProjectileUtil.rotateTowardsMovement( this, 0.2F );
             float inertia = getInertia();
-
+            
             // Spawn bubble particles and slow down in water
-            if ( isInWater() ) {
-                for ( int i = 0; i < 2; ++i ) {
+            if( isInWater() ) {
+                for( int i = 0; i < 2; ++i ) {
                     level().addParticle(
                             ParticleTypes.BUBBLE,
                             newX - deltaMovement.x * 0.25D,
@@ -87,9 +88,9 @@ public class MicroFireball extends Fireball {
             }
             setDeltaMovement( deltaMovement.add( xPower, yPower, zPower ).scale( inertia ) );
             setPos( newX, newY, newZ );
-
+            
             // Spawn normal particles when not in water
-            if ( random.nextBoolean() ) {
+            if( random.nextBoolean() ) {
                 level().addParticle(
                         getTrailParticle(),
                         newX,
@@ -105,65 +106,65 @@ public class MicroFireball extends Fireball {
             discard();
         }
     }
-
+    
     @Override
     protected void onHitEntity( EntityHitResult entityResult ) {
         super.onHitEntity( entityResult );
-
-        if ( !level().isClientSide ) {
+        
+        if( !level().isClientSide ) {
             Entity target = entityResult.getEntity();
             Entity owner = getOwner();
             int remainingFireTicks = target.getRemainingFireTicks();
             target.setSecondsOnFire( 1 );
-
-            if ( !target.hurt( damageSources().fireball( this, owner ), 5.0F ) ) {
+            
+            if( !target.hurt( damageSources().fireball( this, owner ), 5.0F ) ) {
                 target.setRemainingFireTicks( remainingFireTicks );
             }
-            else if ( owner instanceof LivingEntity livingOwner ) {
+            else if( owner instanceof LivingEntity livingOwner ) {
                 // The owner is living, this is so cool u guys
                 doEnchantDamageEffects( livingOwner, target );
             }
         }
     }
-
-    @SuppressWarnings("ConstantConditions")
+    
+    @SuppressWarnings( "ConstantConditions" )
     @Override
     protected void onHitBlock( BlockHitResult blockResult ) {
         super.onHitBlock( blockResult );
-
-        if ( !level().isClientSide ) {
-
-            if ( random.nextInt( 5 ) == 0 ) {
+        
+        if( !level().isClientSide ) {
+            
+            if( random.nextInt( 5 ) == 0 ) {
                 Entity owner = getOwner();
-
-                if ( !( owner instanceof Mob ) || ForgeEventFactory.getMobGriefingEvent( level(), owner ) ) {
+                
+                if( !(owner instanceof Mob) || ForgeEventFactory.getMobGriefingEvent( level(), owner ) ) {
                     BlockPos pos = blockResult.getBlockPos().relative( owner.getDirection() );
-
-                    if ( level().isEmptyBlock( pos ) ) {
+                    
+                    if( level().isEmptyBlock( pos ) ) {
                         level().setBlockAndUpdate( pos, BaseFireBlock.getState( level(), pos ) );
                     }
                 }
             }
             else {
-                level().playSound( null, blockResult.getBlockPos(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.AMBIENT, 1.0F, 1.0F );
+                level().playSound( null, blockResult.getBlockPos(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.AMBIENT, 1.0F, 1.0F + References.MINI_PITCH_SHIFT );
             }
         }
     }
-
+    
     @Override
     protected void onHit( HitResult hitResult ) {
         super.onHit( hitResult );
-
-        if (!level().isClientSide) {
+        
+        if( !level().isClientSide ) {
             discard();
         }
     }
-
+    
     @Override
     public boolean isPickable() {
         return false;
     }
-
+    
     @Override
     public boolean hurt( DamageSource damageSource, float damage ) {
         return false;

@@ -71,7 +71,7 @@ public class DeadlyWorld {
      *      o vanilla vein replacements
      *      o user-defined veins
      *      ? new vein gen styles
-     *  o dungeon world gen
+     *  o dungeon (monster room) world gen
      *      o spawner
      *      o mini
      *      o tower
@@ -82,11 +82,11 @@ public class DeadlyWorld {
      *      o valuable
      *      ? trapped (default disabled)
      *      o tnt floor trap
-     *      o infested
-     *      o surprise
-     *      o mimic
+     *      o infested (event - spawn silverfish or mini spiders)
+     *      o surprise (event - tnt, lava, or poison gas)
+     *      o mimic (event)
      *      + cave-in (via surprise or combo w/ ceiling trap)
-     *      ? random cake from cake item tag
+     *      ? random cake from #forge:cakes tag
      *  - spawner world gen
      *      - default
      *      - stream

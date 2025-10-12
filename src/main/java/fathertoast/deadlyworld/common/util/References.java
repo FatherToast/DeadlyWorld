@@ -16,6 +16,9 @@ public final class References {
     /** The base path for chest loot tables from this mod. */
     public static final String CHEST_LOOT_PATH = LOOT_PATH + "chests/";
     
+    /** The pitch added to mini mob sounds. */
+    public static final float MINI_PITCH_SHIFT = 1.0F;
+    
     // Overworld depth constants
     public static final int DEPTH_SKY = 319; // 0 below world gen limit
     public static final int DEPTH_0 = 54;

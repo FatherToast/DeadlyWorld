@@ -1,6 +1,9 @@
 package fathertoast.deadlyworld.common.entity;
 
 import fathertoast.deadlyworld.common.entity.ai.MiniSwellGoal;
+import fathertoast.deadlyworld.common.util.References;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -30,7 +33,16 @@ public class MiniCreeper extends Creeper {
     }
     
     @Override
+    public void playSound( SoundEvent soundEvent, float volume, float pitch ) {
+        super.playSound( soundEvent, volume,
+                soundEvent == SoundEvents.CREEPER_PRIMED ? pitch + References.MINI_PITCH_SHIFT : pitch );
+    }
+    
+    @Override
     public int getMaxAirSupply() { return 100; }
+    
+    @Override
+    public float getVoicePitch() { return super.getVoicePitch() + References.MINI_PITCH_SHIFT; }
     
     @Override
     protected void explodeCreeper() {

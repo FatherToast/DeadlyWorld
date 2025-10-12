@@ -1,5 +1,8 @@
 package fathertoast.deadlyworld.common.entity;
 
+import fathertoast.deadlyworld.common.util.References;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +30,16 @@ public class MiniSkeleton extends Skeleton {
     }
     
     @Override
+    public void playSound( SoundEvent soundEvent, float volume, float pitch ) {
+        super.playSound( soundEvent, volume,
+                soundEvent == SoundEvents.SKELETON_SHOOT ? pitch + References.MINI_PITCH_SHIFT : pitch );
+    }
+    
+    @Override
     public int getMaxAirSupply() { return 100; }
+    
+    @Override
+    public float getVoicePitch() { return super.getVoicePitch() + References.MINI_PITCH_SHIFT; }
     
     @Override
     protected float getStandingEyeHeight( Pose pose, EntityDimensions entitySize ) { return 0.7F; }

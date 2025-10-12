@@ -21,76 +21,83 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
- *  Base class for our feature provider.
- *  Keeping convenience methods here so the
- *  implementation doesn't get super bloated and insane looking.
+ * Base class for our feature provider.
+ * Keeping convenience methods here so the
+ * implementation doesn't get super bloated and insane looking.
  */
 public abstract class AbstractCFProvider {
-
-
-
+    /** List of all configurations that should generate in overworld biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_FEATURES = new ArrayList<>();
+    /** List of all configurations that should generate in nether biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NETHER_FEATURES = new ArrayList<>();
+    /**
+     * List of all configurations that don't care about dimension type and should generate anywhere.
+     * Any restrictions are handled in the feature itself, usually config based.
+     */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> ANY_DIMENSION_FEATURES = new ArrayList<>();
+    
+    
     /** Convenience method for making a simple block state provider. */
-    protected static BlockStateProvider block(Supplier<? extends Block> block ) { return block( block.get() ); }
-
+    protected static BlockStateProvider block( Supplier<? extends Block> block ) { return block( block.get() ); }
+    
     /** Convenience method for making a simple block state provider. */
     protected static BlockStateProvider block( Block block ) { return block( block.defaultBlockState() ); }
-
+    
     /** Convenience method for making a simple block state provider. */
     protected static BlockStateProvider block( BlockState block ) { return BlockStateProvider.simple( block ); }
-
-
-
-
+    
+    
     /** Registers a configured lone spawner type feature to each supported dimension. */
-    protected static void registerLoneSpawner(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.Spawner feature,
-                                              DimensionConfigGroup overworldConfigs, BlockStateProvider overworldTopper, boolean overworldVines,
-                                              DimensionConfigGroup netherConfigs, BlockStateProvider netherTopper, boolean netherVines ) {
+    protected static void registerLoneSpawner( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.Spawner feature,
+                                               DimensionConfigGroup overworldConfigs, BlockStateProvider overworldTopper, boolean overworldVines,
+                                               DimensionConfigGroup netherConfigs, BlockStateProvider netherTopper, boolean netherVines ) {
         registerLoneSpawner( context, feature.overworldKeys, feature.spawnerType, overworldConfigs, overworldTopper, overworldVines );
         registerLoneSpawner( context, feature.netherKeys, feature.spawnerType, netherConfigs, netherTopper, netherVines );
     }
-
+    
     /** Registers a configured lone spawner type feature. */
-    protected static void registerLoneSpawner(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                              SpawnerType type, DimensionConfigGroup dimConfigs, BlockStateProvider topper, boolean vines ) {
+    protected static void registerLoneSpawner( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                               SpawnerType type, DimensionConfigGroup dimConfigs, BlockStateProvider topper, boolean vines ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.LONE_SPAWNER.get(),
                 new LoneSpawnerFeature.Configuration( block( DWBlocks.spawner( type ) ), topper,
                         SpawnerSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE, vines ) ) );
     }
-
-
-
+    
+    
     /** Registers a configured floor trap type feature to each supported dimension. */
     protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.Trap feature,
                                              DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         registerFloorTrap( context, feature.overworldKeys, feature.trapType, overworldConfigs );
         registerFloorTrap( context, feature.netherKeys, feature.trapType, netherConfigs );
     }
-
+    
     /** Registers a configured floor trap type feature. */
-    protected static void registerFloorTrap(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                            TrapType type, DimensionConfigGroup dimConfigs ) {
+    protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                             TrapType type, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
                 new FloorTrapFeature.Configuration( block( DWBlocks.trap( type ) ),
                         FloorTrapSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
-
-
-
+    
+    
     /** Registers a configured tower dispenser type feature to each supported dimension. */
     protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature, BlockStateProvider baseProvider, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         registerTowerDispenser( context, feature.overworldKeys, feature.towerType, baseProvider, overworldConfigs );
         registerTowerDispenser( context, feature.netherKeys, feature.towerType, baseProvider, netherConfigs );
     }
-
+    
     /** Registers a configured tower dispenser type feature. */
-    protected static void registerTowerDispenser(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                                 TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
+    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                                  TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER_DISPENSER.get(),
                 new SimpleTowerDispenserFeature.Configuration(
                         baseProvider,
@@ -98,31 +105,40 @@ public abstract class AbstractCFProvider {
                         TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
-
-
+    
+    
     /** Registers a configured feature. */
     protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys, ConfiguredFeature<?, ?> configuredFeature ) {
         context.register( featureKeys.configuredKey, configuredFeature );
     }
-
+    
     /** Registers a configured feature. */
-    protected static void register(BootstapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> confFeatureKey, ConfiguredFeature<?, ?> configuredFeature ) {
+    protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> confFeatureKey, ConfiguredFeature<?, ?> configuredFeature ) {
         context.register( confFeatureKey, configuredFeature );
     }
-
-
-
-
-
+    
+    
     /** Creates a configured feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> overworldKey( String name ) { return key( name ); }
-
+    protected static ResourceKey<ConfiguredFeature<?, ?>> overworldKey( String name ) {
+        final ResourceKey<ConfiguredFeature<?, ?>> key = key( name );
+        OVERWORLD_FEATURES.add( key );
+        return key;
+    }
+    
     /** Creates a configured feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> netherKey( String name ) { return key( name + "_nether" ); }
-
+    protected static ResourceKey<ConfiguredFeature<?, ?>> netherKey( String name ) {
+        final ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_nether" );
+        NETHER_FEATURES.add( key );
+        return key;
+    }
+    
     /** Creates a configured feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimKey( String name ) { return key( name + "_any_dimension" ); }
-
+    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimKey( String name ) {
+        final ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension" );
+        ANY_DIMENSION_FEATURES.add( key );
+        return key;
+    }
+    
     /** Creates a configured feature key. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> key( String name ) {
         return ResourceKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.resourceLoc( name ) );
