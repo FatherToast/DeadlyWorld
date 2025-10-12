@@ -36,8 +36,20 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Mod.EventBusSubscriber( value = Dist.CLIENT, modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD )
 public class ClientRegister {
+    
+    private static final List<String> FEATURE_KEYS = new ArrayList<>();
+    
+    public static void setFeatureKeys( Collection<String> keys ) {
+        FEATURE_KEYS.clear();
+        FEATURE_KEYS.addAll( keys );
+        DeadlyWorld.LOG.error( "SETTING FEATURE KEYS {}", COUNT );
+    }
     
     @SubscribeEvent
     public static void onClientSetup( FMLClientSetupEvent event ) {
@@ -112,6 +124,8 @@ public class ClientRegister {
         event.registerEntityRenderer( entityType, ( context ) -> new ThrownItemRenderer<>( context, scale, fullBright ) );
     }
     
+    private static int COUNT;
+    
     @SubscribeEvent
     public static void buildCreativeContents( BuildCreativeModeTabContentsEvent event ) {
         if( event.getTabKey() == CreativeModeTabs.SEARCH ) {
@@ -126,46 +140,11 @@ public class ClientRegister {
             }
         }
         else if( event.getTabKey() == DWCreativeModeTabs.PLACERS.key() ) {
-            for( String featureKey : featureKeys() ) {
+            COUNT++;
+            DeadlyWorld.LOG.error( "LOADING CREATIVE TABS {}", COUNT );
+            for( String featureKey : FEATURE_KEYS ) {
                 event.accept( FeaturePlacerItem.of( ResourceLocation.parse( featureKey ) ) );
             }
         }
-    }
-    
-    private static String[] featureKeys() {
-        return new String[] {
-                "deadlyworld:simple_spawner",
-                "deadlyworld:stream_spawner",
-                "deadlyworld:swarm_spawner",
-                "deadlyworld:brutal_spawner",
-                "deadlyworld:mini_spawner",
-                "deadlyworld:silverfish_nest",
-                "deadlyworld:tnt_trap",
-                "deadlyworld:tnt_mob_trap",
-                "deadlyworld:potion_trap",
-                "deadlyworld:lava_trap",
-                "deadlyworld:fire_trap",
-                "deadlyworld:simple_tower_dispenser",
-                "deadlyworld:fire_tower_dispenser",
-                "deadlyworld:potion_tower_dispenser",
-                "deadlyworld:gatling_tower_dispenser",
-                "deadlyworld:fireball_tower_dispenser",
-                "deadlyworld:simple_spawner_nether",
-                "deadlyworld:stream_spawner_nether",
-                "deadlyworld:swarm_spawner_nether",
-                "deadlyworld:brutal_spawner_nether",
-                "deadlyworld:mini_spawner_nether",
-                "deadlyworld:silverfish_nest_nether",
-                "deadlyworld:tnt_trap_nether",
-                "deadlyworld:tnt_mob_trap_nether",
-                "deadlyworld:potion_trap_nether",
-                "deadlyworld:lava_trap_nether",
-                "deadlyworld:fire_trap_nether",
-                "deadlyworld:simple_tower_dispenser_nether",
-                "deadlyworld:fire_tower_dispenser_nether",
-                "deadlyworld:potion_tower_dispenser_nether",
-                "deadlyworld:gatling_tower_dispenser_nether",
-                "deadlyworld:fireball_tower_dispenser_nether"
-        };
     }
 }
