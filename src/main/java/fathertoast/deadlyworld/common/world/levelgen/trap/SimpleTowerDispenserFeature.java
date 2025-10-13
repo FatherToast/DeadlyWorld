@@ -62,8 +62,8 @@ public class SimpleTowerDispenserFeature extends DeadlyFeature<SimpleTowerDispen
         // Make sure there is some "open" space around the tower
         // so we don't generate in super cramped places
         for( BlockPos pos : BlockPos.betweenClosed(
-                basePos.offset( -1, 0, -1 ),
-                basePos.offset( 1, 2, 1 ) ) ) {
+                dispenserPos.offset( -1, 0, -1 ),
+                dispenserPos.offset( 1, 1, 1 ) ) ) {
             BlockState state = level.getBlockState( pos );
             
             if( state.blocksMotion() )
