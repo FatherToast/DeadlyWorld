@@ -30,6 +30,7 @@ public class DWPlacedFeatureTagsProvider extends TagsProvider<PlacedFeature> {
         addAll( DWTags.PlacedFeatures.SPAWNERS, DWPlacedFeatureProvider.SPAWNER_FEATURES );
         addAll( DWTags.PlacedFeatures.TRAPS, DWPlacedFeatureProvider.TRAP_FEATURES );
         addAll( DWTags.PlacedFeatures.TOWERS, DWPlacedFeatureProvider.TOWER_FEATURES );
+        addAll( DWTags.PlacedFeatures.SEA_MINES, DWPlacedFeatureProvider.SEA_MINE_FEATURES );
         addAll( DWTags.PlacedFeatures.DUNGEONS, DWPlacedFeatureProvider.DUNGEON_FEATURES );
     }
     

@@ -288,11 +288,11 @@
           "functions": [
             {
               "enchantments": [
-                "minecraft:looting",
-                "minecraft:luck_of_the_sea",
                 "minecraft:fortune",
                 "minecraft:bane_of_arthropods",
-                "minecraft:silk_touch"
+                "minecraft:silk_touch",
+                "minecraft:looting",
+                "minecraft:luck_of_the_sea"
               ],
               "function": "minecraft:enchant_randomly"
             }

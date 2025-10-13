@@ -48,8 +48,8 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
 
     public static final FeatureKeys BURIED_LIQUID_ANY_DIMENSION = FeatureKeys.anyDimension( "buried_liquid" ).notPlaceable();
     
-    public static final FeatureKeys.BiDimensional SIMPLE_DUNGEON = FeatureKeys.BiDimensional.of( "simple_dungeon" );
-    public static final FeatureKeys.BiDimensional MINI_DUNGEON = FeatureKeys.BiDimensional.of( "mini_dungeon" );
+    public static final FeatureKeys.SimpleDungeon SIMPLE_DUNGEON = FeatureKeys.SimpleDungeon.of( "simple_dungeon" );
+    public static final FeatureKeys.SimpleDungeon MINI_DUNGEON = FeatureKeys.SimpleDungeon.of( "mini_dungeon" );
     
     
     /** Called by registry set builder to generate our configured features. */

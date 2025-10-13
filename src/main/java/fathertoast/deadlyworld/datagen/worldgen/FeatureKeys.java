@@ -49,8 +49,8 @@ public class FeatureKeys {
         public final FeatureKeys netherKeys;
 
         protected BiDimensional( FeatureKeys overworld, FeatureKeys nether ) {
-            overworldKeys = overworld.notPlaceable();
-            netherKeys = nether.notPlaceable();
+            overworldKeys = overworld;
+            netherKeys = nether;
         }
     }
 
@@ -111,7 +111,7 @@ public class FeatureKeys {
 
 
         protected SimpleDungeon( FeatureKeys overworld, FeatureKeys nether ) {
-            super( overworld, nether );
+            super( overworld.notPlaceable(), nether.notPlaceable() );
 
             AbstractCFProvider.DUNGEON_FEATURES.add( overworld.configuredKey );
             AbstractCFProvider.DUNGEON_FEATURES.add( nether.configuredKey );
@@ -132,8 +132,8 @@ public class FeatureKeys {
             overworldKeys = overworld;
             seaMineType = type;
 
-            AbstractCFProvider.DUNGEON_FEATURES.add( overworld.configuredKey );
-            DWPlacedFeatureProvider.DUNGEON_FEATURES.add( overworld.placedKey );
+            AbstractCFProvider.SEA_MINE_FEATURES.add( overworld.configuredKey );
+            DWPlacedFeatureProvider.SEA_MINE_FEATURES.add( overworld.placedKey );
         }
     }
 }

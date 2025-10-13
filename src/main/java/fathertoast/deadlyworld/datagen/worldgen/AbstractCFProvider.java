@@ -58,6 +58,8 @@ public abstract class AbstractCFProvider {
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TRAP_FEATURES = new ArrayList<>();
     /** List of all tower dispenser configurations. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TOWER_FEATURES = new ArrayList<>();
+    /** List of all sea mine configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> SEA_MINE_FEATURES = new ArrayList<>();
     /** List of all dungeon configurations. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> DUNGEON_FEATURES = new ArrayList<>();
     

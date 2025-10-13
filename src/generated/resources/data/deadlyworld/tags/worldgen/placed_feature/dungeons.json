@@ -1,7 +1,8 @@
 {
   "values": [
-    "deadlyworld:normal_sea_mine",
-    "deadlyworld:puffer_sea_mine",
-    "deadlyworld:guardian_sea_mine"
+    "deadlyworld:simple_dungeon",
+    "deadlyworld:simple_dungeon_nether",
+    "deadlyworld:mini_dungeon",
+    "deadlyworld:mini_dungeon_nether"
   ]
 }

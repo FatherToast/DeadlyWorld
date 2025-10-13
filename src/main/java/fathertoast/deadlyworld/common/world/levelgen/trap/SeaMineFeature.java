@@ -63,6 +63,10 @@ public class SeaMineFeature extends DeadlyFeature<SeaMineFeature.Configuration> 
         final int maxDist = settings.distanceFromBottom().getMaxValue();
         final int totalHeight = Math.min( (maxDist - minDist) + random.nextInt( minDist + 1 ), waterAbove );
 
+        if ( totalHeight < minDist ) {
+            return false;
+        }
+
         // Place chains
         for ( int yOffset = 0; yOffset < totalHeight; yOffset++ ) {
             BlockPos pos = origin.above( yOffset );
