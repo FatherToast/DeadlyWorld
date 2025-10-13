@@ -1,5 +1,5 @@
 {
-  "type": "deadlyworld:tower_dispenser",
+  "type": "deadlyworld:tower",
   "config": {
     "base_provider": {
       "type": "minecraft:simple_state_provider",
@@ -11,28 +11,28 @@
     "dispenser": {
       "activation_sight_check": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:simple_tower_dispensers.sight_check_chance"
+        "value": "deadlyworld:worldgen/minecraft/overworld/towers:simple_towers.sight_check_chance"
       },
       "attack_damage": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:simple_tower_dispensers.attack_damage"
+        "value": "deadlyworld:worldgen/minecraft/overworld/towers:simple_towers.attack_damage"
       },
       "attack_delay": {
         "type": "deadlyworld:config_uniform_int",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:simple_tower_dispensers.attack_delay.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:simple_tower_dispensers.attack_delay.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/towers:simple_towers.attack_delay.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/towers:simple_towers.attack_delay.min"
       },
       "projectile_speed": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:simple_tower_dispensers.projectile_speed"
+        "value": "deadlyworld:worldgen/minecraft/overworld/towers:simple_towers.projectile_speed"
       },
       "projectile_variance": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:simple_tower_dispensers.projectile_variance"
+        "value": "deadlyworld:worldgen/minecraft/overworld/towers:simple_towers.projectile_variance"
       },
       "required_player_range": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:simple_tower_dispensers.required_player_range"
+        "value": "deadlyworld:worldgen/minecraft/overworld/towers:simple_towers.required_player_range"
       }
     },
     "dispenser_provider": {

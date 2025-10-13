@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.world.logic;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;
+import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * The base logic for Deadly World's tower dispensers.
  */
 public abstract class BaseTower {
-
+    
     public enum State {
         /** The tower dispenser has exhausted its ammo/activations and is incapable of functioning. */
         DISABLED,
@@ -37,7 +37,7 @@ public abstract class BaseTower {
         /** The tower dispenser is now active and firing. */
         ACTIVE
     }
-
+    
     // Settings tags
     public static final String TAG_ACTIVATION_RANGE = "RequiredPlayerRange";
     public static final String TAG_CHECK_SIGHT = "CheckSight";
@@ -46,18 +46,18 @@ public abstract class BaseTower {
     public static final String TAG_ATTACK_DAMAGE = "AttackDamage";
     public static final String TAG_PROJECTILE_SPEED = "ProjectileSpeed";
     public static final String TAG_PROJECTILE_VARIANCE = "ProjectileVariance";
-
+    
     // Logic tags
     public static final String TAG_DELAY = "Delay";
-
-
+    
+    
     @Nullable
     private final Entity mobileEntity;
     @Nullable
     private final BlockEntity blockEntity;
     /** This is usually either the mobileEntity or blockEntity, but not required to be. */
     private final ITowerObject towerObject;
-
+    
     // Settings
     /** True if line of sight is required to activate this tower dispenser. */
     protected boolean checkSight;
@@ -73,52 +73,52 @@ public abstract class BaseTower {
     protected float projectileSpeed;
     /** The inaccuracy/offset of this tower's projectiles. */
     protected float projectileVariance;
-
+    
     // Logic
     protected final TowerType towerType;
     /** The entity that activated this tower dispenser. Usually (but not always) non-null when triggering and null in all other states. */
     @Nullable
     protected Entity towerTarget;
     protected boolean disabled = false;
-
+    
     /**
      * Counts up each tick until it hits -1 where the tower dispenser waits until to be activated (which sets this >= 0),
      * then counts up to the max trigger delay and triggers the tower dispenser (which sets this < 0).
      */
     protected int delay = -1;
-
+    
     protected int targetCheckDelay = 0;
-
+    
     @SuppressWarnings( "unused" ) // For possible future use
     public <T extends Entity & ITowerObject> BaseTower( TowerType towerType, T entity ) { this( towerType, entity, entity ); }
-
+    
     public BaseTower( TowerType towerType, Entity entity, ITowerObject trapObj ) { this( towerType, entity, null, trapObj ); }
-
+    
     public <T extends BlockEntity & ITowerObject> BaseTower( TowerType towerType, T block ) { this( towerType, block, block ); }
-
+    
     public BaseTower( TowerType towerType, BlockEntity block, ITowerObject trapObj ) { this( towerType, null, block, trapObj ); }
-
+    
     protected BaseTower( TowerType towerType, @Nullable Entity entity, @Nullable BlockEntity block, ITowerObject towerObj ) {
         this.towerType = towerType;
         mobileEntity = entity;
         blockEntity = block;
         towerObject = towerObj;
     }
-
+    
     /** @return The current state of this tower dispenser. */
     public State getState() {
-        if ( disabled ) return State.DISABLED;
+        if( disabled ) return State.DISABLED;
         if( delay == -1 ) return State.READY;
         return delay < -1 ? State.RESETTING : State.ACTIVE;
     }
-
+    
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
-
+    
     public void initializeTower( WorldGenLevel level, BlockPos pos, RandomSource random, TowerDispenserSettings settings ) {
-        final TowerDispenserConfig.TowerDispenserTypeCategory towerConfig = towerType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+        final TowerConfig.TowerTypeCategory towerConfig = towerType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, towerConfig );
-
+        
         initializeTower( getLevel(), pos, random,
                 settings.requiredPlayerRange().sample( random ),
                 settings.checkSightChance().sample( random ),
@@ -129,16 +129,16 @@ public abstract class BaseTower {
                 settings.projectileVariance().sample( random )
         );
     }
-
+    
     public void initializeTower( @Nullable Level level, BlockPos pos, RandomSource random ) {
-        final TowerDispenserConfig.TowerDispenserTypeCategory towerConfig = towerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+        final TowerConfig.TowerTypeCategory towerConfig = towerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
         initializeTower( level, pos, random,
                 towerConfig.activationRange.get(), (float) towerConfig.checkSightChance.get(),
                 towerConfig.attackDelay.getMin(), towerConfig.attackDelay.getMax(), towerConfig.attackDamage == null ? -1.0F : (float) towerConfig.attackDamage.get(),
                 (float) towerConfig.projectileSpeed.get(), (float) towerConfig.projectileVariance.get()
         );
     }
-
+    
     public void initializeTower( @Nullable Level level, BlockPos pos, RandomSource random, double activationRange,
                                  float checkSightChance, int minAttackDelay, int maxAttackDelay, float attackDamage,
                                  float projectileSpeed, float projectileVariance ) {
@@ -150,14 +150,14 @@ public abstract class BaseTower {
         this.projectileSpeed = projectileSpeed;
         this.projectileVariance = projectileVariance;
     }
-
+    
     protected static boolean roll( RandomSource random, float chance ) { return chance >= 1.0F || chance > 0.0F && random.nextFloat() < chance; }
-
+    
     public double getActivationRange() { return activationRange; }
-
+    
     public void clientTick( Level level, BlockPos pos ) { }
-
-    public void serverTick(ServerLevel level, BlockPos pos ) {
+    
+    public void serverTick( ServerLevel level, BlockPos pos ) {
         switch( getState() ) {
             case DISABLED -> disabledTick( level, pos );
             case READY -> readyTick( level, pos );
@@ -165,20 +165,20 @@ public abstract class BaseTower {
             case ACTIVE -> activeTick( level, pos );
         }
     }
-
+    
     /** Called each server tick while this tower is disabled. */
     protected void disabledTick( ServerLevel level, BlockPos pos ) { }
-
+    
     /** Called each server tick while this tower is resetting. */
     protected void resettingTick( ServerLevel level, BlockPos pos ) { delay++; }
-
+    
     /** Called each server tick while this tower is ready. */
     protected void readyTick( ServerLevel level, BlockPos pos ) {
         if( targetCheckDelay > 0 ) {
             targetCheckDelay--;
             return;
         }
-
+        
         Entity target = findTarget( level, pos );
         if( target == null ) {
             // Impose a longer delay if we use ray traces
@@ -189,47 +189,47 @@ public abstract class BaseTower {
             towerTarget = target;
         }
     }
-
+    
     /** @return A target that meets the conditions to activate this tower, or null if none is found. */
     @Nullable
     protected Entity findTarget( ServerLevel level, BlockPos pos ) {
         return TrapHelper.getTrapTargetInRange( level, pos, activationRange, checkSight );
     }
-
+    
     @Nullable
     public Entity getTarget() {
         return towerTarget;
     }
-
+    
     /** Called each server tick while this tower is activating. */
     protected void activeTick( ServerLevel level, BlockPos pos ) {
         delay++;
         if( delay < maxAttackDelay ) return;
-
+        
         // Try to grab a target if we don't have one for whatever reason
         if( towerTarget == null ) towerTarget = findTarget( level, pos );
         // Something is not right, abort
-        if ( towerTarget == null ) return;
-
+        if( towerTarget == null ) return;
+        
         // Calculate misc vectors
         Vec3 centerPos = new Vec3( pos.getX(), pos.getY(), pos.getZ() ).add( 0.5D, 0.5D, 0.5D );
-        Vec3 targetPos = new Vec3( towerTarget.getX(), towerTarget.getBoundingBox( ).minY + towerTarget.getBbHeight() / 3.0F, towerTarget.getZ() );
+        Vec3 targetPos = new Vec3( towerTarget.getX(), towerTarget.getBoundingBox().minY + towerTarget.getBbHeight() / 3.0F, towerTarget.getZ() );
         Vec3 vecToTarget = targetPos.subtract( centerPos );
-
+        
         if( Math.abs( vecToTarget.x ) < 0.5D && Math.abs( vecToTarget.z ) < 0.5D ) {
             // Target is directly above or below the tower, can't hit it
             return;
         }
         double distanceH = Math.sqrt( vecToTarget.x * vecToTarget.x + vecToTarget.z * vecToTarget.z );
-
+        
         // Determine the offset to spawn the arrow at so it doesn't clip the dispenser block
         Vec3 offset = getOffset( vecToTarget, distanceH );
-
+        
         activateTower( level, pos, towerTarget, centerPos, offset, vecToTarget, distanceH );
         newAttackDelay( level.random );
         level.playSound( null, pos, DWSoundEvents.TOWER_DISPENSER_SHOOT.get(), SoundSource.BLOCKS, 1.0F, 1.0F );
     }
-
+    
     private static Vec3 getOffset( Vec3 vecToTarget, double distanceH ) {
         Vec3 offset;
         if( Math.abs( vecToTarget.x ) < Math.abs( vecToTarget.z ) ) {
@@ -255,13 +255,13 @@ public abstract class BaseTower {
         }
         return offset;
     }
-
+    
     /** Disables this tower dispenser. */
     public void disableTower() {
         disabled = true;
         newAttackDelay( null );
     }
-
+    
     /**
      * Resets the tower dispenser with a randomized duration (between minimum and maximum reset times).
      * If the random is null, the duration will be the maximum reset time.
@@ -271,23 +271,23 @@ public abstract class BaseTower {
                 minAttackDelay + random.nextInt( maxAttackDelay - minAttackDelay ));
         towerTarget = null;
     }
-
+    
     /** Activates this tower. */
     public abstract void activateTower( ServerLevel level, BlockPos pos, Entity target,
-                                       Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance );
-
+                                        Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance );
+    
     /** Helper method for shooting arrows. */
     public void shootArrow( Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH, float velocity, float variance, AbstractArrow arrow ) {
         final double spawnOffset = 0.6;
-
+        
         arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
         arrow.setBaseDamage( attackDamage / velocity );
         arrow.setPos( center.x + offset.x * spawnOffset, center.y, center.z + offset.z * spawnOffset );
         arrow.shoot( vecToTarget.x, vecToTarget.y + distanceH * 0.2F, vecToTarget.z, velocity, variance );
-
+        
         getLevel().addFreshEntity( arrow );
     }
-
+    
     public void load( @Nullable Level level, BlockPos pos, CompoundTag loadTag ) {
         if( NBTHelper.containsNumber( loadTag, TAG_ACTIVATION_RANGE ) )
             activationRange = loadTag.getFloat( TAG_ACTIVATION_RANGE );
@@ -298,7 +298,7 @@ public abstract class BaseTower {
         if( NBTHelper.containsNumber( loadTag, TAG_MAX_ATTACK_DELAY ) )
             maxAttackDelay = loadTag.getShort( TAG_MAX_ATTACK_DELAY );
         if( maxAttackDelay < minAttackDelay ) maxAttackDelay = minAttackDelay;
-
+        
         if( NBTHelper.containsNumber( loadTag, TAG_ATTACK_DAMAGE ) )
             attackDamage = loadTag.getShort( TAG_ATTACK_DAMAGE );
         if( NBTHelper.containsNumber( loadTag, TAG_PROJECTILE_SPEED ) )
@@ -308,7 +308,7 @@ public abstract class BaseTower {
         if( NBTHelper.containsNumber( loadTag, TAG_DELAY ) )
             delay = loadTag.getShort( TAG_DELAY );
     }
-
+    
     public CompoundTag save( CompoundTag saveTag ) {
         saveTag.putFloat( TAG_ACTIVATION_RANGE, (float) activationRange );
         saveTag.putBoolean( TAG_CHECK_SIGHT, checkSight );
@@ -318,14 +318,14 @@ public abstract class BaseTower {
         saveTag.putFloat( TAG_PROJECTILE_SPEED, projectileSpeed );
         saveTag.putFloat( TAG_PROJECTILE_VARIANCE, projectileVariance );
         saveTag.putShort( TAG_DELAY, (short) delay );
-
+        
         return saveTag;
     }
-
+    
     public void broadcastEvent( Level level, BlockPos pos, int eventId ) {
         towerObject.broadcastEvent( this, level, pos, eventId );
     }
-
+    
     public boolean onEventTriggered( Level level, int eventId ) {
         return false;
     }

@@ -1,11 +1,11 @@
 {
-  "feature": "deadlyworld:fire_tower_dispenser",
+  "feature": "deadlyworld:potion_tower",
   "placement": [
     {
       "type": "minecraft:count",
       "count": {
         "type": "deadlyworld:config_count_int",
-        "count": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:fire_tower_dispensers.placements"
+        "count": "deadlyworld:worldgen/minecraft/overworld/towers:potion_towers.placements"
       }
     },
     {
@@ -15,8 +15,8 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "deadlyworld:config_uniform_height",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:fire_tower_dispensers.height.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/tower_dispensers:fire_tower_dispensers.height.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/towers:potion_towers.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/towers:potion_towers.height.min"
       }
     },
     {

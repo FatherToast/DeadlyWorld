@@ -12,7 +12,7 @@ import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import fathertoast.deadlyworld.common.world.levelgen.TowerDispenserSettings;
 import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.LoneSpawnerFeature;
-import fathertoast.deadlyworld.common.world.levelgen.trap.SimpleTowerDispenserFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.TowerFeature;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -50,7 +50,7 @@ public abstract class AbstractCFProvider {
     /** List of all trap configurations. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TRAP_FEATURES = new ArrayList<>();
     /** List of all tower dispenser configurations. */
-    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TOWER_DISPENSER_FEATURES = new ArrayList<>();
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TOWER_FEATURES = new ArrayList<>();
     /** List of all dungeon configurations. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> DUNGEON_FEATURES = new ArrayList<>();
     
@@ -110,11 +110,9 @@ public abstract class AbstractCFProvider {
     
     /** Registers a configured tower dispenser type feature. */
     protected static void registerTower( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                         TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
-        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER_DISPENSER.get(),
-                new SimpleTowerDispenserFeature.Configuration(
-                        baseProvider,
-                        block( DWBlocks.towerDispenser( type ) ),
+                                         TowerType type, BlockStateProvider base, DimensionConfigGroup dimConfigs ) {
+        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER.get(),
+                new TowerFeature.Configuration( block( DWBlocks.towerDispenser( type ) ), base,
                         TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }

@@ -19,7 +19,7 @@ public class ConfigUniformFloatProvider extends FloatProvider {
             FloatFieldSetting.CODEC.fieldOf( "min_inclusive" ).forGetter( ConfigUniformFloatProvider::getMinInclusive ),
             FloatFieldSetting.CODEC.fieldOf( "max_exclusive" ).forGetter( ConfigUniformFloatProvider::getMaxExclusive )
     ).apply( instance, ConfigUniformFloatProvider::new ) );
-
+    
     public static ConfigUniformFloatProvider of( DoubleField.RandomRange range ) { return of( range.getMinField(), range.getMaxField() ); }
     
     public static ConfigUniformFloatProvider of( DoubleField min, DoubleField max ) {

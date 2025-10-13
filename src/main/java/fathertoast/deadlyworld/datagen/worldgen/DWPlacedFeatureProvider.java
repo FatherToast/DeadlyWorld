@@ -39,7 +39,7 @@ public class DWPlacedFeatureProvider {
     /** List of all trap placements. */
     public static final List<ResourceKey<PlacedFeature>> TRAP_FEATURES = new ArrayList<>();
     /** List of all tower dispenser placements. */
-    public static final List<ResourceKey<PlacedFeature>> TOWER_DISPENSER_FEATURES = new ArrayList<>();
+    public static final List<ResourceKey<PlacedFeature>> TOWER_FEATURES = new ArrayList<>();
     /** List of all dungeon placements. */
     public static final List<ResourceKey<PlacedFeature>> DUNGEON_FEATURES = new ArrayList<>();
     

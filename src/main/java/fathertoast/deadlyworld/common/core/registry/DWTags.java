@@ -68,7 +68,7 @@ public final class DWTags {
         
         public static final TagKey<ConfiguredFeature<?, ?>> SPAWNERS = tag( "spawners" );
         public static final TagKey<ConfiguredFeature<?, ?>> TRAPS = tag( "traps" );
-        public static final TagKey<ConfiguredFeature<?, ?>> TOWER_DISPENSERS = tag( "tower_dispensers" );
+        public static final TagKey<ConfiguredFeature<?, ?>> TOWERS = tag( "towers" );
         public static final TagKey<ConfiguredFeature<?, ?>> DUNGEONS = tag( "dungeons" );
         
         private static TagKey<ConfiguredFeature<?, ?>> tag( String name ) {
@@ -83,7 +83,7 @@ public final class DWTags {
         
         public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
         public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );
-        public static final TagKey<PlacedFeature> TOWER_DISPENSERS = tag( "tower_dispensers" );
+        public static final TagKey<PlacedFeature> TOWERS = tag( "towers" );
         public static final TagKey<PlacedFeature> DUNGEONS = tag( "dungeons" );
         
         private static TagKey<PlacedFeature> tag( String name ) {

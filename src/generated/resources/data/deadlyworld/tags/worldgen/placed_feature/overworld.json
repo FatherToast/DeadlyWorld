@@ -11,11 +11,11 @@
     "deadlyworld:potion_trap",
     "deadlyworld:lava_trap",
     "deadlyworld:fire_trap",
-    "deadlyworld:simple_tower_dispenser",
-    "deadlyworld:fire_tower_dispenser",
-    "deadlyworld:potion_tower_dispenser",
-    "deadlyworld:gatling_tower_dispenser",
-    "deadlyworld:fireball_tower_dispenser",
+    "deadlyworld:simple_tower",
+    "deadlyworld:fire_tower",
+    "deadlyworld:potion_tower",
+    "deadlyworld:gatling_tower",
+    "deadlyworld:fireball_tower",
     "deadlyworld:simple_dungeon",
     "deadlyworld:mini_dungeon"
   ]

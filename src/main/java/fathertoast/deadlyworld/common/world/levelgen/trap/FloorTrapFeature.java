@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -23,42 +24,44 @@ public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configurati
             FloorTrapSettings trapSettings,
             TagKey<Block> cannotReplace
     ) implements FeatureConfiguration {
-        public static final Codec<FloorTrapFeature.Configuration> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
+        public static final Codec<FloorTrapFeature.Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
                 BlockStateProvider.CODEC.fieldOf( "trap_provider" ).forGetter( FloorTrapFeature.Configuration::trapProvider ),
                 FloorTrapSettings.CODEC.fieldOf( "trap" ).forGetter( FloorTrapFeature.Configuration::trapSettings ),
                 TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( FloorTrapFeature.Configuration::cannotReplace )
         ).apply( instance, FloorTrapFeature.Configuration::new ) );
     }
-
+    
     public FloorTrapFeature() { this( FloorTrapFeature.Configuration.CODEC ); }
-
+    
     public FloorTrapFeature( Codec<FloorTrapFeature.Configuration> codec ) { super( codec ); }
-
+    
     @Override
     public boolean place( FeaturePlaceContext<FloorTrapFeature.Configuration> context ) {
         final FloorTrapFeature.Configuration config = context.config();
         final RandomSource random = context.random();
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
-
+        
         // TODO - replace with something less bad
-        if ( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
-
-        // Offset by one below to place the trap in the ground
-        BlockPos below = context.origin().below();
-
-        // Make sure the trap at least can be placed
-        if( !predicate.test( level.getBlockState( below ) ) ) return false;
+        if( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
+        
+        final BlockPos.MutableBlockPos trapPos = context.origin().mutable().move( Direction.DOWN );
+        
+        // Move up if on a lip
+        if( isOnLip( level, trapPos ) ) trapPos.move( Direction.UP );
+        
+        // Make sure the trap block can be placed
+        if( !predicate.test( level.getBlockState( trapPos ) ) ) return false;
         // Don't replace blocks with block entities
-        if ( level.getExistingBlockEntity( below ) != null ) return false;
-
+        if( level.getExistingBlockEntity( trapPos ) != null ) return false;
+        
         // Place the trap
-        BlockState trapBlock = config.trapProvider.getState( random, below );
-        setBlock( level, below, trapBlock);
-
+        BlockState trapBlock = config.trapProvider.getState( random, trapPos );
+        setBlock( level, trapPos, trapBlock );
         if( trapBlock.getBlock() instanceof DeadlyTrapBlock ) {
-            config.trapSettings.initializeTrap( level, below, random );
+            config.trapSettings.initializeTrap( level, trapPos, random );
         }
+        
         return true;
     }
 }

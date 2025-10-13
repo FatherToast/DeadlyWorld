@@ -1,11 +1,11 @@
 {
-  "feature": "deadlyworld:fireball_tower_dispenser_nether",
+  "feature": "deadlyworld:simple_tower_nether",
   "placement": [
     {
       "type": "minecraft:count",
       "count": {
         "type": "deadlyworld:config_count_int",
-        "count": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:fireball_tower_dispensers.placements"
+        "count": "deadlyworld:worldgen/minecraft/the_nether/towers:simple_towers.placements"
       }
     },
     {
@@ -15,8 +15,8 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "deadlyworld:config_uniform_height",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:fireball_tower_dispensers.height.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:fireball_tower_dispensers.height.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/towers:simple_towers.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/towers:simple_towers.height.min"
       }
     },
     {

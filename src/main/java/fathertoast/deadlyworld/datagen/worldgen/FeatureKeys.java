@@ -92,10 +92,10 @@ public class FeatureKeys {
             overworldKeys = overworld;
             netherKeys = nether;
             
-            AbstractCFProvider.TOWER_DISPENSER_FEATURES.add( overworld.configuredKey );
-            AbstractCFProvider.TOWER_DISPENSER_FEATURES.add( nether.configuredKey );
-            DWPlacedFeatureProvider.TOWER_DISPENSER_FEATURES.add( overworld.placedKey );
-            DWPlacedFeatureProvider.TOWER_DISPENSER_FEATURES.add( nether.placedKey );
+            AbstractCFProvider.TOWER_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.TOWER_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.TOWER_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.TOWER_FEATURES.add( nether.placedKey );
         }
     }
     

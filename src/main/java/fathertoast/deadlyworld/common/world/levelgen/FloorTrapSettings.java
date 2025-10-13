@@ -19,28 +19,28 @@ public record FloorTrapSettings(
         FloatProvider requiredPlayerRange, FloatProvider checkSightChance,
         IntProvider resetTime, IntProvider triggersRemaining, FloatProvider decoyChance
 ) {
-    public static final Codec<FloorTrapSettings> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
+    public static final Codec<FloorTrapSettings> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
             FloatProvider.CODEC.fieldOf( "required_player_range" ).forGetter( FloorTrapSettings::requiredPlayerRange ),
             FloatProvider.CODEC.fieldOf( "activation_sight_check" ).forGetter( FloorTrapSettings::checkSightChance ),
             IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( FloorTrapSettings::resetTime ),
             IntProvider.CODEC.fieldOf( "triggers_remaining" ).forGetter( FloorTrapSettings::triggersRemaining ),
             FloatProvider.CODEC.fieldOf( "decoy_chance" ).forGetter( FloorTrapSettings::decoyChance )
     ).apply( instance, FloorTrapSettings::new ) );
-
+    
     public static FloorTrapSettings of( TrapType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
-
+    
     public static FloorTrapSettings of( TrapConfig.TrapTypeCategory config ) {
         return new FloorTrapSettings(
                 ConfigConstantFloatProvider.of( config.activationRange ),
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
-
+                
                 ConfigUniformIntProvider.of( config.resetTime ),
                 ConfigConstantIntProvider.of( config.triggersRemaining ),
-
+                
                 ConfigConstantFloatProvider.of( config.decoyChance )
         );
     }
-
+    
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
             trapBlockEntity.getTrapLogic().initializeTrap( level, pos, random, this );

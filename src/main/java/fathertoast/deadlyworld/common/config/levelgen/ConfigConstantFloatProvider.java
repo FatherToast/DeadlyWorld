@@ -21,7 +21,7 @@ public class ConfigConstantFloatProvider extends FloatProvider {
     public static ConfigConstantFloatProvider of( DoubleField value ) {
         return new ConfigConstantFloatProvider( new FloatFieldSetting( value ) );
     }
-
+    
     public static ConfigConstantFloatProvider ofNullable( @Nullable DoubleField value ) {
         return new ConfigConstantFloatProvider( new FloatFieldSetting( value ) );
     }

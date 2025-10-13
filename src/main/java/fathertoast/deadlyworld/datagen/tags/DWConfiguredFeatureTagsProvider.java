@@ -30,7 +30,7 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
         
         addAll( DWTags.ConfiguredFeatures.SPAWNERS, AbstractCFProvider.SPAWNER_FEATURES );
         addAll( DWTags.ConfiguredFeatures.TRAPS, AbstractCFProvider.TRAP_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.TOWER_DISPENSERS, AbstractCFProvider.TOWER_DISPENSER_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.TOWERS, AbstractCFProvider.TOWER_FEATURES );
         addAll( DWTags.ConfiguredFeatures.DUNGEONS, AbstractCFProvider.DUNGEON_FEATURES );
     }
     

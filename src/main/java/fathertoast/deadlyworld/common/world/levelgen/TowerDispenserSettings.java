@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.dimension.TowerDispenserConfig;
+import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
 import net.minecraft.core.BlockPos;
@@ -26,27 +26,27 @@ public record TowerDispenserSettings(
             FloatProvider.CODEC.fieldOf( "attack_damage" ).forGetter( TowerDispenserSettings::attackDamage ),
             FloatProvider.CODEC.fieldOf( "projectile_speed" ).forGetter( TowerDispenserSettings::projectileSpeed ),
             FloatProvider.CODEC.fieldOf( "projectile_variance" ).forGetter( TowerDispenserSettings::projectileVariance )
-    ).apply( instance, TowerDispenserSettings::new ));
-
+    ).apply( instance, TowerDispenserSettings::new ) );
+    
     public static TowerDispenserSettings of( TowerType type, DimensionConfigGroup dimConfigs ) {
         return of( type.getFeatureConfig( dimConfigs ) );
     }
-
-    public static TowerDispenserSettings of( TowerDispenserConfig.TowerDispenserTypeCategory config ) {
+    
+    public static TowerDispenserSettings of( TowerConfig.TowerTypeCategory config ) {
         return new TowerDispenserSettings(
                 ConfigConstantFloatProvider.of( config.activationRange ),
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
-
+                
                 ConfigUniformIntProvider.of( config.attackDelay ),
                 ConfigConstantFloatProvider.of( config.attackDamage ),
-
+                
                 ConfigConstantFloatProvider.of( config.projectileSpeed ),
                 ConfigConstantFloatProvider.of( config.projectileVariance )
         );
     }
-
+    
     public void initializeDispenser( WorldGenLevel level, BlockPos pos, RandomSource random ) {
-        if ( level.getBlockEntity( pos ) instanceof TowerDispenserBlockEntity towerDispenser ) {
+        if( level.getBlockEntity( pos ) instanceof TowerDispenserBlockEntity towerDispenser ) {
             towerDispenser.getTowerLogic().initializeTower( level, pos, random, this );
         }
     }
