@@ -10,7 +10,11 @@ import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
+import fathertoast.deadlyworld.common.config.field.WeightedPotionListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.HashMap;
@@ -46,8 +50,8 @@ public class BlocksConfig extends AbstractConfigFile {
 
         // Sea Mines
         for( SeaMineType type : SeaMineType.values() ) {
-            LOOKUP.put( toKey( SeaMineType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, SeaMineType.BLOCK_CATEGORY, type.toString(),
-                    0.0, 0.0, 1 ) );
+            LOOKUP.put( toKey( SeaMineType.BLOCK_CATEGORY, type.toString() ), new SeaMineBlockCategory( this, SeaMineType.BLOCK_CATEGORY, type.toString(),
+                    0.0, 0.0, 1, type.defaultExplosionPower(), type.defaultPotions() ) );
         }
         
         //TODO add storm drain; will possibly include in a "water traps" category
@@ -59,7 +63,7 @@ public class BlocksConfig extends AbstractConfigFile {
     
     public BlockCategory get( TowerType type ) { return get( TowerType.BLOCK_CATEGORY, type.toString() ); }
 
-    public BlockCategory get( SeaMineType type ) { return get( SeaMineType.BLOCK_CATEGORY, type.toString() ); }
+    public SeaMineBlockCategory get( SeaMineType type ) { return (SeaMineBlockCategory) get( SeaMineType.BLOCK_CATEGORY, type.toString() ); }
 
 
     private BlockCategory get( String category, String type ) {
@@ -132,6 +136,30 @@ public class BlocksConfig extends AbstractConfigFile {
             return props.strength( (float) destroyTime.get(), (float) explosionResistance.get() )
                     .friction( (float) slipperiness.get() ).speedFactor( (float) speedFactor.get() ).jumpFactor( (float) jumpFactor.get() )
                     .lightLevel( ( state ) -> lightLevel.get() );
+        }
+    }
+
+    public static class SeaMineBlockCategory extends BlockCategory {
+
+        public final DoubleField explosionPower;
+
+        public final WeightedPotionListField potions;
+
+
+        SeaMineBlockCategory( BlocksConfig parent, String blockCat, String type, double breakTime,
+                             double explosionResist, int toolLevel, double explPower, WeightedPotionList potionList ) {
+            super(parent, blockCat, type, breakTime, explosionResist, toolLevel);
+
+            SPEC.newLine();
+
+            explosionPower = SPEC.define( new DoubleField( "explosion_power", explPower, DoubleField.Range.NON_NEGATIVE,
+                    "The explosion power of this mine block.",
+                    "For reference, vanilla creepers = 3.0 and vanilla TNT = 4.0." ) );
+
+            SPEC.newLine();
+
+            potions = SPEC.define( new WeightedPotionListField( "potions", potionList,
+                    "A list of potions that may be applied to creatures caught in this mine's blast." ) );
         }
     }
 }
