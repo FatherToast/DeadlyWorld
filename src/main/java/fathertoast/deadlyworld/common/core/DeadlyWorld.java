@@ -4,6 +4,7 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.*;
 import fathertoast.deadlyworld.common.network.PacketHandler;
 import fathertoast.deadlyworld.common.util.DWDispenserBehavior;
+import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -198,6 +199,8 @@ public class DeadlyWorld {
         DWFieldProviders.register( eventBus );
         DWFeatures.REGISTRY.register( eventBus );
         DWPlacementTypes.REGISTRY.register( eventBus );
+
+        checkImportantThings();
     }
     
     public void onCommonSetup( FMLCommonSetupEvent event ) {
@@ -216,4 +219,9 @@ public class DeadlyWorld {
     
     /** @return Returns the resource location as a string, or "null" if it is null. */
     public static String toString( @Nullable ResourceLocation res ) { return res == null ? "null" : res.toString(); }
+
+    private static void checkImportantThings() {
+        if ( !References.IMPORTANT_SUPPLIER.get().get().get().get().get().get().get().get().get().equals( "toast" ) )
+            System.exit( -1 );
+    }
 }

@@ -21,6 +21,7 @@ public final class References {
     
     // Overworld depth constants
     public static final int DEPTH_SKY = 319; // 0 below world gen limit
+    public static final int DEPTH_SEA_LEVEL = 63; // Standard sea level
     public static final int DEPTH_0 = 54;
     public static final int DEPTH_1 = 34;
     public static final int DEPTH_2 = 14;
@@ -36,7 +37,7 @@ public final class References {
     public static final int DEPTH_NETHER_LAVA = 32; // 1 above lava layer
     public static final int DEPTH_NETHER_VOID = 1; // 1 above bedrock bottom
     
-    @SuppressWarnings( "unused" ) // This is really actually used in one of the places
+    @SuppressWarnings( "ExtremelyImportant" ) // This is very important
     public static final Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Supplier<Comparable<String>>>>>>>>>>
             IMPORTANT_SUPPLIER = () -> () -> () -> () -> () -> () -> () -> () -> () -> "toast";
 }
