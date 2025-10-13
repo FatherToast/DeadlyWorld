@@ -1,34 +1,63 @@
 package fathertoast.deadlyworld.common.block.sea_mine;
 
+import fathertoast.crust.api.ICrustApi;
+import fathertoast.crust.api.config.common.value.RegistryValueEntry;
+import fathertoast.crust.api.lib.CrustObjects;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SeaMineConfig;
+import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SuppressWarnings( "ConstantConditions" )
 public enum SeaMineType {
 
-    NORMAL( "normal", ( dimConfigs ) -> dimConfigs.SEA_MINES.NORMAL ),
-    PUFFER( "puffer", ( dimConfigs ) -> dimConfigs.SEA_MINES.PUFFER ),
-    GUARDIAN( "guardian", ( dimConfigs ) -> dimConfigs.SEA_MINES.GUARDIAN );
+    NORMAL( "normal", 6.0F,
+            new WeightedPotionList(),
+            ( dimConfigs ) -> dimConfigs.SEA_MINES.NORMAL ),
+    PUFFER( "puffer", 4.0F,
+            new WeightedPotionList(
+                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 100, 280, 0 ),
+                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 60, 280, 1 ),
+                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 10, 280, 2 )
+            ),
+            ( dimConfigs ) -> dimConfigs.SEA_MINES.PUFFER ),
+    GUARDIAN( "guardian", 4.5F,
+            new WeightedPotionList(
+                    new RegistryValueEntry<>( ResourceLocation.fromNamespaceAndPath( ICrustApi.MOD_ID, CrustObjects.ID.WEIGHT ), 100, 400, 2 ),
+                    new RegistryValueEntry<>( ResourceLocation.fromNamespaceAndPath( ICrustApi.MOD_ID, CrustObjects.ID.WEIGHT ), 20, 400, 4 )
+
+            ),
+            ( dimConfigs ) -> dimConfigs.SEA_MINES.GUARDIAN );
 
     public static final String BLOCK_CATEGORY = "sea_mine";
 
     /** The unique id for this sea mine type. This is used to save and load from disk. */
     private final String id;
     private final String displayName;
+
+    /** The default explosion power for this mine type. */
+    private final float defaultExplosionPower;
+    /** The default potion list for this mine type. */
+    private final WeightedPotionList defaultPotions;
     /** A function that returns the feature config associated with this sea mine type for a given dimension config. */
     private final Function<DimensionConfigGroup, SeaMineConfig.SeaMineCategory> configGetter;
 
 
-    SeaMineType( String name, Function<DimensionConfigGroup, SeaMineConfig.SeaMineCategory> configFunction ) {
-        this( name, name.replace( "_", " " ) + " sea mines", configFunction );
+    SeaMineType( String name, float explosionPower, WeightedPotionList potions, Function<DimensionConfigGroup, SeaMineConfig.SeaMineCategory> configFunction ) {
+        this( name, name.replace( "_", " " ) + " sea mines", explosionPower, potions, configFunction );
     }
 
-    SeaMineType( String name, String prettyName, Function<DimensionConfigGroup, SeaMineConfig.SeaMineCategory> configFunction ) {
+    SeaMineType( String name, String prettyName, float explPower, WeightedPotionList potions, Function<DimensionConfigGroup, SeaMineConfig.SeaMineCategory> configFunction ) {
         id = name;
         displayName = prettyName;
+        defaultExplosionPower = explPower;
+        defaultPotions = potions;
         configGetter = configFunction;
     }
 
@@ -36,6 +65,16 @@ public enum SeaMineType {
 
     /** @return A Supplier of the Sea Mine Block to register for this Sea Mine Type */
     public Supplier<SeaMineBlock> getBlock() { return () -> new SeaMineBlock( this ); }
+
+    /** @return The default explosion power for this Sea Mine type. */
+    public float defaultExplosionPower() {
+        return defaultExplosionPower;
+    }
+
+    /** @return The default potion list for this Sea Mine type. */
+    public WeightedPotionList defaultPotions() {
+        return defaultPotions;
+    }
 
     /**
      * Returns a SeaMineType from ID.

@@ -1,13 +1,18 @@
 package fathertoast.deadlyworld.common.block.sea_mine;
 
 import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.config.BlocksConfig;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
+import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -53,12 +58,19 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
         return type;
     }
 
+    public float getExplosionPower() {
+        return Config.BLOCKS.get( type ).explosionPower.getFloat();
+    }
+
+    private WeightedPotionList getPotionList( ) {
+        return Config.BLOCKS.get( type ).potions.get();
+    }
+
     @Override
     public VoxelShape getShape( BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
         return SHAPE;
     }
 
-    // TODO - Make an easy-to-override method for variant mines
     @Override
     public void tick( BlockState state, ServerLevel level, BlockPos pos, RandomSource random ) {
         level.scheduleTick( pos, this, 20, TickPriority.LOW );
@@ -73,9 +85,19 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
                     pos.getX() + 0.5D,
                     pos.getY() + 0.5D,
                     pos.getZ() + 0.5D,
-                    3.5F,
+                    getExplosionPower(),
                     Level.ExplosionInteraction.BLOCK
             );
+            // Pick a potion and apply it to all creatures caught in the blast
+            if ( getPotionList().isEmpty() ) return;
+
+            final MobEffectInstance potion = getPotionList().next( random );
+
+            if ( potion == null ) return;
+
+            List<LivingEntity> nearbyCreatures = level.getEntitiesOfClass( LivingEntity.class, new AABB( pos ).inflate( getExplosionPower() ) );
+            nearbyCreatures.forEach( (livingEntity) ->
+                    livingEntity.addEffect( new MobEffectInstance( potion ) ) );
         }
         // Check for a nearby player in survival or adventure mode
         else {

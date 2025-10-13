@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.ticks.TickPriority;
 
 public class SeaMineFeature extends DeadlyFeature<SeaMineFeature.Configuration> {
 
@@ -70,13 +71,16 @@ public class SeaMineFeature extends DeadlyFeature<SeaMineFeature.Configuration> 
         // Place chains
         for ( int yOffset = 0; yOffset < totalHeight; yOffset++ ) {
             BlockPos pos = origin.above( yOffset );
-            setBlock( level, pos, config.trailProvider.getState( random, pos ) );
+            BlockState mine = config.trailProvider.getState( random, pos );
+            setBlock( level, pos, mine );
         }
 
         // Place the mine
         BlockPos minePos = origin.above( totalHeight );
         BlockState seaMine = config.mineProvider.getState( random, minePos );
         setBlock( level, minePos, seaMine );
+        // Schedule first tick; Block.onPlace() is not called for blocks placed during world gen
+        level.scheduleTick( minePos, seaMine.getBlock(), 20, TickPriority.LOW );
 
         // Generate debug marker
         if( seaMine.getBlock() instanceof SeaMineBlock seaMineBlock ) {
