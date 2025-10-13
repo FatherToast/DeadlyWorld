@@ -14,10 +14,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.MonsterRoomFeature;
 import net.minecraft.world.level.levelgen.placement.*;
 
 import java.util.ArrayList;
@@ -54,6 +52,9 @@ public class DWPlacedFeatureProvider {
         final DimensionConfigGroup overworldConfigs = Config.getDimensionConfigs( Level.OVERWORLD );
         final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         
+        // Buried liquids
+        register( context, getter, BURIED_LIQUID_ANY_DIMENSION, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
+        
         // Standard lone spawner placements
         registerLoneSpawner( context, getter, SIMPLE_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, STREAM_SPAWNER, overworldConfigs, netherConfigs );
@@ -69,15 +70,12 @@ public class DWPlacedFeatureProvider {
         registerFloorTrap( context, getter, LAVA_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, FIRE_TRAP, overworldConfigs, netherConfigs );
         
-        // Standards tower dispenser placements
-        registerTowerDispenser( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, getter, FIRE_TOWER, overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, getter, POTION_TOWER, overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, getter, GATLING_TOWER, overworldConfigs, netherConfigs );
-        registerTowerDispenser( context, getter, FIREBALL_TOWER, overworldConfigs, netherConfigs );
-        
-        // Buried liquids
-        register( context, getter, BURIED_LIQUID_ANY_DIMENSION, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
+        // Standard tower placements
+        registerTower( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );
+        registerTower( context, getter, FIRE_TOWER, overworldConfigs, netherConfigs );
+        registerTower( context, getter, POTION_TOWER, overworldConfigs, netherConfigs );
+        registerTower( context, getter, GATLING_TOWER, overworldConfigs, netherConfigs );
+        registerTower( context, getter, FIREBALL_TOWER, overworldConfigs, netherConfigs );
         
         // Simple dungeon
         register( context, getter, SIMPLE_DUNGEON.overworldKeys,
@@ -124,9 +122,9 @@ public class DWPlacedFeatureProvider {
         return floorFeature( type.getFeatureConfig( dimConfigs ) );
     }
     
-    /** @return Modifiers for a floor trap feature. */
-    protected static List<PlacementModifier> towerDispenser( TowerType type, DimensionConfigGroup dimConfigs ) {
-        return floorFeature( type.getFeatureConfig( dimConfigs ) );
+    /** @return Modifiers for a tower feature. */
+    protected static List<PlacementModifier> tower( TowerType type, DimensionConfigGroup dimConfigs ) {
+        return surfaceFeature( type.getFeatureConfig( dimConfigs ) );
     }
     
     /** @return Modifiers for a feature that generates only on floors. */
@@ -180,10 +178,10 @@ public class DWPlacedFeatureProvider {
     }
     
     /** Registers a placed floor trap type feature to each supported dimension. */
-    protected static void registerTowerDispenser( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                                  FeatureKeys.TowerDispenser feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        register( context, getter, feature.overworldKeys, towerDispenser( feature.towerType, overworldConfigs ) );
-        register( context, getter, feature.netherKeys, towerDispenser( feature.towerType, netherConfigs ) );
+    protected static void registerTower( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
+                                         FeatureKeys.TowerDispenser feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        register( context, getter, feature.overworldKeys, tower( feature.towerType, overworldConfigs ) );
+        register( context, getter, feature.netherKeys, tower( feature.towerType, netherConfigs ) );
     }
     
     /** Registers a placed feature. */

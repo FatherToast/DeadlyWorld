@@ -101,14 +101,16 @@ public abstract class AbstractCFProvider {
     
     
     /** Registers a configured tower dispenser type feature to each supported dimension. */
-    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature, BlockStateProvider baseProvider, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        registerTowerDispenser( context, feature.overworldKeys, feature.towerType, baseProvider, overworldConfigs );
-        registerTowerDispenser( context, feature.netherKeys, feature.towerType, baseProvider, netherConfigs );
+    protected static void registerTower( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature,
+                                         DimensionConfigGroup overworldConfigs, BlockStateProvider overworldBase,
+                                         DimensionConfigGroup netherConfigs, BlockStateProvider netherBase ) {
+        registerTower( context, feature.overworldKeys, feature.towerType, overworldBase, overworldConfigs );
+        registerTower( context, feature.netherKeys, feature.towerType, netherBase, netherConfigs );
     }
     
     /** Registers a configured tower dispenser type feature. */
-    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                                  TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
+    protected static void registerTower( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                         TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER_DISPENSER.get(),
                 new SimpleTowerDispenserFeature.Configuration(
                         baseProvider,

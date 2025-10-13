@@ -28,7 +28,19 @@
       "direction_of_search": "down",
       "max_steps": 12,
       "target_condition": {
-        "type": "minecraft:solid"
+        "type": "minecraft:any_of",
+        "predicates": [
+          {
+            "type": "minecraft:solid"
+          },
+          {
+            "type": "minecraft:not",
+            "predicate": {
+              "type": "minecraft:matching_fluids",
+              "fluids": "minecraft:empty"
+            }
+          }
+        ]
       }
     },
     {

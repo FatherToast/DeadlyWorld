@@ -4,14 +4,9 @@
     "base_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "minecraft:granite_wall",
+        "Name": "minecraft:polished_basalt",
         "Properties": {
-          "east": "none",
-          "north": "none",
-          "south": "none",
-          "up": "true",
-          "waterlogged": "false",
-          "west": "none"
+          "axis": "y"
         }
       }
     },

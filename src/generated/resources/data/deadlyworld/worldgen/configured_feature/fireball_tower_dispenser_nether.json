@@ -4,14 +4,9 @@
     "base_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "minecraft:nether_brick_wall",
+        "Name": "minecraft:quartz_pillar",
         "Properties": {
-          "east": "none",
-          "north": "none",
-          "south": "none",
-          "up": "true",
-          "waterlogged": "false",
-          "west": "none"
+          "axis": "y"
         }
       }
     },

@@ -29,10 +29,10 @@ public class DeadlyWorld {
      * Features list:
      * (KEY: - = complete in current version, o = incomplete feature from previous version,
      *       + = incomplete new feature, ? = feature to consider adding)
-     *  o general
+     *  - general
      *      - dimension-based configs
      *      o biome-based configs
-     *  o blocks
+     *  - blocks
      *      - configurable physical properties
      *      o procedurally generated silverfish blocks
      *      - deadly spawner
@@ -64,8 +64,9 @@ public class DeadlyWorld {
      *      ? lava monsters
      *  o vein world gen
      *      o silverfish
-     *      - fast lava (single block vein)
      *      - water (single block vein)
+     *      - lava (single block vein)
+     *      - fast lava (single block vein)
      *      o sand
      *      o vanilla vein disables
      *      o vanilla vein replacements
