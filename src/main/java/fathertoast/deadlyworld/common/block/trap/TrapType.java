@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.block.trap;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
 import fathertoast.deadlyworld.common.util.TrapHelper;
@@ -34,10 +34,10 @@ import java.util.function.Supplier;
 
 public enum TrapType {
     
-    TNT( "tnt", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.TNT ) {
+    TNT( "tnt", ( dimConfig ) -> dimConfig.TRAPS.TNT ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            FloorTrapConfig.TntTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT;
+            TrapConfig.TntTrapTypeCategory config = dimConfig.TRAPS.TNT;
             Level level = trapEntity.getLevel();
 
             double x = trapEntity.getBlockPos().getX() + 0.5;
@@ -61,13 +61,13 @@ public enum TrapType {
         }
     },
     
-    TNT_MOB( "tnt_mob", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.TNT_MOB ) {
+    TNT_MOB( "tnt_mob", ( dimConfig ) -> dimConfig.TRAPS.TNT_MOB ) {
         @Override
         public boolean spawnsMonster() { return true; }
 
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            FloorTrapConfig.TntMobTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT_MOB;
+            TrapConfig.TntMobTrapTypeCategory config = dimConfig.TRAPS.TNT_MOB;
             Level level = trapEntity.getLevel();
 
             double x = trapEntity.getBlockPos().getX() + 0.5;
@@ -154,11 +154,11 @@ public enum TrapType {
         }
     },
     
-    POTION( "potion", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.POTION ) {
+    POTION( "potion", ( dimConfig ) -> dimConfig.TRAPS.POTION ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
             PotionTrapBlockEntity potionTrap = (PotionTrapBlockEntity) trapEntity;
-            FloorTrapConfig.PotionTrapTypeCategory config = dimConfig.FLOOR_TRAPS.POTION;
+            TrapConfig.PotionTrapTypeCategory config = dimConfig.TRAPS.POTION;
 
             Level level = trapEntity.getLevel();
 
@@ -189,10 +189,10 @@ public enum TrapType {
         public Supplier<DeadlyTrapBlock> getBlock() { return PotionTrapBlock::new; }
     },
     
-    LAVA( "lava", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.LAVA ) {
+    LAVA( "lava", ( dimConfig ) -> dimConfig.TRAPS.LAVA ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            FloorTrapConfig.TrapTypeCategory config = dimConfig.FLOOR_TRAPS.LAVA;
+            TrapConfig.TrapTypeCategory config = dimConfig.TRAPS.LAVA;
 
             Level level = trapEntity.getLevel();
             BlockPos pos = trapEntity.getBlockPos();
@@ -211,10 +211,10 @@ public enum TrapType {
         }
     },
 
-    FIRE("fire", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.FIRE ) {
+    FIRE("fire", ( dimConfig ) -> dimConfig.TRAPS.FIRE ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            FloorTrapConfig.FireTrapTypeCategory config = dimConfig.FLOOR_TRAPS.FIRE;
+            TrapConfig.FireTrapTypeCategory config = dimConfig.TRAPS.FIRE;
 
             Level level = trapEntity.getLevel();
             BlockPos pos = trapEntity.getBlockPos();
@@ -253,14 +253,14 @@ public enum TrapType {
     private final String id;
     private final String displayName;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
-    private final Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configFunction;
+    private final Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction;
     
     
-    TrapType( String id, Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configFunction ) {
+    TrapType( String id, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
         this( id, id.replace( "_", " " ) + " floor traps", configFunction );
     }
     
-    TrapType( String id, String displayName, Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configFunction ) {
+    TrapType( String id, String displayName, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
         this.id = id;
         this.displayName = displayName;
         this.configFunction = configFunction;
@@ -281,7 +281,7 @@ public enum TrapType {
         return false;
     }
     
-    public final FloorTrapConfig.TrapTypeCategory getFeatureConfig(DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
+    public final TrapConfig.TrapTypeCategory getFeatureConfig(DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
     
     public abstract void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity );
     

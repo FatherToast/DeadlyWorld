@@ -17,16 +17,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import static fathertoast.deadlyworld.common.util.References.*;
 
-public class FloorTrapConfig extends FeatureConfig {
+public class TrapConfig extends FeatureConfig {
     
-    public final FloorTrapConfig.TntTrapTypeCategory TNT;
-    public final FloorTrapConfig.TntMobTrapTypeCategory TNT_MOB;
-    public final FloorTrapConfig.PotionTrapTypeCategory POTION;
-    public final FloorTrapConfig.FireTrapTypeCategory FIRE;
+    public final TrapConfig.TntTrapTypeCategory TNT;
+    public final TrapConfig.TntMobTrapTypeCategory TNT_MOB;
+    public final TrapConfig.PotionTrapTypeCategory POTION;
+    public final TrapConfig.FireTrapTypeCategory FIRE;
     public final TrapTypeCategory LAVA;
 
     /** Builds the config spec that should be used for this config. */
-    FloorTrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
+    TrapConfig(ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "floor trap" );
         
         SPEC.newLine();

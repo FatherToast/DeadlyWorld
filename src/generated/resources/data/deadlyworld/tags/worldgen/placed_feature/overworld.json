@@ -16,6 +16,9 @@
     "deadlyworld:potion_tower",
     "deadlyworld:gatling_tower",
     "deadlyworld:fireball_tower",
+    "deadlyworld:normal_sea_mine",
+    "deadlyworld:puffer_sea_mine",
+    "deadlyworld:guardian_sea_mine",
     "deadlyworld:simple_dungeon",
     "deadlyworld:mini_dungeon"
   ]

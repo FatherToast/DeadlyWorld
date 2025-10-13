@@ -44,11 +44,12 @@ import java.util.List;
 public class ClientRegister {
     
     private static final List<String> FEATURE_KEYS = new ArrayList<>();
+    private static int FEATURE_KEY_COUNT;
 
     public static void setFeatureKeys( Collection<String> keys ) {
         FEATURE_KEYS.clear();
         FEATURE_KEYS.addAll( keys );
-        DeadlyWorld.LOG.error( "SETTING FEATURE KEYS {}", COUNT );
+        DeadlyWorld.LOG.error( "SETTING FEATURE KEYS {}", FEATURE_KEY_COUNT );
     }
 
     @SubscribeEvent
@@ -123,8 +124,6 @@ public class ClientRegister {
     private static <T extends Entity & ItemSupplier> void registerThrownRenderer( EntityType<T> entityType, float scale, boolean fullBright, EntityRenderersEvent.RegisterRenderers event ) {
         event.registerEntityRenderer( entityType, ( context ) -> new ThrownItemRenderer<>( context, scale, fullBright ) );
     }
-    
-    private static int COUNT;
 
     @SubscribeEvent
     public static void buildCreativeContents( BuildCreativeModeTabContentsEvent event ) {
@@ -140,8 +139,8 @@ public class ClientRegister {
             }
         }
         else if( event.getTabKey() == DWCreativeModeTabs.PLACERS.key() ) {
-            COUNT++;
-            DeadlyWorld.LOG.error( "LOADING CREATIVE TABS {}", COUNT );
+            FEATURE_KEY_COUNT++;
+            DeadlyWorld.LOG.error( "LOADING CREATIVE TABS {}", FEATURE_KEY_COUNT );
             for( String featureKey : FEATURE_KEYS ) {
                 event.accept( FeaturePlacerItem.of( ResourceLocation.parse( featureKey ) ) );
             }

@@ -5,7 +5,7 @@ import fathertoast.deadlyworld.api.DWRegistries;
 import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
 import fathertoast.deadlyworld.common.util.TrapHelper;
@@ -118,7 +118,7 @@ public abstract class BaseTrap {
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
 
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random, FloorTrapSettings trapSettings ) {
-        final FloorTrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+        final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, trapConfig );
 
         initializeTrap( getLevel(), pos, random,
@@ -132,7 +132,7 @@ public abstract class BaseTrap {
     }
 
     public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {
-        final FloorTrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+        final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level ) );
         initializeTrap( level, pos, random,
                 trapConfig.activationRange.get(), (float) trapConfig.checkSightChance.get(),
                 trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), trapConfig.triggersRemaining.get(), trapConfig.decoyChance.rollChance( random )

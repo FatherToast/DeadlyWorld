@@ -4,7 +4,7 @@ import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
 import net.minecraft.core.BlockPos;
@@ -37,7 +37,7 @@ public class PotionTrap extends BaseTrap {
     public void triggerTrap( ServerLevel level, BlockPos pos ) { }
 
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random, PotionFloorTrapSettings trapSettings ) {
-        final FloorTrapConfig.PotionTrapTypeCategory trapConfig = (FloorTrapConfig.PotionTrapTypeCategory) trapType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+        final TrapConfig.PotionTrapTypeCategory trapConfig = (TrapConfig.PotionTrapTypeCategory) trapType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, trapConfig );
 
         initializeTrap( getLevel(), pos, random,
@@ -53,7 +53,7 @@ public class PotionTrap extends BaseTrap {
     }
 
     public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {
-        final FloorTrapConfig.PotionTrapTypeCategory trapConfig = (FloorTrapConfig.PotionTrapTypeCategory) TrapType.POTION.getFeatureConfig( Config.getDimensionConfigs( level ) );
+        final TrapConfig.PotionTrapTypeCategory trapConfig = (TrapConfig.PotionTrapTypeCategory) TrapType.POTION.getFeatureConfig( Config.getDimensionConfigs( level ) );
         initializeTrap( level, pos, random,
                 trapConfig.activationRange.get(), (float) trapConfig.checkSightChance.get(),
                 trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), trapConfig.triggersRemaining.get(),
