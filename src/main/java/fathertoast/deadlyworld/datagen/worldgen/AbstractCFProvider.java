@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
@@ -129,7 +130,9 @@ public abstract class AbstractCFProvider {
                                            DimensionConfigGroup overworldConfigs ) {
         registerSeaMine( context,
                 feature.overworldKeys, feature.seaMineType,
-                block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y ) ),
+                block( Blocks.CHAIN.defaultBlockState()
+                        .setValue( ChainBlock.AXIS, Direction.Axis.Y )
+                        .setValue( ChainBlock.WATERLOGGED, true ) ),
                 overworldConfigs );
     }
 
@@ -138,10 +141,9 @@ public abstract class AbstractCFProvider {
                                           SeaMineType type, BlockStateProvider trailProvider, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SEA_MINE.get(),
                 new SeaMineFeature.Configuration(
-                        block( DWBlocks.seaMine( type ) ) ,
+                        block( DWBlocks.seaMine( type ).get().defaultBlockState().setValue( SeaMineBlock.WATERLOGGED, true ) ),
                         trailProvider,
-                        SeaMineSettings.of( type.getFeatureConfig( dimConfigs ) ),
-                        BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+                        SeaMineSettings.of( type.getFeatureConfig( dimConfigs ) ) ) ) );
     }
 
     
