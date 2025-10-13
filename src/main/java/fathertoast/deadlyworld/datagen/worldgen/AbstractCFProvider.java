@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
@@ -8,16 +9,21 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
+import fathertoast.deadlyworld.common.world.levelgen.SeaMineSettings;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import fathertoast.deadlyworld.common.world.levelgen.TowerDispenserSettings;
 import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.LoneSpawnerFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.SimpleTowerDispenserFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.SeaMineFeature;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
@@ -89,8 +95,8 @@ public abstract class AbstractCFProvider {
                         FloorTrapSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
-    
-    
+
+
     /** Registers a configured tower dispenser type feature to each supported dimension. */
     protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature, BlockStateProvider baseProvider, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         registerTowerDispenser( context, feature.overworldKeys, feature.towerType, baseProvider, overworldConfigs );
@@ -107,7 +113,28 @@ public abstract class AbstractCFProvider {
                         TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
-    
+
+
+    /** Registers a configured registerSeaMine type feature to each supported dimension. */
+    protected static void registerSeaMine( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SeaMine feature,
+                                           DimensionConfigGroup overworldConfigs ) {
+        registerSeaMine( context,
+                feature.overworldKeys, feature.seaMineType,
+                block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y ) ),
+                overworldConfigs );
+    }
+
+    /** Registers a configured sea mine type feature. */
+    protected static void registerSeaMine( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                          SeaMineType type, BlockStateProvider trailProvider, DimensionConfigGroup dimConfigs ) {
+        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SEA_MINE.get(),
+                new SeaMineFeature.Configuration(
+                        block( DWBlocks.seaMine( type ) ) ,
+                        trailProvider,
+                        SeaMineSettings.of( type.getFeatureConfig( dimConfigs ) ),
+                        BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+    }
+
     
     /** Registers a configured feature. */
     protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys, ConfiguredFeature<?, ?> configuredFeature ) {

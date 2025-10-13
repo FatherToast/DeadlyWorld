@@ -20,6 +20,7 @@ public final class DWFeatures {
     public static RegistryObject<FloorTrapFeature> FLOOR_TRAP = register( "floor_trap", FloorTrapFeature::new );
     public static RegistryObject<PotionFloorTrapFeature> POTION_FLOOR_TRAP = register( "potion_floor_trap", PotionFloorTrapFeature::new );
     public static RegistryObject<SimpleTowerDispenserFeature> TOWER_DISPENSER = register("tower_dispenser", SimpleTowerDispenserFeature::new);
+    public static RegistryObject<SeaMineFeature> SEA_MINE = register( "sea_mine", SeaMineFeature::new );
 
     public static RegistryObject<BuriedLiquidFeature> BURIED_LIQUID = register( "buried_liquid", BuriedLiquidFeature::new );
 

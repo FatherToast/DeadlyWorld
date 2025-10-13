@@ -18,7 +18,7 @@ public class SimpleDungeonConfig extends FeatureConfig {
 
     /** Builds the config spec that should be used for this config. */
     SimpleDungeonConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
-        super( manager, dir, dimConfigs, "simple_dungeon" );
+        super( manager, dir, dimConfigs, "simple dungeon" );
 
         SPEC.newLine();
 

@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
@@ -32,7 +33,6 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     @Override
     public void generate() {
         dropSelf( DWBlocks.MINI_CHEST.get() );
-        add( DWBlocks.SEA_MINE.get(), noDrop() );
 
         for( SpawnerType type : SpawnerType.values() ) {
             add( DWBlocks.spawner( type ), buildSpawnerLoot( type ) );
@@ -42,6 +42,9 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         }
         for( TowerType type : TowerType.values() ) {
             add( DWBlocks.towerDispenser( type ), buildTowerDispenserLoot( type ) );
+        }
+        for( SeaMineType type : SeaMineType.values() ) {
+            add( DWBlocks.seaMine( type ).get(), noDrop() );
         }
     }
     

@@ -1,0 +1,53 @@
+{
+  "feature": "deadlyworld:normal_sea_mine",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "deadlyworld:config_count_int",
+        "count": "deadlyworld:worldgen/minecraft/overworld/sea_mines:normal_sea_mines.placements"
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "deadlyworld:config_uniform_height",
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/sea_mines:normal_sea_mines.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/sea_mines:normal_sea_mines.height.min"
+      }
+    },
+    {
+      "type": "minecraft:environment_scan",
+      "allowed_search_condition": {
+        "type": "minecraft:any_of",
+        "predicates": [
+          {
+            "type": "minecraft:matching_fluids",
+            "fluids": "minecraft:water"
+          }
+        ]
+      },
+      "direction_of_search": "down",
+      "max_steps": 12,
+      "target_condition": {
+        "type": "minecraft:solid"
+      }
+    },
+    {
+      "type": "minecraft:random_offset",
+      "xz_spread": 0,
+      "y_spread": 1
+    },
+    {
+      "type": "minecraft:surface_relative_threshold_filter",
+      "heightmap": "OCEAN_FLOOR_WG",
+      "max_inclusive": -2
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -165,7 +165,8 @@ public class ClientRegister {
                 "deadlyworld:fire_tower_dispenser_nether",
                 "deadlyworld:potion_tower_dispenser_nether",
                 "deadlyworld:gatling_tower_dispenser_nether",
-                "deadlyworld:fireball_tower_dispenser_nether"
+                "deadlyworld:fireball_tower_dispenser_nether",
+                "deadlyworld:normal_sea_mine"
         };
     }
 }

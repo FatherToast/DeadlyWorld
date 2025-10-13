@@ -5,7 +5,7 @@
       "type": "minecraft:count",
       "count": {
         "type": "deadlyworld:config_count_int",
-        "count": "deadlyworld:worldgen/minecraft/overworld/traps:tnt_traps.placements"
+        "count": "deadlyworld:worldgen/minecraft/overworld/floor_traps:tnt_floor_traps.placements"
       }
     },
     {
@@ -15,8 +15,8 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "deadlyworld:config_uniform_height",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/traps:tnt_traps.height.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/traps:tnt_traps.height.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/floor_traps:tnt_floor_traps.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/floor_traps:tnt_floor_traps.height.min"
       }
     },
     {

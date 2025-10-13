@@ -28,7 +28,7 @@ public class TowerDispenserConfig extends FeatureConfig {
         super( manager, dir, dimConfigs, "tower dispenser" );
         
         SPEC.newLine();
-        //SPEC.describePotionList();
+        // SPEC.describePotionList();
         
         SIMPLE = new TowerDispenserTypeCategory( this, TowerType.SIMPLE, 0.6, DEPTH_LAVA, DEPTH_0, 0.3,
                 9.0, true, 20, 40, 3.0, 1.0, 0.08 );

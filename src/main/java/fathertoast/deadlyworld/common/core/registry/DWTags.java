@@ -21,6 +21,7 @@ public final class DWTags {
         public static final BlockWithItem SPAWNERS = tag( "spawners" );
         public static final BlockWithItem TRAPS = tag( "traps" );
         public static final BlockWithItem TOWER_DISPENSERS = tag( "tower_dispensers" );
+        public static final BlockWithItem SEA_MINES = tag( "sea_mines" );
         
         private static BlockWithItem tag( String name ) {
             return new BlockWithItem( BlockTags.create( DeadlyWorld.resourceLoc( name ) ),

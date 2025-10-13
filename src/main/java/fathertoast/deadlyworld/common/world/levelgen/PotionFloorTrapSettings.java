@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.world.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
-import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
@@ -27,7 +27,7 @@ public record PotionFloorTrapSettings(
             FloatProvider.CODEC.fieldOf( "dynamic_chance" ).forGetter( PotionFloorTrapSettings::dynamicChance )
     ).apply( instance, PotionFloorTrapSettings::new ) );
 
-    public static PotionFloorTrapSettings create( TrapConfig.PotionTrapTypeCategory config ) {
+    public static PotionFloorTrapSettings create( FloorTrapConfig.PotionTrapTypeCategory config ) {
         return new PotionFloorTrapSettings(
                 ConfigConstantFloatProvider.of( config.activationRange ),
                 ConfigConstantFloatProvider.of( config.checkSightChance ),

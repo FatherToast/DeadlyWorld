@@ -5,24 +5,24 @@
     "trap": {
       "activation_sight_check": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:worldgen/minecraft/the_nether/traps:fire_traps.sight_check_chance"
+        "value": "deadlyworld:worldgen/minecraft/the_nether/floor_traps:fire_floor_traps.sight_check_chance"
       },
       "decoy_chance": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:worldgen/minecraft/the_nether/traps:fire_traps.decoy_chance"
+        "value": "deadlyworld:worldgen/minecraft/the_nether/floor_traps:fire_floor_traps.decoy_chance"
       },
       "required_player_range": {
         "type": "deadlyworld:config_constant_float",
-        "value": "deadlyworld:worldgen/minecraft/the_nether/traps:fire_traps.required_player_range"
+        "value": "deadlyworld:worldgen/minecraft/the_nether/floor_traps:fire_floor_traps.required_player_range"
       },
       "reset_time": {
         "type": "deadlyworld:config_uniform_int",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/traps:fire_traps.reset_time.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/traps:fire_traps.reset_time.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/floor_traps:fire_floor_traps.reset_time.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/floor_traps:fire_floor_traps.reset_time.min"
       },
       "triggers_remaining": {
         "type": "deadlyworld:config_constant_int",
-        "value": "deadlyworld:worldgen/minecraft/the_nether/traps:fire_traps.triggers"
+        "value": "deadlyworld:worldgen/minecraft/the_nether/floor_traps:fire_floor_traps.triggers"
       }
     },
     "trap_provider": {

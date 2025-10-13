@@ -1,0 +1,7 @@
+{
+  "parent": "deadlyworld:block/template_sea_mine",
+  "textures": {
+    "mine": "deadlyworld:block/normal_sea_mine",
+    "particle": "minecraft:block/stone"
+  }
+}

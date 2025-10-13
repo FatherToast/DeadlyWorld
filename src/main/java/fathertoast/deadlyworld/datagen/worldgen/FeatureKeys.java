@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
@@ -38,62 +39,68 @@ public class FeatureKeys {
         AbstractCFProvider.NOT_PLACEABLE.add( configuredKey );
         return this;
     }
+
+    /** Feature key-pair for features that generate in both the overworld and nether. */
+    public static class BiDimensional {
+
+        public static BiDimensional of( String name ) { return new BiDimensional( overworld( name ), nether( name ) ); }
+
+        public final FeatureKeys overworldKeys;
+        public final FeatureKeys netherKeys;
+
+        protected BiDimensional( FeatureKeys overworld, FeatureKeys nether ) {
+            overworldKeys = overworld.notPlaceable();
+            netherKeys = nether.notPlaceable();
+        }
+    }
     
-    public static class Spawner {
+    public static class Spawner extends BiDimensional {
         
         public static Spawner of( SpawnerType type, String name ) { return new Spawner( type, overworld( name ), nether( name ) ); }
         
         public final SpawnerType spawnerType;
-        public final FeatureKeys overworldKeys;
-        public final FeatureKeys netherKeys;
         
         protected Spawner( SpawnerType type, FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld, nether );
             spawnerType = type;
-            overworldKeys = overworld;
-            netherKeys = nether;
         }
     }
     
-    public static class Trap {
+    public static class Trap extends BiDimensional {
         
         public static Trap of( TrapType type, String name ) { return new Trap( type, overworld( name ), nether( name ) ); }
         
         public final TrapType trapType;
-        public final FeatureKeys overworldKeys;
-        public final FeatureKeys netherKeys;
         
         protected Trap( TrapType type, FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld, nether );
             trapType = type;
-            overworldKeys = overworld;
-            netherKeys = nether;
         }
     }
     
-    public static class TowerDispenser {
+    public static class TowerDispenser extends BiDimensional {
         
         public static TowerDispenser of( TowerType type, String name ) { return new TowerDispenser( type, overworld( name ), nether( name ) ); }
         
         public final TowerType towerType;
-        public final FeatureKeys overworldKeys;
-        public final FeatureKeys netherKeys;
         
         protected TowerDispenser( TowerType type, FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld, nether );
             towerType = type;
-            overworldKeys = overworld;
-            netherKeys = nether;
         }
     }
-    
-    public static class SimpleDungeon {
-        
-        public static SimpleDungeon of( String name ) { return new SimpleDungeon( overworld( name ), nether( name ) ); }
-        
+
+    public static class SeaMine {
+
         public final FeatureKeys overworldKeys;
-        public final FeatureKeys netherKeys;
-        
-        protected SimpleDungeon( FeatureKeys overworld, FeatureKeys nether ) {
-            overworldKeys = overworld.notPlaceable();
-            netherKeys = nether.notPlaceable();
+
+        public static SeaMine of( SeaMineType type, String name ) { return new SeaMine( type, overworld( name ) ); }
+
+        public final SeaMineType seaMineType;
+
+        protected SeaMine( SeaMineType type, FeatureKeys overworld ) {
+            overworldKeys = overworld;
+            seaMineType = type;
         }
     }
 }

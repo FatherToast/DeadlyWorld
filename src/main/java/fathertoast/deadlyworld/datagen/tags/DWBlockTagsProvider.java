@@ -26,6 +26,7 @@ public class DWBlockTagsProvider extends BlockTagsProvider {
         addAll( DWTags.Blocks.SPAWNERS, DWBlocks.SPAWNERS );
         addAll( DWTags.Blocks.TRAPS, DWBlocks.TRAPS );
         addAll( DWTags.Blocks.TOWER_DISPENSERS, DWBlocks.TOWER_DISPENSERS );
+        addAll( DWTags.Blocks.SEA_MINES, DWBlocks.SEA_MINES );
         
         addTags( BlockTags.MINEABLE_WITH_PICKAXE,
                 DWTags.Blocks.SPAWNERS.get(),

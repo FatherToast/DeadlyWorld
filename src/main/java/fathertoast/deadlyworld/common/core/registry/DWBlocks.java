@@ -1,31 +1,24 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
-import fathertoast.deadlyworld.common.block.fluid.RunnyLavaFluid;
 import fathertoast.deadlyworld.common.block.misc.MiniChestBlock;
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
-import fathertoast.deadlyworld.common.block.trap.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.item.MiniChestBlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -41,6 +34,7 @@ public final class DWBlocks {
     public static final List<RegistryObject<DeadlySpawnerBlock>> SPAWNERS;
     public static final List<RegistryObject<DeadlyTrapBlock>> TRAPS;
     public static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
+    public static final List<RegistryObject<SeaMineBlock>> SEA_MINES;
     
     //    public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
     //    public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock( "sewer_bedrock", () -> new Block( AbstractBlock.Properties.of( Material.STONE, MaterialColor.COLOR_GRAY ).strength( -1.0F, 3600000.0F ).noDrops().sound( SoundType.STONE ) ), ItemGroup.TAB_BUILDING_BLOCKS );
@@ -48,8 +42,6 @@ public final class DWBlocks {
     public static final RegistryObject<Block> MINI_CHEST = registerBlock( "mini_chest",
             () -> new MiniChestBlock( BlockBehaviour.Properties.of().mapColor( MapColor.WOOD ).instrument( NoteBlockInstrument.BASS ).strength( 2.5F ).sound( SoundType.WOOD ).ignitedByLava() ),
             () -> new MiniChestBlockItem( DWBlocks.MINI_CHEST.get() ) );
-
-    public static final RegistryObject<Block> SEA_MINE = registerBlock( "sea_mine", () -> new SeaMineBlock( BlockBehaviour.Properties.of().pushReaction( PushReaction.DESTROY ).instabreak() ) );
 
     public static final RegistryObject<LiquidBlock> RUNNY_LAVA = registerBlockNoItem( "runny_lava", () -> new RunnyLavaBlock( DWFluids.RUNNY_LAVA_SOURCE ) );
 
@@ -75,6 +67,13 @@ public final class DWBlocks {
         }
         towerDispensers.trimToSize();
         TOWER_DISPENSERS = Collections.unmodifiableList( towerDispensers );
+
+        final ArrayList<RegistryObject<SeaMineBlock>> seaMines = new ArrayList<>();
+        for( SeaMineType type : SeaMineType.values() ) {
+            seaMines.add( type.ordinal(), registerBlock( type + "_sea_mine", type.getBlock() ) );
+        }
+        seaMines.trimToSize();
+        SEA_MINES = Collections.unmodifiableList( seaMines );
     }
     
     /** @return The block registry object for a particular spawner type. */
@@ -85,7 +84,10 @@ public final class DWBlocks {
     
     /** @return The block registry object for a particular tower dispenser type. */
     public static RegistryObject<TowerDispenserBlock> towerDispenser( TowerType type ) { return TOWER_DISPENSERS.get( type.ordinal() ); }
-    
+
+    /** @return The block registry object for a particular sea mine type. */
+    public static RegistryObject<SeaMineBlock> seaMine( SeaMineType type ) { return SEA_MINES.get( type.ordinal() ); }
+
     /** Registers a block with a simple item. */
     private static <T extends Block> RegistryObject<T> registerBlock( String name, Supplier<T> blockSupplier ) {
         RegistryObject<T> block = registerBlockNoItem( name, blockSupplier );

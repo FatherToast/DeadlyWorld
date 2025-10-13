@@ -56,7 +56,6 @@ public class BEWLRHolders {
         }
 
         /** @return This holder's BEWLR instance, or null if it hasn't been created yet. */
-        @Nullable
         public BlockEntityWithoutLevelRenderer getInstance() {
             if ( instance == null ) {
                 throw new IllegalStateException( "Attempted to access a BlockEntityWithoutLevelRenderer instance that had not been created." );

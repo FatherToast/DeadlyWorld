@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
@@ -14,11 +15,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.MonsterRoomFeature;
-import net.minecraft.world.level.levelgen.placement.*;
+import net.minecraft.world.level.levelgen.placement.CountPlacement;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,10 @@ public class DWPlacedFeatureProvider {
 
 
     private static final BlockPredicate PREDICATE_ANY_FLUID = BlockPredicate.not( BlockPredicate.noFluid() );
-    
+    private static final BlockPredicate PREDICATE_WATER = BlockPredicate.matchesFluids( Fluids.WATER );
+    private static final BlockPredicate PREDICATE_LAVA = BlockPredicate.matchesFluids( Fluids.LAVA );
+
+
     /** Called by registry set builder to generate our placed features. */
     public static void bootstrap( BootstapContext<PlacedFeature> context ) {
         final HolderGetter<ConfiguredFeature<?, ?>> getter = context.lookup( Registries.CONFIGURED_FEATURE );
@@ -66,6 +71,11 @@ public class DWPlacedFeatureProvider {
         registerTowerDispenser( context, getter, POTION_TOWER, overworldConfigs, netherConfigs );
         registerTowerDispenser( context, getter, GATLING_TOWER, overworldConfigs, netherConfigs );
         registerTowerDispenser( context, getter, FIREBALL_TOWER, overworldConfigs, netherConfigs );
+
+        // Sea mines
+        registerSeaMine( context, getter, NORMAL_SEA_MINE, overworldConfigs );
+        registerSeaMine( context, getter, PUFFER_SEA_MINE, overworldConfigs );
+        registerSeaMine( context, getter, GUARDIAN_SEA_MINE, overworldConfigs );
 
         // Buried liquids
         register( context, getter, BURIED_LIQUID_ANY_DIMENSION, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
@@ -119,7 +129,12 @@ public class DWPlacedFeatureProvider {
     protected static List<PlacementModifier> towerDispenser( TowerType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getFeatureConfig( dimConfigs ) );
     }
-    
+
+    /** @return Modifiers for a floor trap feature. */
+    protected static List<PlacementModifier> seaMine( SeaMineType type, DimensionConfigGroup dimConfigs ) {
+        return waterFloorFeature( type.getFeatureConfig( dimConfigs ) );
+    }
+
     /** @return Modifiers for a feature that generates only on floors. */
     protected static List<PlacementModifier> floorFeature( FeatureConfig.FeatureTypeCategory config ) {
         return verticalScanFeature( config, false, BlockPredicate.solid(), BlockPredicate.ONLY_IN_AIR_PREDICATE );
@@ -139,7 +154,19 @@ public class DWPlacedFeatureProvider {
     /** @return Modifiers for a feature that generates only on the bottom of fluids. */
     protected static List<PlacementModifier> fluidFloorFeature( FeatureConfig.FeatureTypeCategory config ) {
         return verticalScanFeature( config, false, BlockPredicate.solid(),
-                BlockPredicate.anyOf( BlockPredicate.ONLY_IN_AIR_PREDICATE, PREDICATE_ANY_FLUID ) );
+                BlockPredicate.anyOf( PREDICATE_ANY_FLUID ) );
+    }
+
+    /** @return Modifiers for a feature that generates only on the bottom of water. */
+    protected static List<PlacementModifier> waterFloorFeature( FeatureConfig.FeatureTypeCategory config ) {
+        return verticalScanFeature( config, false, BlockPredicate.solid(),
+                BlockPredicate.anyOf( PREDICATE_WATER ) );
+    }
+
+    /** @return Modifiers for a feature that generates only on the bottom of water. */
+    protected static List<PlacementModifier> lavaFloorFeature( FeatureConfig.FeatureTypeCategory config ) {
+        return verticalScanFeature( config, false, BlockPredicate.solid(),
+                BlockPredicate.anyOf( PREDICATE_LAVA ) );
     }
     
     /** @return Modifiers for a feature that scans up or down (up to 12 blocks) for a potential valid location. */
@@ -158,23 +185,29 @@ public class DWPlacedFeatureProvider {
     
     /** Registers a placed lone spawner type feature to each supported dimension. */
     protected static void registerLoneSpawner( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                               FeatureKeys.Spawner feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        register( context, getter, feature.overworldKeys, loneSpawner( feature.spawnerType, overworldConfigs ) );
-        register( context, getter, feature.netherKeys, loneSpawner( feature.spawnerType, netherConfigs ) );
+                                               FeatureKeys.Spawner featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        register( context, getter, featureKeys.overworldKeys, loneSpawner( featureKeys.spawnerType, overworldConfigs ) );
+        register( context, getter, featureKeys.netherKeys, loneSpawner( featureKeys.spawnerType, netherConfigs ) );
     }
 
     /** Registers a placed floor trap type feature to each supported dimension. */
     protected static void registerFloorTrap( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                             FeatureKeys.Trap feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        register( context, getter, feature.overworldKeys, floorTrap( feature.trapType, overworldConfigs ) );
-        register( context, getter, feature.netherKeys, floorTrap( feature.trapType, netherConfigs ) );
+                                             FeatureKeys.Trap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        register( context, getter, featureKeys.overworldKeys, floorTrap( featureKeys.trapType, overworldConfigs ) );
+        register( context, getter, featureKeys.netherKeys, floorTrap( featureKeys.trapType, netherConfigs ) );
     }
 
     /** Registers a placed floor trap type feature to each supported dimension. */
     protected static void registerTowerDispenser( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                             FeatureKeys.TowerDispenser feature, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        register( context, getter, feature.overworldKeys, towerDispenser( feature.towerType, overworldConfigs ) );
-        register( context, getter, feature.netherKeys, towerDispenser( feature.towerType, netherConfigs ) );
+                                             FeatureKeys.TowerDispenser featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        register( context, getter, featureKeys.overworldKeys, towerDispenser( featureKeys.towerType, overworldConfigs ) );
+        register( context, getter, featureKeys.netherKeys, towerDispenser( featureKeys.towerType, netherConfigs ) );
+    }
+
+    /** Registers a placed sea mine feature for the overworld. */
+    protected static void registerSeaMine( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
+                                            FeatureKeys.SeaMine featureKeys, DimensionConfigGroup overworldConfigs ) {
+        register( context, getter, featureKeys.overworldKeys, seaMine( featureKeys.seaMineType, overworldConfigs ) );
     }
     
     /** Registers a placed feature. */
