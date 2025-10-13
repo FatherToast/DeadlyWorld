@@ -25,9 +25,9 @@ public class SeaMineConfig extends FeatureConfig {
             SPEC.increaseIndent();
         }
 
-        NORMAL = new SeaMineCategory( this, SeaMineType.NORMAL, 0.2D, DEPTH_4, DEPTH_SKY, 3, 6, 4.0 );
-        PUFFER = new SeaMineCategory( this, SeaMineType.PUFFER, 0.06D, DEPTH_4, DEPTH_SKY, 3, 6, 2.5 );
-        GUARDIAN = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.06D, DEPTH_4, DEPTH_SKY, 3, 6, 2.5 );
+        NORMAL = new SeaMineCategory( this, SeaMineType.NORMAL, 0.2D, DEPTH_3, DEPTH_SEA_LEVEL, 3, 6 );
+        PUFFER = new SeaMineCategory( this, SeaMineType.PUFFER, 0.06D, DEPTH_3, DEPTH_SEA_LEVEL, 3, 6 );
+        GUARDIAN = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.06D, DEPTH_3, DEPTH_SEA_LEVEL, 3, 6 );
     }
 
     public static class SeaMineCategory extends FeatureTypeCategory {
@@ -36,7 +36,7 @@ public class SeaMineConfig extends FeatureConfig {
 
 
         SeaMineCategory( FeatureConfig parent, SeaMineType type, double placements, int minHeight, int maxHeight,
-                        int minDistFromBottom, int maxDistFromBottom, double explPower ) {
+                        int minDistFromBottom, int maxDistFromBottom ) {
             super( parent, type.toString(), placements, minHeight, maxHeight );
 
             SPEC.newLine();

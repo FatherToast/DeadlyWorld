@@ -164,14 +164,14 @@ public class DWPlacedFeatureProvider {
     
     /** @return Modifiers for a feature that generates only on the bottom of fluids. */
     protected static List<PlacementModifier> fluidFloorFeature( FeatureConfig.FeatureTypeCategory config ) {
-        return verticalScanFeature( config, false, BlockPredicate.solid(),
-                BlockPredicate.anyOf( PREDICATE_ANY_FLUID ) );
+        return submergedVertScanFeature( config, false, BlockPredicate.solid(),
+                BlockPredicate.anyOf( PREDICATE_ANY_FLUID ), 12 );
     }
 
     /** @return Modifiers for a feature that generates only on the bottom of water. */
     protected static List<PlacementModifier> waterFloorFeature( FeatureConfig.FeatureTypeCategory config ) {
-        return verticalScanFeature( config, false, BlockPredicate.solid(),
-                BlockPredicate.anyOf( PREDICATE_WATER ) );
+        return submergedVertScanFeature( config, false, BlockPredicate.solid(),
+                BlockPredicate.anyOf( PREDICATE_WATER ), 12 );
     }
 
     /** @return Modifiers for a feature that generates only on the bottom of water. */
@@ -192,6 +192,14 @@ public class DWPlacedFeatureProvider {
         return new PlacementBuilder().multiply( config ).spreadInChunk().spreadInHeights( config )
                 .move( up ? Direction.UP : Direction.DOWN, scanFor, scanWhile, scanRange )
                 .moveVertical( up ? -1 : 1 ).requireBelowOceanFloor( 2 ).requireBiome().build();
+    }
+
+    /** @return Modifiers for a feature that scans up or down for a potential valid location, including the ocean. */
+    protected static List<PlacementModifier> submergedVertScanFeature( FeatureConfig.FeatureTypeCategory config, boolean up,
+                                                                       BlockPredicate scanFor, BlockPredicate scanWhile, int scanRange ) {
+        return new PlacementBuilder().multiply( config ).spreadInChunk().spreadInHeights( config )
+                .move( up ? Direction.UP : Direction.DOWN, scanFor, scanWhile, scanRange )
+                .moveVertical( up ? -1 : 1 ).requireBiome().build();
     }
     
     /** Registers a placed lone spawner type feature to each supported dimension. */

@@ -72,6 +72,7 @@ public class SeaMineFeature extends DeadlyFeature<SeaMineFeature.Configuration> 
             BlockPos pos = origin.above( yOffset );
             setBlock( level, pos, config.trailProvider.getState( random, pos ) );
         }
+
         // Place the mine
         BlockPos minePos = origin.above( totalHeight );
         BlockState seaMine = config.mineProvider.getState( random, minePos );
