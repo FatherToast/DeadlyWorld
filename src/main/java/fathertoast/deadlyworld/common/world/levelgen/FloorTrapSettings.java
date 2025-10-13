@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
@@ -19,7 +19,7 @@ public record FloorTrapSettings(
         FloatProvider requiredPlayerRange, FloatProvider checkSightChance,
         IntProvider resetTime, IntProvider triggersRemaining, FloatProvider decoyChance
 ) {
-    public static final Codec<FloorTrapSettings> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
+    public static final Codec<FloorTrapSettings> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
             FloatProvider.CODEC.fieldOf( "required_player_range" ).forGetter( FloorTrapSettings::requiredPlayerRange ),
             FloatProvider.CODEC.fieldOf( "activation_sight_check" ).forGetter( FloorTrapSettings::checkSightChance ),
             IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( FloorTrapSettings::resetTime ),
@@ -29,7 +29,7 @@ public record FloorTrapSettings(
 
     public static FloorTrapSettings of( TrapType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
 
-    public static FloorTrapSettings of( FloorTrapConfig.TrapTypeCategory config ) {
+    public static FloorTrapSettings of( TrapConfig.TrapTypeCategory config ) {
         return new FloorTrapSettings(
                 ConfigConstantFloatProvider.of( config.activationRange ),
                 ConfigConstantFloatProvider.of( config.checkSightChance ),

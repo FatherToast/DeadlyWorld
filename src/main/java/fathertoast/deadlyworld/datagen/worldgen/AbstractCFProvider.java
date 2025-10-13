@@ -15,8 +15,6 @@ import fathertoast.deadlyworld.common.world.levelgen.TowerDispenserSettings;
 import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.LoneSpawnerFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.SimpleTowerDispenserFeature;
-import fathertoast.deadlyworld.common.world.levelgen.trap.SeaMineFeature;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -41,15 +39,24 @@ public abstract class AbstractCFProvider {
     /** List of all configurations that cannot be (reasonably) placed by a feature placer. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NOT_PLACEABLE = new ArrayList<>();
     
-    /** List of all configurations that should generate in overworld biomes. */
-    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_FEATURES = new ArrayList<>();
-    /** List of all configurations that should generate in nether biomes. */
-    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NETHER_FEATURES = new ArrayList<>();
     /**
      * List of all configurations that don't care about dimension type and should generate anywhere.
      * Any restrictions are handled in the feature itself, usually config based.
      */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> ANY_DIMENSION_FEATURES = new ArrayList<>();
+    /** List of all configurations that should generate in overworld biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_FEATURES = new ArrayList<>();
+    /** List of all configurations that should generate in nether biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NETHER_FEATURES = new ArrayList<>();
+
+    /** List of all spawner configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> SPAWNER_FEATURES = new ArrayList<>();
+    /** List of all trap configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TRAP_FEATURES = new ArrayList<>();
+    /** List of all tower dispenser configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TOWER_FEATURES = new ArrayList<>();
+    /** List of all dungeon configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> DUNGEON_FEATURES = new ArrayList<>();
     
     
     /** Convenience method for making a simple block state provider. */
@@ -98,18 +105,18 @@ public abstract class AbstractCFProvider {
 
 
     /** Registers a configured tower dispenser type feature to each supported dimension. */
-    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature, BlockStateProvider baseProvider, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        registerTowerDispenser( context, feature.overworldKeys, feature.towerType, baseProvider, overworldConfigs );
-        registerTowerDispenser( context, feature.netherKeys, feature.towerType, baseProvider, netherConfigs );
+    protected static void registerTower( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser feature,
+                                         DimensionConfigGroup overworldConfigs, BlockStateProvider overworldBase,
+                                         DimensionConfigGroup netherConfigs, BlockStateProvider netherBase ) {
+        registerTower( context, feature.overworldKeys, feature.towerType, overworldBase, overworldConfigs );
+        registerTower( context, feature.netherKeys, feature.towerType, netherBase, netherConfigs );
     }
     
     /** Registers a configured tower dispenser type feature. */
-    protected static void registerTowerDispenser( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                                  TowerType type, BlockStateProvider baseProvider, DimensionConfigGroup dimConfigs ) {
-        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER_DISPENSER.get(),
-                new SimpleTowerDispenserFeature.Configuration(
-                        baseProvider,
-                        block( DWBlocks.towerDispenser( type ) ),
+    protected static void registerTower( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                         TowerType type, BlockStateProvider base, DimensionConfigGroup dimConfigs ) {
+        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER.get(),
+                new TowerFeature.Configuration( block( DWBlocks.towerDispenser( type ) ), base,
                         TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }

@@ -19,7 +19,7 @@ public class ConfigUniformIntProvider extends IntProvider {
             IntFieldSetting.CODEC.fieldOf( "min_inclusive" ).forGetter( ConfigUniformIntProvider::getMinInclusive ),
             IntFieldSetting.CODEC.fieldOf( "max_inclusive" ).forGetter( ConfigUniformIntProvider::getMaxInclusive )
     ).apply( instance, ConfigUniformIntProvider::new ) );
-
+    
     public static ConfigUniformIntProvider of( IntField.RandomRange range ) { return of( range.getMinField(), range.getMaxField() ); }
     
     public static ConfigUniformIntProvider of( IntField min, IntField max ) {

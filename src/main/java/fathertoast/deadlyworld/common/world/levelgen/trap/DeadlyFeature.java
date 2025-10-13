@@ -5,12 +5,14 @@ import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelWriter;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,30 +49,30 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
             cursor.move( 0, 1, 0 );
         }
     }
-
+    
     // TODO - This is a temporary solution, and not a very good one
+    
     /**
-     *  Checks for other nearby blocks that extend {@link fathertoast.deadlyworld.common.block.IDeadlyBlock}
-     *  to help prevent bizarre clumping of traps.<br><br>
+     * Checks for other nearby blocks that extend {@link fathertoast.deadlyworld.common.block.IDeadlyBlock}
+     * to help prevent bizarre clumping of traps.<br><br>
      *
      * @param diameter The "diameter" for the bounds (we are searching in a cube).
      *                 Larger values will make generation slow.
-     *
      * @return True if nearby traps/spawners were found inside the given bounds.
      */
     public static boolean hasNearbyTraps( WorldGenLevel level, BlockPos origin, int diameter ) {
-        for ( BlockPos blockPos : BlockPos.betweenClosed(
+        for( BlockPos blockPos : BlockPos.betweenClosed(
                 origin.offset( -diameter, -diameter, -diameter ),
                 origin.offset( diameter, diameter, diameter ) ) ) {
-
-            if ( level.getBlockState( blockPos ).getBlock() instanceof IDeadlyBlock )
+            
+            if( level.getBlockState( blockPos ).getBlock() instanceof IDeadlyBlock )
                 return true;
         }
         return false;
     }
     
     public DeadlyFeature( Codec<FC> codec ) { super( codec ); }
-
+    
     /** Convenience method for using safeSetBlock with a block state provider. */
     protected void safeSetBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random, @Nullable Predicate<BlockState> predicate ) {
         safeSetBlock( level, pos, stateProvider.getState( random, pos ), predicate );
@@ -106,5 +108,21 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
     protected void placeChest( WorldGenLevel level, BlockPos pos, Block chest, RandomSource random, ResourceLocation lootTable, @Nullable Predicate<BlockState> predicate ) {
         safeSetBlock( level, pos, StructurePiece.reorient( level, pos, chest.defaultBlockState() ), predicate );
         RandomizableContainerBlockEntity.setLootTable( level, random, pos, lootTable );
+    }
+    
+    /** @return True if any blocks immediately surrounding the origin in the horizontal plane are solid, but with no block above. */
+    protected boolean isOnLip( WorldGenLevel level, BlockPos origin ) {
+        return isOnLip( level, origin, new BlockPos.MutableBlockPos() );
+    }
+    
+    /** @return True if any blocks immediately surrounding the origin in the horizontal plane are solid, but with no block above. */
+    protected boolean isOnLip( WorldGenLevel level, BlockPos origin, BlockPos.MutableBlockPos cursor ) {
+        for( Direction dir : Direction.Plane.HORIZONTAL ) {
+            if( level.getBlockState( cursor.setWithOffset( origin, dir ) ).isSolid() &&
+                    !level.getBlockState( cursor.move( Direction.UP ) ).isSolid() ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

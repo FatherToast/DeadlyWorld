@@ -12,8 +12,8 @@ public class DimensionConfigGroup extends ConfigGroup {
     public final ResourceKey<Level> DIMENSION;
     
     public final SpawnerConfig SPAWNERS;
-    public final FloorTrapConfig FLOOR_TRAPS;
-    public final TowerDispenserConfig TOWER_DISPENSERS;
+    public final TrapConfig TRAPS;
+    public final TowerConfig TOWER_DISPENSERS;
     public final SeaMineConfig SEA_MINES;
     public final EnvHazardConfig ENV_HAZARDS;
     public final SimpleDungeonConfig SIMPLE_DUNGEONS;
@@ -25,8 +25,8 @@ public class DimensionConfigGroup extends ConfigGroup {
         final String dir = "worldgen/" + dimension.location().getNamespace() + "/" + dimension.location().getPath() + "/";
         
         SPAWNERS = group( new SpawnerConfig( manager, dir, this ) );
-        FLOOR_TRAPS = group( new FloorTrapConfig( manager, dir, this ) );
-        TOWER_DISPENSERS = group( new TowerDispenserConfig( manager, dir, this ) );
+        TRAPS = group( new TrapConfig( manager, dir, this ) );
+        TOWER_DISPENSERS = group( new TowerConfig( manager, dir, this ) );
         SEA_MINES = group( new SeaMineConfig( manager, dir, this ) );
         ENV_HAZARDS = group( new EnvHazardConfig( manager, dir, this ) );
         SIMPLE_DUNGEONS = group( new SimpleDungeonConfig( manager, dir, this ) );

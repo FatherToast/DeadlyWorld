@@ -20,7 +20,7 @@ public class ConfigHeightProvider extends HeightProvider {
             IntFieldSetting.CODEC.fieldOf( "min_inclusive" ).forGetter( ConfigHeightProvider::getMinInclusive ),
             IntFieldSetting.CODEC.fieldOf( "max_inclusive" ).forGetter( ConfigHeightProvider::getMaxInclusive )
     ).apply( instance, ConfigHeightProvider::new ) );
-
+    
     public static ConfigHeightProvider of( IntField.RandomRange range ) { return of( range.getMinField(), range.getMaxField() ); }
     
     public static ConfigHeightProvider of( IntField min, IntField max ) {

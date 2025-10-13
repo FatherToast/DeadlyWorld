@@ -1,0 +1,48 @@
+{
+  "type": "deadlyworld:tower",
+  "config": {
+    "base_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:polished_basalt",
+        "Properties": {
+          "axis": "y"
+        }
+      }
+    },
+    "cannot_replace": "#minecraft:features_cannot_replace",
+    "dispenser": {
+      "activation_sight_check": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/towers:fire_towers.sight_check_chance"
+      },
+      "attack_damage": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/towers:fire_towers.attack_damage"
+      },
+      "attack_delay": {
+        "type": "deadlyworld:config_uniform_int",
+        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/towers:fire_towers.attack_delay.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/towers:fire_towers.attack_delay.min"
+      },
+      "projectile_speed": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/towers:fire_towers.projectile_speed"
+      },
+      "projectile_variance": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/towers:fire_towers.projectile_variance"
+      },
+      "required_player_range": {
+        "type": "deadlyworld:config_constant_float",
+        "value": "deadlyworld:worldgen/minecraft/the_nether/towers:fire_towers.required_player_range"
+      }
+    },
+    "dispenser_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "deadlyworld:fire_tower_dispenser"
+      }
+    }
+  }
+}

@@ -1,11 +1,11 @@
 {
-  "feature": "deadlyworld:gatling_tower_dispenser_nether",
+  "feature": "deadlyworld:gatling_tower",
   "placement": [
     {
       "type": "minecraft:count",
       "count": {
         "type": "deadlyworld:config_count_int",
-        "count": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:gatling_tower_dispensers.placements"
+        "count": "deadlyworld:worldgen/minecraft/overworld/towers:gatling_towers.placements"
       }
     },
     {
@@ -15,8 +15,8 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "deadlyworld:config_uniform_height",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:gatling_tower_dispensers.height.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/tower_dispensers:gatling_tower_dispensers.height.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/towers:gatling_towers.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/towers:gatling_towers.height.min"
       }
     },
     {
@@ -28,7 +28,19 @@
       "direction_of_search": "down",
       "max_steps": 12,
       "target_condition": {
-        "type": "minecraft:solid"
+        "type": "minecraft:any_of",
+        "predicates": [
+          {
+            "type": "minecraft:solid"
+          },
+          {
+            "type": "minecraft:not",
+            "predicate": {
+              "type": "minecraft:matching_fluids",
+              "fluids": "minecraft:empty"
+            }
+          }
+        ]
       }
     },
     {

@@ -53,7 +53,7 @@ public class FeatureKeys {
             netherKeys = nether.notPlaceable();
         }
     }
-    
+
     public static class Spawner extends BiDimensional {
         
         public static Spawner of( SpawnerType type, String name ) { return new Spawner( type, overworld( name ), nether( name ) ); }
@@ -63,6 +63,11 @@ public class FeatureKeys {
         protected Spawner( SpawnerType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             spawnerType = type;
+
+            AbstractCFProvider.SPAWNER_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.SPAWNER_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.SPAWNER_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.SPAWNER_FEATURES.add( nether.placedKey );
         }
     }
     
@@ -75,6 +80,11 @@ public class FeatureKeys {
         protected Trap( TrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             trapType = type;
+
+            AbstractCFProvider.TRAP_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.TRAP_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.TRAP_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.TRAP_FEATURES.add( nether.placedKey );
         }
     }
     
@@ -87,6 +97,26 @@ public class FeatureKeys {
         protected TowerDispenser( TowerType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             towerType = type;
+
+            AbstractCFProvider.TOWER_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.TOWER_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.TOWER_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.TOWER_FEATURES.add( nether.placedKey );
+        }
+    }
+
+    public static class SimpleDungeon extends BiDimensional {
+
+        public static SimpleDungeon of( String name ) { return new SimpleDungeon( overworld( name ), nether( name ) ); }
+
+
+        protected SimpleDungeon( FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld, nether );
+
+            AbstractCFProvider.DUNGEON_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.DUNGEON_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.DUNGEON_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.DUNGEON_FEATURES.add( nether.placedKey );
         }
     }
 
@@ -94,13 +124,16 @@ public class FeatureKeys {
 
         public final FeatureKeys overworldKeys;
 
-        public static SeaMine of( SeaMineType type, String name ) { return new SeaMine( type, overworld( name ) ); }
+        public static SeaMine of(SeaMineType type, String name ) { return new SeaMine( type, overworld( name ) ); }
 
         public final SeaMineType seaMineType;
 
         protected SeaMine( SeaMineType type, FeatureKeys overworld ) {
             overworldKeys = overworld;
             seaMineType = type;
+
+            AbstractCFProvider.DUNGEON_FEATURES.add( overworld.configuredKey );
+            DWPlacedFeatureProvider.DUNGEON_FEATURES.add( overworld.placedKey );
         }
     }
 }

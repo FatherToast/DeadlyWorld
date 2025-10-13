@@ -27,6 +27,11 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
         addAll( DWTags.ConfiguredFeatures.OVERWORLD, AbstractCFProvider.OVERWORLD_FEATURES );
         addAll( DWTags.ConfiguredFeatures.THE_NETHER, AbstractCFProvider.NETHER_FEATURES );
         addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION, AbstractCFProvider.ANY_DIMENSION_FEATURES );
+        
+        addAll( DWTags.ConfiguredFeatures.SPAWNERS, AbstractCFProvider.SPAWNER_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.TRAPS, AbstractCFProvider.TRAP_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.TOWERS, AbstractCFProvider.TOWER_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.DUNGEONS, AbstractCFProvider.DUNGEON_FEATURES );
     }
     
     /** Add all features in a list to a tag. */
