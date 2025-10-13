@@ -1,17 +1,15 @@
 package fathertoast.deadlyworld.common.config.field;
 
 import fathertoast.crust.api.config.common.ConfigUtil;
-import fathertoast.crust.api.config.common.value.*;
+import fathertoast.crust.api.config.common.value.RegistryEntryValueList;
+import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.Random;
 public class WeightedPotionList extends RegistryEntryValueList<MobEffect> {
 
     /** The entity-value entries in this list. */
-    private RegistryValueEntry<MobEffect>[] ENTRIES;
+    private final RegistryValueEntry<MobEffect>[] ENTRIES;
 
     private final double TOTAL_WEIGHT;
 
@@ -30,6 +28,7 @@ public class WeightedPotionList extends RegistryEntryValueList<MobEffect> {
      * <p>
      * Weighted entity lists will require exactly one value, and the value can be any non-negative double.
      */
+    @SuppressWarnings( "unchecked" )
     public WeightedPotionList( List<RegistryValueEntry<MobEffect>> entries ) { this( entries.toArray( new RegistryValueEntry[0] ) ); }
 
     /**
@@ -74,8 +73,13 @@ public class WeightedPotionList extends RegistryEntryValueList<MobEffect> {
         throw new UnsupportedOperationException( "Weighted entity lists must support all non-negative values." );
     }
 
-    /** @return Returns true if this list was implicitly disabled by setting all weights to 0. */
+    /** @return True if this list was implicitly disabled by setting all weights to 0. */
     public boolean isDisabled() { return TOTAL_WEIGHT <= 0; }
+
+    /** @return True if there are no entries in this potion list. */
+    public boolean isEmpty() {
+        return ENTRIES == null || ENTRIES.length == 0;
+    }
 
     /** @return Selects an entity type from the list at random. */
     @Nullable
@@ -88,7 +92,7 @@ public class WeightedPotionList extends RegistryEntryValueList<MobEffect> {
     /** @return Selects an entity type from the list at random. */
     @Nullable
     private MobEffectInstance next( double roll ) {
-        if( isDisabled() ) return null;
+        if( isEmpty() || isDisabled() ) return null;
 
         double choice = roll * TOTAL_WEIGHT;
         for( RegistryValueEntry<MobEffect> entry : ENTRIES ) {
@@ -96,7 +100,8 @@ public class WeightedPotionList extends RegistryEntryValueList<MobEffect> {
                 choice -= entry.VALUES[0];
                 if( choice < 0 ) {
                     try {
-                        MobEffect mobEffect = ForgeRegistries.MOB_EFFECTS.getValue(entry.REG_KEY);
+                        MobEffect mobEffect = ForgeRegistries.MOB_EFFECTS.getValue( entry.REG_KEY );
+                        // noinspection ConstantConditions
                         return new MobEffectInstance( mobEffect, (int) entry.VALUES[1], (int) entry.VALUES[2] );
                     }
                     catch ( Exception e ) {
@@ -105,7 +110,7 @@ public class WeightedPotionList extends RegistryEntryValueList<MobEffect> {
                 }
             }
         }
-        ConfigUtil.LOG.error( "Weighting error occurred while rolling random item! Not good. :(" );
+        ConfigUtil.LOG.error( "Weighting error occurred while rolling random item! Not good :(" );
         return null;
     }
 }
