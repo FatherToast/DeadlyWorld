@@ -14,10 +14,15 @@ import java.util.List;
 public class ItemHelper {
 
     /**
-     * Loads all ItemStacks in the given CompoungTag and
+     * Loads all ItemStacks in the given CompoundTag and
      * adds them to a new NonNullList merged with the given list.<br>
      * Assumes the default value of the given NonNullList is {@link ItemStack#EMPTY}<br>
      * Does not care about slot IDs.
+     * <br><br>
+     * @param tag The CompoundTag to read item stacks from.
+     * @param list The NonNullList to merge with.
+     * @return A NonNullList containing the item stacks of the given list and the
+     *         item stacks loaded from the given compound tag.
      */
     public static NonNullList<ItemStack> loadAllItems( CompoundTag tag, NonNullList<ItemStack> list ) {
         ListTag listTag = tag.getList( "Items", Tag.TAG_COMPOUND );
