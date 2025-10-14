@@ -1,10 +1,7 @@
 package fathertoast.deadlyworld.common.block.sea_mine;
 
-import fathertoast.deadlyworld.common.block.trap.TrapType;
-import fathertoast.deadlyworld.common.config.BlocksConfig;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
-import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -19,17 +17,19 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
@@ -51,15 +51,19 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty ARMED = BooleanProperty.create( "armed" );
+    // TODO - implement this
+    public static final EnumProperty<VerticalLinkType> VERTICAL_LINK_TYPE = EnumProperty.create( "vertical_link", VerticalLinkType.class );
 
-    private static final Predicate<Player> DEFAULT_PREDICATE = (player) -> !player.isSpectator() && !player.isCreative();
-    private static final Predicate<Player> VS_CREATIVE_PREDICATE = (player) -> !player.isSpectator();
+    private static final Predicate<Player> NO_CREATIVE_OR_SPEC = (player) -> !player.isSpectator() && !player.isCreative();
+    private static final Predicate<Player> NO_SPECTATORS = (player) -> !player.isSpectator();
 
     private final SeaMineType type;
 
     public SeaMineBlock( SeaMineType type ) {
         super( Config.BLOCKS.get( type ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.SPAWNER ) ) );
-        registerDefaultState( stateDefinition.any().setValue( WATERLOGGED, false ).setValue( ARMED, false ) );
+        registerDefaultState( stateDefinition.any()
+                .setValue( WATERLOGGED, false )
+                .setValue( ARMED, false ) );
         this.type = type;
     }
 
@@ -90,7 +94,7 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
         if ( armed ) {
             level.removeBlock( pos, false );
         }
-        // Check for a nearby player in survival or adventure mode
+        // Check for a nearby players
         else {
             // Do not arm the mine in peaceful mode unless configured to
             if ( level.getDifficulty() == Difficulty.PEACEFUL && !Config.MAIN.GENERAL.activateTrapsInPeaceful.get() )
@@ -98,9 +102,10 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
 
             List<Player> nearbyPlayers = level.getEntitiesOfClass( Player.class, new AABB( pos ).inflate( 1.0F ) );
             boolean validNearbyTarget = false;
+            // Pick appropriate predicate
             Predicate<Player> predicate = Config.MAIN.GENERAL.activateTrapsVsCreative.get()
-                    ? VS_CREATIVE_PREDICATE
-                    : DEFAULT_PREDICATE;
+                    ? NO_SPECTATORS
+                    : NO_CREATIVE_OR_SPEC;
 
             for ( Player player : nearbyPlayers ) {
                 if ( predicate.test( player ) ) {
@@ -196,5 +201,26 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
         List<LivingEntity> nearbyCreatures = level.getEntitiesOfClass( LivingEntity.class, new AABB( pos ).inflate( getExplosionPower() ) );
         nearbyCreatures.forEach( (livingEntity) ->
                 livingEntity.addEffect( new MobEffectInstance( potion ) ) );
+    }
+
+    /**
+     *  Represents a chain-to-mine link type.
+     *  Used for block state property {@link SeaMineBlock#VERTICAL_LINK_TYPE}
+     */
+    public enum VerticalLinkType implements StringRepresentable {
+        BELOW( "below" ),
+        ABOVE( "above" ),
+        BOTH( "both" ),
+        NONE( "none" );
+
+        VerticalLinkType( String name ) {
+            this.name = name;
+        }
+        final String name;
+
+        @Override
+        public String getSerializedName() {
+            return name;
+        }
     }
 }
