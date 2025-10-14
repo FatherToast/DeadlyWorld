@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
@@ -17,14 +18,13 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChainBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -153,6 +153,18 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
 
         level.removeBlock( pos, false );
         return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public void onProjectileHit( Level level, BlockState state, BlockHitResult hitResult, Projectile projectile ) {
+        BlockPos hitPos = hitResult.getBlockPos();
+
+        if (!level.isClientSide && projectile.mayInteract( level, hitPos )
+                && projectile.getType().is( EntityTypeTags.IMPACT_PROJECTILES )
+                && projectile.getDeltaMovement().length() > 0.1D ) {
+
+            level.destroyBlock( hitPos, false );
+        }
     }
 
     @Override
