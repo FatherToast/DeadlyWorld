@@ -43,19 +43,23 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
     
     @Override
     public boolean place( FeaturePlaceContext<Configuration> context ) {
+        final boolean notSubfeature = context.topFeature().isEmpty();
         final Configuration config = context.config();
         final RandomSource random = context.random();
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
-
-        // TODO - replace with something less bad
-        if ( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
-
-        // Make sure the spawner block at least can be placed
-        if( !predicate.test( level.getBlockState( context.origin() ) ) ) return false;
-        // Don't replace blocks with block entities
-        if ( level.getExistingBlockEntity( context.origin() ) != null ) return false;
-
+        
+        // Check if we can place here
+        if( notSubfeature ) {
+            // TODO - replace with something less bad
+            if( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
+            
+            // Make sure the spawner block at least can be placed
+            if( !predicate.test( level.getBlockState( context.origin() ) ) ) return false;
+            // Don't replace blocks with block entities
+            if( level.getExistingBlockEntity( context.origin() ) != null ) return false;
+        }
+        
         // Place the spawner
         BlockState spawnerBlock = config.spawnerProvider.getState( random, context.origin() );
         setBlock( level, context.origin(), spawnerBlock );

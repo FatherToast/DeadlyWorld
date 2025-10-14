@@ -26,12 +26,15 @@ import java.util.function.Supplier;
 
 public enum TowerType {
     
-    SIMPLE( "simple", ( dimConfig ) -> dimConfig.TOWER_DISPENSERS.SIMPLE ) {
+    SIMPLE( "simple", ( dimConfig ) -> dimConfig.TOWERS.SIMPLE ) {
         @Override
         public void triggerAttack( DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
                                    Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH ) {
+            Level level = towerDispenser.getLevel();
+            if( level == null ) return;
             BlockPos pos = towerDispenser.getBlockPos();
-            AbstractArrow arrow = new Arrow( towerDispenser.getLevel(), pos.getX(), pos.getY(), pos.getZ() );
+            
+            AbstractArrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
                     (float) getFeatureConfig( dimConfig ).projectileSpeed.get(), (float) getFeatureConfig( dimConfig ).projectileVariance.get(), arrow
@@ -39,12 +42,15 @@ public enum TowerType {
         }
     },
     
-    FIRE( "fire", ( dimConfig ) -> dimConfig.TOWER_DISPENSERS.FIRE ) {
+    FIRE( "fire", ( dimConfig ) -> dimConfig.TOWERS.FIRE ) {
         @Override
         public void triggerAttack( DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
                                    Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH ) {
+            Level level = towerDispenser.getLevel();
+            if( level == null ) return;
             BlockPos pos = towerDispenser.getBlockPos();
-            AbstractArrow arrow = new Arrow( towerDispenser.getLevel(), pos.getX(), pos.getY(), pos.getZ() );
+            
+            AbstractArrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
             arrow.setSecondsOnFire( 5 );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
@@ -53,29 +59,25 @@ public enum TowerType {
         }
     },
     
-    POTION( "potion", ( dimConfig ) -> dimConfig.TOWER_DISPENSERS.POTION ) {
+    POTION( "potion", ( dimConfig ) -> dimConfig.TOWERS.POTION ) {
         @Override
         public void triggerAttack( DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
                                    Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH ) {
-            TowerConfig.PotionTowerTypeCategory config = dimConfig.TOWER_DISPENSERS.POTION;
+            TowerConfig.PotionTowerTypeCategory config = dimConfig.TOWERS.POTION;
             PotionTowerDispenserBlockEntity potionTower = (PotionTowerDispenserBlockEntity) towerDispenser;
             
             Level level = potionTower.getLevel();
+            if( level == null ) return;
+            BlockPos pos = potionTower.getBlockPos();
             
             // Create the arrow
-            BlockPos pos = potionTower.getBlockPos();
             Arrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
-            MobEffectInstance potion;
-            
-            if( potionTower.isDynamic() ) {
-                potion = config.potionList.get().next( level.random );
-            }
-            else {
-                potion = potionTower.getPotionCopy();
-            }
-            arrow.addEffect( potion == null
-                    ? new MobEffectInstance( MobEffects.DIG_SLOWDOWN, 120 )
-                    : potion );
+            MobEffectInstance potion = potionTower.isDynamic() ?
+                    config.potionList.get().next( level.random ) :
+                    potionTower.getPotionCopy();
+            arrow.addEffect( potion == null ?
+                    new MobEffectInstance( MobEffects.DIG_SLOWDOWN, 120 ) :
+                    potion );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
                     (float) getFeatureConfig( dimConfig ).projectileSpeed.get(), (float) getFeatureConfig( dimConfig ).projectileVariance.get(), arrow
@@ -86,12 +88,15 @@ public enum TowerType {
         public Supplier<TowerDispenserBlock> getBlock() { return PotionTowerDispenserBlock::new; }
     },
     
-    GATLING( "gatling", ( dimConfig ) -> dimConfig.TOWER_DISPENSERS.GATLING ) {
+    GATLING( "gatling", ( dimConfig ) -> dimConfig.TOWERS.GATLING ) {
         @Override
         public void triggerAttack( DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
                                    Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH ) {
+            Level level = towerDispenser.getLevel();
+            if( level == null ) return;
             BlockPos pos = towerDispenser.getBlockPos();
-            AbstractArrow arrow = new Arrow( towerDispenser.getLevel(), pos.getX(), pos.getY(), pos.getZ() );
+            
+            AbstractArrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
                     (float) getFeatureConfig( dimConfig ).projectileSpeed.get(), (float) getFeatureConfig( dimConfig ).projectileVariance.get(), arrow
@@ -99,13 +104,14 @@ public enum TowerType {
         }
     },
     
-    FIREBALL( "fireball", ( dimConfig ) -> dimConfig.TOWER_DISPENSERS.FIREBALL ) {
+    FIREBALL( "fireball", ( dimConfig ) -> dimConfig.TOWERS.FIREBALL ) {
         @Override
         public void triggerAttack( DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
                                    Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH ) {
             final double spawnOffset = 0.6;
             
             Level level = towerDispenser.getLevel();
+            if( level == null ) return;
             BlockPos topBlock = towerDispenser.getBlockPos().above();
             
             if( level.getBlockState( topBlock ).isAir() ) {

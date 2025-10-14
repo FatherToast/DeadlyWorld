@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.item;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
+import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -74,9 +75,7 @@ public class FeaturePlacerItem extends Item {
                                              TagKey<ConfiguredFeature<?, ?>> tag ) {
         registry.getTag( tag ).ifPresent( ( features ) -> features.forEach( ( feature ) -> {
             if( !feature.is( DWTags.ConfiguredFeatures.NOT_PLACEABLE ) ) {
-                feature.unwrapKey().ifPresent( ( key ) ->
-                        featureKeys.add( key.location().toString() )
-                );
+                feature.unwrapKey().ifPresent( ( key ) -> featureKeys.add( key.location().toString() ) );
             }
         } ) );
     }
@@ -91,10 +90,7 @@ public class FeaturePlacerItem extends Item {
         BlockPos pos = context.getClickedPos().relative( context.getClickedFace() );
         ItemStack item = context.getItemInHand();
         
-        final Registry<ConfiguredFeature<?, ?>> registry = level.registryAccess().registryOrThrow( Registries.CONFIGURED_FEATURE );
-        ConfiguredFeature<?, ?> feature = registry.get( getFeatureKey( item ) );
-        
-        if( feature != null && feature.place( level, level.getChunkSource().getGenerator(), level.getRandom(), pos ) ) {
+        if( DeadlyFeature.placeSubfeature( level, pos, getFeatureKey( item ), null ) ) {
             item.shrink( 1 );
             return InteractionResult.CONSUME;
         }
