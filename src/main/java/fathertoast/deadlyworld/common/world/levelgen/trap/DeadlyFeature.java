@@ -6,22 +6,28 @@ import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelWriter;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -50,8 +56,6 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
         }
     }
     
-    // TODO - This is a temporary solution, and not a very good one
-    
     /**
      * Checks for other nearby blocks that extend {@link fathertoast.deadlyworld.common.block.IDeadlyBlock}
      * to help prevent bizarre clumping of traps.<br><br>
@@ -61,6 +65,7 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
      * @return True if nearby traps/spawners were found inside the given bounds.
      */
     public static boolean hasNearbyTraps( WorldGenLevel level, BlockPos origin, int diameter ) {
+        // TODO - This is a temporary solution, and not a very good one
         for( BlockPos blockPos : BlockPos.betweenClosed(
                 origin.offset( -diameter, -diameter, -diameter ),
                 origin.offset( diameter, diameter, diameter ) ) ) {
@@ -70,6 +75,68 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
         }
         return false;
     }
+    
+    /**
+     * Places a feature as a 'subfeature'. This provides the parent feature in the feature place context
+     * of the subfeature's place method. Deadly World features skip all 'can place' logic when generated
+     * as subfeatures, and may optionally pull data from the parent feature.
+     *
+     * @param subfeatureKey The registry key for the feature to place as a subfeature.
+     * @param parent        The parent feature; if null, the dummy feature singleton is used.
+     * @return True if the subfeature exists in the registry and was successfully placed.
+     */
+    public static boolean placeSubfeature( ServerLevel level, BlockPos pos,
+                                           @Nullable ResourceLocation subfeatureKey, @Nullable ConfiguredFeature<?, ?> parent ) {
+        return placeSubfeature( level, level.getChunkSource().getGenerator(), pos, subfeatureKey, parent );
+    }
+    
+    /**
+     * Places a feature as a 'subfeature'. This provides the parent feature in the feature place context
+     * of the subfeature's place method. Deadly World features skip all 'can place' logic when generated
+     * as subfeatures, and may optionally pull data from the parent feature.
+     *
+     * @param subfeatureKey The registry key for the feature to place as a subfeature.
+     * @param parent        The parent feature; if null, the dummy feature singleton is used.
+     * @return True if the subfeature exists in the registry and was successfully placed.
+     */
+    public static boolean placeSubfeature( WorldGenLevel level, ChunkGenerator chunkGenerator, BlockPos pos,
+                                           @Nullable ResourceLocation subfeatureKey, @Nullable ConfiguredFeature<?, ?> parent ) {
+        Registry<ConfiguredFeature<?, ?>> registry = level.registryAccess().registryOrThrow( Registries.CONFIGURED_FEATURE );
+        ConfiguredFeature<?, ?> subfeature = registry.get( subfeatureKey );
+        return subfeature != null && placeSubfeature( level, chunkGenerator, pos, subfeature, parent );
+    }
+    
+    /**
+     * Places a feature as a 'subfeature'. This provides the parent feature in the feature place context
+     * of the subfeature's place method. Deadly World features skip all 'can place' logic when generated
+     * as subfeatures, and may optionally pull data from the parent feature.
+     *
+     * @param subfeature The feature to place as a subfeature.
+     * @param parent     The parent feature; if null, the dummy feature singleton is used.
+     * @return True if the subfeature was successfully placed.
+     */
+    public static boolean placeSubfeature( ServerLevel level, BlockPos pos,
+                                           ConfiguredFeature<?, ?> subfeature, @Nullable ConfiguredFeature<?, ?> parent ) {
+        return placeSubfeature( level, level.getChunkSource().getGenerator(), pos, subfeature, parent );
+    }
+    
+    /**
+     * Places a feature as a 'subfeature'. This provides the parent feature in the feature place context
+     * of the subfeature's place method. Deadly World features skip all 'can place' logic when generated
+     * as subfeatures, and may optionally pull data from the parent feature.
+     *
+     * @param subfeature The feature to place as a subfeature.
+     * @param parent     The parent feature; if null, the dummy feature singleton is used.
+     * @return True if the subfeature was successfully placed.
+     */
+    public static boolean placeSubfeature( WorldGenLevel level, ChunkGenerator chunkGenerator, BlockPos pos,
+                                           ConfiguredFeature<?, ?> subfeature, @Nullable ConfiguredFeature<?, ?> parent ) {
+        //noinspection rawtypes,unchecked
+        return subfeature.feature().place( new FeaturePlaceContext(
+                Optional.of( parent == null ? DummyFeature.CONFIGURED_INSTANCE : parent ),
+                level, chunkGenerator, level.getRandom(), pos, subfeature.config() ) );
+    }
+    
     
     public DeadlyFeature( Codec<FC> codec ) { super( codec ); }
     

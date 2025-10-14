@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.PotionTrapBlock;
 import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
 import net.minecraft.core.BlockPos;
@@ -37,23 +38,29 @@ public class PotionFloorTrapFeature extends DeadlyFeature<PotionFloorTrapFeature
     
     @Override
     public boolean place( FeaturePlaceContext<PotionFloorTrapFeature.Configuration> context ) {
+        final boolean notSubfeature = context.topFeature().isEmpty();
         final PotionFloorTrapFeature.Configuration config = context.config();
         final RandomSource random = context.random();
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
-        
-        // TODO - replace with something less bad
-        if( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
-        
-        final BlockPos.MutableBlockPos trapPos = context.origin().mutable().move( Direction.DOWN );
+        final BlockPos.MutableBlockPos trapPos = context.origin().mutable();
         
         // Move up if on a lip
         if( isOnLip( level, trapPos ) ) trapPos.move( Direction.UP );
         
-        // Make sure the trap block can be placed
-        if( !predicate.test( level.getBlockState( trapPos ) ) ) return false;
-        // Don't replace blocks with block entities
-        if( level.getExistingBlockEntity( trapPos ) != null ) return false;
+        // Put trap in the floor
+        trapPos.move( Direction.DOWN );
+        
+        // Check if we can place here
+        if( notSubfeature ) {
+            // TODO - replace with something less bad
+            if( hasNearbyTraps( level, trapPos, 3 ) ) return false;
+            
+            // Make sure the trap block can be placed
+            if( !predicate.test( level.getBlockState( trapPos ) ) ) return false;
+            // Don't replace blocks with block entities
+            if( level.getExistingBlockEntity( trapPos ) != null ) return false;
+        }
         
         // Place the trap
         BlockState trapBlock = config.trapProvider.getState( random, trapPos );

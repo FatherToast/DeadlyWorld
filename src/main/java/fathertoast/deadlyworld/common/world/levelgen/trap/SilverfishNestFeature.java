@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -37,19 +38,22 @@ public class SilverfishNestFeature extends DeadlyFeature<SilverfishNestFeature.C
     
     @Override
     public boolean place( FeaturePlaceContext<Configuration> context ) {
+        final boolean notSubfeature = context.topFeature().isEmpty();
         final Configuration config = context.config();
         final RandomSource random = context.random();
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
-
-        // TODO - replace with something less bad
-        if ( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
-
-        // Make sure the spawner block at least can be placed
-        if( !predicate.test( level.getBlockState( context.origin() ) ) ) return false;
-        // Don't replace blocks with block entities
-        if ( level.getExistingBlockEntity( context.origin() ) != null ) return false;
-
+        
+        if( notSubfeature ) {
+            // TODO - replace with something less bad
+            if( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
+            
+            // Make sure the spawner block at least can be placed
+            if( !predicate.test( level.getBlockState( context.origin() ) ) ) return false;
+            // Don't replace blocks with block entities
+            if( level.getExistingBlockEntity( context.origin() ) != null ) return false;
+        }
+        
         // Place the spawner
         BlockState spawnerBlock = config.spawnerProvider.getState( random, context.origin() );
         setBlock( level, context.origin(), spawnerBlock );
@@ -58,12 +62,13 @@ public class SilverfishNestFeature extends DeadlyFeature<SilverfishNestFeature.C
         }
         
         // Place the nest covering
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         for( int y = -1; y <= 1; y++ ) {
             for( int x = -1; x <= 1; x++ ) {
                 for( int z = -1; z <= 1; z++ ) {
                     int abs = Math.abs( x ) + Math.abs( y ) + Math.abs( z );
                     if( abs != 0 && abs <= 2 ) {
-                        safeSetBlock( level, context.origin().offset( x, y, z ),
+                        safeSetBlock( level, cursor.setWithOffset( context.origin(), x, y, z ),
                                 config.nestProvider, random, predicate );
                     }
                 }
