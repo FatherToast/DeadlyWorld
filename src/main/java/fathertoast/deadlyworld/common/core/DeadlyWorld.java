@@ -40,16 +40,19 @@ public class DeadlyWorld {
      *      - mini spawner
      *      - floor trap
      *      - tower dispenser
+     *      - sea mine
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
-     *      - fast flowing lava
+     *      - runny lava
      *      ? cake
-     *  o items
+     *  - items
      *      - spawn eggs
-     *      o feature tester
+     *      - feature placer
      *      o event
-     *  o entities
+     *      - mimic core
+     *      - runny lava bucket
+     *  - entities
      *      - configurable base attributes & stats
      *      - mini creeper
      *      - mini zombie
@@ -59,7 +62,9 @@ public class DeadlyWorld {
      *      - micro ghast
      *          - micro fireball
      *      - mimic chest
+     *      + mini mimic chest
      *      - mimic spawner
+     *      - mini mimic spawner
      *      ? dispenser fish hook
      *      ? water monsters
      *      ? lava monsters
@@ -67,22 +72,20 @@ public class DeadlyWorld {
      *      o silverfish
      *      - water (single block vein)
      *      - lava (single block vein)
-     *      - fast lava (single block vein)
+     *      - runny lava (single block vein)
      *      o sand
      *      o vanilla vein disables
      *      o vanilla vein replacements
      *      o user-defined veins
      *      ? new vein gen styles
      *  - dungeon (monster room) world gen
-     *      - spawner
+     *      - simple (spawner/tower)
      *      - mini
-     *      - tower
-     *      ? other special dungeon types
      *      - vanilla dungeon disable
+     *      ? other special dungeon types
      *  o chest world gen
      *      o default
      *      o valuable
-     *      ? trapped (default disabled)
      *      o tnt floor trap
      *      o infested (event - spawn silverfish or mini spiders)
      *      o surprise (event - tnt, lava, or poison gas)
@@ -103,32 +106,25 @@ public class DeadlyWorld {
      *      - arrow
      *      - fire arrow
      *      - gatling arrow
-     *      - potion
+     *      - potion arrow
      *      - fireball
-     *      + mini
+     *      + splash potion
+     *      ? mini
      *      ? allow towers to generate on ceilings and/or walls
-     *  ? combo world gen
-     *      ? spawner + fish hook tower
-     *      ? spider spawner + splash poison tower
-     *      ? undead spawner + splash harm tower
-     *      ? creeper spawner + lightning tower
-     *      ? creeper spawner + lightning floor trap
-     *      ? fire immune spawner + fireball tower
-     *      ? fire immune spawner + fire floor trap
-     *      ? chicken spawner + egg tower
      *  - floor trap world gen
      *      - tnt
      *      - tnt mob
      *      - potion
+     *      - lava
      *      - fire (from pre-1.12.2 version)
      *      + chicken
      *      + unique/boss mob
      *      ? ambush
      *      ? blackout ambush
      *      ? pit
-     *  ? water trap world gen
+     *  - water trap world gen
+     *      - sea mine (normal/puffer/guardian)
      *      + vortex (storm drain thingy)
-     *      + sea mines (puffer and guardian variants?)
      *      ? need more than just two!
      *  + ceiling trap world gen
      *      + cave-in
@@ -136,13 +132,6 @@ public class DeadlyWorld {
      *      ? water
      *      ? anvil
      *      ? more would be nice
-     *  ? combo feature world gen
-     *      + spider spawner & splash poison dispenser
-     *      + undead spawner & splash harm dispenser
-     *      + any spawner & fish hook dispenser
-     *      + any floor trap & fish hook dispenser
-     *      + fire immune spawner & fireball dispenser
-     *      + creeper spawner & lightning dispenser
      *  ? wall trap world gen
      *      + arrow
      *      + potion
@@ -150,6 +139,16 @@ public class DeadlyWorld {
      *      ? water
      *      ? spike
      *      ? uhh what else?
+     *  ? combo feature world gen
+     *      + spider spawner & splash poison dispenser
+     *      + undead spawner & splash harm dispenser
+     *      + any spawner & fish hook dispenser
+     *      + any floor trap & fish hook dispenser
+     *      + fire immune spawner & fireball dispenser
+     *      + fire immune spawner & fire floor trap
+     *      + creeper spawner & lightning dispenser
+     *      + creeper spawner & lightning floor trap
+     *      + chicken spawner & egg dispenser
      *
      * Possible future additions:
      *  - option to allow floor traps to trigger vs creative mode players, and vice-versa for other traps
@@ -199,7 +198,7 @@ public class DeadlyWorld {
         DWFieldProviders.register( eventBus );
         DWFeatures.REGISTRY.register( eventBus );
         DWPlacementTypes.REGISTRY.register( eventBus );
-
+        
         checkImportantThings();
     }
     
@@ -219,9 +218,9 @@ public class DeadlyWorld {
     
     /** @return Returns the resource location as a string, or "null" if it is null. */
     public static String toString( @Nullable ResourceLocation res ) { return res == null ? "null" : res.toString(); }
-
+    
     private static void checkImportantThings() {
-        if ( !References.IMPORTANT_SUPPLIER.get().get().get().get().get().get().get().get().get().equals( "toast" ) )
+        if( !References.IMPORTANT_SUPPLIER.get().get().get().get().get().get().get().get().get().equals( "toast" ) )
             System.exit( -1 );
     }
 }

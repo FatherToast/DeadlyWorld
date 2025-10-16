@@ -26,20 +26,20 @@ public record PotionFloorTrapSettings(
             FloatProvider.CODEC.fieldOf( "decoy_chance" ).forGetter( PotionFloorTrapSettings::decoyChance ),
             FloatProvider.CODEC.fieldOf( "dynamic_chance" ).forGetter( PotionFloorTrapSettings::dynamicChance )
     ).apply( instance, PotionFloorTrapSettings::new ) );
-
+    
     public static PotionFloorTrapSettings create( TrapConfig.PotionTrapTypeCategory config ) {
         return new PotionFloorTrapSettings(
                 ConfigConstantFloatProvider.of( config.activationRange ),
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
-
+                
                 ConfigUniformIntProvider.of( config.resetTime ),
                 ConfigConstantIntProvider.of( config.triggersRemaining ),
-
+                
                 ConfigConstantFloatProvider.of( config.decoyChance ),
                 ConfigConstantFloatProvider.of( config.dynamicChance )
         );
     }
-
+    
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof PotionTrapBlockEntity potionTrap ) {
             ((PotionTrap) potionTrap.getTrapLogic()).initializeTrap( level, pos, random, this );

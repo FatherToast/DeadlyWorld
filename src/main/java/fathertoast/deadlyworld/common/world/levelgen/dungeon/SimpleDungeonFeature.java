@@ -113,7 +113,7 @@ public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Con
                     BlockState state = level.getBlockState( cursor );
                     
                     // Hollow out the inside of the room with air
-                    if( x != minX && y != -1 && z != minZ && x != maxX && y != 4 && z != maxZ ) {
+                    if( y != -1 && x != minX && z != minZ && x != maxX && z != maxZ ) {
                         // We leave existing chests and trap things alone,
                         // so if another dungeon generated nearby they can merge without much problem.
                         if( !state.is( Blocks.CHEST ) && !state.is( DWTags.Blocks.SPAWNERS.blockTag() ) && !state.is( DWTags.Blocks.TOWER_DISPENSERS.blockTag() ) ) {
