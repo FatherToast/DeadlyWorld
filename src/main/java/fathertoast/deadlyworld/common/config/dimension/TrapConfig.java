@@ -242,7 +242,7 @@ public class TrapConfig extends FeatureConfig {
             
             runnyChance = SPEC.define( new DoubleField( "runny_chance", isNetherDimension() ? 0.0 : 0.05, DoubleField.Range.PERCENT,
                     "The chance for " + FEATURE_TYPE_NAME + " to place runny lava instead of vanilla lava.",
-                    "Runny lava flows like water, even outside the Nether.",
+                    "Runny lava flows faster than water, even outside the Nether.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
     }
