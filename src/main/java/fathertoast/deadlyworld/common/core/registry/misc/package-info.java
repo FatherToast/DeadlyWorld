@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package fathertoast.deadlyworld.common.core.registry.util;
+package fathertoast.deadlyworld.common.core.registry.misc;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 
