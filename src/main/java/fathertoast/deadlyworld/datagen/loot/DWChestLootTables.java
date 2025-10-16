@@ -37,8 +37,7 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
         lootRegistry = registry;
         
         for( SpawnerType type : SpawnerType.values() ) {
-            if( !type.isSubfeature() ) // Feature handles the chest loot
-                add( type.getChestLootTable(), buildSpawnerChestLoot( type ) );
+            add( type.getChestLootTable(), buildSpawnerChestLoot( type ) );
         }
         //        for( FloorTrapType type : FloorTrapType.values() ) {
         //            add( type.getChestLootTable(), buildFloorTrapChestLoot( type ) );
@@ -51,13 +50,12 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
     private LootTableBuilder buildSpawnerChestLoot( SpawnerType type ) {
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) {
-            case SIMPLE, STREAM -> loot.addPool( buildExplorationLootPool() );
+            case SIMPLE, DUNGEON -> { }
+            case STREAM -> loot.addPool( buildExplorationLootPool() );
             case SWARM -> loot.addPool( buildExplosivesLootPool() );
             case BRUTAL -> loot.addPool( buildValuableLootPool() );
             case NEST -> loot.addPool( buildBuggyLootPool() );
             case MINI -> loot.addPool( buildBrewingLootPool() );
-            case DUNGEON ->
-                    throw new IllegalArgumentException( "Subfeatures do not have chest loot! (spawner type \"" + type + "\")" );
             default ->
                     throw new IllegalArgumentException( "Spawner type \"" + type + "\" is missing chest loot table data gen code!" );
         }

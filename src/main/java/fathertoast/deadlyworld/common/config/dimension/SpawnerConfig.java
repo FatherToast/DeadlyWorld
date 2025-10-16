@@ -66,7 +66,7 @@ public class SpawnerConfig extends FeatureConfig {
         NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.52, DEPTH_LAVA, DEPTH_0,
                 16, false, 100, 400, 20, 6, 6, 0.0, 0.05 );
         
-        MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.08, DEPTH_LAVA, DEPTH_0,
+        MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.02, DEPTH_LAVA, DEPTH_0,
                 16, false, 100, 400, 20, 6, 4, 0.1, 0.05 );
         
         DUNGEON = new DungeonSpawnerCategory( this, SpawnerType.DUNGEON,

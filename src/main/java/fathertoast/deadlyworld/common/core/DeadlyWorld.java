@@ -44,14 +44,14 @@ public class DeadlyWorld {
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
-     *      - fast flowing lava
+     *      - runny lava
      *      ? cake
      *  - items
      *      - spawn eggs
      *      - feature placer
      *      o event
      *      - mimic core
-     *      - fast flowing lava bucket
+     *      - runny lava bucket
      *  - entities
      *      - configurable base attributes & stats
      *      - mini creeper
@@ -72,7 +72,7 @@ public class DeadlyWorld {
      *      o silverfish
      *      - water (single block vein)
      *      - lava (single block vein)
-     *      - fast lava (single block vein)
+     *      - runny lava (single block vein)
      *      o sand
      *      o vanilla vein disables
      *      o vanilla vein replacements
@@ -115,6 +115,7 @@ public class DeadlyWorld {
      *      - tnt
      *      - tnt mob
      *      - potion
+     *      - lava
      *      - fire (from pre-1.12.2 version)
      *      + chicken
      *      + unique/boss mob

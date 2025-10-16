@@ -28,8 +28,8 @@ public class TowerConfig extends FeatureConfig {
     TowerConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "tower" );
         
-        SPEC.newLine();
-        // SPEC.describePotionList();
+        //SPEC.newLine();
+        //SPEC.describePotionList();
         
         SIMPLE = new TowerTypeCategory( this, TowerType.SIMPLE, 0.6, DEPTH_LAVA, DEPTH_0,
                 11.0, true, 20, 40, 3.0, 1.2, 0.08 );

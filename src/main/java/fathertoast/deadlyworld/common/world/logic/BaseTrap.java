@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * The base logic for Deadly World's traps.
  */
 public abstract class BaseTrap {
-
+    
     public enum State {
         /** The trap has exhausted its ammo/activations and is incapable of functioning. */
         DISABLED,
@@ -73,10 +73,10 @@ public abstract class BaseTrap {
     /** The decoy type for this trap. Can be null */
     @Nullable
     protected DecoyType decoyType;
-
+    
     // Logic
     protected final TrapType trapType;
-
+    
     /** The entity that tripped this trap. Usually (but not always) non-null when triggering and null in all other states. */
     @Nullable
     protected Entity tripEntity;
@@ -116,47 +116,47 @@ public abstract class BaseTrap {
     
     @Nullable
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
-
+    
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random, FloorTrapSettings trapSettings ) {
         final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, trapConfig );
-
+        
         initializeTrap( getLevel(), pos, random,
+                trapSettings.decoyChance().sample( random ) > random.nextFloat(),
                 trapSettings.requiredPlayerRange().sample( random ),
-                trapSettings.checkSightChance().sample( random ),
-                trapSettings.resetTime().getMinValue(),
-                trapSettings.resetTime().getMaxValue(),
+                trapSettings.checkSightChance().sample( random ) > random.nextFloat(),
                 trapSettings.triggersRemaining().sample( random ),
-                roll( random, trapSettings.decoyChance().sample( random ) )
+                trapSettings.resetTime().getMinValue(),
+                trapSettings.resetTime().getMaxValue()
         );
     }
-
+    
     public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {
         final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level ) );
-        initializeTrap( level, pos, random,
-                trapConfig.activationRange.get(), (float) trapConfig.checkSightChance.get(),
-                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), trapConfig.triggersRemaining.get(), trapConfig.decoyChance.rollChance( random )
+        initializeTrap( level, pos, random, trapConfig.decoyChance.rollChance( random ),
+                trapConfig.activationRange.get(), trapConfig.checkSightChance.rollChance( random ),
+                trapConfig.triggersRemaining.get(), trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax()
         );
     }
-
-    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random, double activationRange,
-                                float checkSightChance, int minResetTime, int maxResetTime, int triggersRemaining, boolean spawnDecoy ) {
-        this.checkSight = roll( random, checkSightChance );
+    
+    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random, boolean spawnDecoy,
+                                double activationRange, boolean checkSight, int triggersRemaining, int minResetTime, int maxResetTime ) {
+        this.checkSight = checkSight;
         this.activationRange = activationRange;
         this.minResetTime = minResetTime;
         this.maxResetTime = maxResetTime;
         this.triggersRemaining = triggersRemaining;
-
-        if ( spawnDecoy ) {
+        
+        if( spawnDecoy ) {
             // Pick a decoy suitable for the dimension we are in if level is not null
-            if ( level != null ) {
+            if( level != null ) {
                 ResourceKey<Level> dimension = level.dimension();
                 ITag<DecoyType> tag;
-
-                if ( dimension.equals( Level.OVERWORLD ) ) {
+                
+                if( dimension.equals( Level.OVERWORLD ) ) {
                     tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.OVERWORLD );
                 }
-                else if ( dimension.equals( Level.NETHER ) ) {
+                else if( dimension.equals( Level.NETHER ) ) {
                     tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.THE_NETHER );
                 }
                 else {
@@ -165,13 +165,11 @@ public abstract class BaseTrap {
                 this.decoyType = tag.getRandomElement( random ).orElse( DWDecoyTypes.PIG.get() );
             }
             else {
-                this.decoyType = DWDecoyTypes.getRandomType(random);
+                this.decoyType = DWDecoyTypes.getRandomType( random );
             }
         }
     }
-
-    protected static boolean roll( RandomSource random, float chance ) { return chance >= 1.0F || chance > 0.0F && random.nextFloat() < chance; }
-
+    
     public double getActivationRange() { return activationRange; }
     
     public void clientTick( Level level, BlockPos pos ) { }
@@ -213,7 +211,7 @@ public abstract class BaseTrap {
     protected Entity findTripTarget( ServerLevel level, BlockPos pos ) {
         return TrapHelper.getTrapTargetInRange( level, pos, activationRange, checkSight );
     }
-
+    
     @Nullable
     public Entity getTripTarget() {
         return tripEntity;
@@ -265,10 +263,18 @@ public abstract class BaseTrap {
     public abstract void triggerTrap( ServerLevel level, BlockPos pos );
     
     public void load( @Nullable Level level, BlockPos pos, CompoundTag loadTag ) {
+        if( NBTHelper.containsString( loadTag, TAG_DECOY_TYPE ) ) {
+            ResourceLocation typeId = ResourceLocation.tryParse( loadTag.getString( TAG_DECOY_TYPE ) );
+            
+            if( typeId != null )
+                decoyType = DWRegistries.DECOY_TYPE_REGISTRY.get().getValue( typeId );
+        }
+        
         if( NBTHelper.containsNumber( loadTag, TAG_ACTIVATION_RANGE ) )
             activationRange = loadTag.getFloat( TAG_ACTIVATION_RANGE );
         if( NBTHelper.containsNumber( loadTag, TAG_CHECK_SIGHT ) )
             checkSight = loadTag.getBoolean( TAG_CHECK_SIGHT );
+        
         if( NBTHelper.containsNumber( loadTag, TAG_MIN_RESET_TIME ) )
             minResetTime = loadTag.getShort( TAG_MIN_RESET_TIME );
         if( NBTHelper.containsNumber( loadTag, TAG_MAX_RESET_TIME ) )
@@ -277,12 +283,6 @@ public abstract class BaseTrap {
             maxResetTime = minResetTime;
         if( NBTHelper.containsNumber( loadTag, TAG_MAX_TRIGGER_DELAY ) )
             maxTriggerDelay = loadTag.getShort( TAG_MAX_TRIGGER_DELAY );
-        if ( NBTHelper.containsString( loadTag, TAG_DECOY_TYPE ) ) {
-            ResourceLocation typeId = ResourceLocation.tryParse( loadTag.getString( TAG_DECOY_TYPE ) );
-
-            if ( typeId != null )
-                decoyType = DWRegistries.DECOY_TYPE_REGISTRY.get().getValue( typeId );
-        }
         
         if( NBTHelper.containsNumber( loadTag, TAG_TRIGGERS_REMAINING ) )
             triggersRemaining = loadTag.getShort( TAG_TRIGGERS_REMAINING );
@@ -291,28 +291,29 @@ public abstract class BaseTrap {
     }
     
     public CompoundTag save( CompoundTag saveTag ) {
+        if( decoyType != null ) {
+            ResourceLocation typeId = DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType );
+            if( typeId != null )
+                saveTag.putString( TAG_DECOY_TYPE, typeId.toString() );
+        }
+        
         saveTag.putFloat( TAG_ACTIVATION_RANGE, (float) activationRange );
         saveTag.putBoolean( TAG_CHECK_SIGHT, checkSight );
+        
         saveTag.putShort( TAG_MIN_RESET_TIME, (short) minResetTime );
         saveTag.putShort( TAG_MAX_RESET_TIME, (short) maxResetTime );
         saveTag.putShort( TAG_MAX_TRIGGER_DELAY, (short) maxTriggerDelay );
-
-        if ( decoyType != null ) {
-            ResourceLocation typeId = DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType );
-            if ( typeId != null )
-                saveTag.putString( TAG_DECOY_TYPE, typeId.toString() );
-        }
         
         saveTag.putShort( TAG_TRIGGERS_REMAINING, (short) triggersRemaining );
         saveTag.putShort( TAG_DELAY, (short) delay );
         
         return saveTag;
     }
-
+    
     public void writeToUpdateTag( CompoundTag updateTag ) {
-        if ( decoyType != null ) {
+        if( decoyType != null ) {
             ResourceLocation typeId = DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType );
-            if ( typeId != null )
+            if( typeId != null )
                 updateTag.putString( TAG_DECOY_TYPE, typeId.toString() );
         }
     }
@@ -330,7 +331,7 @@ public abstract class BaseTrap {
     
     @Nullable
     public BlockEntity getSpawnerBlockEntity() { return blockEntity; }
-
+    
     @Nullable
     public DecoyType getDecoyType() {
         return decoyType;

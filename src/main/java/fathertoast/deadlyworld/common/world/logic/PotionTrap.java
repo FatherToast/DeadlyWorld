@@ -18,84 +18,83 @@ import net.minecraft.world.level.WorldGenLevel;
 import javax.annotation.Nullable;
 
 public class PotionTrap extends BaseTrap {
-
+    
     public static final String POTION_KEY = "Potion";
     public static final String DYNAMIC_POTION_KEY = "DynamicPotion";
-
+    
     private boolean dynamic;
     @Nullable
     private MobEffectInstance potion;
-
-
+    
+    
     public PotionTrap( DeadlyTrapBlockEntity trap ) {
         super( TrapType.POTION, trap, trap );
     }
-
-
+    
+    
     // Overridden in block
     @Override
     public void triggerTrap( ServerLevel level, BlockPos pos ) { }
-
+    
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random, PotionFloorTrapSettings trapSettings ) {
         final TrapConfig.PotionTrapTypeCategory trapConfig = (TrapConfig.PotionTrapTypeCategory) trapType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, trapConfig );
-
+        
         initializeTrap( getLevel(), pos, random,
+                trapSettings.decoyChance().sample( random ) > random.nextFloat(),
                 trapSettings.requiredPlayerRange().sample( random ),
-                trapSettings.checkSightChance().sample( random ),
+                trapSettings.checkSightChance().sample( random ) > random.nextFloat(),
+                trapSettings.triggersRemaining().sample( random ),
                 trapSettings.resetTime().getMinValue(),
                 trapSettings.resetTime().getMaxValue(),
-                trapSettings.triggersRemaining().sample( random ),
-                roll( random, trapSettings.dynamicChance().sample( random ) ),
-                trapConfig.potionList.get().next( random ),
-                roll( random, trapSettings.decoyChance().sample( random ) )
+                trapSettings.dynamicChance().sample( random ) > random.nextFloat(),
+                trapConfig.potionList.get().next( random )
         );
     }
-
+    
     public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {
         final TrapConfig.PotionTrapTypeCategory trapConfig = (TrapConfig.PotionTrapTypeCategory) TrapType.POTION.getFeatureConfig( Config.getDimensionConfigs( level ) );
-        initializeTrap( level, pos, random,
-                trapConfig.activationRange.get(), (float) trapConfig.checkSightChance.get(),
-                trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(), trapConfig.triggersRemaining.get(),
-                trapConfig.dynamicChance.rollChance( random ), trapConfig.potionList.get().next( random ),
-                trapConfig.decoyChance.rollChance( random )
+        initializeTrap( level, pos, random, trapConfig.decoyChance.rollChance( random ),
+                trapConfig.activationRange.get(), trapConfig.checkSightChance.rollChance( random ),
+                trapConfig.triggersRemaining.get(), trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(),
+                trapConfig.dynamicChance.rollChance( random ), trapConfig.potionList.get().next( random )
         );
     }
-
-    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random, double activationRange,
-                                float checkSightChance, int minResetTime, int maxResetTime, int triggersRemaining,
-                                boolean dynamic, @Nullable MobEffectInstance potion, boolean spawnDecoy ) {
-        super.initializeTrap( level, pos, random, activationRange, checkSightChance, minResetTime, maxResetTime, triggersRemaining, spawnDecoy );
+    
+    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random, boolean spawnDecoy,
+                                double activationRange, boolean checkSight, int triggersRemaining, int minResetTime, int maxResetTime,
+                                boolean dynamic, @Nullable MobEffectInstance potion ) {
+        super.initializeTrap( level, pos, random, spawnDecoy, activationRange, checkSight, triggersRemaining, minResetTime, maxResetTime );
         this.dynamic = dynamic;
         this.potion = potion;
     }
-
+    
     public boolean isDynamic() {
         return dynamic;
     }
-
+    
     @Nullable
     public MobEffectInstance getPotionCopy() {
         return potion == null ? null : new MobEffectInstance( potion );
     }
-
+    
     @Override
     public void load( @Nullable Level level, BlockPos pos, CompoundTag loadTag ) {
         super.load( level, pos, loadTag );
-
-        if ( NBTHelper.containsNumber( loadTag, DYNAMIC_POTION_KEY ) )
+        
+        if( NBTHelper.containsNumber( loadTag, DYNAMIC_POTION_KEY ) )
             dynamic = loadTag.getBoolean( DYNAMIC_POTION_KEY );
-        if ( NBTHelper.containsCompound( loadTag, POTION_KEY ))
+        if( NBTHelper.containsCompound( loadTag, POTION_KEY ) )
             potion = MobEffectInstance.load( loadTag.getCompound( POTION_KEY ) );
     }
-
+    
     @Override
     public CompoundTag save( CompoundTag saveTag ) {
         saveTag = super.save( saveTag );
-
+        
         saveTag.putBoolean( DYNAMIC_POTION_KEY, dynamic );
         saveTag.put( POTION_KEY, potion == null ? new CompoundTag() : potion.save( new CompoundTag() ) );
-
+        
         return saveTag;
     }
 }
