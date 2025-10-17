@@ -4,11 +4,15 @@ package fathertoast.deadlyworld.common.event;
 import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.core.registry.DWBlocks;
+import fathertoast.deadlyworld.common.core.registry.DWItems;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
+import fathertoast.deadlyworld.common.item.SeaMineBlocKItem;
 import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.util.MimicHelper;
 import net.minecraft.core.BlockPos;
@@ -17,6 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +39,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -56,7 +62,18 @@ public final class GameEventHandler {
     //    static void onServerStarting( ServerStartingEvent event ) {
     //        Config.initializeDynamic( event.getServer() );
     //    }
-    
+
+
+    @SubscribeEvent
+    public static void onLivingTick( LivingEvent.LivingTickEvent event ) {
+        ItemStack itemOnHead = event.getEntity().getItemBySlot( EquipmentSlot.HEAD );
+
+        if ( itemOnHead.getItem() instanceof SeaMineBlocKItem seaMine ) {
+            seaMine.onLivingUpdate( event.getEntity(), itemOnHead );
+        }
+    }
+
+
     /**
      * Called during LivingEntity#actuallyHurt after all damage calculations, right before damage is applied.
      *

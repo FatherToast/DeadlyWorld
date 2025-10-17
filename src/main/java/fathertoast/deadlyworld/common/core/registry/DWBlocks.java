@@ -12,6 +12,7 @@ import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.item.MiniChestBlockItem;
+import fathertoast.deadlyworld.common.item.SeaMineBlocKItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -45,7 +46,6 @@ public final class DWBlocks {
 
     public static final RegistryObject<LiquidBlock> RUNNY_LAVA = registerBlockNoItem( "runny_lava", () -> new RunnyLavaBlock( DWFluids.RUNNY_LAVA_SOURCE ) );
 
-
     static {
         final ArrayList<RegistryObject<DeadlySpawnerBlock>> spawners = new ArrayList<>();
         for( SpawnerType type : SpawnerType.values() ) {
@@ -70,7 +70,11 @@ public final class DWBlocks {
 
         final ArrayList<RegistryObject<SeaMineBlock>> seaMines = new ArrayList<>();
         for( SeaMineType type : SeaMineType.values() ) {
-            seaMines.add( type.ordinal(), registerBlock( type + "_sea_mine", type.getBlock() ) );
+            Supplier<SeaMineBlock> block = type.getBlock();
+            String name = type + "_sea_mine";
+            RegistryObject<SeaMineBlock> regObj = registerBlockNoItem( name, block );
+            seaMines.add( type.ordinal(), regObj );
+            DWItems.register( name, () -> new SeaMineBlocKItem( regObj.get(), new Item.Properties() ) );
         }
         seaMines.trimToSize();
         SEA_MINES = Collections.unmodifiableList( seaMines );

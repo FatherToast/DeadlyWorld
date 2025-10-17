@@ -54,8 +54,8 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
     // TODO - implement this
     public static final EnumProperty<VerticalLinkType> VERTICAL_LINK_TYPE = EnumProperty.create( "vertical_link", VerticalLinkType.class );
 
-    private static final Predicate<Player> NO_CREATIVE_OR_SPEC = (player) -> !player.isSpectator() && !player.isCreative();
-    private static final Predicate<Player> NO_SPECTATORS = (player) -> !player.isSpectator();
+    public static final Predicate<Player> NO_CREATIVE_OR_SPEC = (player) -> !player.isSpectator() && !player.isCreative();
+    public static final Predicate<Player> NO_SPECTATORS = (player) -> !player.isSpectator();
 
     private final SeaMineType type;
 
@@ -182,7 +182,7 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
         super.createBlockStateDefinition( builder.add( WATERLOGGED, ARMED ) );
     }
 
-    private void explode( Level level, BlockPos pos, RandomSource random ) {
+    public void explode( Level level, BlockPos pos, RandomSource random ) {
         level.explode(
                 null,
                 pos.getX() + 0.5D,
