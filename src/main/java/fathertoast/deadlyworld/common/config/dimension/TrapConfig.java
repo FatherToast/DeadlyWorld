@@ -101,7 +101,7 @@ public class TrapConfig extends FeatureConfig {
         TntTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
                              double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, int minFuseTime, int maxFuseTime,
                              int tntCnt, double launchSpd ) {
-            super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, minResetTime, maxResetTime, triggers );
+            super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minResetTime, maxResetTime );
             
             SPEC.newLine();
             
@@ -186,7 +186,7 @@ public class TrapConfig extends FeatureConfig {
         
         PotionTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
                                 double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, double dynamicCh ) {
-            super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, minResetTime, maxResetTime, triggers );
+            super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minResetTime, maxResetTime );
             
             SPEC.newLine();
             
@@ -236,7 +236,7 @@ public class TrapConfig extends FeatureConfig {
         
         LavaTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
                               double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers ) {
-            super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, minResetTime, maxResetTime, triggers );
+            super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minResetTime, maxResetTime );
             
             SPEC.newLine();
             
@@ -254,7 +254,7 @@ public class TrapConfig extends FeatureConfig {
         FireTrapTypeCategory( FeatureConfig parent, TrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
                               double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, double thrPower ) {
             super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight,
-                    minResetTime, maxResetTime, triggers );
+                    triggers, minResetTime, maxResetTime );
             
             SPEC.newLine();
             
