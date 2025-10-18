@@ -20,6 +20,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
 public class DWConfiguredFeatureProvider extends AbstractCFProvider {
     
@@ -45,6 +47,7 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
     public static final FeatureKeys.SeaMine NORMAL_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.NORMAL, "normal_sea_mine" );
     public static final FeatureKeys.SeaMine PUFFER_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.PUFFER, "puffer_sea_mine" );
     public static final FeatureKeys.SeaMine GUARDIAN_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.GUARDIAN, "guardian_sea_mine" );
+    public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.anyDimension( "sea_mine_mob_trap" );
 
     public static final FeatureKeys BURIED_LIQUID_ANY_DIMENSION = FeatureKeys.anyDimension( "buried_liquid" ).notPlaceable();
     
@@ -122,6 +125,7 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
         registerSeaMine( context, NORMAL_SEA_MINE, overworldConfigs );
         registerSeaMine( context, PUFFER_SEA_MINE, overworldConfigs );
         registerSeaMine( context, GUARDIAN_SEA_MINE, overworldConfigs );
+        register( context, SEA_MINE_MOB_TRAP, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP ) );
 
         // Simple dungeons
         register( context, SIMPLE_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(), new SimpleDungeonFeature.Configuration(

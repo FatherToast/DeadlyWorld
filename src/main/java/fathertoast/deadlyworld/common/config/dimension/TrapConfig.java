@@ -60,11 +60,19 @@ public class TrapConfig extends FeatureConfig {
         
         public final IntField triggersRemaining;
         public final IntField.RandomRange resetTime;
-        
+
         TrapTypeCategory( FeatureConfig parent, TrapType type,
+                         double placements, int minHeight, int maxHeight, double decoyCh,
+                         double activationRng, boolean checkSight, int triggers, int minResetTime, int maxResetTime ) {
+            this( parent, type.toString(), placements, minHeight, maxHeight, decoyCh,
+                    activationRng, checkSight, triggers, minResetTime, maxResetTime );
+
+        }
+        
+        TrapTypeCategory( FeatureConfig parent, String name,
                           double placements, int minHeight, int maxHeight, double decoyCh,
                           double activationRng, boolean checkSight, int triggers, int minResetTime, int maxResetTime ) {
-            super( parent, type.toString(), placements, minHeight, maxHeight );
+            super( parent, name, placements, minHeight, maxHeight );
             
             SPEC.newLine();
             

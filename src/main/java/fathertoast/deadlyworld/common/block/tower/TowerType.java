@@ -175,7 +175,7 @@ public enum TowerType {
     
     public static TowerType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {
-            DeadlyWorld.LOG.warn( "Attempted to load invalid tower dispenser type from index '{}'", index );
+            DeadlyWorld.LOG.warn( "Attempted to fetch invalid tower dispenser type from index '{}'", index );
             return SIMPLE;
         }
         return values()[index];

@@ -1,9 +1,12 @@
 package fathertoast.deadlyworld.common.block.trap;
 
+import fathertoast.crust.api.config.common.value.WeightedList;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.WaterTrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.util.References;
@@ -16,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -247,6 +251,88 @@ public enum TrapType {
             
             level.playSound( null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, 1.0F );
         }
+    },
+
+    SEA_MINE_MOB( "sea_mine_mob", ( dimConfig ) -> dimConfig.TRAPS.SEA_MINE_MOB ) {
+        @Override
+        public boolean spawnsMonster() { return true; }
+
+        @Override
+        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+            WaterTrapConfig.SeaMineMobTrapTypeCategory config = dimConfig.SEA_MINES.SEA_MINE_MOB;
+            Level level = trapEntity.getLevel();
+
+            double x = trapEntity.getBlockPos().getX() + 0.5;
+            double y = trapEntity.getBlockPos().getY() + 1;
+            double z = trapEntity.getBlockPos().getZ() + 0.5;
+
+            // Pick an entity to spawn
+            EntityType<?> entityType = config.spawnList.get().next( level.random );
+
+            if( entityType == null ) {
+                DeadlyWorld.LOG.warn(
+                        "Sea mine mob floor trap received null entity type!" +
+                                " - This is probably caused by an error or change in the config for DIM_{} (defaulting to drowned)", level.dimension()
+                );
+                entityType = EntityType.DROWNED;
+            }
+
+            // Try to create the entity to spawn
+            Entity entity;
+            LivingEntity livingEntity = null;
+            try {
+                entity = entityType.create( level );
+            }
+            catch( Exception ex ) {
+                DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", ForgeRegistries.ENTITY_TYPES.getKey( entityType ), ex );
+                return;
+            }
+            if( entity == null ) {
+                DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", ForgeRegistries.ENTITY_TYPES.getKey( entityType ) );
+                return;
+            }
+
+            // Initialize the entity
+            entity.setPos( x, y, z );
+            entity.setYRot( level.random.nextFloat() * 2.0F * (float) Math.PI );
+            entity.setXRot( 0.0F );
+            entity.setDeltaMovement( entity.getDeltaMovement().x, 0.3D, entity.getDeltaMovement().z );
+
+            if( entity instanceof LivingEntity ) {
+                livingEntity = (LivingEntity) entity;
+                AttributeInstance attribute;
+
+                if( config.healthMultiplier.get() != 1.0D ) {
+                    try {
+                        attribute = livingEntity.getAttribute( Attributes.MAX_HEALTH );
+                        attribute.setBaseValue( attribute.getBaseValue() * config.healthMultiplier.get() );
+                    }
+                    catch( Exception ex ) {
+                        // This is fine, entity just doesn't have the attribute
+                    }
+                }
+                if( config.speedMultiplier.get() != 1.0F ) {
+                    try {
+                        attribute = livingEntity.getAttribute( Attributes.MOVEMENT_SPEED );
+                        attribute.setBaseValue( attribute.getBaseValue() * config.speedMultiplier.get() );
+                    }
+                    catch( Exception ex ) {
+                        // This is fine, entity just doesn't have the attribute
+                    }
+                }
+                livingEntity.setHealth( livingEntity.getMaxHealth() );
+
+                // Equip a sea mine on the mob's head
+                livingEntity.setItemSlot( EquipmentSlot.HEAD, new ItemStack( DWBlocks.seaMine( SeaMineType.fromIndex( 0 ) ).get() ) );
+
+                Entity tripTarget = trapEntity.getTrapLogic().getTripTarget();
+
+                if( tripTarget instanceof LivingEntity livingTarget ) {
+                    livingEntity.setLastHurtByMob( livingTarget );
+                }
+            }
+            level.addFreshEntity( entity );
+        }
     };
     
     
@@ -294,7 +380,7 @@ public enum TrapType {
     
     public static TrapType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {
-            DeadlyWorld.LOG.warn( "Attempted to load invalid floor trap type from index '{}'", index );
+            DeadlyWorld.LOG.warn( "Attempted to fetch invalid floor trap type from index '{}'", index );
             return TNT;
         }
         return values()[index];

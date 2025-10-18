@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.dimension.SeaMineConfig;
+import fathertoast.deadlyworld.common.config.dimension.WaterTrapConfig;
 import fathertoast.deadlyworld.common.world.levelgen.SeaMineSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -78,7 +78,7 @@ public class SeaMineFeature extends DeadlyFeature<SeaMineFeature.Configuration> 
         
         // Generate debug marker
         if( seaMine.getBlock() instanceof SeaMineBlock seaMineBlock ) {
-            final SeaMineConfig.SeaMineCategory seaMineConfig = seaMineBlock.getSeaMineType().getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+            final WaterTrapConfig.SeaMineCategory seaMineConfig = seaMineBlock.getSeaMineType().getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
             debugMarkerIfEnabled( level, cursor, seaMineConfig );
         }
         

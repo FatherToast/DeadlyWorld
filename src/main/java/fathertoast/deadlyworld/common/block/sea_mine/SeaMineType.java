@@ -4,7 +4,7 @@ import fathertoast.crust.api.ICrustApi;
 import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.crust.api.lib.CrustObjects;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.dimension.SeaMineConfig;
+import fathertoast.deadlyworld.common.config.dimension.WaterTrapConfig;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.resources.ResourceLocation;
@@ -19,21 +19,21 @@ public enum SeaMineType {
 
     NORMAL( "normal", 6.0F,
             new WeightedPotionList(),
-            ( dimConfigs ) -> dimConfigs.SEA_MINES.NORMAL ),
+            ( dimConfigs ) -> dimConfigs.WATER_TRAPS.NORMAL_SEA_MINE ),
     PUFFER( "puffer", 4.0F,
             new WeightedPotionList(
                     new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 100, 280, 0 ),
                     new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 60, 280, 1 ),
                     new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 10, 280, 2 )
             ),
-            ( dimConfigs ) -> dimConfigs.SEA_MINES.PUFFER ),
+            ( dimConfigs ) -> dimConfigs.WATER_TRAPS.PUFFER_SEA_MINE ),
     GUARDIAN( "guardian", 4.5F,
             new WeightedPotionList(
                     new RegistryValueEntry<>( ResourceLocation.fromNamespaceAndPath( ICrustApi.MOD_ID, CrustObjects.ID.WEIGHT ), 100, 400, 2 ),
                     new RegistryValueEntry<>( ResourceLocation.fromNamespaceAndPath( ICrustApi.MOD_ID, CrustObjects.ID.WEIGHT ), 20, 400, 4 )
 
             ),
-            ( dimConfigs ) -> dimConfigs.SEA_MINES.GUARDIAN );
+            ( dimConfigs ) -> dimConfigs.WATER_TRAPS.GUARDIAN_SEA_MINE );
 
     public static final String BLOCK_CATEGORY = "sea_mine";
 
@@ -46,14 +46,14 @@ public enum SeaMineType {
     /** The default potion list for this mine type. */
     private final WeightedPotionList defaultPotions;
     /** A function that returns the feature config associated with this sea mine type for a given dimension config. */
-    private final Function<DimensionConfigGroup, SeaMineConfig.SeaMineCategory> configGetter;
+    private final Function<DimensionConfigGroup, WaterTrapConfig.SeaMineCategory> configGetter;
 
 
-    SeaMineType( String name, float explosionPower, WeightedPotionList potions, Function<DimensionConfigGroup, SeaMineConfig.SeaMineCategory> configFunction ) {
+    SeaMineType( String name, float explosionPower, WeightedPotionList potions, Function<DimensionConfigGroup, WaterTrapConfig.SeaMineCategory> configFunction ) {
         this( name, name.replace( "_", " " ) + " sea mines", explosionPower, potions, configFunction );
     }
 
-    SeaMineType( String name, String prettyName, float explPower, WeightedPotionList potions, Function<DimensionConfigGroup, SeaMineConfig.SeaMineCategory> configFunction ) {
+    SeaMineType( String name, String prettyName, float explPower, WeightedPotionList potions, Function<DimensionConfigGroup, WaterTrapConfig.SeaMineCategory> configFunction ) {
         id = name;
         displayName = prettyName;
         defaultExplosionPower = explPower;
@@ -95,11 +95,11 @@ public enum SeaMineType {
     @Override
     public String toString() { return id; }
 
-    public SeaMineConfig.SeaMineCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configGetter.apply( dimConfigs ); }
+    public WaterTrapConfig.SeaMineCategory getFeatureConfig(DimensionConfigGroup dimConfigs ) { return configGetter.apply( dimConfigs ); }
 
     public static SeaMineType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {
-            DeadlyWorld.LOG.warn( "Attempted to load invalid sea mine type from index '{}'", index );
+            DeadlyWorld.LOG.warn( "Attempted to fetch invalid sea mine type from index '{}'", index );
             return NORMAL;
         }
         return values()[index];
