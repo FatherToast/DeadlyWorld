@@ -124,9 +124,11 @@ public class MainConfig extends AbstractConfigFile {
     static RegistryEntryList<Block> buildDefaultSilverfishBlocks() {
         return new RegistryEntryList<>( ForgeRegistries.BLOCKS,
                 // Overworld
-                Blocks.DIRT, Blocks.MUD, Blocks.CLAY, Blocks.SANDSTONE, Blocks.RED_SANDSTONE,
-                Blocks.MOSSY_COBBLESTONE, Blocks.BOOKSHELF, Blocks.CALCITE, Blocks.SMOOTH_BASALT, Blocks.TUFF,
-                Blocks.COBBLED_DEEPSLATE, Blocks.CHISELED_DEEPSLATE, Blocks.POLISHED_DEEPSLATE,
+                Blocks.DIRT, Blocks.MUD, Blocks.MUD_BRICKS, Blocks.CLAY, Blocks.MOSSY_COBBLESTONE, Blocks.BOOKSHELF,
+                Blocks.GRANITE, Blocks.POLISHED_GRANITE, Blocks.DIORITE, Blocks.POLISHED_DIORITE, Blocks.ANDESITE, Blocks.POLISHED_ANDESITE,
+                Blocks.TUFF, Blocks.SANDSTONE, Blocks.CUT_SANDSTONE, Blocks.CHISELED_SANDSTONE, Blocks.SMOOTH_SANDSTONE,
+                Blocks.RED_SANDSTONE, Blocks.CUT_RED_SANDSTONE, Blocks.CHISELED_RED_SANDSTONE, Blocks.SMOOTH_RED_SANDSTONE,
+                Blocks.CALCITE, Blocks.SMOOTH_BASALT, Blocks.COBBLED_DEEPSLATE, Blocks.CHISELED_DEEPSLATE, Blocks.POLISHED_DEEPSLATE,
                 Blocks.DEEPSLATE_TILES, Blocks.CRACKED_DEEPSLATE_TILES, Blocks.DEEPSLATE_BRICKS, Blocks.CRACKED_DEEPSLATE_BRICKS,
                 Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE,
                 // Overworld ores
@@ -135,7 +137,9 @@ public class MainConfig extends AbstractConfigFile {
                 Blocks.REDSTONE_ORE, Blocks.DEEPSLATE_REDSTONE_ORE, Blocks.LAPIS_ORE, Blocks.DEEPSLATE_LAPIS_ORE,
                 Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.DEEPSLATE_EMERALD_ORE,
                 // Nether
-                Blocks.NETHERRACK, Blocks.NETHER_BRICKS, Blocks.BLACKSTONE, Blocks.BASALT, Blocks.SOUL_SOIL,
+                Blocks.NETHERRACK, Blocks.BASALT, Blocks.POLISHED_BASALT, Blocks.SOUL_SOIL, Blocks.BLACKSTONE, Blocks.POLISHED_BLACKSTONE,
+                Blocks.CHISELED_POLISHED_BLACKSTONE, Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS,
+                Blocks.NETHER_BRICKS, Blocks.CRACKED_NETHER_BRICKS, Blocks.CHISELED_NETHER_BRICKS, Blocks.RED_NETHER_BRICKS,
                 Blocks.NETHER_GOLD_ORE, Blocks.NETHER_QUARTZ_ORE,
                 // The End
                 Blocks.END_STONE, Blocks.END_STONE_BRICKS, Blocks.PURPUR_BLOCK, Blocks.PURPUR_PILLAR
