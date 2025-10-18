@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
@@ -21,16 +22,10 @@ public class DWEntityLootTables extends EntityLootSubProvider {
     @Override
     public void generate() {
         // New mobs
-        add( DWEntities.CHEST_MIMIC, new LootTableBuilder().addPool( new DWLootPoolBuilder( "chest" )
-                .addEntry( new LootEntryItemBuilder( DWItems.MIMIC_CORE.get() )
-                        .setWeight( 100 )
-                        .setCount( 0, 1 )
-                        .toLootEntry() )
-                .toLootPool() )
-        );
-        add( DWEntities.JUKEBOX_MIMIC, new LootTableBuilder().addLootTable( "jukebox", Blocks.JUKEBOX.getLootTable() ) );
-        add( DWEntities.SPAWNER_MIMIC, new LootTableBuilder() );
-        add( DWEntities.MINI_SPAWNER_MIMIC, new LootTableBuilder() );
+        add( DWEntities.CHEST_MIMIC, new LootTableBuilder().addPool( mimicCore() ) );
+        add( DWEntities.JUKEBOX_MIMIC, new LootTableBuilder().addPool( mimicCore() ).addLootTable( "jukebox", Blocks.JUKEBOX.getLootTable() ) );
+        add( DWEntities.SPAWNER_MIMIC, new LootTableBuilder().addPool( mimicCore() ) );
+        add( DWEntities.MINI_SPAWNER_MIMIC, new LootTableBuilder().addPool( mimicCore() ) );
         
         // Mini mobs
         addVanillaLike( DWEntities.MINI_CREEPER, EntityType.CREEPER );
@@ -54,5 +49,11 @@ public class DWEntityLootTables extends EntityLootSubProvider {
     protected Stream<EntityType<?>> getKnownEntityTypes() {
         // This is basically pulled straight from the forge docs on data gen for block/entity loot tables
         return DWEntities.REGISTRY.getEntries().stream().flatMap( RegistryObject::stream );
+    }
+    
+    protected LootPool.Builder mimicCore() {
+        return new DWLootPoolBuilder( "mimic_core" )
+                .addEntry( new LootEntryItemBuilder( DWItems.MIMIC_CORE.get() ).setCount( -9, 1 ).toLootEntry() )
+                .toLootPool();
     }
 }

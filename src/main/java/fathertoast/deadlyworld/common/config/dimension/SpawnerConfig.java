@@ -51,23 +51,23 @@ public class SpawnerConfig extends FeatureConfig {
                         "the 'configured_feature' json file when generated or placed and can then be overwritten for individual " +
                         "spawners by nbt editing." );
         
-        SIMPLE = new SpawnerTypeCategory( this, SpawnerType.SIMPLE, 0.6, DEPTH_LAVA, DEPTH_0,
+        SIMPLE = new SpawnerTypeCategory( this, SpawnerType.SIMPLE, 0.5, DEPTH_LAVA, DEPTH_0,
                 16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
         
-        STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.2, DEPTH_LAVA, DEPTH_1,
+        STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.15, DEPTH_LAVA, DEPTH_1,
                 16, true, 0, 400, 10, 1, 2, 0.95, 0.05 );
         
-        SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.12, DEPTH_LAVA, DEPTH_2,
+        SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.1, DEPTH_LAVA, DEPTH_2,
                 20, true, 400, 2400, 100, 12, 8, 0.05, 0.05 );
         
-        BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.06, DEPTH_LAVA, DEPTH_3,
+        BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.05, DEPTH_LAVA, DEPTH_3,
                 16, true, 200, 800, 100, 2, 3, 0.05, 0.05 );
         
-        NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.52, DEPTH_LAVA, DEPTH_0,
+        NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.5, DEPTH_LAVA, DEPTH_SEA_LEVEL,
                 16, false, 100, 400, 20, 6, 6, 0.0, 0.05 );
         
         MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.02, DEPTH_LAVA, DEPTH_0,
-                16, false, 100, 400, 20, 6, 4, 0.1, 0.05 );
+                12, false, 100, 400, 20, 6, 4, 0.2, 0.2 );
         
         DUNGEON = new DungeonSpawnerCategory( this, SpawnerType.DUNGEON,
                 16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );

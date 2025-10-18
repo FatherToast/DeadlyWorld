@@ -108,9 +108,9 @@
           "functions": [
             {
               "enchantments": [
+                "minecraft:flame",
                 "minecraft:sweeping",
-                "minecraft:blast_protection",
-                "minecraft:flame"
+                "minecraft:blast_protection"
               ],
               "function": "minecraft:enchant_randomly"
             }

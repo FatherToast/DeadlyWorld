@@ -11,17 +11,17 @@ import java.util.List;
 
 import static fathertoast.deadlyworld.common.util.References.*;
 
-public class SimpleDungeonConfig extends FeatureConfig {
+public class DungeonConfig extends FeatureConfig {
     
     public final SimpleDungeonCategory NORMAL;
     public final FeatureTypeCategory MINI;
     
     /** Builds the config spec that should be used for this config. */
-    SimpleDungeonConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
-        super( manager, dir, dimConfigs, "simple dungeon" );
+    DungeonConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
+        super( manager, dir, dimConfigs, "dungeon" );
         
-        NORMAL = new SimpleDungeonCategory( this, "normal", 10, DEPTH_5, DEPTH_SKY );
-        MINI = new FeatureTypeCategory( this, "mini", 2, DEPTH_4, DEPTH_0 );
+        NORMAL = new SimpleDungeonCategory( this, "normal", 10, DEPTH_LAVA, DEPTH_SKY );
+        MINI = new FeatureTypeCategory( this, "mini", 2, DEPTH_LAVA, DEPTH_0 );
     }
     
     

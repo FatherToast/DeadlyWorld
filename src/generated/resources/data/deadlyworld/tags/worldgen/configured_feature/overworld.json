@@ -1,5 +1,10 @@
 {
   "values": [
+    "deadlyworld:simple_lone_chest",
+    "deadlyworld:valuable_lone_chest",
+    "deadlyworld:tnt_trap_lone_chest",
+    "deadlyworld:infested_lone_chest",
+    "deadlyworld:surprise_lone_chest",
     "deadlyworld:simple_spawner",
     "deadlyworld:stream_spawner",
     "deadlyworld:swarm_spawner",

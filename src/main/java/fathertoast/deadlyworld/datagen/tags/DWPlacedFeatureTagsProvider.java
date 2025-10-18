@@ -27,6 +27,7 @@ public class DWPlacedFeatureTagsProvider extends TagsProvider<PlacedFeature> {
         addAll( DWTags.PlacedFeatures.THE_NETHER, DWPlacedFeatureProvider.NETHER_FEATURES );
         addAll( DWTags.PlacedFeatures.ANY_DIMENSION, DWPlacedFeatureProvider.ANY_DIMENSION_FEATURES );
         
+        addAll( DWTags.PlacedFeatures.LONE_CHESTS, DWPlacedFeatureProvider.LONE_CHEST_FEATURES );
         addAll( DWTags.PlacedFeatures.SPAWNERS, DWPlacedFeatureProvider.SPAWNER_FEATURES );
         addAll( DWTags.PlacedFeatures.TRAPS, DWPlacedFeatureProvider.TRAP_FEATURES );
         addAll( DWTags.PlacedFeatures.TOWERS, DWPlacedFeatureProvider.TOWER_FEATURES );

@@ -31,20 +31,20 @@ public class TowerConfig extends FeatureConfig {
         //SPEC.newLine();
         //SPEC.describePotionList();
         
-        SIMPLE = new TowerTypeCategory( this, TowerType.SIMPLE, 0.6, DEPTH_LAVA, DEPTH_0,
+        SIMPLE = new TowerTypeCategory( this, TowerType.SIMPLE, 0.5, DEPTH_LAVA, DEPTH_0,
                 11.0, true, 20, 40, 3.0, 1.2, 0.08 );
         
-        FIRE = new TowerTypeCategory( this, TowerType.FIRE, 0.4, DEPTH_LAVA, DEPTH_0,
+        FIRE = new TowerTypeCategory( this, TowerType.FIRE, 0.2, DEPTH_LAVA, DEPTH_0,
                 9.0, true, 20, 40, 1.0, 1.0, 0.1 );
         
-        POTION = new PotionTowerTypeCategory( this, TowerType.POTION, 0.3, DEPTH_LAVA, DEPTH_0,
+        POTION = new PotionTowerTypeCategory( this, TowerType.POTION, 0.1, DEPTH_LAVA, DEPTH_0,
                 9.0, true, 30, 50, 2.0, 1.0, 0.08,
                 0.2 );
         
-        GATLING = new TowerTypeCategory( this, TowerType.GATLING, 0.2, DEPTH_LAVA, DEPTH_0,
+        GATLING = new TowerTypeCategory( this, TowerType.GATLING, 0.1, DEPTH_LAVA, DEPTH_0,
                 9.0, true, 6, 8, 1.0, 1.0, 0.2 );
         
-        FIREBALL = new TowerTypeCategory( this, TowerType.FIREBALL, 0.2, DEPTH_LAVA, DEPTH_0,
+        FIREBALL = new TowerTypeCategory( this, TowerType.FIREBALL, 0.1, DEPTH_LAVA, DEPTH_0,
                 16.0, true, 40, 60, 3.0, 1.3, 0.4 );
     }
     

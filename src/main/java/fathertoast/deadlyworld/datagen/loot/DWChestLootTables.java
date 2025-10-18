@@ -2,12 +2,14 @@ package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
-import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.misc.ChestType;
+import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.data.loot.packs.VanillaChestLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -36,40 +38,46 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
     public void generate( BiConsumer<ResourceLocation, LootTable.Builder> registry ) {
         lootRegistry = registry;
         
-        for( SpawnerType type : SpawnerType.values() ) {
-            add( type.getChestLootTable(), buildSpawnerChestLoot( type ) );
+        for( ChestType type : ChestType.values() ) {
+            add( type.getChestLootTable(), buildLoneChestLoot( type ) );
         }
-        //        for( FloorTrapType type : FloorTrapType.values() ) {
-        //            add( type.getChestLootTable(), buildFloorTrapChestLoot( type ) );
+        //        for( SpawnerType type : SpawnerType.values() ) {
+        //            add( type.getChestLootTable(), buildSpawnerChestLoot( type ) );
         //        }
         //        for( TowerType type : TowerType.values() ) {
         //            add( type.getChestLootTable(), buildTowerChestLoot( type ) );
         //        }
     }
     
-    private LootTableBuilder buildSpawnerChestLoot( SpawnerType type ) {
+    private LootTableBuilder buildLoneChestLoot( ChestType type ) {
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) {
-            case SIMPLE, DUNGEON -> { }
-            case STREAM -> loot.addPool( buildExplorationLootPool() );
-            case SWARM -> loot.addPool( buildExplosivesLootPool() );
-            case BRUTAL -> loot.addPool( buildValuableLootPool() );
-            case NEST -> loot.addPool( buildBuggyLootPool() );
-            case MINI -> loot.addPool( buildBrewingLootPool() );
+            case SIMPLE -> { } // No extras
+            case VALUABLE -> loot.addPool( buildValuableLootPool() );
+            case TNT_TRAP -> loot.addPool( buildExplosivesLootPool() );
+            case INFESTED -> loot.addPool( buildSingleItemLootPool( "event", DWItems.INFESTED_EVENT_ITEM.get() ) )
+                    .addPool( buildBuggyLootPool() );
+            case SURPRISE -> loot.addPool( buildSingleItemLootPool( "event", DWItems.SURPRISE_EVENT_ITEM.get() ) )
+                    .addPool( buildBrewingLootPool() );
             default ->
-                    throw new IllegalArgumentException( "Spawner type \"" + type + "\" is missing chest loot table data gen code!" );
+                    throw new IllegalArgumentException( "Chest type \"" + type + "\" is missing chest loot table data gen code!" );
         }
         return loot.addLootTable( "base", BuiltInLootTables.SIMPLE_DUNGEON );
     }
     
-    //    private LootTableBuilder buildFloorTrapChestLoot( FloorTrapType type ) {
+    //    private LootTableBuilder buildSpawnerChestLoot( SpawnerType type ) {
     //        final LootTableBuilder loot = new LootTableBuilder();
     //        switch( type ) {
-    //            case TNT -> { }
+    //            case SIMPLE, DUNGEON -> { }
+    //            case STREAM -> loot.addPool( buildExplorationLootPool() );
+    //            case SWARM -> loot.addPool( buildExplosivesLootPool() );
+    //            case BRUTAL -> loot.addPool( buildValuableLootPool() );
+    //            case NEST -> loot.addPool( buildBuggyLootPool() );
+    //            case MINI -> loot.addPool( buildBrewingLootPool() );
     //            default ->
-    //                    throw new IllegalArgumentException( "Floor trap type \"" + type + "\" is missing chest loot table data gen code!" );
+    //                    throw new IllegalArgumentException( "Spawner type \"" + type + "\" is missing chest loot table data gen code!" );
     //        }
-    //        return loot;
+    //        return loot.addLootTable( "base", BuiltInLootTables.SIMPLE_DUNGEON );
     //    }
     
     //    private LootTableBuilder buildTowerChestLoot( TowerType type ) {
@@ -84,6 +92,10 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
     
     protected void add( ResourceLocation name, LootTableBuilder builder ) {
         lootRegistry.accept( name, builder.toLootTable() );
+    }
+    
+    private LootPool.Builder buildSingleItemLootPool( String name, ItemLike item ) {
+        return new DWLootPoolBuilder( name ).setRolls( 1 ).addItem( item, 10 ).toLootPool();
     }
     
     private LootPool.Builder buildExplorationLootPool() {

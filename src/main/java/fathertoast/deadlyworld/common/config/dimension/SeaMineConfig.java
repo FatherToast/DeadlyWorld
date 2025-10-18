@@ -4,9 +4,9 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
-import net.minecraft.world.level.Level;
 
-import static fathertoast.deadlyworld.common.util.References.*;
+import static fathertoast.deadlyworld.common.util.References.DEPTH_5;
+import static fathertoast.deadlyworld.common.util.References.DEPTH_SEA_LEVEL;
 
 public class SeaMineConfig extends FeatureConfig {
     
@@ -20,9 +20,9 @@ public class SeaMineConfig extends FeatureConfig {
         
         flagAsWaterFeature();
         
-        NORMAL = new SeaMineCategory( this, SeaMineType.NORMAL, 0.2, DEPTH_3, DEPTH_SEA_LEVEL, 2, 8 );
-        PUFFER = new SeaMineCategory( this, SeaMineType.PUFFER, 0.06, DEPTH_3, DEPTH_SEA_LEVEL, 2, 8 );
-        GUARDIAN = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.06, DEPTH_3, DEPTH_SEA_LEVEL, 2, 8 );
+        NORMAL = new SeaMineCategory( this, SeaMineType.NORMAL, 0.3, DEPTH_5, DEPTH_SEA_LEVEL, 2, 8 );
+        PUFFER = new SeaMineCategory( this, SeaMineType.PUFFER, 0.1, DEPTH_5, DEPTH_SEA_LEVEL, 2, 8 );
+        GUARDIAN = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.1, DEPTH_5, DEPTH_SEA_LEVEL, 2, 8 );
     }
     
     public static class SeaMineCategory extends FeatureTypeCategory {

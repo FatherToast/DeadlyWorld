@@ -1,6 +1,8 @@
 package fathertoast.deadlyworld.common.item;
 
+import fathertoast.crust.api.config.common.ConfigUtil;
 import fathertoast.crust.api.lib.NBTHelper;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
@@ -9,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -32,7 +35,7 @@ import java.util.List;
  * <p>
  * Based somewhat on {@link net.minecraft.world.level.block.grower.AbstractTreeGrower} logic.
  */
-public class FeaturePlacerItem extends Item {
+public class FeaturePlacerItem extends Item implements ICustomTabContents {
     
     /** The NBT tag for the configured feature's resource location. */
     public static final String TAG_FEATURE = "CfgFeature";
@@ -101,7 +104,23 @@ public class FeaturePlacerItem extends Item {
     public void appendHoverText( ItemStack item, @Nullable Level level, List<Component> tooltip, TooltipFlag verbose ) {
         ResourceLocation featureKey = getFeatureKey( item );
         if( featureKey != null ) {
-            tooltip.add( Component.literal( featureKey.toString() ).withStyle( ChatFormatting.GRAY ) );
+            String key = featureKey.toString();
+            String fallback = tryConvertToReadable( featureKey );
+            tooltip.add( CommonComponents.EMPTY );
+            tooltip.add( Component.translatable( getDescriptionId() + ".tooltip" ).withStyle( ChatFormatting.GRAY ) );
+            tooltip.add( CommonComponents.space().append( Component.translatableWithFallback( getDescriptionId() + ".tooltip." + key, fallback )
+                    .withStyle( ChatFormatting.AQUA ) ) );
         }
     }
+    
+    private static String tryConvertToReadable( ResourceLocation featureKey ) {
+        String name = ConfigUtil.properCase( featureKey.getPath().replace( '_', ' ' ) );
+        if( !DeadlyWorld.MOD_ID.equals( featureKey.getNamespace() ) ) {
+            return ConfigUtil.properCase( featureKey.getNamespace() ) + ": " + name;
+        }
+        return name;
+    }
+    
+    @Override
+    public List<ItemStack> buildTabContents() { return new ArrayList<>(); } // Built in its own tab
 }

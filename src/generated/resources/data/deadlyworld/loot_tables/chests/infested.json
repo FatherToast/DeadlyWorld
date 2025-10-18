@@ -6,6 +6,18 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "deadlyworld:infested_event_item",
+          "weight": 10
+        }
+      ],
+      "name": "event",
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "functions": [
             {
               "add": false,
@@ -288,11 +300,11 @@
           "functions": [
             {
               "enchantments": [
-                "minecraft:looting",
+                "minecraft:bane_of_arthropods",
                 "minecraft:silk_touch",
                 "minecraft:fortune",
-                "minecraft:bane_of_arthropods",
-                "minecraft:luck_of_the_sea"
+                "minecraft:luck_of_the_sea",
+                "minecraft:looting"
               ],
               "function": "minecraft:enchant_randomly"
             }
@@ -316,5 +328,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "deadlyworld:loot_tables/chests/deadly_spawners/nest"
+  "random_sequence": "deadlyworld:chests/infested"
 }

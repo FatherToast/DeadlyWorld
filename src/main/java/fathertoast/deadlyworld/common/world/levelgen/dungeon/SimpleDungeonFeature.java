@@ -3,13 +3,11 @@ package fathertoast.deadlyworld.common.world.levelgen.dungeon;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.config.dimension.DungeonConfig;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
-import fathertoast.deadlyworld.common.world.levelgen.trap.LoneSpawnerFeature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -20,11 +18,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraftforge.common.Tags;
@@ -161,7 +157,8 @@ public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Con
                     
                     // There is only one solid neighbor, we are facing a wall!
                     if( solidNeighbors == 1 ) {
-                        safeSetBlock( level, cursor, StructurePiece.reorient( level, cursor, Blocks.CHEST.defaultBlockState() ), predicate );
+                        safeSetBlock( level, cursor, randomizeChestDirection( level, cursor,
+                                Blocks.CHEST.defaultBlockState(), random, true ), predicate );
                         RandomizableContainerBlockEntity.setLootTable( level, random, cursor, BuiltInLootTables.SIMPLE_DUNGEON );
                         break;
                     }
@@ -169,22 +166,17 @@ public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Con
             }
         }
         
+        final DungeonConfig.SimpleDungeonCategory featureConfig = Config.getDimensionConfigs( level.getLevel() ).SIMPLE_DUNGEONS.NORMAL;
+        
         // Generate debug marker
-        debugMarkerIfEnabled( level, origin, Config.getDimensionConfigs( level.getLevel() ).SIMPLE_DUNGEONS.NORMAL );
+        debugMarkerIfEnabled( level, origin, featureConfig );
         
         // TODO - Make it so subfeatures can be specified via data pack
-        try {
-            final List<String> subfeatureList = Config.getDimensionConfigs( level.getLevel() ).SIMPLE_DUNGEONS.NORMAL.subfeatures.get();
-            
-            if( !subfeatureList.isEmpty() ) { // No subfeatures defined in config, very sad
-                placeSubfeature( level, context.chunkGenerator(), origin, ResourceLocation.parse(
-                                subfeatureList.get( random.nextInt( subfeatureList.size() ) ) ),
-                        new ConfiguredFeature<>( this, config ) );
-            }
-        }
-        catch( Exception ex ) {
-            DeadlyWorld.LOG.warn( "Failed to place subfeature for \"{}\"!", getClass().getSimpleName() );
-            ex.printStackTrace();
+        final List<String> subfeatureList = featureConfig.subfeatures.get();
+        if( !subfeatureList.isEmpty() ) { // No subfeatures defined in config, very sad
+            placeSubfeature( level, context.chunkGenerator(), origin, ResourceLocation.parse(
+                            subfeatureList.get( random.nextInt( subfeatureList.size() ) ) ),
+                    new ConfiguredFeature<>( this, config ) );
         }
         return true;
     }

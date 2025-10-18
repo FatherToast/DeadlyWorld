@@ -32,23 +32,23 @@ public class TrapConfig extends FeatureConfig {
         SPEC.newLine();
         SPEC.describeEntityList();
         
-        SPEC.newLine();
+        //SPEC.newLine();
         //SPEC.describePotionList();
         
-        TNT = new TntTrapTypeCategory( this, TrapType.TNT, 0.25, DEPTH_LAVA, DEPTH_0, 0.05,
-                6.0, true, 20, 60, 1, 80, 180, 3, 2.0 );
+        TNT = new TntTrapTypeCategory( this, TrapType.TNT, 0.3, DEPTH_LAVA, DEPTH_0, 0.05,
+                4.0, true, 20, 60, 1, 40, 50, 4, 2.0 );
         
-        TNT_MOB = new TntMobTrapTypeCategory( this, TrapType.TNT_MOB, 0.08, DEPTH_LAVA, DEPTH_2, 0.05,
-                5.0, true, 20, 60, 1, 80, 180, 3, 0.6 );
+        TNT_MOB = new TntMobTrapTypeCategory( this, TrapType.TNT_MOB, 0.05, DEPTH_LAVA, DEPTH_2, 0.05,
+                4.0, true, 20, 60, 1, 80, 180, 3, 0.6 );
         
-        POTION = new PotionTrapTypeCategory( this, TrapType.POTION, 0.3, DEPTH_LAVA, DEPTH_0, 0.05,
+        POTION = new PotionTrapTypeCategory( this, TrapType.POTION, 0.2, DEPTH_LAVA, DEPTH_0, 0.05,
                 5.0, true, 20, 60, -1, 0.2 );
         
-        LAVA = new LavaTrapTypeCategory( this, TrapType.LAVA, 0.12, DEPTH_LAVA, DEPTH_3, 0.05,
-                4.0, true, 20, 60, 1 );
+        LAVA = new LavaTrapTypeCategory( this, TrapType.LAVA, 0.15, DEPTH_LAVA, DEPTH_3, 0.05,
+                5.0, true, 20, 60, 1 );
         
-        FIRE = new FireTrapTypeCategory( this, TrapType.FIRE, 0.08, DEPTH_VOID, DEPTH_1, 0.05,
-                4.0, false, 4, 7, -1, 4.0 );
+        FIRE = new FireTrapTypeCategory( this, TrapType.FIRE, 0.1, DEPTH_VOID, DEPTH_1, 0.05,
+                5.0, false, 4, 7, -1, 4.0 );
     }
     
     public static class TrapTypeCategory extends FeatureTypeCategory {

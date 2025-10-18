@@ -11,12 +11,13 @@ import net.minecraft.world.level.Level;
 public class DimensionConfigGroup extends ConfigGroup {
     public final ResourceKey<Level> DIMENSION;
     
+    public final ChestConfig CHESTS;
     public final SpawnerConfig SPAWNERS;
     public final TrapConfig TRAPS;
     public final TowerConfig TOWERS;
     public final SeaMineConfig SEA_MINES;
     public final EnvHazardConfig ENV_HAZARDS;
-    public final SimpleDungeonConfig SIMPLE_DUNGEONS;
+    public final DungeonConfig SIMPLE_DUNGEONS;
     
     public DimensionConfigGroup( ConfigManager manager, ResourceKey<Level> dimension ) {
         DIMENSION = dimension;
@@ -24,12 +25,13 @@ public class DimensionConfigGroup extends ConfigGroup {
         // Organized in folder: configs/DeadlyWorld/worldgen/<modid>/<dimension>/
         final String dir = "worldgen/" + dimension.location().getNamespace() + "/" + dimension.location().getPath() + "/";
         
+        CHESTS = group( new ChestConfig( manager, dir, this ) );
         SPAWNERS = group( new SpawnerConfig( manager, dir, this ) );
         TRAPS = group( new TrapConfig( manager, dir, this ) );
         TOWERS = group( new TowerConfig( manager, dir, this ) );
         SEA_MINES = group( new SeaMineConfig( manager, dir, this ) );
         ENV_HAZARDS = group( new EnvHazardConfig( manager, dir, this ) );
-        SIMPLE_DUNGEONS = group( new SimpleDungeonConfig( manager, dir, this ) );
+        SIMPLE_DUNGEONS = group( new DungeonConfig( manager, dir, this ) );
     }
     
     /** @return The short name for this dimension (e.g. "'the_nether' dimension"). */

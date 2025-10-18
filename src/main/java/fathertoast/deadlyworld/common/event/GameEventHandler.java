@@ -4,14 +4,12 @@ package fathertoast.deadlyworld.common.event;
 import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
-import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.core.registry.DWBlocks;
-import fathertoast.deadlyworld.common.core.registry.DWItems;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
+import fathertoast.deadlyworld.common.item.EventItem;
 import fathertoast.deadlyworld.common.item.SeaMineBlocKItem;
 import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.util.MimicHelper;
@@ -19,9 +17,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
@@ -62,18 +63,18 @@ public final class GameEventHandler {
     //    static void onServerStarting( ServerStartingEvent event ) {
     //        Config.initializeDynamic( event.getServer() );
     //    }
-
-
+    
+    
     @SubscribeEvent
     public static void onLivingTick( LivingEvent.LivingTickEvent event ) {
         ItemStack itemOnHead = event.getEntity().getItemBySlot( EquipmentSlot.HEAD );
-
-        if ( itemOnHead.getItem() instanceof SeaMineBlocKItem seaMine ) {
+        
+        if( itemOnHead.getItem() instanceof SeaMineBlocKItem seaMine ) {
             seaMine.onLivingUpdate( event.getEntity(), itemOnHead );
         }
     }
-
-
+    
+    
     /**
      * Called during LivingEntity#actuallyHurt after all damage calculations, right before damage is applied.
      *
@@ -109,17 +110,29 @@ public final class GameEventHandler {
     }
     
     @SubscribeEvent( priority = EventPriority.HIGH )
+    public static void onEntityJoinLevel( EntityJoinLevelEvent event ) {
+        if( !(event.getLevel() instanceof ServerLevel level) || !(event.getEntity() instanceof ItemEntity itemEntity) )
+            return;
+        
+        if( itemEntity.getItem().getItem() instanceof EventItem<?> eventItem ) {
+            eventItem.triggerEvent( level, itemEntity.blockPosition(), Blocks.AIR.defaultBlockState(),
+                    Direction.UP, null, itemEntity.getItem() );
+            event.setCanceled( true );
+        }
+    }
+    
+    @SubscribeEvent( priority = EventPriority.HIGH )
     public static void onDestroyBlock( BlockEvent.BreakEvent event ) {
-        if( event.getLevel() instanceof ServerLevel serverLevel ) {
-            BlockPos pos = event.getPos();
-            BlockState state = serverLevel.getBlockState( pos );
-            BlockEntity blockEntity = serverLevel.getExistingBlockEntity( pos );
-            
-            if( blockEntity instanceof ChestBlockEntity chest ) {
-                if( MimicHelper.spawnChestMimicFrom( serverLevel, pos, state, chest, event.getPlayer() ) ) {
-                    serverLevel.removeBlock( pos, false );
-                    event.setCanceled( true );
-                }
+        if( !(event.getLevel() instanceof ServerLevel serverLevel) ) return;
+        
+        BlockPos pos = event.getPos();
+        BlockState state = serverLevel.getBlockState( pos );
+        BlockEntity blockEntity = serverLevel.getExistingBlockEntity( pos );
+        
+        if( blockEntity instanceof ChestBlockEntity chest ) {
+            if( MimicHelper.spawnChestMimicFrom( serverLevel, pos, state, chest, event.getPlayer() ) ) {
+                serverLevel.removeBlock( pos, false );
+                event.setCanceled( true );
             }
         }
     }
@@ -133,15 +146,17 @@ public final class GameEventHandler {
     @SubscribeEvent( priority = EventPriority.HIGHEST )
     public static void onRightClickChest( PlayerInteractEvent.RightClickBlock event ) {
         // Prevent spectators from generating loot tables and/or spawning mimics
-        if( event.getEntity().isSpectator() ) return;
+        if( event.getEntity().isSpectator() || !(event.getLevel() instanceof ServerLevel level) ) return;
         
         BlockPos pos = event.getPos();
-        Level level = event.getLevel();
         BlockState state = level.getBlockState( pos );
         BlockEntity blockEntity = level.getExistingBlockEntity( pos );
         
-        if( level instanceof ServerLevel serverLevel && blockEntity instanceof ChestBlockEntity chest ) {
-            if( MimicHelper.spawnChestMimicFrom( serverLevel, pos, state, chest, event.getEntity() ) ) {
+        if( blockEntity instanceof Container container ) {
+            MimicHelper.triggerEventsFrom( level, pos, state, container, event.getEntity() );
+        }
+        if( blockEntity instanceof ChestBlockEntity chest ) {
+            if( MimicHelper.spawnChestMimicFrom( level, pos, state, chest, event.getEntity() ) ) {
                 level.removeBlock( pos, false );
             }
         }

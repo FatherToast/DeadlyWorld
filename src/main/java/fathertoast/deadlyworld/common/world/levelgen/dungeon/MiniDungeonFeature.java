@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraftforge.common.Tags;
@@ -153,7 +152,8 @@ public class MiniDungeonFeature extends DeadlyFeature<MiniDungeonFeature.Configu
                     
                     // There is only one solid neighbor, we are facing a wall!
                     if( solidNeighbors == 1 ) {
-                        safeSetBlock( level, cursor, StructurePiece.reorient( level, cursor, DWBlocks.MINI_CHEST.get().defaultBlockState() ), predicate );
+                        safeSetBlock( level, cursor, randomizeChestDirection( level, cursor,
+                                DWBlocks.MINI_CHEST.get().defaultBlockState(), random, true ), predicate );
                         RandomizableContainerBlockEntity.setLootTable( level, random, cursor, BuiltInLootTables.SIMPLE_DUNGEON );
                         break;
                     }

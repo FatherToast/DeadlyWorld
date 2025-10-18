@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class BooleanFieldSetting {
-    
     public static final Codec<BooleanFieldSetting> CODEC = Codec.STRING.xmap( BooleanFieldSetting::new, BooleanFieldSetting::toString );
     
     private final String MOD_ID;
