@@ -25,11 +25,11 @@ public class WaterTrapConfig extends FeatureConfig {
         
         flagAsWaterFeature();
 
-        NORMAL_SEA_MINE = new SeaMineCategory( this, SeaMineType.NORMAL, 0.2, DEPTH_3, DEPTH_SEA_LEVEL, 2, 8 );
+        NORMAL_SEA_MINE = new SeaMineCategory( this, SeaMineType.NORMAL, 0.3, DEPTH_5, DEPTH_SEA_LEVEL, 2, 8 );
 
-        PUFFER_SEA_MINE = new SeaMineCategory( this, SeaMineType.PUFFER, 0.06, DEPTH_3, DEPTH_SEA_LEVEL, 2, 8 );
+        PUFFER_SEA_MINE = new SeaMineCategory( this, SeaMineType.PUFFER, 0.1, DEPTH_5, DEPTH_SEA_LEVEL, 2, 8 );
 
-        GUARDIAN_SEA_MINE = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.06, DEPTH_3, DEPTH_SEA_LEVEL, 2, 8 );
+        GUARDIAN_SEA_MINE = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.1, DEPTH_5, DEPTH_SEA_LEVEL, 2, 8 );
 
         SEA_MINE_MOB = new SeaMineMobTrapTypeCategory( this, "sea_mine_mob", 0.2, DEPTH_2, DEPTH_SEA_LEVEL, 0.05,
                 6.0, true, 1 );
