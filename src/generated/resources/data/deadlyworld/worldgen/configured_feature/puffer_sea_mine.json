@@ -14,8 +14,8 @@
     "sea_mine": {
       "min_distance_from_bottom": {
         "type": "deadlyworld:config_uniform_int",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/water_traps:puffer_water_traps.dist_from_bottom.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/water_traps:puffer_water_traps.dist_from_bottom.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/water_traps:puffer_sea_mine_water_traps.dist_from_bottom.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/water_traps:puffer_sea_mine_water_traps.dist_from_bottom.min"
       }
     },
     "trail_provider": {
