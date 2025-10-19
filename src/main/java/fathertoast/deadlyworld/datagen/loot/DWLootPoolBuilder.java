@@ -5,6 +5,7 @@ import fathertoast.crust.api.datagen.loot.LootPoolBuilder;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;
 import net.minecraft.world.level.storage.loot.functions.SetStewEffectFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import org.jetbrains.annotations.ApiStatus;
 
 public class DWLootPoolBuilder extends LootPoolBuilder {
     /** Creates a loot pool with the given unique name. */
@@ -30,7 +32,12 @@ public class DWLootPoolBuilder extends LootPoolBuilder {
     public DWLootPoolBuilder addItem( ItemLike item, int weight, int count ) {
         return addEntry( new LootEntryItemBuilder( item ).setWeight( weight ).setCount( count ).toLootEntry() );
     }
-    
+
+    // TODO - Random item from item tag
+    public DWLootPoolBuilder addRandomFromTag( TagKey<Item> tag, int weight, int count ) {
+        return null;
+    }
+
     /** Adds a simple item loot entry with a count of 1-4. */
     public DWLootPoolBuilder addItemClusterSmall( ItemLike item, int weight ) {
         return addItemCluster( item, weight, 4 );

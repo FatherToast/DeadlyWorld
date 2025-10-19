@@ -82,10 +82,18 @@
           "type": "minecraft:item",
           "name": "minecraft:lava_bucket",
           "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "deadlyworld:runny_lava_bucket"
         }
       ],
       "name": "floor_trap",
-      "rolls": 3.0
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 2.0,
+        "min": 1.0
+      }
     }
   ],
   "random_sequence": "deadlyworld:blocks/lava_deadly_trap"

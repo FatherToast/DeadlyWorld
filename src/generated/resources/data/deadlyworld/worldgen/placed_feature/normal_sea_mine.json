@@ -5,7 +5,7 @@
       "type": "minecraft:count",
       "count": {
         "type": "deadlyworld:config_count_int",
-        "count": "deadlyworld:worldgen/minecraft/overworld/sea_mines:normal_sea_mines.placements"
+        "count": "deadlyworld:worldgen/minecraft/overworld/water_traps:normal_water_traps.placements"
       }
     },
     {
@@ -15,8 +15,8 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "deadlyworld:config_uniform_height",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/sea_mines:normal_sea_mines.height.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/sea_mines:normal_sea_mines.height.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/overworld/water_traps:normal_water_traps.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/overworld/water_traps:normal_water_traps.height.min"
       }
     },
     {

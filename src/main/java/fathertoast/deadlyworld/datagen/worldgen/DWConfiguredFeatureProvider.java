@@ -8,11 +8,13 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
+import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
 import fathertoast.deadlyworld.common.world.levelgen.dungeon.MiniDungeonFeature;
 import fathertoast.deadlyworld.common.world.levelgen.dungeon.SimpleDungeonFeature;
 import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedLiquidFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
 import net.minecraft.data.worldgen.BootstapContext;
@@ -37,7 +39,8 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
     public static final FeatureKeys.Trap POTION_TRAP = FeatureKeys.Trap.of( TrapType.POTION, "potion_trap" );
     public static final FeatureKeys.Trap LAVA_TRAP = FeatureKeys.Trap.of( TrapType.LAVA, "lava_trap" );
     public static final FeatureKeys.Trap FIRE_TRAP = FeatureKeys.Trap.of( TrapType.FIRE, "fire_trap" );
-    
+    public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
+
     public static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower" );
     public static final FeatureKeys.TowerDispenser FIRE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIRE, "fire_tower" );
     public static final FeatureKeys.TowerDispenser POTION_TOWER = FeatureKeys.TowerDispenser.of( TowerType.POTION, "potion_tower" );
@@ -47,7 +50,6 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
     public static final FeatureKeys.SeaMine NORMAL_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.NORMAL, "normal_sea_mine" );
     public static final FeatureKeys.SeaMine PUFFER_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.PUFFER, "puffer_sea_mine" );
     public static final FeatureKeys.SeaMine GUARDIAN_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.GUARDIAN, "guardian_sea_mine" );
-    public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.anyDimension( "sea_mine_mob_trap" );
 
     public static final FeatureKeys BURIED_LIQUID_ANY_DIMENSION = FeatureKeys.anyDimension( "buried_liquid" ).notPlaceable();
     
@@ -95,6 +97,10 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
         registerFloorTrap( context, TNT_MOB_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, LAVA_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, FIRE_TRAP, overworldConfigs, netherConfigs );
+        register( context, SEA_MINE_MOB_TRAP, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
+                new FloorTrapFeature.Configuration( block( DWBlocks.trap( TrapType.SEA_MINE_MOB ) ),
+                        FloorTrapSettings.of( TrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ),
+                        BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         
         // Potion floor traps
         register( context, POTION_TRAP.overworldKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
@@ -121,11 +127,10 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
                 overworldConfigs, block( Blocks.DEEPSLATE_TILES ),
                 netherConfigs, block( Blocks.QUARTZ_PILLAR ) );
 
-        // Sea mines
+        // Water traps
         registerSeaMine( context, NORMAL_SEA_MINE, overworldConfigs );
         registerSeaMine( context, PUFFER_SEA_MINE, overworldConfigs );
         registerSeaMine( context, GUARDIAN_SEA_MINE, overworldConfigs );
-        register( context, SEA_MINE_MOB_TRAP, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP ) );
 
         // Simple dungeons
         register( context, SIMPLE_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(), new SimpleDungeonFeature.Configuration(

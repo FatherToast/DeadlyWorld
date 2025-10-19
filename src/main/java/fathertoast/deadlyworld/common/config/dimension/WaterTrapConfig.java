@@ -32,7 +32,7 @@ public class WaterTrapConfig extends FeatureConfig {
         GUARDIAN_SEA_MINE = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.06, DEPTH_3, DEPTH_SEA_LEVEL, 2, 8 );
 
         SEA_MINE_MOB = new SeaMineMobTrapTypeCategory( this, "sea_mine_mob", 0.2, DEPTH_2, DEPTH_SEA_LEVEL, 0.05,
-                6.0, true, 20, 60, 1, 1 );
+                6.0, true, 1 );
     }
     
     public static class SeaMineCategory extends FeatureTypeCategory {
@@ -41,7 +41,7 @@ public class WaterTrapConfig extends FeatureConfig {
         
         SeaMineCategory( FeatureConfig parent, SeaMineType type, double placements, int minHeight, int maxHeight,
                          int minDistFromBottom, int maxDistFromBottom ) {
-            super( parent, type.toString(), placements, minHeight, maxHeight );
+            super( parent, type + "_sea_mine", placements, minHeight, maxHeight );
             
             SPEC.newLine();
             
@@ -53,47 +53,14 @@ public class WaterTrapConfig extends FeatureConfig {
 
     public static class SeaMineMobTrapTypeCategory extends TrapConfig.TrapTypeCategory {
 
-        public final DoubleField decoyChance;
-
-        public final DoubleField activationRange;
-        public final DoubleField checkSightChance;
-
-        public final IntField triggersRemaining;
-        public final IntField.RandomRange resetTime;
-
         public final WeightedEntityListField spawnList;
-        public final IntField mobCount;
 
         public final DoubleField speedMultiplier;
         public final DoubleField healthMultiplier;
 
         SeaMineMobTrapTypeCategory( FeatureConfig parent, String name, double placements, int minHeight, int maxHeight, double decoyCh,
-                                    double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers,
-                                    int mobCnt ) {
+                                    double activationRng, boolean checkSight, int triggers ) {
             super( parent, name, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minHeight, maxHeight );
-
-            SPEC.newLine();
-
-            decoyChance = SPEC.define( new DoubleField( "decoy_chance", decoyCh, DoubleField.Range.PERCENT,
-                    "The chance for " + FEATURE_TYPE_NAME + " to generate with a decoy above it.",
-                    "Decoys range from fake cakes, illusionary mobs and other visual distractions that are not real.",
-                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
-
-            SPEC.newLine();
-
-            activationRange = SPEC.define( standardActivationRangeField( activationRng ) );
-            checkSightChance = SPEC.define( standardCheckSightField( checkSight ) );
-
-            SPEC.newLine();
-
-            triggersRemaining = SPEC.define( new IntField( "triggers", triggers, -1, Short.MAX_VALUE,
-                    "How many times the trap can trigger before it gets \"used up\".",
-                    "Setting this to -1 equals infinite triggers.",
-                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
-            resetTime = new IntField.RandomRange( SPEC, "reset_time", minResetTime, maxResetTime, 0, Short.MAX_VALUE,
-                    "The minimum and maximum (inclusive) amount of time that must pass before a previously " +
-                            "triggered trap resets, in ticks. (20 ticks = 1 second)",
-                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE );
 
             SPEC.newLine();
 
@@ -101,9 +68,6 @@ public class WaterTrapConfig extends FeatureConfig {
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + ". One of these is chosen " +
                             "at random when the trap is generated.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
-
-            mobCount = SPEC.define( new IntField( "mob_count", mobCnt, IntField.Range.POSITIVE,
-                    "The amount of mobs to spawn when this trap triggers." ) );
 
             SPEC.newLine();
 

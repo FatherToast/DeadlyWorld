@@ -80,8 +80,8 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:tnt",
-          "weight": 10
+          "name": "minecraft:sponge",
+          "weight": 3
         },
         {
           "type": "minecraft:item",
@@ -96,7 +96,23 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:gunpowder",
+          "name": "minecraft:prismarine",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 4.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:sea_pickle",
           "weight": 10
         }
       ],
@@ -108,5 +124,5 @@
       }
     }
   ],
-  "random_sequence": "deadlyworld:blocks/tnt_mob_deadly_trap"
+  "random_sequence": "deadlyworld:blocks/sea_mine_mob_deadly_trap"
 }

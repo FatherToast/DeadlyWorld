@@ -78,6 +78,9 @@ public class DWPlacedFeatureProvider {
         registerFloorTrap( context, getter, POTION_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, LAVA_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, getter, FIRE_TRAP, overworldConfigs, netherConfigs );
+        // Water trap variant
+        register( context, getter, SEA_MINE_MOB_TRAP,
+                waterFloorFeature( TrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ) );
 
         // Standard tower placements
         registerTower( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );

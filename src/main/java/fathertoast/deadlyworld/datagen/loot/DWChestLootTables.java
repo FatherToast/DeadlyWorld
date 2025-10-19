@@ -37,7 +37,8 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
         lootRegistry = registry;
         
         for( SpawnerType type : SpawnerType.values() ) {
-            add( type.getChestLootTable(), buildSpawnerChestLoot( type ) );
+            if ( !type.isSubfeature() )
+                add( type.getChestLootTable(), buildSpawnerChestLoot( type ) );
         }
         //        for( FloorTrapType type : FloorTrapType.values() ) {
         //            add( type.getChestLootTable(), buildFloorTrapChestLoot( type ) );

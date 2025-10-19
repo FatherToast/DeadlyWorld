@@ -253,13 +253,13 @@ public enum TrapType {
         }
     },
 
-    SEA_MINE_MOB( "sea_mine_mob", ( dimConfig ) -> dimConfig.TRAPS.SEA_MINE_MOB ) {
+    SEA_MINE_MOB( "sea_mine_mob", ( dimConfig ) -> dimConfig.WATER_TRAPS.SEA_MINE_MOB ) {
         @Override
         public boolean spawnsMonster() { return true; }
 
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            WaterTrapConfig.SeaMineMobTrapTypeCategory config = dimConfig.SEA_MINES.SEA_MINE_MOB;
+            WaterTrapConfig.SeaMineMobTrapTypeCategory config = dimConfig.WATER_TRAPS.SEA_MINE_MOB;
             Level level = trapEntity.getLevel();
 
             double x = trapEntity.getBlockPos().getX() + 0.5;
