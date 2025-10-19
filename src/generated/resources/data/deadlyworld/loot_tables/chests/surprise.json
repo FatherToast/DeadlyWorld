@@ -6,6 +6,18 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "deadlyworld:surprise_event_item",
+          "weight": 10
+        }
+      ],
+      "name": "event",
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "functions": [
             {
               "add": false,
@@ -408,5 +420,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "deadlyworld:loot_tables/chests/deadly_spawners/mini"
+  "random_sequence": "deadlyworld:chests/surprise"
 }

@@ -209,7 +209,7 @@ public abstract class BaseTrap {
     /** @return A target that meets the conditions to trip this trap, or null if none is found. */
     @Nullable
     protected Entity findTripTarget( ServerLevel level, BlockPos pos ) {
-        return TrapHelper.getTrapTargetInRange( level, pos, activationRange, checkSight );
+        return TrapHelper.getTrapTargetInRange( level, pos.above(), activationRange, checkSight );
     }
     
     @Nullable

@@ -36,12 +36,23 @@
 
   "item.deadlyworld.device_blueprint": "Deadly Device Blueprint",
 
-  "item.deadlyworld.event_item": "Deadly World Event Item",
   "item.deadlyworld.mimic_core": "Mimic Core",
+  "item.deadlyworld.infested_event_item": "Container Infestation",
+  "item.deadlyworld.infested_event_item.tooltip": "When triggered:",
+  "item.deadlyworld.infested_event_item.tooltip.spiders": "Spawns mini spiders",
+  "item.deadlyworld.infested_event_item.tooltip.silverfish": "Spawns silverfish",
+  "item.deadlyworld.surprise_event_item": "Container Trap",
+  "item.deadlyworld.surprise_event_item.tooltip": "When triggered:",
+  "item.deadlyworld.surprise_event_item.tooltip.tnt": "Spawns primed TNT",
+  "item.deadlyworld.surprise_event_item.tooltip.lava": "Spews lava",
+  "item.deadlyworld.surprise_event_item.tooltip.runny_lava": "Spews runny lava",
+  "item.deadlyworld.surprise_event_item.tooltip.poison_gas": "Releases poison gas",
+  "item.deadlyworld.surprise_event_item.tooltip.wither_gas": "Releases withering gas",
 
   "item.deadlyworld.runny_lava_bucket": "Runny Lava Bucket",
 
   "item.deadlyworld.chest_mimic_spawn_egg": "Chest Mimic Spawn Egg",
+  "item.deadlyworld.mini_chest_mimic_spawn_egg": "Mini Chest Mimic Spawn Egg",
   "item.deadlyworld.jukebox_mimic_spawn_egg": "Jukebox Mimic Spawn Egg",
   "item.deadlyworld.spawner_mimic_spawn_egg": "Spawner Mimic Spawn Egg",
   "item.deadlyworld.mini_spawner_mimic_spawn_egg": "Mini Spawner Mimic Spawn Egg",
@@ -52,11 +63,13 @@
   "item.deadlyworld.micro_ghast_spawn_egg": "Micro Ghast Spawn Egg",
 
   "item.deadlyworld.feature_placer": "Feature Placer",
+  "item.deadlyworld.feature_placer.tooltip": "Generates:",
 
   "entity.deadlyworld.chest_mimic": "Mimic",
+  "entity.deadlyworld.mini_chest_mimic": "Mini Mimic",
   "entity.deadlyworld.jukebox_mimic": "Mimic",
   "entity.deadlyworld.spawner_mimic": "Mimic",
-  "entity.deadlyworld.mini_spawner_mimic": "Mimic",
+  "entity.deadlyworld.mini_spawner_mimic": "Mini Mimic",
   "entity.deadlyworld.mini_creeper": "Mini Creeper",
   "entity.deadlyworld.mini_zombie": "Mini Zombie",
   "entity.deadlyworld.mini_skeleton": "Mini Skeleton",
@@ -67,13 +80,6 @@
   "entity.deadlyworld.yeet_tnt": "YeetNT",
 
   "block.deadlyworld.deadly_silverfish.tooltip": "Infested",
-  "block.deadlyworld.event_item.tooltip": "Event:",
-
-  "block.deadlyworld.event_item.tooltip.spawn_silverfish": "Spawn Silverfish",
-  "block.deadlyworld.event_item.tooltip.tnt": "Primed TNT",
-  "block.deadlyworld.event_item.tooltip.lava": "Lava Flow",
-  "block.deadlyworld.event_item.tooltip.poison_gas": "Poison Gas",
-  "block.deadlyworld.event_item.tooltip.spawn_mimic": "Spawn Mimic",
 
   "block.deadlyworld.feature_tester.tooltip.chest.simple": "Simple Chest",
   "block.deadlyworld.feature_tester.tooltip.chest.valuable": "Valuable Chest",
@@ -102,9 +108,9 @@
   "death.attack.deadlyworld.vortex": "%1$s was swooshed by a vortex",
   "death.attack.deadlyworld.vortex.player": "%1$s got swooshed by a vortex while fighting %2$s",
 
-  "sound_event.deadlyworld.subtitle.tower_dispenser.shoot": "Tower dispenser shoots",
-  "sound_event.deadlyworld.subtitle.mini_chest.open": "Mini Chest Opens",
-  "sound_event.deadlyworld.subtitle.mini_chest.close": "Mini Chest Closes",
+  "sound_event.deadlyworld.subtitle.tower_dispenser.shoot": "Tower Dispenser shoots",
+  "sound_event.deadlyworld.subtitle.mini_chest.open": "Mini Chest opens",
+  "sound_event.deadlyworld.subtitle.mini_chest.close": "Mini Chest closes",
   "sound_event.deadlyworld.subtitle.mimic.appear": "Mimic appears",
   "sound_event.deadlyworld.subtitle.chest_mimic.hurt": "Mimic hurts",
   "sound_event.deadlyworld.subtitle.chest_mimic.death": "Mimic dies",

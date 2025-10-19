@@ -5,7 +5,7 @@
       "type": "minecraft:count",
       "count": {
         "type": "deadlyworld:config_count_int",
-        "count": "deadlyworld:worldgen/minecraft/the_nether/simple_dungeons:mini_simple_dungeons.placements"
+        "count": "deadlyworld:worldgen/minecraft/the_nether/dungeons:mini_dungeons.placements"
       }
     },
     {
@@ -15,8 +15,8 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "deadlyworld:config_uniform_height",
-        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/simple_dungeons:mini_simple_dungeons.height.max",
-        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/simple_dungeons:mini_simple_dungeons.height.min"
+        "max_inclusive": "deadlyworld:worldgen/minecraft/the_nether/dungeons:mini_dungeons.height.max",
+        "min_inclusive": "deadlyworld:worldgen/minecraft/the_nether/dungeons:mini_dungeons.height.min"
       }
     },
     {

@@ -12,16 +12,15 @@
               "count": {
                 "type": "minecraft:uniform",
                 "max": 1.0,
-                "min": 0.0
+                "min": -9.0
               },
               "function": "minecraft:set_count"
             }
           ],
-          "name": "deadlyworld:mimic_core",
-          "weight": 100
+          "name": "deadlyworld:mimic_core"
         }
       ],
-      "name": "chest",
+      "name": "mimic_core",
       "rolls": 1.0
     }
   ],

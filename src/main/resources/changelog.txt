@@ -9,11 +9,13 @@
         - Added custom simple dungeon feature in place of the vanilla dungeon.
         - Added Mini Dungeon variant.
     - Added feature placer item to help with testing.
+    - Added Lone Chest feature.
+        - Added event items.
     - Added new Sea Mine feature.
-        - Added Normal Sea Mine block
-        - Added Puffer Sea Mine block
-        - Added Guardian Sea Mine block
-    - Changed the voice/sound pitch of mini entities and mini blocks
+        - Added Normal Sea Mine block.
+        - Added Puffer Sea Mine block.
+        - Added Guardian Sea Mine block.
+    - Changed the voice/sound pitch of mini entities and mini blocks.
     - Updated some default configs.
 1.20.1-1.1.1
     - Added safety check when generating features to prevent replacing blocks with block entities, hopefully preventing a rare crash

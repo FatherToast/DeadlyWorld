@@ -13,5 +13,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "deadlyworld:loot_tables/chests/deadly_spawners/simple"
+  "random_sequence": "deadlyworld:chests/simple"
 }

@@ -1,8 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.item.FeaturePlacerItem;
-import fathertoast.deadlyworld.common.item.RunnyLavaBucketItem;
+import fathertoast.deadlyworld.common.item.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.*;
@@ -21,9 +20,12 @@ public final class DWItems {
     
     //public static final RegistryObject<DeviceBlueprintItem> DEVICE_BLUEPRINT = register( "device_blueprint", DeviceBlueprintItem::new );
     
-    public static final RegistryObject<Item> MIMIC_CORE = register( "mimic_core", () -> new SimpleFoiledItem( new Item.Properties()
-            .stacksTo( 1 )
-            .rarity( Rarity.UNCOMMON ) ) );
+    public static final RegistryObject<Item> MIMIC_CORE = register( "mimic_core",
+            () -> new SimpleFoiledItem( new Item.Properties().stacksTo( 1 ).rarity( Rarity.UNCOMMON ) ) );
+    public static final RegistryObject<Item> INFESTED_EVENT_ITEM = register( "infested_event_item",
+            () -> new EventItem<>( InfestedEventType.values(), new Item.Properties().stacksTo( 1 ) ) );
+    public static final RegistryObject<Item> SURPRISE_EVENT_ITEM = register( "surprise_event_item",
+            () -> new EventItem<>( SurpriseEventType.values(), new Item.Properties().stacksTo( 1 ) ) );
     
     public static final RegistryObject<BucketItem> RUNNY_LAVA_BUCKET = register( "runny_lava_bucket", () -> new RunnyLavaBucketItem( DWFluids.RUNNY_LAVA_SOURCE, new Item.Properties().stacksTo( 1 ) ) );
     

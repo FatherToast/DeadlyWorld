@@ -16,6 +16,7 @@ import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import fathertoast.deadlyworld.common.item.FeaturePlacerItem;
+import fathertoast.deadlyworld.common.item.ICustomTabContents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -132,8 +133,12 @@ public class ClientRegister {
         }
         else if( event.getTabKey() == DWCreativeModeTabs.ALL.key() ) {
             for( RegistryObject<Item> item : DWItems.REGISTRY.getEntries() ) {
-                if( item.equals( DWItems.FEATURE_PLACER ) ) continue;
-                event.accept( item.get() );
+                if( item.get() instanceof ICustomTabContents custom ) {
+                    custom.buildTabContents().forEach( event::accept );
+                }
+                else {
+                    event.accept( item.get() );
+                }
             }
         }
         else if( event.getTabKey() == DWCreativeModeTabs.PLACERS.key() ) {

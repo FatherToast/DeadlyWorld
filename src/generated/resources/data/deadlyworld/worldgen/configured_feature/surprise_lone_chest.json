@@ -1,0 +1,23 @@
+{
+  "type": "deadlyworld:lone_chest",
+  "config": {
+    "cannot_replace": "#minecraft:features_cannot_replace",
+    "chest": {
+      "debug_marker": "deadlyworld:worldgen/minecraft/overworld/chests:surprise_chests.testing_markers",
+      "loot_table": "deadlyworld:chests/surprise",
+      "loot_table_seed": 0
+    },
+    "chest_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:chest",
+        "Properties": {
+          "type": "single",
+          "facing": "north",
+          "waterlogged": "false"
+        }
+      }
+    },
+    "floor_trap": ":"
+  }
+}

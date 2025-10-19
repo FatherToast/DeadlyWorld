@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
+import fathertoast.deadlyworld.common.block.misc.ChestType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
@@ -40,21 +41,45 @@ public class FeatureKeys {
         return this;
     }
     
-    /** Feature key-pair for features that generate in both the overworld and nether. */
-    public static class BiDimensional {
-        
-        public static BiDimensional of( String name ) { return new BiDimensional( overworld( name ), nether( name ) ); }
+    /** Feature key-pair for features that generate in only in dimensions with naturally generating water. */
+    public static class WaterFeature {
         
         public final FeatureKeys overworldKeys;
+        
+        protected WaterFeature( FeatureKeys overworld ) {
+            overworldKeys = overworld;
+        }
+    }
+    
+    /** Feature key-pair for features that generate in all supported dimensions. */
+    public static class TypicalFeature extends WaterFeature {
+        
         public final FeatureKeys netherKeys;
         
-        protected BiDimensional( FeatureKeys overworld, FeatureKeys nether ) {
-            overworldKeys = overworld;
+        protected TypicalFeature( FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld );
             netherKeys = nether;
         }
     }
     
-    public static class Spawner extends BiDimensional {
+    public static class LoneChest extends TypicalFeature {
+        
+        public static LoneChest of( ChestType type, String name ) { return new LoneChest( type, overworld( name ), nether( name ) ); }
+        
+        public final ChestType chestType;
+        
+        protected LoneChest( ChestType type, FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld, nether );
+            chestType = type;
+            
+            AbstractCFProvider.LONE_CHEST_FEATURES.add( overworld.configuredKey );
+            AbstractCFProvider.LONE_CHEST_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.LONE_CHEST_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.LONE_CHEST_FEATURES.add( nether.placedKey );
+        }
+    }
+    
+    public static class Spawner extends TypicalFeature {
         
         public static Spawner of( SpawnerType type, String name ) { return new Spawner( type, overworld( name ), nether( name ) ); }
         
@@ -71,7 +96,7 @@ public class FeatureKeys {
         }
     }
     
-    public static class Trap extends BiDimensional {
+    public static class Trap extends TypicalFeature {
         
         public static Trap of( TrapType type, String name ) { return new Trap( type, overworld( name ), nether( name ) ); }
         
@@ -88,7 +113,7 @@ public class FeatureKeys {
         }
     }
     
-    public static class TowerDispenser extends BiDimensional {
+    public static class TowerDispenser extends TypicalFeature {
         
         public static TowerDispenser of( TowerType type, String name ) { return new TowerDispenser( type, overworld( name ), nether( name ) ); }
         
@@ -105,10 +130,9 @@ public class FeatureKeys {
         }
     }
     
-    public static class SimpleDungeon extends BiDimensional {
+    public static class SimpleDungeon extends TypicalFeature {
         
         public static SimpleDungeon of( String name ) { return new SimpleDungeon( overworld( name ), nether( name ) ); }
-        
         
         protected SimpleDungeon( FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
@@ -120,16 +144,14 @@ public class FeatureKeys {
         }
     }
     
-    public static class SeaMine {
-        
-        public final FeatureKeys overworldKeys;
+    public static class SeaMine extends WaterFeature {
         
         public static SeaMine of( SeaMineType type, String name ) { return new SeaMine( type, overworld( name ) ); }
         
         public final SeaMineType seaMineType;
         
         protected SeaMine( SeaMineType type, FeatureKeys overworld ) {
-            overworldKeys = overworld;
+            super( overworld );
             seaMineType = type;
             
             AbstractCFProvider.SEA_MINE_FEATURES.add( overworld.configuredKey );

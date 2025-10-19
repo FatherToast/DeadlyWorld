@@ -11,11 +11,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelWriter;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -27,6 +28,8 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -101,8 +104,7 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
      */
     public static boolean placeSubfeature( WorldGenLevel level, ChunkGenerator chunkGenerator, BlockPos pos,
                                            @Nullable ResourceLocation subfeatureKey, @Nullable ConfiguredFeature<?, ?> parent ) {
-        Registry<ConfiguredFeature<?, ?>> registry = level.registryAccess().registryOrThrow( Registries.CONFIGURED_FEATURE );
-        ConfiguredFeature<?, ?> subfeature = registry.get( subfeatureKey );
+        ConfiguredFeature<?, ?> subfeature = getFeature( level, subfeatureKey );
         return subfeature != null && placeSubfeature( level, chunkGenerator, pos, subfeature, parent );
     }
     
@@ -137,6 +139,13 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
                 level, chunkGenerator, level.getRandom(), pos, subfeature.config() ) );
     }
     
+    /** @return The configured feature from the registry, if it exists. */
+    @Nullable
+    public static ConfiguredFeature<?, ?> getFeature( WorldGenLevel level, @Nullable ResourceLocation featureKey ) {
+        Registry<ConfiguredFeature<?, ?>> registry = level.registryAccess().registryOrThrow( Registries.CONFIGURED_FEATURE );
+        return registry.get( featureKey );
+    }
+    
     
     public DeadlyFeature( Codec<FC> codec ) { super( codec ); }
     
@@ -161,20 +170,43 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
         level.setBlock( pos, state, Block.UPDATE_CLIENTS );
     }
     
-    /** Convenience method for placing a regular chest with loot. */
-    protected void placeChest( WorldGenLevel level, BlockPos pos, RandomSource random, ResourceLocation lootTable, @Nullable Predicate<BlockState> predicate ) {
-        placeChest( level, pos, Blocks.CHEST, random, lootTable, predicate );
-    }
-    
-    /** Convenience method for placing a trapped chest with loot. */
-    protected void placeTrappedChest( WorldGenLevel level, BlockPos pos, RandomSource random, ResourceLocation lootTable, @Nullable Predicate<BlockState> predicate ) {
-        placeChest( level, pos, Blocks.TRAPPED_CHEST, random, lootTable, predicate );
-    }
-    
-    /** Convenience method for placing a specific type of chest with loot. */
-    protected void placeChest( WorldGenLevel level, BlockPos pos, Block chest, RandomSource random, ResourceLocation lootTable, @Nullable Predicate<BlockState> predicate ) {
-        safeSetBlock( level, pos, StructurePiece.reorient( level, pos, chest.defaultBlockState() ), predicate );
-        RandomizableContainerBlockEntity.setLootTable( level, random, pos, lootTable );
+    /**
+     * Based on {@link StructurePiece#reorient(BlockGetter, BlockPos, BlockState)}, but heavily modified.
+     *
+     * @return The chest block with a somewhat randomized direction; tries to avoid making the chest face a wall.
+     */
+    protected BlockState randomizeChestDirection( BlockGetter level, BlockPos pos, BlockState chest,
+                                                  RandomSource random, boolean favorSingleWall ) {
+        if( !chest.hasProperty( HorizontalDirectionalBlock.FACING ) ) return chest;
+        
+        // Determine the directions that are not facing a wall
+        final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        final List<Direction> allowedDirs = new ArrayList<>();
+        Direction wall = null;
+        for( Direction direction : Direction.Plane.HORIZONTAL ) {
+            cursor.setWithOffset( pos, direction );
+            if( level.getBlockState( cursor ).isSolidRender( level, cursor ) ) {
+                wall = direction;
+            }
+            else {
+                allowedDirs.add( direction );
+            }
+        }
+        
+        // If only one direction is a wall, face directly away from it
+        if( favorSingleWall && allowedDirs.size() == 3 && wall != null ) {
+            return chest.setValue( HorizontalDirectionalBlock.FACING, wall.getOpposite() );
+        }
+        // We are surrounded by walls, just pick a random direction
+        else if( allowedDirs.isEmpty() ) {
+            return chest.setValue( HorizontalDirectionalBlock.FACING,
+                    Direction.Plane.HORIZONTAL.getRandomDirection( random ) );
+        }
+        // Pick a random direction that is not facing a wall
+        else {
+            return chest.setValue( HorizontalDirectionalBlock.FACING,
+                    allowedDirs.get( random.nextInt( allowedDirs.size() ) ) );
+        }
     }
     
     /** @return True if any blocks immediately surrounding the origin in the horizontal plane are solid, but with no block above. */
@@ -185,6 +217,7 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
     /** @return True if any blocks immediately surrounding the origin in the horizontal plane are solid, but with no block above. */
     protected boolean isOnLip( WorldGenLevel level, BlockPos origin, BlockPos.MutableBlockPos cursor ) {
         for( Direction dir : Direction.Plane.HORIZONTAL ) {
+            //noinspection deprecation
             if( level.getBlockState( cursor.setWithOffset( origin, dir ) ).isSolid() &&
                     !level.getBlockState( cursor.move( Direction.UP ) ).isSolid() ) {
                 return true;

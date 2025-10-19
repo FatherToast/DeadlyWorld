@@ -49,8 +49,9 @@ public class DeadlyWorld {
      *  - items
      *      - spawn eggs
      *      - feature placer
-     *      o event
      *      - mimic core
+     *      - infested event (spawn silverfish or mini spiders)
+     *      - surprise event (tnt, lava, runny lava, poison gas, or withering gas)
      *      - runny lava bucket
      *  - entities
      *      - configurable base attributes & stats
@@ -83,13 +84,12 @@ public class DeadlyWorld {
      *      - mini
      *      - vanilla dungeon disable
      *      ? other special dungeon types
-     *  o chest world gen
-     *      o default
-     *      o valuable
-     *      o tnt floor trap
-     *      o infested (event - spawn silverfish or mini spiders)
-     *      o surprise (event - tnt, lava, or poison gas)
-     *      o mimic (event)
+     *  - chest world gen
+     *      - simple
+     *      - valuable
+     *      - tnt floor trap
+     *      - infested (event)
+     *      - surprise (event)
      *      + cave-in (via surprise or combo w/ ceiling trap)
      *      ? random cake from #forge:cakes tag
      *  - spawner world gen
