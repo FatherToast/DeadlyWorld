@@ -39,7 +39,7 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
         lootRegistry = registry;
         
         for( ChestType type : ChestType.values() ) {
-            add( type.getChestLootTable(), buildLoneChestLoot( type ) );
+                add( type.getChestLootTable(), buildLoneChestLoot( type ) );
         }
         //        for( SpawnerType type : SpawnerType.values() ) {
         //            add( type.getChestLootTable(), buildSpawnerChestLoot( type ) );
@@ -97,7 +97,7 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
     private LootPool.Builder buildSingleItemLootPool( String name, ItemLike item ) {
         return new DWLootPoolBuilder( name ).setRolls( 1 ).addItem( item, 10 ).toLootPool();
     }
-    
+
     private LootPool.Builder buildExplorationLootPool() {
         return new DWLootPoolBuilder( "exploration" ).setRolls( 1, 3 )
                 // Weapons
