@@ -17,6 +17,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -143,21 +145,12 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public void onRemove( BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean updateNeighbors ) {
-        super.onRemove( oldState, level, pos, newState, updateNeighbors );
+    public void playerWillDestroy( Level level, BlockPos pos, BlockState state, Player player ) {
+        super.playerWillDestroy( level, pos, state, player );
 
-        if ( !newState.is( oldState.getBlock() ) ) {
-            explode(level, pos, level.random);
+        if ( !player.isCreative() ) {
+            explode( level, pos, level.random );
         }
-    }
-
-    @Override
-    public InteractionResult use( BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult ) {
-        if ( level.isClientSide )
-            return InteractionResult.SUCCESS;
-
-        level.removeBlock( pos, false );
-        return InteractionResult.CONSUME;
     }
 
     @Override
@@ -169,6 +162,7 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
                 && projectile.getDeltaMovement().length() > 0.1D ) {
 
             level.destroyBlock( hitPos, false );
+            explode( level, hitPos, level.random );
         }
     }
 
