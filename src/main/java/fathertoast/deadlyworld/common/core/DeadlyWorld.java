@@ -13,6 +13,7 @@ import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +36,7 @@ public class DeadlyWorld {
      *      o biome-based configs
      *  - blocks
      *      - configurable physical properties
-     *      o procedurally generated silverfish blocks
+     *      o auto-generated infested blocks
      *      - deadly spawner
      *      - mini spawner
      *      - floor trap
@@ -164,11 +165,18 @@ public class DeadlyWorld {
     /** The logger used by this mod. */
     public static final Logger LOG = LogManager.getLogger( MOD_ID );
     
+    public static FMLModContainer CONTAINER;//TODO Temporary, for diagnostics
+    
+    public static void printCurrentState( String message ) {
+        LOG.error( "--------====:: {} - {} ::====-------- ", CONTAINER.getCurrentState().toString(), message );
+    }
+    
     /** Packet handler instance */
     public PacketHandler packetHandler = new PacketHandler();
     
     
     public DeadlyWorld( FMLJavaModLoadingContext context ) {
+        CONTAINER = context.getContainer();
         IEventBus eventBus = context.getModEventBus();
         
         packetHandler.registerMessages();
@@ -192,7 +200,8 @@ public class DeadlyWorld {
         
         Config.initializeEarly();
         DeferredWorkQueue.lookup( Optional.of( ModLoadingStage.COMMON_SETUP ) ).ifPresent(
-                ( workQueue ) -> workQueue.enqueueWork( ModList.get().getModContainerById( MOD_ID ).orElseThrow(), Config::initialize )
+                ( workQueue ) -> workQueue.enqueueWork( ModList.get().getModContainerById( MOD_ID ).orElseThrow(),
+                        Config::initialize )
         );
         
         DWFieldProviders.register( eventBus );

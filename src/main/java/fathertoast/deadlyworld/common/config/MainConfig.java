@@ -4,11 +4,7 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.*;
-import fathertoast.crust.api.config.common.value.RegistryEntryList;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -31,8 +27,6 @@ public class MainConfig extends AbstractConfigFile {
         
         public final StringListField extraDimensions;
         
-        public final RegistryEntryListField<Block> silverfishBlocks;
-        
         public final BooleanField activateTrapsInPeaceful;
         public final BooleanField activateTrapsVsCreative;
         
@@ -53,13 +47,6 @@ public class MainConfig extends AbstractConfigFile {
                             "world gen, and can also overwrite most world gen config settings. This mod generally only " +
                             "supports the default values here without the use of a data pack."
             ), RestartNote.GAME );
-            
-            SPEC.newLine();
-            
-            silverfishBlocks = SPEC.define( new LazyRegistryEntryListField<>( "extra_silverfish_blocks", buildDefaultSilverfishBlocks(),
-                    "A list of blocks to generate an \"infested\" version for. The infested version of a block " +
-                            "looks identical, but has its own physical properties and spawns a silverfish when broken.",
-                    "Only blocks that are solid, full cubes should be put on this list." ) );
             
             SPEC.newLine();
             
@@ -92,6 +79,7 @@ public class MainConfig extends AbstractConfigFile {
         public final BooleanField spookyStalactites;
         public final DoubleField triggerChance;
         public final IntField scanHeight;
+        public final IntField scanRange;
         
         StalactiteOverhaul( MainConfig parent ) {
             super( parent, "stalactite_overhaul",
@@ -114,35 +102,12 @@ public class MainConfig extends AbstractConfigFile {
             triggerChance = SPEC.define( new DoubleField( "trigger_chance", 0.1, DoubleField.Range.PERCENT,
                     "If \"spooky_stalactites\" is enabled, this field determines the chance for nearby " +
                             "stalactites to break off and fall when the player breaks a block." ) );
-            scanHeight = SPEC.define( new IntField( "scan_height", 10, IntField.Range.POSITIVE,
+            scanHeight = SPEC.define( new IntField( "scan_height", 18, IntField.Range.POSITIVE,
                     "If \"spooky_stalactites\" is enabled, this determines the vertical scan height used " +
                             "when checking for Pointed Dripstone above the player." ) );
+            scanRange = SPEC.define( new IntField( "scan_range", 2, IntField.Range.POSITIVE,
+                    "If \"spooky_stalactites\" is enabled, this determines the horizontal scan range used " +
+                            "when checking for Pointed Dripstone above the player." ) );
         }
-    }
-    
-    
-    static RegistryEntryList<Block> buildDefaultSilverfishBlocks() {
-        return new RegistryEntryList<>( ForgeRegistries.BLOCKS,
-                // Overworld
-                Blocks.DIRT, Blocks.MUD, Blocks.MUD_BRICKS, Blocks.CLAY, Blocks.MOSSY_COBBLESTONE, Blocks.BOOKSHELF,
-                Blocks.GRANITE, Blocks.POLISHED_GRANITE, Blocks.DIORITE, Blocks.POLISHED_DIORITE, Blocks.ANDESITE, Blocks.POLISHED_ANDESITE,
-                Blocks.TUFF, Blocks.SANDSTONE, Blocks.CUT_SANDSTONE, Blocks.CHISELED_SANDSTONE, Blocks.SMOOTH_SANDSTONE,
-                Blocks.RED_SANDSTONE, Blocks.CUT_RED_SANDSTONE, Blocks.CHISELED_RED_SANDSTONE, Blocks.SMOOTH_RED_SANDSTONE,
-                Blocks.CALCITE, Blocks.SMOOTH_BASALT, Blocks.COBBLED_DEEPSLATE, Blocks.CHISELED_DEEPSLATE, Blocks.POLISHED_DEEPSLATE,
-                Blocks.DEEPSLATE_TILES, Blocks.CRACKED_DEEPSLATE_TILES, Blocks.DEEPSLATE_BRICKS, Blocks.CRACKED_DEEPSLATE_BRICKS,
-                Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE,
-                // Overworld ores
-                Blocks.COAL_ORE, Blocks.DEEPSLATE_COAL_ORE, Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE,
-                Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE, Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE,
-                Blocks.REDSTONE_ORE, Blocks.DEEPSLATE_REDSTONE_ORE, Blocks.LAPIS_ORE, Blocks.DEEPSLATE_LAPIS_ORE,
-                Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.DEEPSLATE_EMERALD_ORE,
-                // Nether
-                Blocks.NETHERRACK, Blocks.BASALT, Blocks.POLISHED_BASALT, Blocks.SOUL_SOIL, Blocks.BLACKSTONE, Blocks.POLISHED_BLACKSTONE,
-                Blocks.CHISELED_POLISHED_BLACKSTONE, Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS,
-                Blocks.NETHER_BRICKS, Blocks.CRACKED_NETHER_BRICKS, Blocks.CHISELED_NETHER_BRICKS, Blocks.RED_NETHER_BRICKS,
-                Blocks.NETHER_GOLD_ORE, Blocks.NETHER_QUARTZ_ORE,
-                // The End
-                Blocks.END_STONE, Blocks.END_STONE_BRICKS, Blocks.PURPUR_BLOCK, Blocks.PURPUR_PILLAR
-        );
     }
 }
