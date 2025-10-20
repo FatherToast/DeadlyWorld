@@ -5,5 +5,5 @@
     "minecraft:monster_room",
     "minecraft:monster_room_deep"
   ],
-  "enabled": "deadlyworld:_main:misc.disable_vanilla_monster_rooms"
+  "enabled": "deadlyworld:_main:general.disable_vanilla_monster_rooms"
 }
