@@ -144,7 +144,7 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     
     @Override
     public MutableComponent getName() {
-        return Component.translatable( "block.deadlyworld.infested_block." + config().GENERAL.nameStyle.get().getCode(),
+        return Component.translatable( "block.deadlyworld.infested_block." + config().AUTO_GEN.nameStyle.get().getCode(),
                 Component.translatable( getHostBlock().getDescriptionId() ) );
     }
     

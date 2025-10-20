@@ -19,6 +19,7 @@ import java.util.List;
 public class InfestedBlocksConfig extends AbstractConfigFile {
     
     public final General GENERAL;
+    public final AutoGen AUTO_GEN;
     
     /** Builds the config spec that should be used for this config. */
     InfestedBlocksConfig( ConfigManager manager, String fileName ) {
@@ -28,14 +29,10 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
         );
         
         GENERAL = new General( this );
+        AUTO_GEN = new AutoGen( this );
     }
     
     public static class General extends AbstractConfigCategory<InfestedBlocksConfig> {
-        
-        public final StringListField hostBlocks;
-        public final StringListField dependencies;
-        
-        public final EnumField<NameStyle> nameStyle;
         
         public final RegistryEntryListField<Item> cleanseTools;
         public final IntField cleanseDamage;
@@ -43,6 +40,34 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
         
         General( InfestedBlocksConfig parent ) {
             super( parent, "general",
+                    "Options that apply to infested blocks as a whole " +
+                            "(not just Deadly World's infested blocks)." );
+            
+            cleanseTools = SPEC.define( new LazyRegistryEntryListField<>( "cleanse.tools",
+                    new RegistryEntryList<>( ForgeRegistries.ITEMS, null, List.of( ItemTags.SHOVELS ) ),
+                    "A list of items that can interact with infested blocks to revert them to their host " +
+                            "block. This will release the silverfish infesting it and damage the tool, depending on " +
+                            "the settings below.",
+                    "For reference, the standard tool tags are: " +
+                            TomlHelper.literalList( new RegistryEntryList<>( ForgeRegistries.ITEMS, null, List.of(
+                                    ItemTags.SWORDS, ItemTags.AXES, ItemTags.HOES, ItemTags.PICKAXES, ItemTags.SHOVELS, ItemTags.TOOLS
+                            ) ).toStringList() ) + "." ) );
+            cleanseDamage = SPEC.define( new IntField( "cleanse.tool_damage", 2, IntField.Range.NON_NEGATIVE,
+                    "The amount of damage tools take when successfully cleansing an infested block." ) );
+            cleanseSpawnsSilverfish = SPEC.define( new BooleanField( "cleanse.spawns_silverfish", true,
+                    "If true, cleansing an infested block spawns a silverfish." ) );
+        }
+    }
+    
+    public static class AutoGen extends AbstractConfigCategory<InfestedBlocksConfig> {
+        
+        public final StringListField hostBlocks;
+        public final StringListField dependencies;
+        
+        public final EnumField<NameStyle> nameStyle;
+        
+        AutoGen( InfestedBlocksConfig parent ) {
+            super( parent, "auto_gen",
                     "Options that apply to this mod's auto-generated infested blocks as a whole." );
             
             hostBlocks = SPEC.define( new StringListField( "host_blocks", "namespace:block_name",
@@ -78,22 +103,6 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                             "in 'jade.json' if you wish to see this name style in tooltips."
             ) );
             //TODO Jade compat setting to show host block's mod instead of Deadly World in block tooltips
-            
-            SPEC.newLine();
-            
-            cleanseTools = SPEC.define( new LazyRegistryEntryListField<>( "cleanse.tools",
-                    new RegistryEntryList<>( ForgeRegistries.ITEMS, null, List.of( ItemTags.SHOVELS ) ),
-                    "A list of items that can interact with infested blocks (including the vanilla ones) to " +
-                            "revert them to their host block. This will release the silverfish infesting it and damage " +
-                            "the tool, depending on the settings below.",
-                    "For reference, the standard tool tags are: " +
-                            TomlHelper.literalList( new RegistryEntryList<>( ForgeRegistries.ITEMS, null, List.of(
-                                    ItemTags.SWORDS, ItemTags.AXES, ItemTags.HOES, ItemTags.PICKAXES, ItemTags.SHOVELS, ItemTags.TOOLS
-                            ) ).toStringList() ) + "." ) );
-            cleanseDamage = SPEC.define( new IntField( "cleanse.tool_damage", 2, IntField.Range.NON_NEGATIVE,
-                    "The amount of damage tools take when successfully cleansing an infested block." ) );
-            cleanseSpawnsSilverfish = SPEC.define( new BooleanField( "cleanse.spawns_silverfish", true,
-                    "If true, cleansing an infested block spawns a silverfish." ) );
         }
         
         private List<String> buildDefaultSilverfishBlocks() {

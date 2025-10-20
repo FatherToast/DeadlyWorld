@@ -48,11 +48,11 @@ public class InfestedBlockAutoGen {
      */
     public static void buildInfestedBlocks( final List<RegistryObject<DeadlyInfestedBlock>> infestedBlocks,
                                             Function<ResourceLocation, RegistryObject<DeadlyInfestedBlock>> register ) {
-        final Set<String> dependencies = new HashSet<>( Config.INFESTED_BLOCKS.GENERAL.dependencies.get() );
+        final Set<String> dependencies = new HashSet<>( Config.INFESTED_BLOCKS.AUTO_GEN.dependencies.get() );
         final boolean autoDependencies = dependencies.isEmpty();
         
         // Register an infested block for each host block we believe might exist
-        for( String hostName : Config.INFESTED_BLOCKS.GENERAL.hostBlocks.get() ) {
+        for( String hostName : Config.INFESTED_BLOCKS.AUTO_GEN.hostBlocks.get() ) {
             final ResourceLocation hostBlockLoc;
             try {
                 hostBlockLoc = ResourceLocation.parse( hostName );
