@@ -37,7 +37,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
             add( DWBlocks.spawner( type ), buildSpawnerLoot( type ) );
         }
         for( TrapType type : TrapType.values() ) {
-            add( DWBlocks.trap( type ), buildFloorTrapLoot( type ) );
+            add( DWBlocks.floorTrap( type ), buildFloorTrapLoot( type ) );
         }
         for( TowerType type : TowerType.values() ) {
             add( DWBlocks.towerDispenser( type ), buildTowerDispenserLoot( type ) );

@@ -1,10 +1,10 @@
 {
   "values": [
-    "deadlyworld:tnt_deadly_trap",
-    "deadlyworld:tnt_mob_deadly_trap",
-    "deadlyworld:potion_deadly_trap",
-    "deadlyworld:lava_deadly_trap",
-    "deadlyworld:fire_deadly_trap",
-    "deadlyworld:sea_mine_mob_deadly_trap"
+    "deadlyworld:tnt_floor_trap",
+    "deadlyworld:tnt_mob_floor_trap",
+    "deadlyworld:potion_floor_trap",
+    "deadlyworld:lava_floor_trap",
+    "deadlyworld:fire_floor_trap",
+    "deadlyworld:sea_mine_mob_floor_trap"
   ]
 }

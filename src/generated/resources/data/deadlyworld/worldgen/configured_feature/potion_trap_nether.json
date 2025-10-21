@@ -32,7 +32,7 @@
     "trap_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "deadlyworld:potion_deadly_trap"
+        "Name": "deadlyworld:potion_floor_trap"
       }
     }
   }

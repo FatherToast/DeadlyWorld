@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "deadlyworld:block/dungeon_deadly_spawner"
+    }
+  }
+}

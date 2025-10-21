@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "deadlyworld:block/swarm_deadly_spawner"
+    }
+  }
+}

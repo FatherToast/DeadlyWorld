@@ -264,8 +264,8 @@
             {
               "enchantments": [
                 "minecraft:bane_of_arthropods",
-                "minecraft:silk_touch",
                 "minecraft:fortune",
+                "minecraft:silk_touch",
                 "minecraft:luck_of_the_sea",
                 "minecraft:looting"
               ],

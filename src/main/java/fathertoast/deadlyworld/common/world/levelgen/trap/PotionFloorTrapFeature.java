@@ -2,8 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
-import fathertoast.deadlyworld.common.block.trap.PotionTrapBlock;
+import fathertoast.deadlyworld.common.block.trap.PotionFloorTrapBlock;
 import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -65,7 +64,7 @@ public class PotionFloorTrapFeature extends DeadlyFeature<PotionFloorTrapFeature
         // Place the trap
         BlockState trapBlock = config.trapProvider.getState( random, trapPos );
         setBlock( level, trapPos, trapBlock );
-        if( trapBlock.getBlock() instanceof PotionTrapBlock ) {
+        if( trapBlock.getBlock() instanceof PotionFloorTrapBlock) {
             config.trapSettings.initializeTrap( level, trapPos, random );
         }
         

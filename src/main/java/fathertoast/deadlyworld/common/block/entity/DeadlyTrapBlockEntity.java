@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.block.entity;
 import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.api.IDecoyProvider;
 import fathertoast.deadlyworld.common.block.ICamoTrap;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
+import fathertoast.deadlyworld.common.block.trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.util.TrapHelper;
@@ -46,8 +46,8 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     
     public DeadlyTrapBlockEntity( BlockEntityType<?> type, BlockPos pos, BlockState state ) {
         super( type, pos, state );
-        trapType = ((DeadlyTrapBlock) state.getBlock()).getTrapType();
-        trapLogic = ((DeadlyTrapBlock) state.getBlock()).newTrapLogic( this );
+        trapType = ((FloorTrapBlock) state.getBlock()).getTrapType();
+        trapLogic = ((FloorTrapBlock) state.getBlock()).newTrapLogic( this );
     }
 
     @Override

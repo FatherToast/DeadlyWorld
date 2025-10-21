@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.datagen.tags;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
-import fathertoast.deadlyworld.datagen.worldgen.AbstractCFProvider;
+import fathertoast.deadlyworld.datagen.worldgen.DWAbstractCFProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -23,17 +23,17 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
     
     @Override
     protected void addTags( HolderLookup.Provider holderLookup ) {
-        addAll( DWTags.ConfiguredFeatures.NOT_PLACEABLE, AbstractCFProvider.NOT_PLACEABLE );
-        addAll( DWTags.ConfiguredFeatures.OVERWORLD, AbstractCFProvider.OVERWORLD_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.THE_NETHER, AbstractCFProvider.NETHER_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION, AbstractCFProvider.ANY_DIMENSION_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.NOT_PLACEABLE, DWAbstractCFProvider.NOT_PLACEABLE );
+        addAll( DWTags.ConfiguredFeatures.OVERWORLD, DWAbstractCFProvider.OVERWORLD_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.THE_NETHER, DWAbstractCFProvider.NETHER_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION, DWAbstractCFProvider.ANY_DIMENSION_FEATURES );
         
-        addAll( DWTags.ConfiguredFeatures.LONE_CHESTS, AbstractCFProvider.LONE_CHEST_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.SPAWNERS, AbstractCFProvider.SPAWNER_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.TRAPS, AbstractCFProvider.TRAP_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.TOWERS, AbstractCFProvider.TOWER_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.SEA_MINES, AbstractCFProvider.SEA_MINE_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.DUNGEONS, AbstractCFProvider.DUNGEON_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.LONE_CHESTS, DWAbstractCFProvider.LONE_CHEST_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.SPAWNERS, DWAbstractCFProvider.SPAWNER_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.TRAPS, DWAbstractCFProvider.TRAP_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.TOWERS, DWAbstractCFProvider.TOWER_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.SEA_MINES, DWAbstractCFProvider.SEA_MINE_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.DUNGEONS, DWAbstractCFProvider.DUNGEON_FEATURES );
     }
     
     /** Add all features in a list to a tag. */

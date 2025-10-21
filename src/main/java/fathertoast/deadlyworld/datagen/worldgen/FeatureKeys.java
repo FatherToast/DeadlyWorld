@@ -37,7 +37,7 @@ public class FeatureKeys {
     
     /** Marks the configured feature as 'not placeable' and returns itself for ease in constructing. */
     public FeatureKeys notPlaceable() {
-        AbstractCFProvider.NOT_PLACEABLE.add( configuredKey );
+        DWAbstractCFProvider.NOT_PLACEABLE.add( configuredKey );
         return this;
     }
     
@@ -72,8 +72,8 @@ public class FeatureKeys {
             super( overworld, nether );
             chestType = type;
             
-            AbstractCFProvider.LONE_CHEST_FEATURES.add( overworld.configuredKey );
-            AbstractCFProvider.LONE_CHEST_FEATURES.add( nether.configuredKey );
+            DWAbstractCFProvider.LONE_CHEST_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.LONE_CHEST_FEATURES.add( nether.configuredKey );
             DWPlacedFeatureProvider.LONE_CHEST_FEATURES.add( overworld.placedKey );
             DWPlacedFeatureProvider.LONE_CHEST_FEATURES.add( nether.placedKey );
         }
@@ -89,8 +89,8 @@ public class FeatureKeys {
             super( overworld, nether );
             spawnerType = type;
             
-            AbstractCFProvider.SPAWNER_FEATURES.add( overworld.configuredKey );
-            AbstractCFProvider.SPAWNER_FEATURES.add( nether.configuredKey );
+            DWAbstractCFProvider.SPAWNER_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.SPAWNER_FEATURES.add( nether.configuredKey );
             DWPlacedFeatureProvider.SPAWNER_FEATURES.add( overworld.placedKey );
             DWPlacedFeatureProvider.SPAWNER_FEATURES.add( nether.placedKey );
         }
@@ -106,8 +106,8 @@ public class FeatureKeys {
             super( overworld, nether );
             trapType = type;
             
-            AbstractCFProvider.TRAP_FEATURES.add( overworld.configuredKey );
-            AbstractCFProvider.TRAP_FEATURES.add( nether.configuredKey );
+            DWAbstractCFProvider.TRAP_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.TRAP_FEATURES.add( nether.configuredKey );
             DWPlacedFeatureProvider.TRAP_FEATURES.add( overworld.placedKey );
             DWPlacedFeatureProvider.TRAP_FEATURES.add( nether.placedKey );
         }
@@ -123,8 +123,8 @@ public class FeatureKeys {
             super( overworld, nether );
             towerType = type;
             
-            AbstractCFProvider.TOWER_FEATURES.add( overworld.configuredKey );
-            AbstractCFProvider.TOWER_FEATURES.add( nether.configuredKey );
+            DWAbstractCFProvider.TOWER_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.TOWER_FEATURES.add( nether.configuredKey );
             DWPlacedFeatureProvider.TOWER_FEATURES.add( overworld.placedKey );
             DWPlacedFeatureProvider.TOWER_FEATURES.add( nether.placedKey );
         }
@@ -137,8 +137,8 @@ public class FeatureKeys {
         protected SimpleDungeon( FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             
-            AbstractCFProvider.DUNGEON_FEATURES.add( overworld.configuredKey );
-            AbstractCFProvider.DUNGEON_FEATURES.add( nether.configuredKey );
+            DWAbstractCFProvider.DUNGEON_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.DUNGEON_FEATURES.add( nether.configuredKey );
             DWPlacedFeatureProvider.DUNGEON_FEATURES.add( overworld.placedKey );
             DWPlacedFeatureProvider.DUNGEON_FEATURES.add( nether.placedKey );
         }
@@ -154,7 +154,7 @@ public class FeatureKeys {
             super( overworld );
             seaMineType = type;
             
-            AbstractCFProvider.SEA_MINE_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.SEA_MINE_FEATURES.add( overworld.configuredKey );
             DWPlacedFeatureProvider.SEA_MINE_FEATURES.add( overworld.placedKey );
         }
     }

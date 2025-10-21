@@ -4,7 +4,7 @@ import fathertoast.deadlyworld.common.block.entity.*;
 import fathertoast.deadlyworld.common.block.spawner.*;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.DeadlyTrapBlock;
+import fathertoast.deadlyworld.common.block.trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.trap.TrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
@@ -27,9 +27,9 @@ public final class DWBlockEntities {
             "mini_spawner", MiniSpawnerBlockEntity::new, DWBlocks.spawner( SpawnerType.MINI ) );
     
     public static final RegistryObject<BlockEntityType<DeadlyTrapBlockEntity>> DEADLY_TRAP = registerMultiple(
-            "deadly_trap", DeadlyTrapBlockEntity::new, DWBlockEntities::getStandardTrapBlocks );
+            "deadly_trap", DeadlyTrapBlockEntity::new, DWBlockEntities::getStandardFloorTrapBlocks );
     public static final RegistryObject<BlockEntityType<PotionTrapBlockEntity>> POTION_TRAP = register(
-            "potion_trap", PotionTrapBlockEntity::new, DWBlocks.trap( TrapType.POTION ) );
+            "potion_trap", PotionTrapBlockEntity::new, DWBlocks.floorTrap( TrapType.POTION ) );
     
     public static final RegistryObject<BlockEntityType<TowerDispenserBlockEntity>> TOWER_DISPENSER = registerMultiple(
             "tower_dispenser", TowerDispenserBlockEntity::new, DWBlockEntities::getStandardTowerDisBlocks );
@@ -78,12 +78,12 @@ public final class DWBlockEntities {
     }
 
     /** @return Creates a new array of all blocks extracted from a list of block registry objects. */
-    private static DeadlyTrapBlock[] getStandardTrapBlocks() {
-        List<DeadlyTrapBlock> blocks = new ArrayList<>();
-        for( RegistryObject<DeadlyTrapBlock> block : DWBlocks.TRAPS ) {
-            if( DeadlyTrapBlock.class.equals( block.get().getClass() ) ) blocks.add( block.get() );
+    private static FloorTrapBlock[] getStandardFloorTrapBlocks() {
+        List<FloorTrapBlock> blocks = new ArrayList<>();
+        for( RegistryObject<FloorTrapBlock> block : DWBlocks.FLOOR_TRAPS ) {
+            if( FloorTrapBlock.class.equals( block.get().getClass() ) ) blocks.add( block.get() );
         }
-        return blocks.toArray( new DeadlyTrapBlock[0] );
+        return blocks.toArray( new FloorTrapBlock[0] );
     }
 
     private static TowerDispenserBlock[] getStandardTowerDisBlocks() {

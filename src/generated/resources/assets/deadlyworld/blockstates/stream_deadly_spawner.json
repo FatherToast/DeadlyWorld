@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "deadlyworld:block/stream_deadly_spawner"
+    }
+  }
+}

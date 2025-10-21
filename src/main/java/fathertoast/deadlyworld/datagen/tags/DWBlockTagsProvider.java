@@ -24,7 +24,7 @@ public class DWBlockTagsProvider extends BlockTagsProvider {
     @Override
     public void addTags( HolderLookup.Provider holderLookup ) {
         addAll( DWTags.Blocks.SPAWNERS, DWBlocks.SPAWNERS );
-        addAll( DWTags.Blocks.TRAPS, DWBlocks.TRAPS );
+        addAll( DWTags.Blocks.TRAPS, DWBlocks.FLOOR_TRAPS );
         addAll( DWTags.Blocks.TOWER_DISPENSERS, DWBlocks.TOWER_DISPENSERS );
         addAll( DWTags.Blocks.SEA_MINES, DWBlocks.SEA_MINES );
         

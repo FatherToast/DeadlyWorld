@@ -23,10 +23,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public class DWConfiguredFeatureProvider extends AbstractCFProvider {
+public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     
     public static final FeatureKeys.LoneChest SIMPLE_LONE_CHEST = FeatureKeys.LoneChest.of( ChestType.SIMPLE, "simple_lone_chest" );
     public static final FeatureKeys.LoneChest VALUABLE_LONE_CHEST = FeatureKeys.LoneChest.of( ChestType.VALUABLE, "valuable_lone_chest" );
@@ -117,16 +115,16 @@ public class DWConfiguredFeatureProvider extends AbstractCFProvider {
         registerFloorTrap( context, LAVA_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, FIRE_TRAP, overworldConfigs, netherConfigs );
         register( context, SEA_MINE_MOB_TRAP, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
-                new FloorTrapFeature.Configuration( block( DWBlocks.trap( TrapType.SEA_MINE_MOB ) ),
+                new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( TrapType.SEA_MINE_MOB ) ),
                         FloorTrapSettings.of( TrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
 
         // Potion floor traps
         register( context, POTION_TRAP.overworldKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
-                block( DWBlocks.trap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( overworldConfigs.TRAPS.POTION ),
+                block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( overworldConfigs.TRAPS.POTION ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         register( context, POTION_TRAP.netherKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
-                block( DWBlocks.trap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( netherConfigs.TRAPS.POTION ),
+                block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( netherConfigs.TRAPS.POTION ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         
         // Towers

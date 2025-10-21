@@ -1,6 +1,5 @@
 package fathertoast.deadlyworld.common.block.trap;
 
-import fathertoast.crust.api.config.common.value.WeightedList;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
@@ -192,7 +191,7 @@ public enum TrapType {
         }
         
         @Override
-        public Supplier<DeadlyTrapBlock> getBlock() { return PotionTrapBlock::new; }
+        public Supplier<FloorTrapBlock> getBlock() { return PotionFloorTrapBlock::new; }
     },
     
     LAVA( "lava", ( dimConfig ) -> dimConfig.TRAPS.LAVA ) {
@@ -365,7 +364,7 @@ public enum TrapType {
     }
     
     /** @return A Supplier of the Spawner Block to register for this Spawner Type */
-    public Supplier<DeadlyTrapBlock> getBlock() { return () -> new DeadlyTrapBlock( this ); }
+    public Supplier<FloorTrapBlock> getBlock() { return () -> new FloorTrapBlock( this ); }
     
     public boolean spawnsMonster() {
         return false;

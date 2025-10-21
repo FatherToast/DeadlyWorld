@@ -18,15 +18,14 @@
   "block.deadlyworld.dungeon_deadly_spawner": "Dungeon Monster Spawner",
   "block.deadlyworld.mini_deadly_spawner": "Mini Monster Spawner",
 
-  "block.deadlyworld.tnt_deadly_trap": "Exploding Floor Trap",
-  "block.deadlyworld.tnt_mob_deadly_trap": "Exploding Monster Floor Trap",
-  "block.deadlyworld.potion_deadly_trap": "Potion Floor Trap",
-  "block.deadlyworld.fire_deadly_trap": "Fire Floor Trap",
-  "block.deadlyworld.lava_deadly_trap": "Lava Floor Trap",
-  "block.deadlyworld.sea_mine_mob_deadly_trap": "Sea Mine Mob Trap",
+  "block.deadlyworld.tnt_floor_trap": "Exploding Floor Trap",
+  "block.deadlyworld.tnt_mob_floor_trap": "Exploding Monster Floor Trap",
+  "block.deadlyworld.potion_floor_trap": "Potion Floor Trap",
+  "block.deadlyworld.fire_floor_trap": "Fire Floor Trap",
+  "block.deadlyworld.lava_floor_trap": "Lava Floor Trap",
+  "block.deadlyworld.sea_mine_mob_floor_trap": "Sea Mine Mob Trap",
 
-
-  "block.deadlyworld.storm_drain_deadly_trap": "Storm Drain Trap",
+  "block.deadlyworld.storm_drain_trap": "Storm Drain Trap",
 
   "block.deadlyworld.simple_tower_dispenser": "Arrow Tower Dispenser",
   "block.deadlyworld.fire_tower_dispenser": "Flaming Arrow Tower Dispenser",
@@ -35,7 +34,6 @@
   "block.deadlyworld.gatling_tower_dispenser": "Gatling Arrow Tower Dispenser",
 
   "item.deadlyworld.device_blueprint": "Deadly Device Blueprint",
-
   "item.deadlyworld.mimic_core": "Mimic Core",
   "item.deadlyworld.infested_event_item": "Container Infestation",
   "item.deadlyworld.infested_event_item.tooltip": "When triggered:",

@@ -4,6 +4,7 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.datagen.loot.DWLootModProvider;
 import fathertoast.deadlyworld.datagen.loot.DWLootTableProvider;
+import fathertoast.deadlyworld.datagen.model.DWModelProvider;
 import fathertoast.deadlyworld.datagen.tags.*;
 import fathertoast.deadlyworld.datagen.worldgen.DWConfiguredFeatureProvider;
 import fathertoast.deadlyworld.datagen.worldgen.DWPlacedFeatureProvider;
@@ -40,13 +41,9 @@ public class DataGatherer {
         final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         final ExistingFileHelper fileHelper = event.getExistingFileHelper();
         
-        //        if( event.includeClient() ) {
-        //            generator.addProvider( true, new SMBlockStateAndModelProvider( packOutput, fileHelper ) );
-        //            generator.addProvider( true, new SMItemModelProvider( packOutput, fileHelper ) );
-        //            for( Map.Entry<String, SMLanguageProvider.TranslationKey> entry : SMLanguageProvider.LANG_CODE_MAP.entrySet() ) {
-        //                generator.addProvider( true, new SMLanguageProvider( packOutput, entry.getKey(), entry.getValue() ) );
-        //            }
-        //        }
+        if( event.includeClient() ) {
+            generator.addProvider( true, new DWModelProvider( packOutput, fileHelper ) );
+        }
         if( event.includeServer() ) {
             DatapackBuiltinEntriesProvider builtInProvider =
                     generator.addProvider( true, new DatapackBuiltinEntriesProvider( packOutput, lookupProvider, BUILDER, Set.of( DeadlyWorld.MOD_ID ) ) );
