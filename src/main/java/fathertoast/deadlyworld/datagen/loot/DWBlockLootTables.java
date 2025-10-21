@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
+import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
@@ -50,7 +51,8 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     @Override
     protected Iterable<Block> getKnownBlocks() {
         // This is basically pulled straight from the forge docs on data gen for block/entity loot tables
-        return DWBlocks.REGISTRY.getEntries().stream().flatMap( RegistryObject::stream ).collect( Collectors.toList() );
+        return DWBlocks.REGISTRY.getEntries().stream().flatMap( RegistryObject::stream )
+                .filter( ( block ) -> !(block instanceof DeadlyInfestedBlock) ).collect( Collectors.toList() );
     }
     
     private LootTableBuilder buildSpawnerLoot( SpawnerType type ) {
@@ -158,7 +160,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
                 
                 .toLootPool();
     }
-
+    
     private LootPool.Builder buildWaterTrapLootPool() {
         return floorTrapLootPoolBuilder()
                 .addItem( Items.SPONGE, 3 )
@@ -378,6 +380,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     
     private static LootPoolEntryContainer.Builder<?> potionEntry( Item potionItem, int weight, Potion potion ) {
         CompoundTag tag = new CompoundTag();
+        //noinspection ConstantConditions
         tag.putString( "Potion", ForgeRegistries.POTIONS.getKey( potion ).toString() );
         
         LootEntryItemBuilder builder = new LootEntryItemBuilder( potionItem )

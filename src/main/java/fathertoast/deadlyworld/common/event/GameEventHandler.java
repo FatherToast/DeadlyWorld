@@ -1,16 +1,17 @@
 package fathertoast.deadlyworld.common.event;
 
 
+import fathertoast.crust.api.lib.DeferredAction;
 import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
-import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
+import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
 import fathertoast.deadlyworld.common.item.EventItem;
-import fathertoast.deadlyworld.common.item.SeaMineBlocKItem;
+import fathertoast.deadlyworld.common.item.SeaMineBlockItem;
 import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.util.MimicHelper;
 import net.minecraft.core.BlockPos;
@@ -19,23 +20,22 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.entity.EntityAccess;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -64,19 +64,24 @@ public final class GameEventHandler {
     //        Config.initializeDynamic( event.getServer() );
     //    }
     
-    
-    @SubscribeEvent
+    /**
+     * Called when a living entity is ticked in {@link LivingEntity#tick()}.
+     * If this event is canceled, the entity does not update.
+     *
+     * @param event The event data.
+     */
+    @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onLivingTick( LivingEvent.LivingTickEvent event ) {
         ItemStack itemOnHead = event.getEntity().getItemBySlot( EquipmentSlot.HEAD );
         
-        if( itemOnHead.getItem() instanceof SeaMineBlocKItem seaMine ) {
+        if( itemOnHead.getItem() instanceof SeaMineBlockItem seaMine ) {
             seaMine.onLivingUpdate( event.getEntity(), itemOnHead );
         }
     }
     
-    
     /**
-     * Called during LivingEntity#actuallyHurt after all damage calculations, right before damage is applied.
+     * Called during {@link LivingEntity#actuallyHurt(DamageSource, float)} after all damage calculations,
+     * right before damage is applied.
      *
      * @param event The event data.
      */
@@ -95,69 +100,99 @@ public final class GameEventHandler {
     }
     
     /**
-     * Called when a block is placed.
+     * Called when a block is placed. If canceled, the block will not be placed.
      *
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onEntityPlaceBlock( BlockEvent.EntityPlaceEvent event ) {
-        if( event.getLevel() instanceof ServerLevel level ) {
-            // Initialize placed blocks with configured settings
-            if( event.getPlacedBlock().getBlock() instanceof IDeadlyBlock deadlyBlock ) {
-                deadlyBlock.initDeadly( level, event.getPos(), level.getRandom() );
-            }
+        if( event.isCanceled() || !(event.getLevel() instanceof ServerLevel level) ) return;
+        
+        // Initialize manually placed blocks with configured settings
+        if( event.getPlacedBlock().getBlock() instanceof IDeadlyBlock deadlyBlock ) {
+            deadlyBlock.initDeadly( level, event.getPos(), level.getRandom() );
         }
     }
     
-    @SubscribeEvent( priority = EventPriority.HIGH )
+    /**
+     * Called whenever an entity is spawned during {@link Level#addFreshEntity(Entity)} through
+     * {@link net.minecraft.world.level.entity.PersistentEntitySectionManager#addEntity(EntityAccess, boolean)}.
+     * If the event is canceled, the entity will not be spawned.
+     * <p>
+     * Note: This event may be called before the underlying chunk is fully loaded; you will cause chunk
+     * loading deadlocks if you do not delay world interactions!
+     *
+     * @param event The event data.
+     */
+    @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onEntityJoinLevel( EntityJoinLevelEvent event ) {
-        if( !(event.getLevel() instanceof ServerLevel level) || !(event.getEntity() instanceof ItemEntity itemEntity) )
-            return;
+        if( event.isCanceled() || !(event.getLevel() instanceof ServerLevel level) ) return;
         
-        if( itemEntity.getItem().getItem() instanceof EventItem<?> eventItem ) {
-            eventItem.triggerEvent( level, itemEntity.blockPosition(), Blocks.AIR.defaultBlockState(),
-                    Direction.UP, null, itemEntity.getItem() );
-            event.setCanceled( true );
-        }
-    }
-    
-    @SubscribeEvent( priority = EventPriority.HIGH )
-    public static void onDestroyBlock( BlockEvent.BreakEvent event ) {
-        if( !(event.getLevel() instanceof ServerLevel serverLevel) ) return;
-        
-        BlockPos pos = event.getPos();
-        BlockState state = serverLevel.getBlockState( pos );
-        BlockEntity blockEntity = serverLevel.getExistingBlockEntity( pos );
-        
-        if( blockEntity instanceof ChestBlockEntity chest ) {
-            if( MimicHelper.spawnChestMimicFrom( serverLevel, pos, state, chest, event.getPlayer() ) ) {
-                serverLevel.removeBlock( pos, false );
+        // Check event item trigger
+        if( event.getEntity() instanceof ItemEntity itemEntity ) {
+            ItemStack itemStack = itemEntity.getItem();
+            if( itemStack.getItem() instanceof EventItem<?> eventItem ) {
+                BlockPos pos = itemEntity.blockPosition();
+                // Just delete the item without doing anything if spawned in an unloaded chunk for some reason
+                if( level.isLoaded( pos ) ) {
+                    eventItem.triggerEvent( level, pos, Blocks.AIR.defaultBlockState(),
+                            Direction.UP, null, itemStack );
+                }
                 event.setCanceled( true );
             }
         }
     }
     
     /**
-     * This event is fired on both sides whenever the player right clicks while targeting a block.<br><br>
-     * This specific handler method checks when the player right-clicks a chest, and if a Chest Mimic should spawn.
+     * Called when a block is about to be broken by a player.
+     * Canceling this event will prevent the block from being broken.
      *
      * @param event The event data.
      */
-    @SubscribeEvent( priority = EventPriority.HIGHEST )
-    public static void onRightClickChest( PlayerInteractEvent.RightClickBlock event ) {
-        // Prevent spectators from generating loot tables and/or spawning mimics
-        if( event.getEntity().isSpectator() || !(event.getLevel() instanceof ServerLevel level) ) return;
+    @SubscribeEvent( priority = EventPriority.HIGH )
+    public static void onBlockBreak( BlockEvent.BreakEvent event ) {
+        if( event.isCanceled() || !(event.getLevel() instanceof ServerLevel level) ) return;
         
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState( pos );
         BlockEntity blockEntity = level.getExistingBlockEntity( pos );
         
+        if( blockEntity instanceof ChestBlockEntity chest ) {
+            if( MimicHelper.spawnChestMimicFrom( level, pos, state, chest, event.getPlayer() ) ) {
+                level.removeBlock( pos, false );
+            }
+        }
+    }
+    
+    /**
+     * This event is fired on both sides whenever the player right clicks while targeting a block.
+     * <p>
+     * Used to check container block inventories for traps.
+     *
+     * @param event The event data.
+     */
+    @SubscribeEvent( priority = EventPriority.HIGH )
+    public static void onRightClickContainer( PlayerInteractEvent.RightClickBlock event ) {
+        // Prevent spectators from generating loot tables and/or spawning mimics
+        if( event.isCanceled() || event.getEntity().isSpectator() || !(event.getLevel() instanceof ServerLevel level) )
+            return;
+        
+        BlockPos pos = event.getPos();
+        BlockState state = level.getBlockState( pos );
+        BlockEntity blockEntity = level.getExistingBlockEntity( pos );
+        if( blockEntity == null ) return;
+        
+        // Check event item trigger(s)
         if( blockEntity instanceof Container container ) {
             MimicHelper.triggerEventsFrom( level, pos, state, container, event.getEntity() );
+            // Do not cancel; allow right click event to proceed as normal
         }
+        // Check mimic trigger
         if( blockEntity instanceof ChestBlockEntity chest ) {
             if( MimicHelper.spawnChestMimicFrom( level, pos, state, chest, event.getEntity() ) ) {
                 level.removeBlock( pos, false );
+                event.setCancellationResult( InteractionResult.SUCCESS );
+                event.setCanceled( true );
             }
         }
     }
@@ -169,56 +204,62 @@ public final class GameEventHandler {
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onRightClickBlock( PlayerInteractEvent.RightClickBlock event ) {
-        if( !event.isCanceled() && event.getLevel() instanceof ServerLevel level ) {
-            Player player = event.getEntity();
-            ItemStack itemStack = player.getItemInHand( event.getHand() );
-            
-            if( itemStack.getItem() instanceof SpawnEggItem ) {
-                BlockPos pos = event.getPos();
-                BlockState blockState = level.getBlockState( pos );
-                
-                if( blockState.getBlock() instanceof DeadlySpawnerBlock && level.getBlockEntity( pos ) instanceof DeadlySpawnerBlockEntity blockEntity ) {
-                    spawnEggUseOnDWSpawner( level, player, pos, itemStack, blockState, blockEntity );
-                    // Cancel the event; we've fully handled the interaction
-                    event.setCancellationResult( InteractionResult.CONSUME );
-                    event.setCanceled( true );
-                }
-            }
+        if( event.isCanceled() || !(event.getLevel() instanceof ServerLevel level) ) return;
+        
+        // Handle infested block cleansing
+        if( DeadlyInfestedBlock.tryCleanseBlock( event, level ) ) {
+            event.setCancellationResult( InteractionResult.SUCCESS );
+            event.setCanceled( true );
+        }
+        // Handle deadly spawner setting
+        else if( DeadlySpawnerBlock.spawnEggUseOn( event, level ) ) {
+            event.setCancellationResult( InteractionResult.CONSUME );
+            event.setCanceled( true );
         }
     }
     
     /**
-     * Fired when a player is about to destroy a block. Cancelable.
+     * Called when a block is about to be broken by a player.
+     * Canceling this event will prevent the block from being broken.
+     * <p>
+     * Used to trigger falling dripstone.
      *
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void onBlockBreak( BlockEvent.BreakEvent event ) {
-        if( !Config.MAIN.STALACTITE_OVERHAUL.spookyStalactites.get() ) return;
+    public static void onBlockAboutToBreak( BlockEvent.BreakEvent event ) {
+        if( event.isCanceled() || !Config.MAIN.STALACTITE_OVERHAUL.spookyStalactites.get() ||
+                !(event.getLevel() instanceof ServerLevel level) ||
+                !Config.MAIN.STALACTITE_OVERHAUL.triggerChance.rollChance( level.random ) ) {
+            return;
+        }
         
-        Level level = (Level) event.getLevel();
+        // Below surface and no skylight? Likely we are in a cave!
         BlockPos pos = event.getPos();
-        
-        // Below ocean and no skylight? Likely we are in a cave!
-        if( level.getBrightness( LightLayer.SKY, pos ) <= 2 && pos.getY() < level.getSeaLevel() ) {
+        if( level.dimensionType().hasCeiling() || level.getBrightness( LightLayer.SKY, pos ) <= 2 &&
+                pos.getY() < level.getHeight( Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ() ) - 2 ) {
             
-            if( Config.MAIN.STALACTITE_OVERHAUL.triggerChance.rollChance( level.random ) ) {
-                // Move up until we hit something solid or reach the max height specified in config
-                for( int offset = 1; offset < Config.MAIN.STALACTITE_OVERHAUL.scanHeight.get(); offset++ ) {
-                    BlockState aboveState = level.getBlockState( pos.above( offset ) );
-                    
-                    // Assume we hit the roof of a cave, check surrounding blocks
-                    if( aboveState.isSolidRender( level, pos ) ) {
-                        for( BlockPos p : BlockPos.betweenClosed( pos.offset( -1, offset - 1, -1 ), pos.offset( 1, offset + 1, 1 ) ) ) {
-                            BlockState state = level.getBlockState( p );
-                            
-                            if( level instanceof ServerLevel && state.is( Blocks.POINTED_DRIPSTONE ) && state.getValue( PointedDripstoneBlock.TIP_DIRECTION ) == Direction.DOWN ) {
-                                // Dripstone moment!
-                                PointedDripstoneBlock.spawnFallingStalactite( state, (ServerLevel) level, p );
-                            }
+            // Move up until we hit something solid or reach the max height specified in config
+            for( int offset = 1; offset <= Config.MAIN.STALACTITE_OVERHAUL.scanHeight.get(); offset++ ) {
+                BlockPos abovePos = pos.above( offset );
+                
+                // Assume we hit the roof of a cave, check surrounding blocks
+                if( level.getBlockState( abovePos ).isSolidRender( level, abovePos ) ) {
+                    int r = Config.MAIN.STALACTITE_OVERHAUL.scanRange.get();
+                    for( BlockPos cursor : BlockPos.betweenClosed( abovePos.offset( -r, -1, -r ),
+                            abovePos.offset( r, 1, r ) ) ) {
+                        
+                        BlockState state = level.getBlockState( cursor );
+                        if( state.is( Blocks.POINTED_DRIPSTONE ) && state.getValue( PointedDripstoneBlock.TIP_DIRECTION ) == Direction.DOWN ) {
+                            // Dripstone moment!
+                            BlockPos targetPos = cursor.immutable();
+                            DeferredAction.queue( level.random.nextInt( 15 ), () -> {
+                                PointedDripstoneBlock.spawnFallingStalactite( state, level, targetPos );
+                                return true;
+                            } );
                         }
-                        break;
                     }
+                    break;
                 }
             }
         }
@@ -231,7 +272,7 @@ public final class GameEventHandler {
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.LOW )
-    public static void onFish( ItemFishedEvent event ) {
+    public static void onItemFished( ItemFishedEvent event ) {
         if( !event.getEntity().level().isClientSide && Config.FISHING_PRANKS.GENERAL.prankChance.rollChance( event.getEntity().getRandom() ) ) {
             ServerPlayer player = (ServerPlayer) event.getEntity();
             ServerLevel level = (ServerLevel) player.level();
@@ -267,21 +308,5 @@ public final class GameEventHandler {
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onDatapackSync( OnDatapackSyncEvent event ) {
         NetworkHelper.syncPlaceableFeatures( event.getPlayers() );
-    }
-    
-    /**
-     * Modified copy-paste of the spawner portion of {@link SpawnEggItem#useOn(UseOnContext)}.
-     */
-    private static void spawnEggUseOnDWSpawner( ServerLevel level, Player player, BlockPos pos, ItemStack spawnEgg,
-                                                BlockState spawner, DeadlySpawnerBlockEntity spawnerBlockEntity ) {
-        EntityType<?> spawnEntity = ((SpawnEggItem) spawnEgg.getItem()).getType( spawnEgg.getTag() );
-        spawnerBlockEntity.setEntityId( spawnEntity, level.getRandom() );
-        spawnerBlockEntity.getSpawnerLogic().addSpawn(); // Let it spawn an extra mob, why not
-        spawnerBlockEntity.setChanged();
-        level.sendBlockUpdated( pos, spawner, spawner, Block.UPDATE_ALL );
-        level.gameEvent( player, GameEvent.BLOCK_CHANGE, pos );
-        if( !player.getAbilities().instabuild ) { // idk why the vanilla method doesn't need this, but we do
-            spawnEgg.shrink( 1 );
-        }
     }
 }

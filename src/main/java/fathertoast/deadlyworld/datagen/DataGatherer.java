@@ -62,12 +62,4 @@ public class DataGatherer {
             generator.addProvider( true, new DWFluidTagsProvider( packOutput, lookupProvider, fileHelper ) );
         }
     }
-    
-    /**
-     * Many common mod lifecycle events are not fired when running datagen, so
-     * we must make sure we load the configs before doing anything.
-     */
-    private static void ensureConfigLoaded() {
-        Config.initialize();
-    }
 }

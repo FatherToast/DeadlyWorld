@@ -1,13 +1,13 @@
 package fathertoast.deadlyworld.common.config;
 
 import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.deadlyworld.common.block.infested.InfestedBlockAutoGen;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.WorldGenLevel;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -20,12 +20,13 @@ import java.util.HashMap;
  */
 public class Config {
     private static final ConfigManager MANAGER = ConfigManager.create( "DeadlyWorld", DeadlyWorld.MOD_ID );
-
+    
     // Initialized later to avoid accessing custom registries too early.
     public static MainConfig MAIN;
     public static FishingPrankConfig FISHING_PRANKS;
     
     public static final BlocksConfig BLOCKS = new BlocksConfig( MANAGER, "blocks" );
+    public static final InfestedBlocksConfig INFESTED_BLOCKS = new InfestedBlocksConfig( MANAGER, "infested_blocks" );
     public static final EntitiesConfig ENTITIES = new EntitiesConfig( MANAGER, "entities" );
     
     /** Mapping of each dimension type to its config. */
@@ -58,24 +59,25 @@ public class Config {
         if( DEFAULT_CONFIGS == null )
             throw new IllegalStateException( "Attempted to access dimension configs before any have been loaded." );
     }
-
+    
     /**
-     * Performs loading of configs in this mod with values that are
-     * needed early in the mod loading cycle. Called by the mod's constructor
+     * Performs loading of configs in this mod with values that are needed early in the mod loading cycle.
+     * Called by the mod's constructor.
      */
     public static void initializeEarly() {
         MANAGER.freezeFileWatcher = true;
-
+        
         BLOCKS.SPEC.initialize();
+        InfestedBlockAutoGen.initialize();
         ENTITIES.SPEC.initialize();
-
+        
         MANAGER.freezeFileWatcher = false;
     }
     
     /** Performs loading of configs in this mod. Added to deferred work queue at common setup. */
     public static void initialize() {
         MANAGER.freezeFileWatcher = true;
-
+        
         MAIN = new MainConfig( MANAGER, "_main" );
         MAIN.SPEC.initialize();
         FISHING_PRANKS = new FishingPrankConfig( MANAGER, "fishing_pranks" );
@@ -85,7 +87,7 @@ public class Config {
         DEFAULT_CONFIGS.initialize();
         DIMENSIONS = new HashMap<>();
         DIMENSIONS.put( Level.OVERWORLD, DEFAULT_CONFIGS );
-
+        
         for( String dimension : MAIN.GENERAL.extraDimensions.get() ) {
             ResourceKey<Level> key = ResourceKey.create( Registries.DIMENSION, ResourceLocation.parse( dimension ) );
             if( DIMENSIONS.containsKey( key ) ) continue;
