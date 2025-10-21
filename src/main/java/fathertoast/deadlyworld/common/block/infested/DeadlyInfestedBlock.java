@@ -17,19 +17,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.InfestedBlock;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class DeadlyInfestedBlock extends InfestedBlock {
     /**
@@ -126,6 +130,41 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     // to make spawned silverfish target the entity that breaks their block or copy target when a silverfish breaks it;
     // might require some way to figure out who broke the block...
     
+    //TODO Needs to drop the host block when silk touched and nothing otherwise
+    //    @Override
+    //    public List<ItemStack> getDrops( BlockState infestedState, LootParams.Builder builder ) {
+    //        ResourceLocation resourcelocation = getLootTable();
+    //        if( resourcelocation == BuiltInLootTables.EMPTY ) {
+    //            return Collections.emptyList();
+    //        }
+    //        else {
+    //            LootParams lootparams = builder.withParameter( LootContextParams.BLOCK_STATE, infestedState ).create( LootContextParamSets.BLOCK );
+    //            ServerLevel serverlevel = lootparams.getLevel();
+    //            LootTable loottable = serverlevel.getServer().getLootData().getLootTable( resourcelocation );
+    //            return loottable.getRandomItems( lootparams );
+    //        }
+    //    }
+    
+    //      TODO Maybe implement an instant break config option with this
+    //    @SuppressWarnings( "deprecation" )
+    //    @Override
+    //    public float getDestroyProgress( BlockState infestedState, Player player, BlockGetter level, BlockPos pos ) {
+    //        return super.getDestroyProgress( infestedState, player, level, pos );
+    //    }
+    //    @SuppressWarnings( "deprecation" )
+    //    @Override
+    //    public float getExplosionResistance() { return super.getExplosionResistance(); }
+    
+    //      TODO Maybe would be fun to let projectile hits or walking break the block?
+    //    @SuppressWarnings( "deprecation" )
+    //    @Override
+    //    public void onProjectileHit( Level level, BlockState infestedState, BlockHitResult context, Projectile projectile) {
+    //    }
+    //    @Override
+    //    public void stepOn( Level level, BlockPos pos, BlockState infestedState, Entity entity ) { }
+    //    @Override
+    //    public void fallOn( Level level, BlockState infestedState, BlockPos pos, Entity entity, float distance ) { }
+    
     
     // Host block emulation
     
@@ -135,12 +174,13 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     
     @Override
     public MutableComponent getName() {
-        return Component.translatable( "block.deadlyworld.infested_block." + config().AUTO_GEN.nameStyle.get().getCode(),
+        return Component.translatable( config().AUTO_GEN.nameStyle.get().getLangKey(),
                 Component.translatable( getHostBlock().getDescriptionId() ) );
     }
     
     @Override
     public String getDescriptionId() { return getName().getString(); } // Kinda hacky, feels like it might be illegal
+    
     
     // Properties copying
     
@@ -166,10 +206,17 @@ public class DeadlyInfestedBlock extends InfestedBlock {
         return getHostBlock().getSoundType( toHost( infestedState ), level, pos, entity );
     }
     
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public SoundType getSoundType( BlockState infestedState ) {
+        return getHostBlock().getSoundType( toHost( infestedState ) );
+    }
+    
     @Override
     public int getLightEmission( BlockState infestedState, BlockGetter level, BlockPos pos ) {
         return getHostBlock().getLightEmission( toHost( infestedState ), level, pos );
     }
+    
     
     // Behavior copying
     
@@ -177,6 +224,12 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     @Override
     public BlockState rotate( BlockState infestedState, Rotation rotation ) {
         return toInfested( getHostBlock().rotate( toHost( infestedState ), rotation ) );
+    }
+    
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public BlockState mirror( BlockState infestedState, Mirror mirror ) {
+        return toInfested( getHostBlock().mirror( toHost( infestedState ), mirror ) );
     }
     
     @Nullable
