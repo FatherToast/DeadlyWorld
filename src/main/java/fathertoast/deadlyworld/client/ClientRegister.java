@@ -29,7 +29,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,9 +43,13 @@ import java.util.List;
 
 @Mod.EventBusSubscriber( value = Dist.CLIENT, modid = DeadlyWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD )
 public class ClientRegister {
-    
+    /**
+     * All configured features registered under the tags #any_dimension, #overworld, or #nether
+     * less the ones registered under #not_placeable. Synced from the server's data pack.
+     */
     private static final List<String> FEATURE_KEYS = new ArrayList<>();
     
+    /** Called when receiving a sync packet from the server on login or after the data pack is reloaded. */
     public static void setFeatureKeys( Collection<String> keys ) {
         FEATURE_KEYS.clear();
         FEATURE_KEYS.addAll( keys );
@@ -57,16 +61,6 @@ public class ClientRegister {
         
         DecoyRendererRegistry.registerDefaults();
         ChestMimicChestLayer.validateChestTextures();
-    }
-    
-    @SubscribeEvent
-    public static void onAddLayers( EntityRenderersEvent.AddLayers event ) {
-        // Sneak in decoy render setup here after entity renderers have been setup
-        DecoyRendererRegistry.setupDecoyRenderers();
-    }
-    
-    @SubscribeEvent
-    public static void onRegisterReloadListeners( RegisterClientReloadListenersEvent event ) {
     }
     
     private static void registerBlockEntityRenderers() {
@@ -84,12 +78,20 @@ public class ClientRegister {
     }
     
     @SubscribeEvent
-    public static void registerLayerDefs( EntityRenderersEvent.RegisterLayerDefinitions event ) {
+    public static void onAddLayers( EntityRenderersEvent.AddLayers event ) {
+        // Sneak in decoy render setup here after entity renderers have been setup
+        DecoyRendererRegistry.setupDecoyRenderers();
+    }
+    
+    @SubscribeEvent
+    public static void registerLayerDefinitions( EntityRenderersEvent.RegisterLayerDefinitions event ) {
+        // Living entities
         event.registerLayerDefinition( DWModelLayers.JUKEBOX_MIMIC, JukeboxMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.CHEST_MIMIC, ChestMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.MINI_SPAWNER_MIMIC, MiniSpawnerMimicModel::createBodyLayer );
         
+        // Block entities
         event.registerLayerDefinition( DWModelLayers.MINI_CHEST, MiniChestBlockEntityRenderer::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.DEADLY_TRAP_OVERLAY, DeadlyTrapBlockEntityRenderer::createOverlayLayer );
     }
@@ -126,9 +128,12 @@ public class ClientRegister {
     
     @SubscribeEvent
     public static void buildCreativeContents( BuildCreativeModeTabContentsEvent event ) {
+        // All items except feature placers
         if( event.getTabKey() == CreativeModeTabs.SEARCH ) {
             for( RegistryObject<Item> item : DWItems.REGISTRY.getEntries() ) {
-                event.accept( item.get() );
+                if( item.get() != DWItems.FEATURE_PLACER.get() ) {
+                    event.accept( item.get() );
+                }
             }
         }
         else if( event.getTabKey() == DWCreativeModeTabs.ALL.key() ) {
@@ -141,10 +146,16 @@ public class ClientRegister {
                 }
             }
         }
+        // Feature placers for everything the server tells us to do
         else if( event.getTabKey() == DWCreativeModeTabs.PLACERS.key() ) {
             for( String featureKey : FEATURE_KEYS ) {
                 event.accept( FeaturePlacerItem.of( ResourceLocation.parse( featureKey ) ) );
             }
         }
+    }
+    
+    @SubscribeEvent
+    public static void modifyBakingResult( ModelEvent.ModifyBakingResult event ) {
+        InfestedBlockClientHelper.injectModels( event.getModels() );
     }
 }

@@ -52,6 +52,7 @@ public class InfestedBlockAutoGen {
         final boolean autoDependencies = dependencies.isEmpty();
         
         // Register an infested block for each host block we believe might exist
+        final Set<ResourceLocation> registered = new HashSet<>( Config.INFESTED_BLOCKS.AUTO_GEN.hostBlocks.get().size() );
         for( String hostName : Config.INFESTED_BLOCKS.AUTO_GEN.hostBlocks.get() ) {
             final ResourceLocation hostBlockLoc;
             try {
@@ -61,12 +62,16 @@ public class InfestedBlockAutoGen {
                 LOG.warn( "Skipping host block '{}' with invalid name: {}", hostName, ex.getMessage() );
                 continue;
             }
-            if( autoDependencies && !ModList.get().isLoaded( hostBlockLoc.getNamespace() ) ) {
+            if( registered.contains( hostBlockLoc ) ) {
+                LOG.warn( "Skipping duplicate host block '{}'", hostBlockLoc );
+            }
+            else if( autoDependencies && !ModList.get().isLoaded( hostBlockLoc.getNamespace() ) ) {
                 LOG.warn( "Skipping host block '{}' for undetected mod '{}'", hostName, hostBlockLoc.getNamespace() );
             }
             else {
                 infestedBlocks.add( register.apply( hostBlockLoc ) );
                 if( autoDependencies ) dependencies.add( hostBlockLoc.getNamespace() );
+                registered.add( hostBlockLoc );
             }
         }
         
@@ -153,5 +158,12 @@ public class InfestedBlockAutoGen {
                 }
             }
         }
+    }
+    
+    /** Called during server startup to inject auto-generated infested block server data. */
+    public static void injectServerData() {
+        DWBlocks.getInfestedBlocks().forEach( ( block ) -> {
+            //TODO Generate block loot table somehow
+        } );
     }
 }
