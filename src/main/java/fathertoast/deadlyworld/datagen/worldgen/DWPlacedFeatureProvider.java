@@ -4,7 +4,7 @@ import fathertoast.deadlyworld.common.block.misc.ChestType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
@@ -90,7 +90,7 @@ public class DWPlacedFeatureProvider {
         registerFloorTrap( context, getter, FIRE_TRAP, overworldConfigs, netherConfigs );
         // Water trap variant
         register( context, getter, SEA_MINE_MOB_TRAP,
-                waterFloorFeature( TrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ) );
+                waterFloorFeature( FloorTrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ) );
 
         // Standard tower placements
         registerTower( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );
@@ -126,7 +126,7 @@ public class DWPlacedFeatureProvider {
     }
 
     /** @return Modifiers for a floor trap feature. */
-    protected static List<PlacementModifier> floorTrap( TrapType type, DimensionConfigGroup dimConfigs ) {
+    protected static List<PlacementModifier> floorTrap(FloorTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getFeatureConfig( dimConfigs ) );
     }
 

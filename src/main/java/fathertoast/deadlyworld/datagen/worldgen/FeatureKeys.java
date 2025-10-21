@@ -4,7 +4,7 @@ import fathertoast.deadlyworld.common.block.misc.ChestType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -98,11 +98,11 @@ public class FeatureKeys {
     
     public static class Trap extends TypicalFeature {
         
-        public static Trap of( TrapType type, String name ) { return new Trap( type, overworld( name ), nether( name ) ); }
+        public static Trap of(FloorTrapType type, String name ) { return new Trap( type, overworld( name ), nether( name ) ); }
         
-        public final TrapType trapType;
+        public final FloorTrapType trapType;
         
-        protected Trap( TrapType type, FeatureKeys overworld, FeatureKeys nether ) {
+        protected Trap(FloorTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             trapType = type;
             

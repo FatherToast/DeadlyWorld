@@ -3,8 +3,8 @@ package fathertoast.deadlyworld.common.block.entity;
 import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.api.IDecoyProvider;
 import fathertoast.deadlyworld.common.block.ICamoTrap;
-import fathertoast.deadlyworld.common.block.trap.FloorTrapBlock;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;
@@ -35,7 +35,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     public static final String CAMO_STATE_KEY = "CamoState";
 
     protected final BaseTrap trapLogic;
-    protected final TrapType trapType;
+    protected final FloorTrapType trapType;
 
     private BlockState camoState;
 

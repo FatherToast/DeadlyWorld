@@ -4,8 +4,8 @@ import fathertoast.deadlyworld.common.block.entity.*;
 import fathertoast.deadlyworld.common.block.spawner.*;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.FloorTrapBlock;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,7 +29,7 @@ public final class DWBlockEntities {
     public static final RegistryObject<BlockEntityType<DeadlyTrapBlockEntity>> DEADLY_TRAP = registerMultiple(
             "deadly_trap", DeadlyTrapBlockEntity::new, DWBlockEntities::getStandardFloorTrapBlocks );
     public static final RegistryObject<BlockEntityType<PotionTrapBlockEntity>> POTION_TRAP = register(
-            "potion_trap", PotionTrapBlockEntity::new, DWBlocks.floorTrap( TrapType.POTION ) );
+            "potion_trap", PotionTrapBlockEntity::new, DWBlocks.floorTrap( FloorTrapType.POTION ) );
     
     public static final RegistryObject<BlockEntityType<TowerDispenserBlockEntity>> TOWER_DISPENSER = registerMultiple(
             "tower_dispenser", TowerDispenserBlockEntity::new, DWBlockEntities::getStandardTowerDisBlocks );

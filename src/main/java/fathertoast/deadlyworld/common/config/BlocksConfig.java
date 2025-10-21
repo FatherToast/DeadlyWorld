@@ -9,7 +9,7 @@ import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -35,8 +35,8 @@ public class BlocksConfig extends AbstractConfigFile {
         }
         
         // Floor Traps
-        for( TrapType type : TrapType.values() ) {
-            LOOKUP.put( toKey( TrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, TrapType.BLOCK_CATEGORY, type.toString(),
+        for( FloorTrapType type : FloorTrapType.values() ) {
+            LOOKUP.put( toKey( FloorTrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, FloorTrapType.BLOCK_CATEGORY, type.toString(),
                     5.0, 3.5, 1 ) );
         }
         
@@ -58,7 +58,7 @@ public class BlocksConfig extends AbstractConfigFile {
     
     public BlockCategory get( SpawnerType type ) { return get( SpawnerType.BLOCK_CATEGORY, type.toString() ); }
     
-    public BlockCategory get( TrapType type ) { return get( TrapType.BLOCK_CATEGORY, type.toString() ); }
+    public BlockCategory get( FloorTrapType type ) { return get( FloorTrapType.BLOCK_CATEGORY, type.toString() ); }
     
     public BlockCategory get( TowerType type ) { return get( TowerType.BLOCK_CATEGORY, type.toString() ); }
     

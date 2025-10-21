@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.datagen.model;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
-import fathertoast.deadlyworld.common.block.trap.FloorTrapBlock;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;

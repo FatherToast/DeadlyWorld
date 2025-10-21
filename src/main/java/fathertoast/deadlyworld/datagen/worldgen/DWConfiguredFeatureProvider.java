@@ -4,7 +4,7 @@ import fathertoast.deadlyworld.common.block.misc.ChestType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
@@ -39,11 +39,11 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.Spawner MINI_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.MINI, "mini_spawner" );
     public static final FeatureKeys.Spawner SILVERFISH_NEST = FeatureKeys.Spawner.of( SpawnerType.NEST, "silverfish_nest" );
     
-    public static final FeatureKeys.Trap TNT_TRAP = FeatureKeys.Trap.of( TrapType.TNT, "tnt_trap" );
-    public static final FeatureKeys.Trap TNT_MOB_TRAP = FeatureKeys.Trap.of( TrapType.TNT_MOB, "tnt_mob_trap" );
-    public static final FeatureKeys.Trap POTION_TRAP = FeatureKeys.Trap.of( TrapType.POTION, "potion_trap" );
-    public static final FeatureKeys.Trap LAVA_TRAP = FeatureKeys.Trap.of( TrapType.LAVA, "lava_trap" );
-    public static final FeatureKeys.Trap FIRE_TRAP = FeatureKeys.Trap.of( TrapType.FIRE, "fire_trap" );
+    public static final FeatureKeys.Trap TNT_TRAP = FeatureKeys.Trap.of( FloorTrapType.TNT, "tnt_trap" );
+    public static final FeatureKeys.Trap TNT_MOB_TRAP = FeatureKeys.Trap.of( FloorTrapType.TNT_MOB, "tnt_mob_trap" );
+    public static final FeatureKeys.Trap POTION_TRAP = FeatureKeys.Trap.of( FloorTrapType.POTION, "potion_trap" );
+    public static final FeatureKeys.Trap LAVA_TRAP = FeatureKeys.Trap.of( FloorTrapType.LAVA, "lava_trap" );
+    public static final FeatureKeys.Trap FIRE_TRAP = FeatureKeys.Trap.of( FloorTrapType.FIRE, "fire_trap" );
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
 
     public static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower" );
@@ -115,8 +115,8 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         registerFloorTrap( context, LAVA_TRAP, overworldConfigs, netherConfigs );
         registerFloorTrap( context, FIRE_TRAP, overworldConfigs, netherConfigs );
         register( context, SEA_MINE_MOB_TRAP, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
-                new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( TrapType.SEA_MINE_MOB ) ),
-                        FloorTrapSettings.of( TrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ),
+                new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( FloorTrapType.SEA_MINE_MOB ) ),
+                        FloorTrapSettings.of( FloorTrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
 
         // Potion floor traps

@@ -1,14 +1,9 @@
 package fathertoast.deadlyworld.datagen.model;
 
-import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
-import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.MiniSpawnerBlock;
-import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
-import fathertoast.deadlyworld.common.block.trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;

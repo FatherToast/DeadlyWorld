@@ -10,8 +10,8 @@ import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.FloorTrapBlock;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.item.MiniChestBlockItem;
 import fathertoast.deadlyworld.common.item.SeaMineBlockItem;
@@ -58,7 +58,7 @@ public final class DWBlocks {
         SPAWNERS = Collections.unmodifiableList( spawners );
         
         final ArrayList<RegistryObject<FloorTrapBlock>> floorTraps = new ArrayList<>();
-        for( TrapType type : TrapType.values() ) {
+        for( FloorTrapType type : FloorTrapType.values() ) {
             floorTraps.add( type.ordinal(), registerBlock( type + "_floor_trap", type.getBlock() ) );
         }
         floorTraps.trimToSize();
@@ -98,7 +98,7 @@ public final class DWBlocks {
     public static RegistryObject<DeadlySpawnerBlock> spawner( SpawnerType type ) { return SPAWNERS.get( type.ordinal() ); }
     
     /** @return The block registry object for a particular floor trap type. */
-    public static RegistryObject<FloorTrapBlock> floorTrap(TrapType type ) { return FLOOR_TRAPS.get( type.ordinal() ); }
+    public static RegistryObject<FloorTrapBlock> floorTrap(FloorTrapType type ) { return FLOOR_TRAPS.get( type.ordinal() ); }
     
     /** @return The block registry object for a particular tower dispenser type. */
     public static RegistryObject<TowerDispenserBlock> towerDispenser( TowerType type ) { return TOWER_DISPENSERS.get( type.ordinal() ); }

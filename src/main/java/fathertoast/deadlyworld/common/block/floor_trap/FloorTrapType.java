@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.trap;
+package fathertoast.deadlyworld.common.block.floor_trap;
 
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
@@ -37,7 +37,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public enum TrapType {
+public enum FloorTrapType {
     
     TNT( "tnt", ( dimConfig ) -> dimConfig.TRAPS.TNT ) {
         @Override
@@ -278,7 +278,7 @@ public enum TrapType {
 
             // Try to create the entity to spawn
             Entity entity;
-            LivingEntity livingEntity = null;
+            LivingEntity livingEntity;
             try {
                 entity = entityType.create( level );
             }
@@ -345,11 +345,11 @@ public enum TrapType {
     private final Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction;
     
     
-    TrapType( String id, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
+    FloorTrapType(String id, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
         this( id, id.replace( "_", " " ) + " floor traps", configFunction );
     }
     
-    TrapType( String id, String displayName, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
+    FloorTrapType(String id, String displayName, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
         this.id = id;
         this.displayName = displayName;
         this.configFunction = configFunction;
@@ -377,7 +377,7 @@ public enum TrapType {
     @Override
     public String toString() { return id; }
     
-    public static TrapType fromIndex( int index ) {
+    public static FloorTrapType fromIndex(int index ) {
         if( index < 0 || index >= values().length ) {
             DeadlyWorld.LOG.warn( "Attempted to fetch invalid floor trap type from index '{}'", index );
             return TNT;

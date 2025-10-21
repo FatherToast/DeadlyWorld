@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.logic;
 
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
@@ -28,7 +28,7 @@ public class PotionTrap extends BaseTrap {
     
     
     public PotionTrap( DeadlyTrapBlockEntity trap ) {
-        super( TrapType.POTION, trap, trap );
+        super( FloorTrapType.POTION, trap, trap );
     }
     
     
@@ -53,7 +53,7 @@ public class PotionTrap extends BaseTrap {
     }
     
     public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {
-        final TrapConfig.PotionTrapTypeCategory trapConfig = (TrapConfig.PotionTrapTypeCategory) TrapType.POTION.getFeatureConfig( Config.getDimensionConfigs( level ) );
+        final TrapConfig.PotionTrapTypeCategory trapConfig = (TrapConfig.PotionTrapTypeCategory) FloorTrapType.POTION.getFeatureConfig( Config.getDimensionConfigs( level ) );
         initializeTrap( level, pos, random, trapConfig.decoyChance.rollChance( random ),
                 trapConfig.activationRange.get(), trapConfig.checkSightChance.rollChance( random ),
                 trapConfig.triggersRemaining.get(), trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(),

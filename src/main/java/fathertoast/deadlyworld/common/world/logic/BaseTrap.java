@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.world.logic;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.api.DWRegistries;
 import fathertoast.deadlyworld.api.DecoyType;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
@@ -75,7 +75,7 @@ public abstract class BaseTrap {
     protected DecoyType decoyType;
     
     // Logic
-    protected final TrapType trapType;
+    protected final FloorTrapType trapType;
     
     /** The entity that tripped this trap. Usually (but not always) non-null when triggering and null in all other states. */
     @Nullable
@@ -92,15 +92,15 @@ public abstract class BaseTrap {
     protected int tripCheckDelay;
     
     @SuppressWarnings( "unused" ) // For possible future use
-    public <T extends Entity & ITrapObject> BaseTrap( TrapType trapType, T entity ) { this( trapType, entity, entity ); }
+    public <T extends Entity & ITrapObject> BaseTrap(FloorTrapType trapType, T entity ) { this( trapType, entity, entity ); }
     
-    public BaseTrap( TrapType trapType, Entity entity, ITrapObject trapObj ) { this( trapType, entity, null, trapObj ); }
+    public BaseTrap(FloorTrapType trapType, Entity entity, ITrapObject trapObj ) { this( trapType, entity, null, trapObj ); }
     
-    public <T extends BlockEntity & ITrapObject> BaseTrap( TrapType trapType, T block ) { this( trapType, block, block ); }
+    public <T extends BlockEntity & ITrapObject> BaseTrap(FloorTrapType trapType, T block ) { this( trapType, block, block ); }
     
-    public BaseTrap( TrapType trapType, BlockEntity block, ITrapObject trapObj ) { this( trapType, null, block, trapObj ); }
+    public BaseTrap(FloorTrapType trapType, BlockEntity block, ITrapObject trapObj ) { this( trapType, null, block, trapObj ); }
     
-    protected BaseTrap( TrapType trapType, @Nullable Entity entity, @Nullable BlockEntity block, ITrapObject trapObj ) {
+    protected BaseTrap(FloorTrapType trapType, @Nullable Entity entity, @Nullable BlockEntity block, ITrapObject trapObj ) {
         this.trapType = trapType;
         mobileEntity = entity;
         blockEntity = block;

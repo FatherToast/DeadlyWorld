@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.trap.FloorTrapBlock;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

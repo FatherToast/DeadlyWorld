@@ -5,7 +5,7 @@ import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
@@ -126,8 +126,8 @@ public abstract class DWAbstractCFProvider {
     }
     
     /** Registers a configured floor trap type feature. */
-    protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                             TrapType type, DimensionConfigGroup dimConfigs ) {
+    protected static void registerFloorTrap(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                            FloorTrapType type, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
                 new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( type ) ),
                         FloorTrapSettings.of( type.getFeatureConfig( dimConfigs ) ),

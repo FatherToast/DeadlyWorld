@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.world.levelgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
@@ -27,7 +27,7 @@ public record FloorTrapSettings(
             IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( FloorTrapSettings::resetTime )
     ).apply( instance, FloorTrapSettings::new ) );
     
-    public static FloorTrapSettings of( TrapType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
+    public static FloorTrapSettings of(FloorTrapType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
     
     public static FloorTrapSettings of( TrapConfig.TrapTypeCategory config ) {
         return new FloorTrapSettings(

@@ -6,7 +6,7 @@ import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.trap.TrapType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
@@ -37,7 +37,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         for( SpawnerType type : SpawnerType.values() ) {
             add( DWBlocks.spawner( type ), buildSpawnerLoot( type ) );
         }
-        for( TrapType type : TrapType.values() ) {
+        for( FloorTrapType type : FloorTrapType.values() ) {
             add( DWBlocks.floorTrap( type ), buildFloorTrapLoot( type ) );
         }
         for( TowerType type : TowerType.values() ) {
@@ -69,7 +69,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         return loot.addPool( buildBasicSpawnerLootPool() );
     }
     
-    private LootTableBuilder buildFloorTrapLoot( TrapType type ) {
+    private LootTableBuilder buildFloorTrapLoot( FloorTrapType type ) {
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) {
             case TNT, TNT_MOB -> loot.addPool( buildTNTFloorTrapLootPool() );

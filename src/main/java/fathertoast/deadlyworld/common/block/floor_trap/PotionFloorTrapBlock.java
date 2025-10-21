@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.trap;
+package fathertoast.deadlyworld.common.block.floor_trap;
 
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class PotionFloorTrapBlock extends FloorTrapBlock {
 
     public PotionFloorTrapBlock() {
-        super( TrapType.POTION );
+        super( FloorTrapType.POTION );
     }
 
     @Override

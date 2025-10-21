@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.trap;
+package fathertoast.deadlyworld.common.block.floor_trap;
 
 import fathertoast.deadlyworld.common.block.ICamoTrap;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
@@ -23,14 +23,14 @@ import javax.annotation.Nullable;
 
 public class FloorTrapBlock extends BaseEntityBlock implements ICamoTrap, IDeadlyBlock {
 
-    private final TrapType trapType;
+    private final FloorTrapType trapType;
 
-    public FloorTrapBlock(TrapType trapType ) {
+    public FloorTrapBlock(FloorTrapType trapType ) {
         super( Config.BLOCKS.get( trapType ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.DISPENSER ) ) );
         this.trapType = trapType;
     }
 
-    public TrapType getTrapType() {
+    public FloorTrapType getTrapType() {
         return trapType;
     }
 
