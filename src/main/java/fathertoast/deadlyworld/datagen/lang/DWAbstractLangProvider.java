@@ -1,29 +1,22 @@
 package fathertoast.deadlyworld.datagen.lang;
 
-import com.google.common.reflect.TypeParameter;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
-import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
-import net.minecraft.client.gui.components.SubtitleOverlay;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.text.WordUtils;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -37,8 +30,8 @@ import java.util.Objects;
  */
 public abstract class DWAbstractLangProvider extends LanguageProvider {
 
-    /** A map of entries that should override auto-generated entries. */
-    private final Map<String, String> exception = new HashMap<>();
+    /** A map of key-translation pairs that should override auto-generated entries. */
+    private final Map<String, String> exceptions = new HashMap<>();
 
 
     public DWAbstractLangProvider( PackOutput output ) {
@@ -48,7 +41,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         addExceptions();
-        exception.forEach( this::add );
+        exceptions.forEach( this::add );
     }
 
     /**
@@ -61,7 +54,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
     protected void exception( String key, String translation ) {
         Objects.requireNonNull( key );
         Objects.requireNonNull( translation );
-        exception.put( key, translation );
+        exceptions.put( key, translation );
     }
 
     protected void creativeTab( DWCreativeModeTabs.CreativeTabRegObj regObj, String translation ) {
@@ -108,7 +101,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
                 continue;
 
             // Key already exists in exceptions, next entry
-            if ( exception.containsKey( key ) )
+            if ( exceptions.containsKey( key ) )
                 continue;
 
             String translation = regObj.getId().getPath().replaceAll( "_", " " );
@@ -128,7 +121,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
                 continue;
 
             // Key already exists in exceptions, next entry
-            if ( exception.containsKey( key ) )
+            if ( exceptions.containsKey( key ) )
                 continue;
 
             String translation = regObj.getId().getPath().replaceAll( "_", " " );
@@ -143,7 +136,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
             String key = regObj.get().getDescriptionId();
 
             // Key already exists in exceptions, next entry
-            if ( exception.containsKey( key ) )
+            if ( exceptions.containsKey( key ) )
                 continue;
 
             String translation = regObj.getId().getPath().replaceAll( "_", " " );
@@ -158,7 +151,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
             String key = regObj.get().getDescriptionId();
 
             // Key already exists in exceptions, next entry
-            if ( exception.containsKey( key ) )
+            if ( exceptions.containsKey( key ) )
                 continue;
 
             String translation = regObj.getId().getPath().replaceAll( "_", " " );
