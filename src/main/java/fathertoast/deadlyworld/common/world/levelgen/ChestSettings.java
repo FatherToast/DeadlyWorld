@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.misc.ChestType;
+import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.levelgen.setting.BooleanFieldSetting;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;

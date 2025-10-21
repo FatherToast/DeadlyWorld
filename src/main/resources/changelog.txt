@@ -1,4 +1,4 @@
-1.20.1-1.2.0
+1.20.1-2.2.2
     - Added trap decoys.
         - New Forge registry for DecoyTypes.
         - API for registering custom DecoyTypes and renderers.
@@ -15,6 +15,8 @@
         - Added Normal Sea Mine block.
         - Added Puffer Sea Mine block.
         - Added Guardian Sea Mine block.
+    - Added new floor trap variant:
+        - Sea mine mob trap
     - Changed the voice/sound pitch of mini entities and mini blocks.
     - Updated some default configs.
 1.20.1-1.1.1

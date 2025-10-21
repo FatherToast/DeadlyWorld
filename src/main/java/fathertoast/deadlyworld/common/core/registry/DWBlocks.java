@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.core.registry;
 import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.infested.InfestedBlockAutoGen;
-import fathertoast.deadlyworld.common.block.misc.MiniChestBlock;
+import fathertoast.deadlyworld.common.block.chest.MiniChestBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;

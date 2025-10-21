@@ -4,7 +4,7 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.InjectionWrapperField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.deadlyworld.common.block.misc.ChestType;
+import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.item.IEventType;
 import fathertoast.deadlyworld.common.item.InfestedEventType;
 import fathertoast.deadlyworld.common.item.SurpriseEventType;

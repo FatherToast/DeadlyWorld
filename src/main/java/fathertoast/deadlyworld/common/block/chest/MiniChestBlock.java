@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.misc;
+package fathertoast.deadlyworld.common.block.chest;
 
 import fathertoast.deadlyworld.common.block.entity.MiniChestBlockEntity;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;

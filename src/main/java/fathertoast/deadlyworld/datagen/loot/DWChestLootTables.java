@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
-import fathertoast.deadlyworld.common.block.misc.ChestType;
+import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.data.loot.packs.VanillaChestLoot;
 import net.minecraft.resources.ResourceLocation;

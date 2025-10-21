@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.misc;
+package fathertoast.deadlyworld.common.block.chest;
 
 import fathertoast.deadlyworld.common.config.dimension.ChestConfig;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
