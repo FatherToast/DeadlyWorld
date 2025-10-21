@@ -14,10 +14,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.InfestedBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -102,20 +104,8 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     
     protected DeadlyInfestedBlock( Block hostBlock, ResourceLocation hostBlockLoc, BlockBehaviour.Properties properties ) {
         super( hostBlock, properties );
-        // May as well grab this since we have it handy, might be useful later
         hostBlockLocation = hostBlockLoc;
-        
-        // Copy default block state from the host
-        if( blockForStateDef != null ) {
-            BlockState hostState = blockForStateDef.defaultBlockState();
-            BlockState defaultState = defaultBlockState();
-            //noinspection rawtypes
-            for( Property property : hostState.getProperties() ) {
-                //noinspection unchecked
-                defaultState.setValue( property, hostState.getValue( property ) );
-            }
-            registerDefaultState( defaultState );
-        }
+        registerDefaultState( toInfested( hostBlock.defaultBlockState() ) );
     }
     
     @Override
@@ -129,6 +119,7 @@ public class DeadlyInfestedBlock extends InfestedBlock {
         }
     }
     
+    /** Used for model mirroring. */
     public ResourceLocation getHostBlockLocation() { return hostBlockLocation; }
     
     //TODO Perhaps AT InfestedBlock#spawnInfestation and override it (or do more work and override spawnAfterBreak)
@@ -181,6 +172,19 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     }
     
     // Behavior copying
+    
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public BlockState rotate( BlockState infestedState, Rotation rotation ) {
+        return toInfested( getHostBlock().rotate( toHost( infestedState ), rotation ) );
+    }
+    
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement( BlockPlaceContext context ) {
+        BlockState hostState = getHostBlock().getStateForPlacement( context );
+        return hostState == null ? null : toInfested( hostState );
+    }
     
     @Override
     public int getFlammability( BlockState infestedState, BlockGetter level, BlockPos pos, Direction direction ) {
