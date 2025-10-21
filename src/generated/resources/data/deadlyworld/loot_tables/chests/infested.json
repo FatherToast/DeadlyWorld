@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "deadlyworld:infested_event_item",
+          "name": "deadlyworld:container_infestation",
           "weight": 10
         }
       ],
@@ -301,10 +301,10 @@
             {
               "enchantments": [
                 "minecraft:bane_of_arthropods",
-                "minecraft:fortune",
-                "minecraft:silk_touch",
                 "minecraft:luck_of_the_sea",
-                "minecraft:looting"
+                "minecraft:looting",
+                "minecraft:silk_touch",
+                "minecraft:fortune"
               ],
               "function": "minecraft:enchant_randomly"
             }

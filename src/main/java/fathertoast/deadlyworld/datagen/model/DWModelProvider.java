@@ -37,8 +37,8 @@ public class DWModelProvider extends DWAbstractModelProvider {
 
         // Items
         simpleItem( DWItems.MIMIC_CORE );
-        simpleItemWithParent( DWItems.INFESTED_EVENT_ITEM, Items.NETHER_WART );
-        simpleItemWithParent( DWItems.SURPRISE_EVENT_ITEM, Items.FIREWORK_STAR );
+        simpleItemWithParent( DWItems.CONTAINER_INFESTATION, Items.NETHER_WART );
+        simpleItemWithParent( DWItems.CONTAINER_TRAP, Items.FIREWORK_STAR );
         simpleItemWithParent( DWItems.FEATURE_PLACER, Items.STRUCTURE_VOID );
         simpleItem( DWItems.RUNNY_LAVA_BUCKET );
 

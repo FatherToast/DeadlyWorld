@@ -24,9 +24,9 @@ public final class DWItems {
     
     public static final RegistryObject<Item> MIMIC_CORE = register( "mimic_core",
             () -> new SimpleFoiledItem( new Item.Properties().stacksTo( 1 ).rarity( Rarity.UNCOMMON ) ) );
-    public static final RegistryObject<Item> INFESTED_EVENT_ITEM = register( "infested_event_item",
+    public static final RegistryObject<Item> CONTAINER_INFESTATION = register( "container_infestation",
             () -> new EventItem<>( InfestedEventType.values(), new Item.Properties().stacksTo( 1 ) ) );
-    public static final RegistryObject<Item> SURPRISE_EVENT_ITEM = register( "surprise_event_item",
+    public static final RegistryObject<Item> CONTAINER_TRAP = register( "container_trap",
             () -> new EventItem<>( SurpriseEventType.values(), new Item.Properties().stacksTo( 1 ) ) );
     
     public static final RegistryObject<BucketItem> RUNNY_LAVA_BUCKET = register( "runny_lava_bucket", () -> new RunnyLavaBucketItem( DWFluids.RUNNY_LAVA_SOURCE, new Item.Properties().stacksTo( 1 ) ) );

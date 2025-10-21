@@ -55,9 +55,9 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
             case SIMPLE -> { } // No extras
             case VALUABLE -> loot.addPool( buildValuableLootPool() );
             case TNT_TRAP -> loot.addPool( buildExplosivesLootPool() );
-            case INFESTED -> loot.addPool( buildSingleItemLootPool( "event", DWItems.INFESTED_EVENT_ITEM.get() ) )
+            case INFESTED -> loot.addPool( buildSingleItemLootPool( "event", DWItems.CONTAINER_INFESTATION.get() ) )
                     .addPool( buildBuggyLootPool() );
-            case SURPRISE -> loot.addPool( buildSingleItemLootPool( "event", DWItems.SURPRISE_EVENT_ITEM.get() ) )
+            case SURPRISE -> loot.addPool( buildSingleItemLootPool( "event", DWItems.CONTAINER_TRAP.get() ) )
                     .addPool( buildBrewingLootPool() );
             default ->
                     throw new IllegalArgumentException( "Chest type \"" + type + "\" is missing chest loot table data gen code!" );

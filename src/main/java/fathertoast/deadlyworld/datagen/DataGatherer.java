@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.datagen;
 
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.datagen.lang.DWLangProvider;
 import fathertoast.deadlyworld.datagen.loot.DWLootModProvider;
 import fathertoast.deadlyworld.datagen.loot.DWLootTableProvider;
 import fathertoast.deadlyworld.datagen.model.DWModelProvider;
@@ -43,6 +44,7 @@ public class DataGatherer {
         
         if( event.includeClient() ) {
             generator.addProvider( true, new DWModelProvider( packOutput, fileHelper ) );
+            generator.addProvider( true, new DWLangProvider( packOutput ) );
         }
         if( event.includeServer() ) {
             DatapackBuiltinEntriesProvider builtInProvider =

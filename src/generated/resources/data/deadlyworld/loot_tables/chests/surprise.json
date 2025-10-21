@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "deadlyworld:surprise_event_item",
+          "name": "deadlyworld:container_trap",
           "weight": 10
         }
       ],
