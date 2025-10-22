@@ -24,7 +24,7 @@ import java.util.Optional;
  * The core of the mod. Contains basic info about the mod, initializes configs, and hooks into FML.
  */
 @Mod( DeadlyWorld.MOD_ID )
-public class DeadlyWorld {
+public final class DeadlyWorld {
     /* TODO LIST:
      *  - finish all features; see features list
      *
@@ -219,7 +219,7 @@ public class DeadlyWorld {
     }
     
     /** @return A ResourceLocation with the mod's modid. */
-    public static ResourceLocation resourceLoc( String path ) { return ResourceLocation.fromNamespaceAndPath( MOD_ID, path ); }
+    public static ResourceLocation rl(String path ) { return ResourceLocation.fromNamespaceAndPath( MOD_ID, path ); }
     
     public static String logPrefix( Class<?> clazz ) {
         return "[" + MOD_ID + "/" + clazz.getSimpleName() + "] ";
