@@ -13,9 +13,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -24,11 +27,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import javax.annotation.Nullable;
@@ -57,6 +61,12 @@ public class DeadlyInfestedBlock extends InfestedBlock {
         return "infested/" + hostBlockLoc.getNamespace() + "/" + hostBlockLoc.getPath();
     }
     
+    /** @return An infested version of the given host block if one exists, otherwise it just returns the host block. */
+    public static BlockState tryInfest( BlockState hostState ) {
+        return isCompatibleHostBlock( hostState ) ? infestedStateByHost( hostState ) : hostState;
+    }
+    
+    /** Runs the logic for "infested block cleansing". */
     public static boolean tryCleanseBlock( PlayerInteractEvent.RightClickBlock event, ServerLevel level ) {
         if( config().GENERAL.cleanseTools.isEmpty() ) return false;
         
@@ -129,41 +139,54 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     //TODO Perhaps AT InfestedBlock#spawnInfestation and override it (or do more work and override spawnAfterBreak)
     // to make spawned silverfish target the entity that breaks their block or copy target when a silverfish breaks it;
     // might require some way to figure out who broke the block...
+    // (or just do the SM thing and make them target the nearest player on spawn)
     
-    //TODO Needs to drop the host block when silk touched and nothing otherwise
-    //    @Override
-    //    public List<ItemStack> getDrops( BlockState infestedState, LootParams.Builder builder ) {
-    //        ResourceLocation resourcelocation = getLootTable();
-    //        if( resourcelocation == BuiltInLootTables.EMPTY ) {
-    //            return Collections.emptyList();
-    //        }
-    //        else {
-    //            LootParams lootparams = builder.withParameter( LootContextParams.BLOCK_STATE, infestedState ).create( LootContextParamSets.BLOCK );
-    //            ServerLevel serverlevel = lootparams.getLevel();
-    //            LootTable loottable = serverlevel.getServer().getLootData().getLootTable( resourcelocation );
-    //            return loottable.getRandomItems( lootparams );
-    //        }
-    //    }
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public List<ItemStack> getDrops( BlockState infestedState, LootParams.Builder builder ) {
+        // Drop a loot table, if one exists TODO test this later to make sure it actually works lol
+        ServerLevel level = builder.getLevel();
+        LootTable lootTable = level.getServer().getLootData().getElement( LootDataType.TABLE, getLootTable() );
+        if( lootTable != null ) {
+            return lootTable.getRandomItems( builder
+                    .withParameter( LootContextParams.BLOCK_STATE, infestedState )
+                    .create( LootContextParamSets.BLOCK ) );
+        }
+        // Otherwise, make the loot ourselves
+        ItemStack tool = builder.getOptionalParameter( LootContextParams.TOOL );
+        if( tool != null && tool.getEnchantmentLevel( Enchantments.SILK_TOUCH ) > 0 ) {
+            return List.of( new ItemStack( getHostBlock() ) );
+        }
+        return Collections.emptyList();
+    }
     
-    //      TODO Maybe implement an instant break config option with this
-    //    @SuppressWarnings( "deprecation" )
-    //    @Override
-    //    public float getDestroyProgress( BlockState infestedState, Player player, BlockGetter level, BlockPos pos ) {
-    //        return super.getDestroyProgress( infestedState, player, level, pos );
-    //    }
-    //    @SuppressWarnings( "deprecation" )
-    //    @Override
-    //    public float getExplosionResistance() { return super.getExplosionResistance(); }
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public float getDestroyProgress( BlockState infestedState, Player player, BlockGetter level, BlockPos pos ) {
+        return super.getDestroyProgress( infestedState, player, level, pos ) *
+                config().AUTO_GEN.breakSpeedMulti.getFloat();
+    }
     
-    //      TODO Maybe would be fun to let projectile hits or walking break the block?
-    //    @SuppressWarnings( "deprecation" )
-    //    @Override
-    //    public void onProjectileHit( Level level, BlockState infestedState, BlockHitResult context, Projectile projectile) {
-    //    }
-    //    @Override
-    //    public void stepOn( Level level, BlockPos pos, BlockState infestedState, Entity entity ) { }
-    //    @Override
-    //    public void fallOn( Level level, BlockState infestedState, BlockPos pos, Entity entity, float distance ) { }
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public float getExplosionResistance() { return config().AUTO_GEN.explosionResistMulti.getFloat(); }
+    
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public void onProjectileHit( Level level, BlockState infestedState, BlockHitResult context, Projectile projectile ) {
+        if( !level.isClientSide() && config().AUTO_GEN.projBreakChance.get() > 0.0 &&
+                config().AUTO_GEN.projBreakChance.rollChance( level.random ) ) {
+            level.destroyBlock( context.getBlockPos(), true, projectile.getEffectSource() );
+        }
+    }
+    
+    @Override
+    public void stepOn( Level level, BlockPos pos, BlockState infestedState, Entity entity ) {
+        if( !level.isClientSide() && config().AUTO_GEN.stepBreakChance.get() > 0.0 && entity instanceof Player player &&
+                !player.isCreative() && config().AUTO_GEN.stepBreakChance.rollChance( level.random ) ) {
+            level.destroyBlock( pos, true, entity );
+        }
+    }
     
     
     // Host block emulation

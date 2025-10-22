@@ -66,9 +66,16 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
         
         public final EnumField<NameStyle> nameStyle;
         
+        public final DoubleField breakSpeedMulti;
+        public final DoubleField explosionResistMulti;
+        
+        public final DoubleField projBreakChance;
+        public final DoubleField stepBreakChance;
+        
         AutoGen( InfestedBlocksConfig parent ) {
-            super( parent, "auto_gen",
-                    "Options that apply to this mod's auto-generated infested blocks as a whole." );
+            super( parent, "auto_generated_blocks",
+                    "Options that apply to automatic generation of this Deadly World's infested " +
+                            "blocks, as well as their behavior." );
             
             hostBlocks = SPEC.define( new StringListField( "host_blocks", "namespace:block_name",
                     buildDefaultSilverfishBlocks(),
@@ -103,6 +110,29 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                             "in 'jade.json' if you wish to see this name style in tooltips."
             ) );
             //TODO Jade compat setting to show host block's mod instead of Deadly World in block tooltips
+            
+            SPEC.newLine();
+            
+            breakSpeedMulti = SPEC.define( new DoubleField( "break_speed_multi", 2.0, DoubleField.Range.NON_NEGATIVE,
+                    "Break speed multiplier for infested blocks. A value of 0 makes them unbreakable, " +
+                            "while something really high like 3.4E38 makes them break instantly.",
+                    "Base break speed of infested blocks is double the host block's break speed, but is unaffected by tools."
+            ) );
+            explosionResistMulti = SPEC.define( new DoubleField( "explosion_resistance", 0.75, DoubleField.Range.NON_NEGATIVE,
+                    "Explosion resistance for infested blocks.",
+                    "For reference, some vanilla block explosion resistances are: Dirt = 0.5, Stone = 6, Obsidian = 1200"
+            ) );
+            
+            SPEC.newLine();
+            
+            projBreakChance = SPEC.define( new DoubleField( "break_chance.projectile", 0.3, DoubleField.Range.PERCENT,
+                    "The chance for infested blocks to break when hit by a projectile."
+            ) );
+            stepBreakChance = SPEC.define( new DoubleField( "break_chance.step", 0.01, DoubleField.Range.PERCENT,
+                    "The chance for infested blocks to break when stepped on by a player. This chance " +
+                            "is rolled each tick (20 times per second) while standing on an infested block, so it " +
+                            "should probably be kept pretty low."
+            ) );
         }
         
         private List<String> buildDefaultSilverfishBlocks() {
