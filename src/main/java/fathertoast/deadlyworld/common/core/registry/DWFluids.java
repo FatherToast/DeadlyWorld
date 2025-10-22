@@ -22,20 +22,19 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.awt.image.RenderedImage;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 // Registering fluids is a mess, I feel immense sadness
-public class DWFluids {
+public final class DWFluids {
     public static final DeferredRegister<Fluid> REGISTRY = DeferredRegister.create( ForgeRegistries.FLUIDS, DeadlyWorld.MOD_ID );
     public static final DeferredRegister<FluidType> TYPE_REGISTRY = DeferredRegister.create( ForgeRegistries.Keys.FLUID_TYPES, DeadlyWorld.MOD_ID );
 
     //
     // FLUIDS
     //
-    public static final RegistryObject<FlowingFluid> RUNNY_LAVA_SOURCE = RegistryObject.create( DeadlyWorld.resourceLoc( "runny_lava" ), ForgeRegistries.FLUIDS );
-    public static final RegistryObject<FlowingFluid> RUNNY_LAVA_FLOWING = RegistryObject.create( DeadlyWorld.resourceLoc( "flowing_runny_lava" ), ForgeRegistries.FLUIDS );;
+    public static final RegistryObject<FlowingFluid> RUNNY_LAVA_SOURCE = RegistryObject.create( DeadlyWorld.rl( "runny_lava" ), ForgeRegistries.FLUIDS );
+    public static final RegistryObject<FlowingFluid> RUNNY_LAVA_FLOWING = RegistryObject.create( DeadlyWorld.rl( "flowing_runny_lava" ), ForgeRegistries.FLUIDS );;
 
     //
     // TYPES
@@ -73,8 +72,8 @@ public class DWFluids {
         @Override
         public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
             consumer.accept(new IClientFluidTypeExtensions() {
-                private static final ResourceLocation STILL = DeadlyWorld.resourceLoc( "block/runny_lava_still" );
-                private static final ResourceLocation FLOWING = DeadlyWorld.resourceLoc( "block/runny_lava_flow" );
+                private static final ResourceLocation STILL = DeadlyWorld.rl( "block/runny_lava_still" );
+                private static final ResourceLocation FLOWING = DeadlyWorld.rl( "block/runny_lava_flow" );
 
                 @Override
                 public ResourceLocation getStillTexture() {

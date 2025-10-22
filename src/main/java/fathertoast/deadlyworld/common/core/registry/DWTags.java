@@ -24,8 +24,8 @@ public final class DWTags {
         public static final BlockWithItem SEA_MINES = tag( "sea_mines" );
         
         private static BlockWithItem tag( String name ) {
-            return new BlockWithItem( BlockTags.create( DeadlyWorld.resourceLoc( name ) ),
-                    ItemTags.create( DeadlyWorld.resourceLoc( name ) ) );
+            return new BlockWithItem( BlockTags.create( DeadlyWorld.rl( name ) ),
+                    ItemTags.create( DeadlyWorld.rl( name ) ) );
         }
     }
     
@@ -41,7 +41,7 @@ public final class DWTags {
         public static final TagKey<EntityType<?>> FIREBALLS = sharedTag( "fireballs" );
         
         private static TagKey<EntityType<?>> tag( String name ) {
-            return TagKey.create( Registries.ENTITY_TYPE, DeadlyWorld.resourceLoc( name ) );
+            return TagKey.create( Registries.ENTITY_TYPE, DeadlyWorld.rl( name ) );
         }
         
         private static TagKey<EntityType<?>> sharedTag( String name ) {
@@ -56,7 +56,7 @@ public final class DWTags {
         public static final TagKey<DecoyType> ANY_DIMENSION = tag( "any_dimension" );
         
         private static TagKey<DecoyType> tag( String name ) {
-            return DWDecoyTypes.REGISTRY.createTagKey( DeadlyWorld.resourceLoc( name ) );
+            return DWDecoyTypes.REGISTRY.createTagKey( DeadlyWorld.rl( name ) );
         }
     }
     
@@ -75,7 +75,7 @@ public final class DWTags {
         public static final TagKey<ConfiguredFeature<?, ?>> DUNGEONS = tag( "dungeons" );
         
         private static TagKey<ConfiguredFeature<?, ?>> tag( String name ) {
-            return TagKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.resourceLoc( name ) );
+            return TagKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.rl( name ) );
         }
     }
     
@@ -92,7 +92,7 @@ public final class DWTags {
         public static final TagKey<PlacedFeature> DUNGEONS = tag( "dungeons" );
         
         private static TagKey<PlacedFeature> tag( String name ) {
-            return TagKey.create( Registries.PLACED_FEATURE, DeadlyWorld.resourceLoc( name ) );
+            return TagKey.create( Registries.PLACED_FEATURE, DeadlyWorld.rl( name ) );
         }
     }
     

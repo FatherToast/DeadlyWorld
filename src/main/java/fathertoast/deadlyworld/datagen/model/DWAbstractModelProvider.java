@@ -128,7 +128,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
 
     /** Helper method for getting the location of a DeadlyWorld template block model. */
     protected static ResourceLocation templateLoc( String name ) {
-        return DeadlyWorld.resourceLoc( "block/template/" + name );
+        return DeadlyWorld.rl( "block/template/" + name );
     }
 
     /** @return A block texture location of the vanilla namespace and the given path. */
@@ -138,7 +138,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
 
     /** @return A block texture location of DeadlyWorld's namespace and the given path. */
     protected static ResourceLocation modBlockTexture( String path ) {
-        return DeadlyWorld.resourceLoc( ModelProvider.BLOCK_FOLDER + "/" + path );
+        return DeadlyWorld.rl( ModelProvider.BLOCK_FOLDER + "/" + path );
     }
 
     /** @return A block texture location using the given block's ID, with an additional suffix. */
@@ -200,6 +200,6 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
 
     /** @return An item texture location of DeadlyWorld's namespace and the given path. */
     protected static ResourceLocation modItemTexture( String path ) {
-        return DeadlyWorld.resourceLoc( ModelProvider.ITEM_FOLDER + "/" + path );
+        return DeadlyWorld.rl( ModelProvider.ITEM_FOLDER + "/" + path );
     }
 }

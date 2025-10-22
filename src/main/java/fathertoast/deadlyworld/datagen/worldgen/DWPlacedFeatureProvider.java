@@ -304,6 +304,6 @@ public class DWPlacedFeatureProvider {
     
     /** Creates a placed feature key that is not added to any world gen. */
     protected static ResourceKey<PlacedFeature> key( String name ) {
-        return ResourceKey.create( Registries.PLACED_FEATURE, DeadlyWorld.resourceLoc( name ) );
+        return ResourceKey.create( Registries.PLACED_FEATURE, DeadlyWorld.rl( name ) );
     }
 }

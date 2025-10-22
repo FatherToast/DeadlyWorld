@@ -27,7 +27,7 @@ public final class DWCreativeModeTabs {
     
     
     private static CreativeTabRegObj register( String name, Supplier<CreativeModeTab> supplier ) {
-        return new CreativeTabRegObj( REGISTRY.register( name, supplier ), ResourceKey.create( Registries.CREATIVE_MODE_TAB, DeadlyWorld.resourceLoc( name ) ) );
+        return new CreativeTabRegObj( REGISTRY.register( name, supplier ), ResourceKey.create( Registries.CREATIVE_MODE_TAB, DeadlyWorld.rl( name ) ) );
     }
     
     public record CreativeTabRegObj(RegistryObject<CreativeModeTab> regObj, ResourceKey<CreativeModeTab> key) { }

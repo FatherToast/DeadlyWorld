@@ -20,6 +20,6 @@ public class DWModelLayers {
     }
 
     private static ModelLayerLocation create( String path, String layerName ) {
-        return new ModelLayerLocation( DeadlyWorld.resourceLoc( path ), layerName );
+        return new ModelLayerLocation( DeadlyWorld.rl( path ), layerName );
     }
 }

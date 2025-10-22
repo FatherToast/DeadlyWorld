@@ -11,7 +11,7 @@ import net.minecraftforge.common.ForgeHooks;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemHelper {
+public final class ItemHelper {
 
     /**
      * Loads all ItemStacks in the given CompoundTag and

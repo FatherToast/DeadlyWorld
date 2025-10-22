@@ -27,6 +27,6 @@ public final class DWSoundEvents {
 
 
     private static RegistryObject<SoundEvent> register( String name ) {
-        return REGISTRY.register( name, () -> SoundEvent.createVariableRangeEvent( DeadlyWorld.resourceLoc( name ) ) );
+        return REGISTRY.register( name, () -> SoundEvent.createVariableRangeEvent( DeadlyWorld.rl( name ) ) );
     }
 }

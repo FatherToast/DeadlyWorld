@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
-public class MimicHelper {
+public final class MimicHelper {
     
     /**
      * Attempts to trigger an event item from a container at the given location.

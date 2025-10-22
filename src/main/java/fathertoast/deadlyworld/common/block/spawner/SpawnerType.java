@@ -115,7 +115,7 @@ public enum SpawnerType {
     public ResourceLocation getChestLootTable() {
         if( isSubfeature() )
             throw new UnsupportedOperationException( "Subfeatures do not have chest loot! (spawner type \"" + id + "\")" );
-        return DeadlyWorld.resourceLoc( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
+        return DeadlyWorld.rl( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
     }
     
     public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configGetter.apply( dimConfigs ); }

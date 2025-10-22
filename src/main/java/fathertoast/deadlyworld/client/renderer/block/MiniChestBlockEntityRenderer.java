@@ -24,7 +24,7 @@ import java.util.Calendar;
 
 public class MiniChestBlockEntityRenderer<T extends MiniChestBlockEntity> implements BlockEntityRenderer<T> {
 
-    private static final ResourceLocation TEXTURE = DeadlyWorld.resourceLoc( "textures/entity/mini_chest.png" );
+    private static final ResourceLocation TEXTURE = DeadlyWorld.rl( "textures/entity/mini_chest.png" );
 
     private final ModelPart lid;
     private final ModelPart base;

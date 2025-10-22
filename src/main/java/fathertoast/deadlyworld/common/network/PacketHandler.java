@@ -28,7 +28,7 @@ public final class PacketHandler {
     
     private static SimpleChannel createChannel() {
         return NetworkRegistry.ChannelBuilder
-                .named( DeadlyWorld.resourceLoc( "channel" ) )
+                .named( DeadlyWorld.rl( "channel" ) )
                 .serverAcceptedVersions( PROTOCOL_NAME::equals )
                 .clientAcceptedVersions( PROTOCOL_NAME::equals )
                 .networkProtocolVersion( () -> PROTOCOL_NAME )

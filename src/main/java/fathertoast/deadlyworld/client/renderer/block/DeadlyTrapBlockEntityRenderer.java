@@ -25,13 +25,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.common.extensions.IForgeBlockEntity;
 
 import javax.annotation.Nullable;
 
 public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<DeadlyTrapBlockEntity> {
 
-    private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.resourceLoc("textures/misc/floor_trap_overlay.png" );
+    private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.rl("textures/misc/floor_trap_overlay.png" );
 
     private final ModelPart topOverlay;
 

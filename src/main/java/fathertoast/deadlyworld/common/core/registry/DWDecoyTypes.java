@@ -6,7 +6,6 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -20,7 +19,7 @@ import static fathertoast.deadlyworld.common.core.registry.DWTags.DecoyTypes.*;
 
 public final class DWDecoyTypes {
 
-    public static final DeferredRegister<DecoyType> REGISTRY = DeferredRegister.create( DeadlyWorld.resourceLoc( "decoy_types" ), DeadlyWorld.MOD_ID );
+    public static final DeferredRegister<DecoyType> REGISTRY = DeferredRegister.create( DeadlyWorld.rl( "decoy_types" ), DeadlyWorld.MOD_ID );
     static {
         DWRegistries.DECOY_TYPE_REGISTRY = REGISTRY.makeRegistry( () -> new RegistryBuilder<DecoyType>().hasTags() );
     }

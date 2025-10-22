@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ChestMimicRenderer extends MobRenderer<ChestMimic, ChestMimicModel> {
 
-    private static final ResourceLocation TEXTURE = DeadlyWorld.resourceLoc("textures/entity/chest_mimic.png");
+    private static final ResourceLocation TEXTURE = DeadlyWorld.rl("textures/entity/chest_mimic.png");
 
 
     public ChestMimicRenderer( EntityRendererProvider.Context context ) {

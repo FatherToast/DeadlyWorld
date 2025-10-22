@@ -5,7 +5,6 @@ import fathertoast.deadlyworld.client.DWModelLayers;
 import fathertoast.deadlyworld.client.renderer.entity.model.MiniSpawnerMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.MiniSpawnerMimic;
-import fathertoast.deadlyworld.common.entity.SpawnerMimic;
 import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -14,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MiniSpawnerMimicRenderer extends MobRenderer<MiniSpawnerMimic, MiniSpawnerMimicModel> {
 
-    private static final ResourceLocation TEXTURE = DeadlyWorld.resourceLoc("textures/entity/mini_spawner_mimic.png");
+    private static final ResourceLocation TEXTURE = DeadlyWorld.rl("textures/entity/mini_spawner_mimic.png");
 
 
     public MiniSpawnerMimicRenderer( EntityRendererProvider.Context context ) {

@@ -360,7 +360,7 @@ public enum FloorTrapType {
     }
     
     public ResourceLocation getChestLootTable() {
-        return DeadlyWorld.resourceLoc( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
+        return DeadlyWorld.rl( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
     }
     
     /** @return A Supplier of the Spawner Block to register for this Spawner Type */

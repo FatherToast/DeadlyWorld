@@ -205,6 +205,6 @@ public abstract class DWAbstractCFProvider {
     
     /** Creates a configured feature key. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> key( String name ) {
-        return ResourceKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.resourceLoc( name ) );
+        return ResourceKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.rl( name ) );
     }
 }

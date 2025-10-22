@@ -7,14 +7,13 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.SpawnerMimic;
 import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.SpawnerRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class SpawnerMimicRenderer extends MobRenderer<SpawnerMimic, SpawnerMimicModel<SpawnerMimic>> {
 
-    private static final ResourceLocation TEXTURE = DeadlyWorld.resourceLoc("textures/entity/spawner_mimic.png");
+    private static final ResourceLocation TEXTURE = DeadlyWorld.rl("textures/entity/spawner_mimic.png");
 
 
     public SpawnerMimicRenderer( EntityRendererProvider.Context context ) {

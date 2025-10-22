@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** Helper class for registering custom dispenser behaviors. */
-public class DWDispenserBehavior {
+public final class DWDispenserBehavior {
 
 
     public static void register() {

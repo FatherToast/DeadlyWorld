@@ -34,7 +34,7 @@ public enum ChestType {
     
     public String getDisplayName() { return displayName; }
     
-    public ResourceLocation getChestLootTable() { return DeadlyWorld.resourceLoc( References.CHEST_LOOT_PATH + this ); }
+    public ResourceLocation getChestLootTable() { return DeadlyWorld.rl( References.CHEST_LOOT_PATH + this ); }
     
     public final ChestConfig.ChestTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
     
