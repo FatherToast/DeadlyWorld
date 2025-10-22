@@ -159,11 +159,4 @@ public class InfestedBlockAutoGen {
             }
         }
     }
-    
-    /** Called during server startup to inject auto-generated infested block server data. */
-    public static void injectServerData() {
-        DWBlocks.getInfestedBlocks().forEach( ( block ) -> {
-            //TODO Generate block loot table somehow
-        } );
-    }
 }
