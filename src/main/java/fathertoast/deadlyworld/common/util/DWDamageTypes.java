@@ -8,7 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.level.Level;
 
-public final class DWDamageSources {
+public final class DWDamageTypes {
 
     public static final ResourceKey<DamageType> SPIKE_TRAP = create( "spike_trap" );
 
@@ -26,7 +26,7 @@ public final class DWDamageSources {
 
     /** Called by registry set builder to generate our damage types. */
     public static void bootstrap( BootstapContext<DamageType> context ) {
-        register( context, SPIKE_TRAP, new DamageType( msg( "quicksand" ), 0.0F ) );
+        register( context, SPIKE_TRAP, new DamageType( msg( "spike_trap" ), 0.0F ) );
     }
 
     /** Helper method for damage type data gen. It is very pointless, but semantically I think it looks better (Sarinsa) */

@@ -51,7 +51,7 @@ public class WaterTrapConfig extends FeatureConfig {
         }
     }
 
-    public static class SeaMineMobTrapTypeCategory extends TrapConfig.TrapTypeCategory {
+    public static class SeaMineMobTrapTypeCategory extends FloorTrapConfig.TrapTypeCategory {
 
         public final WeightedEntityListField spawnList;
 

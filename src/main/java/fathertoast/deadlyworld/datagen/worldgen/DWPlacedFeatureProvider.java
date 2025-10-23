@@ -43,8 +43,10 @@ public class DWPlacedFeatureProvider {
     public static final List<ResourceKey<PlacedFeature>> LONE_CHEST_FEATURES = new ArrayList<>();
     /** List of all spawner placements. */
     public static final List<ResourceKey<PlacedFeature>> SPAWNER_FEATURES = new ArrayList<>();
-    /** List of all trap placements. */
-    public static final List<ResourceKey<PlacedFeature>> TRAP_FEATURES = new ArrayList<>();
+    /** List of all floor trap placements. */
+    public static final List<ResourceKey<PlacedFeature>> FLOOR_TRAP_FEATURES = new ArrayList<>();
+    /** List of all spike trap placements. */
+    public static final List<ResourceKey<PlacedFeature>> SPIKE_TRAP_FEATURES = new ArrayList<>();
     /** List of all tower dispenser placements. */
     public static final List<ResourceKey<PlacedFeature>> TOWER_FEATURES = new ArrayList<>();
     /** List of all sea mine placements. */
@@ -90,7 +92,7 @@ public class DWPlacedFeatureProvider {
         registerFloorTrap( context, getter, FIRE_TRAP, overworldConfigs, netherConfigs );
         // Water trap variant
         register( context, getter, SEA_MINE_MOB_TRAP,
-                waterFloorFeature( FloorTrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ) );
+                waterFloorFeature( FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs ) ) );
 
         // Standard tower placements
         registerTower( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );
@@ -117,27 +119,27 @@ public class DWPlacedFeatureProvider {
 
     /** @return Modifiers for a lone spawner feature. */
     protected static List<PlacementModifier> loneChest( ChestType type, DimensionConfigGroup dimConfigs ) {
-        return floorFeature( type.getFeatureConfig( dimConfigs ) );
+        return floorFeature( type.getConfig( dimConfigs ) );
     }
     
     /** @return Modifiers for a lone spawner feature. */
     protected static List<PlacementModifier> loneSpawner( SpawnerType type, DimensionConfigGroup dimConfigs ) {
-        return floorFeature( type.getFeatureConfig( dimConfigs ) );
+        return floorFeature( type.getConfig( dimConfigs ) );
     }
 
     /** @return Modifiers for a floor trap feature. */
     protected static List<PlacementModifier> floorTrap(FloorTrapType type, DimensionConfigGroup dimConfigs ) {
-        return floorFeature( type.getFeatureConfig( dimConfigs ) );
+        return floorFeature( type.getConfig( dimConfigs ) );
     }
 
     /** @return Modifiers for a tower feature. */
     protected static List<PlacementModifier> tower( TowerType type, DimensionConfigGroup dimConfigs ) {
-        return surfaceFeature( type.getFeatureConfig( dimConfigs ) );
+        return surfaceFeature( type.getConfig( dimConfigs ) );
     }
 
     /** @return Modifiers for a floor trap feature. */
     protected static List<PlacementModifier> seaMine( SeaMineType type, DimensionConfigGroup dimConfigs ) {
-        return waterFloorFeature( type.getFeatureConfig( dimConfigs ) );
+        return waterFloorFeature( type.getConfig( dimConfigs ) );
     }
 
     /** @return Modifiers for a feature that generates only on floors. */
@@ -233,8 +235,8 @@ public class DWPlacedFeatureProvider {
     }
 
     /** Registers a placed floor trap type feature to each supported dimension. */
-    protected static void registerFloorTrap( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                             FeatureKeys.Trap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+    protected static void registerFloorTrap(BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
+                                            FeatureKeys.FloorTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         register( context, getter, featureKeys.overworldKeys, floorTrap( featureKeys.trapType, overworldConfigs ) );
         register( context, getter, featureKeys.netherKeys, floorTrap( featureKeys.trapType, netherConfigs ) );
     }

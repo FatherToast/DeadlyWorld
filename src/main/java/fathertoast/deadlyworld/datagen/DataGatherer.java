@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.datagen;
 
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.util.DWDamageSources;
+import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import fathertoast.deadlyworld.datagen.lang.DWLangProvider;
 import fathertoast.deadlyworld.datagen.loot.DWLootModProvider;
 import fathertoast.deadlyworld.datagen.loot.DWLootTableProvider;
@@ -29,7 +29,7 @@ public class DataGatherer {
     
     /** Data provider that generates registry entries from supported registry types. */
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
-            .add( Registries.DAMAGE_TYPE, DWDamageSources::bootstrap )
+            .add( Registries.DAMAGE_TYPE, DWDamageTypes::bootstrap )
             .add( Registries.CONFIGURED_FEATURE, DWConfiguredFeatureProvider::bootstrap )
             .add( Registries.PLACED_FEATURE, DWPlacedFeatureProvider::bootstrap );
     

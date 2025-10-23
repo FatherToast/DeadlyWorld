@@ -44,7 +44,7 @@ public class FloorTrapBlock extends BaseEntityBlock implements ICamoTrap, IDeadl
     }
 
     @Override
-    public void initDeadly(ServerLevel level, BlockPos pos, RandomSource random) {
+    public void initDeadly( ServerLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
             trapBlockEntity.getTrapLogic().initializeTrap( level, pos, random );
         }

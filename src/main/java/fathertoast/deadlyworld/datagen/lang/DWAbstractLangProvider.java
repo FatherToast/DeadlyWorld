@@ -5,7 +5,9 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
@@ -57,6 +59,9 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         exceptions.put( key, translation );
     }
 
+    /**
+     * Adds a creative mode tab name translation for the given creative tab using the tab's registry key.
+     */
     protected void creativeTab( DWCreativeModeTabs.CreativeTabRegObj regObj, String translation ) {
         // Assume display name is a translatable component
         try {
@@ -68,11 +73,18 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         }
     }
 
+    /**
+     * Adds a subtitle translation for the given sound event.
+     */
     protected void soundSubtitle( RegistryObject<SoundEvent> regObj, String translation ) {
         String key = "sound_event." + regObj.getId().getNamespace() + ".subtitle." + regObj.getId().getPath();
         add( key, translation );
     }
 
+    /**
+     * Adds an item sub-tooltip translation for the given item,
+     * creating a translation key with the format <b>"item.{namespace}.{path}.tooltip.{subKey}"</b>.
+     */
     protected void tooltip( RegistryObject<? extends Item> regObj, @Nullable String subKey, String translation ) {
         StringBuilder builder = new StringBuilder( regObj.get().getDescriptionId() );
         builder.append( ".tooltip" );
@@ -84,14 +96,37 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         add( builder.toString(), translation );
     }
 
+    /**
+     * Adds an item tooltip translation for the given item,
+     * creating a translation key with the format <b>"item.{namespace}.{path}.tooltip"</b>.
+     */
     protected void tooltip( RegistryObject<? extends Item> regObj, String translation ) {
         tooltip( regObj, null, translation );
     }
 
+    /**
+     * Adds death message translations for the given damage type key.
+     *
+     * @param damageTypeKey The registry key for the damage type.
+     * @param message The translated death message displayed when a player dies without any other entity being involved.
+     * @param chasedMessage The translated death message displayed when a player dies after recently being attacked by an entity.
+     */
+    protected void deathMessage( ResourceKey<DamageType> damageTypeKey, String message, String chasedMessage ) {
+        String typeName = damageTypeKey.location().getPath();
+        String baseKey = "death.attack." + DeadlyWorld.MOD_ID + "." + typeName;
+        add( baseKey, message );
+        add( baseKey + ".player", chasedMessage );
+    }
+
+    /**
+     * Adds a container name translation for the given container ID.<br>
+     * We assume we are only adding for our own containers.
+     */
     protected void container( String containerName, String translation ) {
         add( "container." + DeadlyWorld.MOD_ID + "." + containerName , translation );
     }
 
+    /** Auto-generates translations for all blocks in the provided deferred register. */
     protected void blocks( DeferredRegister<Block> registry ) {
         for ( RegistryObject<Block> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
@@ -111,6 +146,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         }
     }
 
+    /** Auto-generates translations for all items in the provided deferred register. */
     protected void items( DeferredRegister<Item> registry ) {
         for ( RegistryObject<Item> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
@@ -131,6 +167,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         }
     }
 
+    /** Auto-generates translations for all entity types in the provided deferred register. */
     protected void entityTypes( DeferredRegister<EntityType<?>> registry ) {
         for ( RegistryObject<EntityType<?>> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
@@ -146,6 +183,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         }
     }
 
+    /** Auto-generates translations for all mob effects in the provided deferred register. */
     protected void mobEffects( DeferredRegister<MobEffect> registry ) {
         for ( RegistryObject<MobEffect> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
@@ -159,5 +197,11 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
 
             add( key, translation );
         }
+    }
+
+    static class MsgPlaceholder {
+        protected static final String FIRST = "%1$s";
+        protected static final String SECOND = "%2$s";
+        protected static final String THIRD = "%3$s";
     }
 }

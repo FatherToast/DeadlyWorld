@@ -1,8 +1,5 @@
 {
   "credit": "Made with Blockbench",
-  "_note": "In case we want textured variants, this model file stands as a generic template.",
-
-
   "render_type": "cutout",
   "gui_light": "side",
   "display": {

@@ -29,7 +29,7 @@ public record TowerDispenserSettings(
     ).apply( instance, TowerDispenserSettings::new ) );
     
     public static TowerDispenserSettings of( TowerType type, DimensionConfigGroup dimConfigs ) {
-        return of( type.getFeatureConfig( dimConfigs ) );
+        return of( type.getConfig( dimConfigs ) );
     }
     
     public static TowerDispenserSettings of( TowerConfig.TowerTypeCategory config ) {

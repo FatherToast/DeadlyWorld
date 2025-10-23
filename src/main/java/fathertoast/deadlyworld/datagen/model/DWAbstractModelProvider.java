@@ -1,7 +1,9 @@
 package fathertoast.deadlyworld.datagen.model;
 
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -20,6 +22,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -111,6 +114,34 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
                 .texture( PARTICLE_KEY, blockTexture( Blocks.COBBLESTONE ) );
         itemModels().getBuilder( name ).parent( chainless );
     }
+
+    protected void spikeTrap( RegistryObject<? extends SpikeTrapBlock> regObj,
+                                    ResourceLocation baseTexture, ResourceLocation spikeTexture, ResourceLocation overlay ) {
+        final String name = Objects.requireNonNull( regObj.getId() ).getPath();
+
+        simpleBlockWithItem( regObj.get(), models()
+                .withExistingParent( name, templateLoc( "template_spike_trap" ) )
+                .texture( "base", baseTexture )
+                .texture( "overlay", overlay )
+                .texture( "spikes", spikeTexture )
+                .texture( PARTICLE_KEY, blockTexture( Blocks.COBBLESTONE ) )
+        );
+    }
+
+    protected void spikeTrap( RegistryObject<? extends SpikeTrapBlock> regObj, ResourceLocation baseTexture, ResourceLocation spikeTexture ) {
+        spikeTrap( regObj, baseTexture, spikeTexture, modBlockTexture( "regular_spike_trap_overlay" ) );
+    }
+
+    protected void spikeTrap( RegistryObject<? extends SpikeTrapBlock> regObj, ResourceLocation baseTexture ) {
+        String typeName = regObj.get().getSpikeTrapType().name().toLowerCase( Locale.ROOT );
+        ResourceLocation spikeTexture = modBlockTexture( typeName+ "_spikes" );
+        spikeTrap( regObj, baseTexture, spikeTexture );
+    }
+
+    protected void simpleSpikeTrap( RegistryObject<? extends SpikeTrapBlock> regObj ) {
+        spikeTrap( regObj, blockTexture( Blocks.STONE ) );
+    }
+
 
     /**
      * Generates state definition and a block model for blocks

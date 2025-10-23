@@ -1,8 +1,11 @@
 package fathertoast.deadlyworld.common.block.tower;
 
+import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
 import fathertoast.deadlyworld.common.block.entity.PotionTowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.SpikeTrapConfig;
 import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
@@ -24,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public enum TowerType {
+public enum TowerType implements IFeatureConfigProvider<TowerConfig.TowerTypeCategory> {
     
     SIMPLE( "simple", ( dimConfig ) -> dimConfig.TOWERS.SIMPLE ) {
         @Override
@@ -37,7 +40,7 @@ public enum TowerType {
             AbstractArrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
-                    (float) getFeatureConfig( dimConfig ).projectileSpeed.get(), (float) getFeatureConfig( dimConfig ).projectileVariance.get(), arrow
+                    (float) getConfig( dimConfig ).projectileSpeed.get(), (float) getConfig( dimConfig ).projectileVariance.get(), arrow
             );
         }
     },
@@ -54,7 +57,7 @@ public enum TowerType {
             arrow.setSecondsOnFire( 5 );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
-                    (float) getFeatureConfig( dimConfig ).projectileSpeed.get(), (float) getFeatureConfig( dimConfig ).projectileVariance.get(), arrow
+                    (float) getConfig( dimConfig ).projectileSpeed.get(), (float) getConfig( dimConfig ).projectileVariance.get(), arrow
             );
         }
     },
@@ -80,7 +83,7 @@ public enum TowerType {
                     potion );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
-                    (float) getFeatureConfig( dimConfig ).projectileSpeed.get(), (float) getFeatureConfig( dimConfig ).projectileVariance.get(), arrow
+                    (float) getConfig( dimConfig ).projectileSpeed.get(), (float) getConfig( dimConfig ).projectileVariance.get(), arrow
             );
         }
         
@@ -99,7 +102,7 @@ public enum TowerType {
             AbstractArrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
-                    (float) getFeatureConfig( dimConfig ).projectileSpeed.get(), (float) getFeatureConfig( dimConfig ).projectileVariance.get(), arrow
+                    (float) getConfig( dimConfig ).projectileSpeed.get(), (float) getConfig( dimConfig ).projectileVariance.get(), arrow
             );
         }
     },
@@ -118,10 +121,10 @@ public enum TowerType {
                 level.setBlock( topBlock, Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL );
             }
             
-            float accel = (float) getFeatureConfig( dimConfig ).projectileSpeed.get();
-            float var = (float) Math.sqrt( distanceH ) / 12.0F * (float) getFeatureConfig( dimConfig ).projectileVariance.get();
+            float accel = (float) getConfig( dimConfig ).projectileSpeed.get();
+            float var = (float) Math.sqrt( distanceH ) / 12.0F * (float) getConfig( dimConfig ).projectileVariance.get();
             
-            for( float count = (float) getFeatureConfig( dimConfig ).attackDamage.get(); count >= 1.0F || count > 0.0F && count > level.random.nextFloat(); count-- ) {
+            for( float count = (float) getConfig( dimConfig ).attackDamage.get(); count >= 1.0F || count > 0.0F && count > level.random.nextFloat(); count-- ) {
                 SmallFireball fireball = new SmallFireball(
                         level, center.x + offset.x * spawnOffset, center.y, center.z + offset.z * spawnOffset,
                         vecToTarget.x * accel + level.random.nextGaussian() * var,
@@ -143,17 +146,17 @@ public enum TowerType {
     private final String id;
     private final String displayName;
     /** A function that returns the feature config associated with this tower dispenser type for a given dimension config. */
-    private final Function<DimensionConfigGroup, TowerConfig.TowerTypeCategory> configFunction;
+    private final Function<DimensionConfigGroup, TowerConfig.TowerTypeCategory> configGetter;
     
     
     TowerType( String id, Function<DimensionConfigGroup, TowerConfig.TowerTypeCategory> configFunction ) {
         this( id, id.replace( "_", " " ) + " tower dispensers", configFunction );
     }
     
-    TowerType( String id, String displayName, Function<DimensionConfigGroup, TowerConfig.TowerTypeCategory> configFunction ) {
+    TowerType( String id, String displayName, Function<DimensionConfigGroup, TowerConfig.TowerTypeCategory> configGetter ) {
         this.id = id;
         this.displayName = displayName;
-        this.configFunction = configFunction;
+        this.configGetter = configGetter;
     }
     
     public String getDisplayName() { return displayName; }
@@ -164,9 +167,17 @@ public enum TowerType {
     
     /** @return A Supplier of the Spawner Block to register for this Spawner Type */
     public Supplier<TowerDispenserBlock> getBlock() { return () -> new TowerDispenserBlock( this ); }
-    
-    public final TowerConfig.TowerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
-    
+
+    @Override
+    public TowerConfig.TowerTypeCategory getConfig(Level level ) {
+        return configGetter.apply( Config.getDimensionConfigs( level ) );
+    }
+
+    @Override
+    public TowerConfig.TowerTypeCategory getConfig( DimensionConfigGroup dimConfig ) {
+        return configGetter.apply( dimConfig );
+    }
+
     public abstract void triggerAttack( DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
                                         Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH );
     

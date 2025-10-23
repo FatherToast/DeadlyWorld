@@ -78,10 +78,9 @@ public class SeaMineFeature extends DeadlyFeature<SeaMineFeature.Configuration> 
         
         // Generate debug marker
         if( seaMine.getBlock() instanceof SeaMineBlock seaMineBlock ) {
-            final WaterTrapConfig.SeaMineCategory seaMineConfig = seaMineBlock.getSeaMineType().getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+            final WaterTrapConfig.SeaMineCategory seaMineConfig = seaMineBlock.getSeaMineType().getConfig( level.getLevel() );
             debugMarkerIfEnabled( level, cursor, seaMineConfig );
         }
-        
         return true;
     }
 }

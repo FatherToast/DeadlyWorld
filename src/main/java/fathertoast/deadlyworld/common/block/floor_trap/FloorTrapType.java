@@ -1,10 +1,13 @@
 package fathertoast.deadlyworld.common.block.floor_trap;
 
+import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
 import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.config.dimension.WaterTrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
@@ -37,12 +40,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public enum FloorTrapType {
+public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.TrapTypeCategory> {
     
-    TNT( "tnt", ( dimConfig ) -> dimConfig.TRAPS.TNT ) {
+    TNT( "tnt", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.TNT ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            TrapConfig.TntTrapTypeCategory config = dimConfig.TRAPS.TNT;
+            FloorTrapConfig.TntTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT;
             Level level = trapEntity.getLevel();
             
             double x = trapEntity.getBlockPos().getX() + 0.5;
@@ -66,13 +69,13 @@ public enum FloorTrapType {
         }
     },
     
-    TNT_MOB( "tnt_mob", ( dimConfig ) -> dimConfig.TRAPS.TNT_MOB ) {
+    TNT_MOB( "tnt_mob", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.TNT_MOB ) {
         @Override
         public boolean spawnsMonster() { return true; }
         
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            TrapConfig.TntMobTrapTypeCategory config = dimConfig.TRAPS.TNT_MOB;
+            FloorTrapConfig.TntMobTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT_MOB;
             Level level = trapEntity.getLevel();
             
             double x = trapEntity.getBlockPos().getX() + 0.5;
@@ -159,11 +162,11 @@ public enum FloorTrapType {
         }
     },
     
-    POTION( "potion", ( dimConfig ) -> dimConfig.TRAPS.POTION ) {
+    POTION( "potion", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.POTION ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
             PotionTrapBlockEntity potionTrap = (PotionTrapBlockEntity) trapEntity;
-            TrapConfig.PotionTrapTypeCategory config = dimConfig.TRAPS.POTION;
+            FloorTrapConfig.PotionTrapTypeCategory config = dimConfig.FLOOR_TRAPS.POTION;
             
             Level level = trapEntity.getLevel();
             
@@ -194,10 +197,10 @@ public enum FloorTrapType {
         public Supplier<FloorTrapBlock> getBlock() { return PotionFloorTrapBlock::new; }
     },
     
-    LAVA( "lava", ( dimConfig ) -> dimConfig.TRAPS.LAVA ) {
+    LAVA( "lava", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.LAVA ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            TrapConfig.LavaTrapTypeCategory config = dimConfig.TRAPS.LAVA;
+            FloorTrapConfig.LavaTrapTypeCategory config = dimConfig.FLOOR_TRAPS.LAVA;
             
             Level level = trapEntity.getLevel();
             BlockPos pos = trapEntity.getBlockPos();
@@ -218,10 +221,10 @@ public enum FloorTrapType {
         }
     },
     
-    FIRE( "fire", ( dimConfig ) -> dimConfig.TRAPS.FIRE ) {
+    FIRE( "fire", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.FIRE ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
-            TrapConfig.FireTrapTypeCategory config = dimConfig.TRAPS.FIRE;
+            FloorTrapConfig.FireTrapTypeCategory config = dimConfig.FLOOR_TRAPS.FIRE;
             
             Level level = trapEntity.getLevel();
             BlockPos pos = trapEntity.getBlockPos();
@@ -342,17 +345,17 @@ public enum FloorTrapType {
     private final String id;
     private final String displayName;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
-    private final Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction;
+    private final Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configGetter;
     
     
-    FloorTrapType(String id, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
-        this( id, id.replace( "_", " " ) + " floor traps", configFunction );
+    FloorTrapType(String id, Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configGetter ) {
+        this( id, id.replace( "_", " " ) + " floor traps", configGetter );
     }
     
-    FloorTrapType(String id, String displayName, Function<DimensionConfigGroup, TrapConfig.TrapTypeCategory> configFunction ) {
+    FloorTrapType(String id, String displayName, Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configGetter ) {
         this.id = id;
         this.displayName = displayName;
-        this.configFunction = configFunction;
+        this.configGetter = configGetter;
     }
     
     public String getDisplayName() {
@@ -369,9 +372,17 @@ public enum FloorTrapType {
     public boolean spawnsMonster() {
         return false;
     }
-    
-    public final TrapConfig.TrapTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
-    
+
+    @Override
+    public FloorTrapConfig.TrapTypeCategory getConfig(Level level ) {
+        return configGetter.apply( Config.getDimensionConfigs( level ) );
+    }
+
+    @Override
+    public FloorTrapConfig.TrapTypeCategory getConfig( DimensionConfigGroup dimConfig ) {
+        return configGetter.apply( dimConfig );
+    }
+
     public abstract void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity );
     
     @Override

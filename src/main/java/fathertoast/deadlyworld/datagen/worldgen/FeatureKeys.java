@@ -96,23 +96,40 @@ public class FeatureKeys {
         }
     }
     
-    public static class Trap extends TypicalFeature {
+    public static class FloorTrap extends TypicalFeature {
         
-        public static Trap of(FloorTrapType type, String name ) { return new Trap( type, overworld( name ), nether( name ) ); }
+        public static FloorTrap of( FloorTrapType type, String name ) { return new FloorTrap( type, overworld( name ), nether( name ) ); }
         
         public final FloorTrapType trapType;
         
-        protected Trap(FloorTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
+        protected FloorTrap( FloorTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             trapType = type;
             
-            DWAbstractCFProvider.TRAP_FEATURES.add( overworld.configuredKey );
-            DWAbstractCFProvider.TRAP_FEATURES.add( nether.configuredKey );
-            DWPlacedFeatureProvider.TRAP_FEATURES.add( overworld.placedKey );
-            DWPlacedFeatureProvider.TRAP_FEATURES.add( nether.placedKey );
+            DWAbstractCFProvider.FLOOR_TRAP_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.FLOOR_TRAP_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.FLOOR_TRAP_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.FLOOR_TRAP_FEATURES.add( nether.placedKey );
         }
     }
-    
+
+    public static class SpikeTrap extends TypicalFeature {
+
+        public static SpikeTrap of( FloorTrapType type, String name ) { return new SpikeTrap( type, overworld( name ), nether( name ) ); }
+
+        public final FloorTrapType trapType;
+
+        protected SpikeTrap( FloorTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld, nether );
+            trapType = type;
+
+            DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( nether.placedKey );
+        }
+    }
+
     public static class TowerDispenser extends TypicalFeature {
         
         public static TowerDispenser of( TowerType type, String name ) { return new TowerDispenser( type, overworld( name ), nether( name ) ); }

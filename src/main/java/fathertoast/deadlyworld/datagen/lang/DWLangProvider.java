@@ -4,6 +4,7 @@ import fathertoast.deadlyworld.common.block.infested.NameStyle;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.*;
+import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import net.minecraft.data.PackOutput;
 
 public class DWLangProvider extends DWAbstractLangProvider {
@@ -45,9 +46,9 @@ public class DWLangProvider extends DWAbstractLangProvider {
         creativeTab( DWCreativeModeTabs.PLACERS, "Deadly World - Feature Placers" );
         
         // Infested block stuff
-        add( NameStyle.VANILLA.getLangKey(), "Infested %1$s" );
-        add( NameStyle.SUSPICIOUS.getLangKey(), "\"%1$s\"" );
-        add( NameStyle.IDENTITY.getLangKey(), "%1$s" );
+        add( NameStyle.VANILLA.getLangKey(), "Infested " + MsgPlaceholder.FIRST );
+        add( NameStyle.SUSPICIOUS.getLangKey(), "\"" + MsgPlaceholder.FIRST + "\"" );
+        add( NameStyle.IDENTITY.getLangKey(), MsgPlaceholder.FIRST );
         
         // Sound event subtitles
         soundSubtitle( DWSoundEvents.TOWER_DISPENSER_SHOOT, "Tower Dispenser shoots" );
@@ -65,15 +66,19 @@ public class DWLangProvider extends DWAbstractLangProvider {
         // Item tooltips
         tooltip( DWItems.FEATURE_PLACER, "Generates:" );
         tooltip( DWItems.CONTAINER_INFESTATION, "When triggered:" );
+        tooltip( DWItems.CONTAINER_TRAP, "When triggered:" );
         tooltip( DWItems.CONTAINER_INFESTATION, "spiders", "Spawns mini spiders" );
         tooltip( DWItems.CONTAINER_INFESTATION, "silverfish", "Spawns silverfish" );
-        tooltip( DWItems.CONTAINER_TRAP, "When triggered:" );
         tooltip( DWItems.CONTAINER_TRAP, "tnt", "Spawns primed TNT" );
         tooltip( DWItems.CONTAINER_TRAP, "lava", "Spews lava" );
         tooltip( DWItems.CONTAINER_TRAP, "runny_lava", "Spews runny lava" );
         tooltip( DWItems.CONTAINER_TRAP, "poison_gas", "Releases poison gas" );
         tooltip( DWItems.CONTAINER_TRAP, "wither_gas", "Releases withering gas" );
-        
+
+        deathMessage( DWDamageTypes.SPIKE_TRAP,
+                MsgPlaceholder.FIRST + " was impaled on a spike trap",
+                MsgPlaceholder.FIRST + " was impaled on a spike trap while trying to escape " + MsgPlaceholder.SECOND );
+
         // Auto-gen for registries
         items( DWItems.REGISTRY );
         blocks( DWBlocks.REGISTRY );

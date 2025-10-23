@@ -1,7 +1,10 @@
 package fathertoast.deadlyworld.common.block.spawner;
 
+import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
+import fathertoast.deadlyworld.common.config.dimension.SpikeTrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.BlockPos;
@@ -17,7 +20,7 @@ import net.minecraft.world.level.Level;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public enum SpawnerType {
+public enum SpawnerType implements IFeatureConfigProvider<SpawnerConfig.SpawnerTypeCategory> {
     
     // Standalone features
     SIMPLE( "simple", ( dimConfigs ) -> dimConfigs.SPAWNERS.SIMPLE ),
@@ -117,12 +120,20 @@ public enum SpawnerType {
             throw new UnsupportedOperationException( "Subfeatures do not have chest loot! (spawner type \"" + id + "\")" );
         return DeadlyWorld.rl( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
     }
-    
-    public SpawnerConfig.SpawnerTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configGetter.apply( dimConfigs ); }
-    
+
+    @Override
+    public SpawnerConfig.SpawnerTypeCategory getConfig( Level level ) {
+        return configGetter.apply( Config.getDimensionConfigs( level ) );
+    }
+
+    @Override
+    public SpawnerConfig.SpawnerTypeCategory getConfig( DimensionConfigGroup dimConfig ) {
+        return configGetter.apply( dimConfig );
+    }
+
     /** Applies any additional modifiers to entities spawned by spawners of this type. */
     public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level level, BlockPos pos ) {
-        final SpawnerConfig.SpawnerTypeCategory config = getFeatureConfig( dimConfigs );
+        final SpawnerConfig.SpawnerTypeCategory config = getConfig( dimConfigs );
         config.attributeAdjustments.apply( entity );
         entity.setHealth( entity.getMaxHealth() );
     }

@@ -5,6 +5,7 @@ import fathertoast.crust.api.datagen.loot.LootTableBuilder;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
@@ -39,6 +40,10 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         }
         for( FloorTrapType type : FloorTrapType.values() ) {
             add( DWBlocks.floorTrap( type ), buildFloorTrapLoot( type ) );
+        }
+        // TODO - dunno what these should drops
+        for( SpikeTrapType type : SpikeTrapType.values() ) {
+            add( DWBlocks.spikeTrap( type ).get(), noDrop() );
         }
         for( TowerType type : TowerType.values() ) {
             add( DWBlocks.towerDispenser( type ), buildTowerDispenserLoot( type ) );

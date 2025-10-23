@@ -39,11 +39,11 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.Spawner MINI_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.MINI, "mini_spawner" );
     public static final FeatureKeys.Spawner SILVERFISH_NEST = FeatureKeys.Spawner.of( SpawnerType.NEST, "silverfish_nest" );
     
-    public static final FeatureKeys.Trap TNT_TRAP = FeatureKeys.Trap.of( FloorTrapType.TNT, "tnt_trap" );
-    public static final FeatureKeys.Trap TNT_MOB_TRAP = FeatureKeys.Trap.of( FloorTrapType.TNT_MOB, "tnt_mob_trap" );
-    public static final FeatureKeys.Trap POTION_TRAP = FeatureKeys.Trap.of( FloorTrapType.POTION, "potion_trap" );
-    public static final FeatureKeys.Trap LAVA_TRAP = FeatureKeys.Trap.of( FloorTrapType.LAVA, "lava_trap" );
-    public static final FeatureKeys.Trap FIRE_TRAP = FeatureKeys.Trap.of( FloorTrapType.FIRE, "fire_trap" );
+    public static final FeatureKeys.FloorTrap TNT_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.TNT, "tnt_trap" );
+    public static final FeatureKeys.FloorTrap TNT_MOB_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.TNT_MOB, "tnt_mob_trap" );
+    public static final FeatureKeys.FloorTrap POTION_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.POTION, "potion_trap" );
+    public static final FeatureKeys.FloorTrap LAVA_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.LAVA, "lava_trap" );
+    public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
 
     public static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower" );
@@ -116,15 +116,15 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         registerFloorTrap( context, FIRE_TRAP, overworldConfigs, netherConfigs );
         register( context, SEA_MINE_MOB_TRAP, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
                 new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( FloorTrapType.SEA_MINE_MOB ) ),
-                        FloorTrapSettings.of( FloorTrapType.SEA_MINE_MOB.getFeatureConfig( overworldConfigs ) ),
+                        FloorTrapSettings.of( FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
 
         // Potion floor traps
         register( context, POTION_TRAP.overworldKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
-                block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( overworldConfigs.TRAPS.POTION ),
+                block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( overworldConfigs.FLOOR_TRAPS.POTION ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         register( context, POTION_TRAP.netherKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
-                block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( netherConfigs.TRAPS.POTION ),
+                block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( netherConfigs.FLOOR_TRAPS.POTION ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         
         // Towers

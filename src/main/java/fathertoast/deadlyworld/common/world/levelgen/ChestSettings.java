@@ -23,7 +23,7 @@ public record ChestSettings(
     
     public static ChestSettings of( ChestType type, DimensionConfigGroup dimConfigs ) {
         return new ChestSettings( type.getChestLootTable(), 0, // We never use a fixed lootTableSeed
-                new BooleanFieldSetting( type.getFeatureConfig( dimConfigs ).debugMarker ) );
+                new BooleanFieldSetting( type.getConfig( dimConfigs ).debugMarker ) );
     }
     
     public void initializeChest( WorldGenLevel level, BlockPos pos, RandomSource random ) {

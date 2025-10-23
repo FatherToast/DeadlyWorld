@@ -3,19 +3,23 @@ package fathertoast.deadlyworld.common.block.sea_mine;
 import fathertoast.crust.api.ICrustApi;
 import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.crust.api.lib.CrustObjects;
+import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.config.dimension.WaterTrapConfig;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings( "ConstantConditions" )
-public enum SeaMineType {
+public enum SeaMineType implements IFeatureConfigProvider<WaterTrapConfig.SeaMineCategory> {
 
     NORMAL( "normal", 6.0F,
             new WeightedPotionList(),
@@ -95,7 +99,15 @@ public enum SeaMineType {
     @Override
     public String toString() { return id; }
 
-    public WaterTrapConfig.SeaMineCategory getFeatureConfig(DimensionConfigGroup dimConfigs ) { return configGetter.apply( dimConfigs ); }
+    @Override
+    public WaterTrapConfig.SeaMineCategory getConfig(Level level ) {
+        return configGetter.apply( Config.getDimensionConfigs( level ) );
+    }
+
+    @Override
+    public WaterTrapConfig.SeaMineCategory getConfig( DimensionConfigGroup dimConfig ) {
+        return configGetter.apply( dimConfig );
+    }
 
     public static SeaMineType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {

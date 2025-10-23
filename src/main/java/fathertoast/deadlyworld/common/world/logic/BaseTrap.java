@@ -5,7 +5,7 @@ import fathertoast.deadlyworld.api.DWRegistries;
 import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.dimension.TrapConfig;
+import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
 import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
 import fathertoast.deadlyworld.common.util.TrapHelper;
@@ -118,10 +118,10 @@ public abstract class BaseTrap {
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random, FloorTrapSettings trapSettings ) {
-        final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+        final FloorTrapConfig.TrapTypeCategory trapConfig = trapType.getConfig( level.getLevel() );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, trapConfig );
         
-        initializeTrap( getLevel(), pos, random,
+        initializeTrap( level.getLevel(), pos, random,
                 trapSettings.decoyChance().sample( random ) > random.nextFloat(),
                 trapSettings.requiredPlayerRange().sample( random ),
                 trapSettings.checkSightChance().sample( random ) > random.nextFloat(),
@@ -130,16 +130,16 @@ public abstract class BaseTrap {
                 trapSettings.resetTime().getMaxValue()
         );
     }
-    
-    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random ) {
-        final TrapConfig.TrapTypeCategory trapConfig = trapType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+
+    public void initializeTrap( Level level, BlockPos pos, RandomSource random ) {
+        final FloorTrapConfig.TrapTypeCategory trapConfig = trapType.getConfig( level );
         initializeTrap( level, pos, random, trapConfig.decoyChance.rollChance( random ),
                 trapConfig.activationRange.get(), trapConfig.checkSightChance.rollChance( random ),
                 trapConfig.triggersRemaining.get(), trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax()
         );
     }
     
-    public void initializeTrap( @Nullable Level level, BlockPos pos, RandomSource random, boolean spawnDecoy,
+    public void initializeTrap( Level level, BlockPos pos, RandomSource random, boolean spawnDecoy,
                                 double activationRange, boolean checkSight, int triggersRemaining, int minResetTime, int maxResetTime ) {
         this.checkSight = checkSight;
         this.activationRange = activationRange;
@@ -149,24 +149,19 @@ public abstract class BaseTrap {
         
         if( spawnDecoy ) {
             // Pick a decoy suitable for the dimension we are in if level is not null
-            if( level != null ) {
-                ResourceKey<Level> dimension = level.dimension();
-                ITag<DecoyType> tag;
+            ResourceKey<Level> dimension = level.dimension();
+            ITag<DecoyType> tag;
                 
-                if( dimension.equals( Level.OVERWORLD ) ) {
-                    tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.OVERWORLD );
-                }
-                else if( dimension.equals( Level.NETHER ) ) {
-                    tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.THE_NETHER );
-                }
-                else {
-                    tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.ANY_DIMENSION );
-                }
-                this.decoyType = tag.getRandomElement( random ).orElse( DWDecoyTypes.PIG.get() );
+            if( dimension.equals( Level.OVERWORLD ) ) {
+                tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.OVERWORLD );
+            }
+            else if( dimension.equals( Level.NETHER ) ) {
+                tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.THE_NETHER );
             }
             else {
-                this.decoyType = DWDecoyTypes.getRandomType( random );
+                tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.ANY_DIMENSION );
             }
+            this.decoyType = tag.getRandomElement( random ).orElse( DWDecoyTypes.PIG.get() );
         }
     }
     

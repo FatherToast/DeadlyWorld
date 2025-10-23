@@ -39,7 +39,7 @@ public class PotionTower extends BaseTower {
     
     public void initializeTower( WorldGenLevel level, BlockPos pos, RandomSource random, FloorTrapSettings trapSettings ) {
         final TowerConfig.PotionTowerTypeCategory towerConfig =
-                (TowerConfig.PotionTowerTypeCategory) towerType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+                (TowerConfig.PotionTowerTypeCategory) towerType.getConfig( level.getLevel() );
         
         DeadlyFeature.debugMarkerIfEnabled( level, pos, towerConfig );
 
@@ -55,9 +55,9 @@ public class PotionTower extends BaseTower {
     }
     
     @Override
-    public void initializeTower( @Nullable Level level, BlockPos pos, RandomSource random ) {
+    public void initializeTower( Level level, BlockPos pos, RandomSource random ) {
         final TowerConfig.PotionTowerTypeCategory towerConfig =
-                (TowerConfig.PotionTowerTypeCategory) towerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+                (TowerConfig.PotionTowerTypeCategory) towerType.getConfig( level );
         
         initializeTower( level, pos, random,
                 towerConfig.activationRange.get(), (float) towerConfig.checkSightChance.get(),
@@ -66,7 +66,7 @@ public class PotionTower extends BaseTower {
         );
     }
     
-    public void initializeTower( @Nullable Level level, BlockPos pos, RandomSource random, double activationRange,
+    public void initializeTower( Level level, BlockPos pos, RandomSource random, double activationRange,
                                  float checkSightChance, int minAttackDelay, int maxAttackDelay, float attackDamage,
                                  float projectileSpeed, float projectileVariance, boolean dynamic ) {
         this.checkSight = roll( random, checkSightChance );

@@ -116,10 +116,10 @@ public abstract class BaseTower {
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
     public void initializeTower( WorldGenLevel level, BlockPos pos, RandomSource random, TowerDispenserSettings settings ) {
-        final TowerConfig.TowerTypeCategory towerConfig = towerType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+        final TowerConfig.TowerTypeCategory towerConfig = towerType.getConfig( level.getLevel() );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, towerConfig );
         
-        initializeTower( getLevel(), pos, random,
+        initializeTower( level.getLevel(), pos, random,
                 settings.requiredPlayerRange().sample( random ),
                 settings.checkSightChance().sample( random ),
                 settings.attackDelay().getMinValue(),
@@ -130,8 +130,8 @@ public abstract class BaseTower {
         );
     }
     
-    public void initializeTower( @Nullable Level level, BlockPos pos, RandomSource random ) {
-        final TowerConfig.TowerTypeCategory towerConfig = towerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+    public void initializeTower( Level level, BlockPos pos, RandomSource random ) {
+        final TowerConfig.TowerTypeCategory towerConfig = towerType.getConfig( level );
         initializeTower( level, pos, random,
                 towerConfig.activationRange.get(), (float) towerConfig.checkSightChance.get(),
                 towerConfig.attackDelay.getMin(), towerConfig.attackDelay.getMax(), towerConfig.attackDamage == null ? -1.0F : (float) towerConfig.attackDamage.get(),
@@ -139,7 +139,7 @@ public abstract class BaseTower {
         );
     }
     
-    public void initializeTower( @Nullable Level level, BlockPos pos, RandomSource random, double activationRange,
+    public void initializeTower( Level level, BlockPos pos, RandomSource random, double activationRange,
                                  float checkSightChance, int minAttackDelay, int maxAttackDelay, float attackDamage,
                                  float projectileSpeed, float projectileVariance ) {
         this.checkSight = roll( random, checkSightChance );
@@ -284,7 +284,7 @@ public abstract class BaseTower {
         arrow.setBaseDamage( attackDamage / velocity );
         arrow.setPos( center.x + offset.x * spawnOffset, center.y, center.z + offset.z * spawnOffset );
         arrow.shoot( vecToTarget.x, vecToTarget.y + distanceH * 0.2F, vecToTarget.z, velocity, variance );
-        
+
         getLevel().addFreshEntity( arrow );
     }
     

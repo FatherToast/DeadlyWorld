@@ -1,30 +1,40 @@
-package fathertoast.deadlyworld.common.block.misc;
+package fathertoast.deadlyworld.common.block.spike_trap;
 
-import fathertoast.deadlyworld.common.util.DWDamageSources;
+import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class SpikeTrapBlock extends Block {
 
-    
-
     public static BooleanProperty ACTIVE = BooleanProperty.create( "active" );
 
-    public SpikeTrapBlock( Properties properties ) {
-        super( properties );
+    private final SpikeTrapType type;
+
+
+    public SpikeTrapBlock( SpikeTrapType type ) {
+        super( Config.BLOCKS.get( type ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.SPAWNER ) ) );
+        this.type = type;
         registerDefaultState( stateDefinition.any().setValue( ACTIVE, false ) );
+    }
+
+    public SpikeTrapType getSpikeTrapType() {
+        return type;
     }
 
     @Override
     public void stepOn( Level level, BlockPos pos, BlockState state, Entity entity ) {
         if ( !state.getValue( ACTIVE ) && !entity.isSteppingCarefully() && entity instanceof LivingEntity livingEntity ) {
-            livingEntity.hurt( DWDamageSources.of( level, DWDamageSources.SPIKE_TRAP ), 4.0F );
+            float damage = type.getConfig( level ).damage.getFloat();
+            livingEntity.hurt( DWDamageTypes.of( level, DWDamageTypes.SPIKE_TRAP ), damage );
         }
         super.stepOn( level, pos, state, entity );
     }

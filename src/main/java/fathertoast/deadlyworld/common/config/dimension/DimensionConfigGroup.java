@@ -13,9 +13,10 @@ public class DimensionConfigGroup extends ConfigGroup {
     
     public final ChestConfig CHESTS;
     public final SpawnerConfig SPAWNERS;
-    public final TrapConfig TRAPS;
     public final TowerConfig TOWERS;
+    public final FloorTrapConfig FLOOR_TRAPS;
     public final WaterTrapConfig WATER_TRAPS;
+    public final SpikeTrapConfig SPIKE_TRAPS;
     public final EnvHazardConfig ENV_HAZARDS;
     public final DungeonConfig SIMPLE_DUNGEONS;
     
@@ -27,9 +28,10 @@ public class DimensionConfigGroup extends ConfigGroup {
         
         CHESTS = group( new ChestConfig( manager, dir, this ) );
         SPAWNERS = group( new SpawnerConfig( manager, dir, this ) );
-        TRAPS = group( new TrapConfig( manager, dir, this ) );
         TOWERS = group( new TowerConfig( manager, dir, this ) );
+        FLOOR_TRAPS = group( new FloorTrapConfig( manager, dir, this ) );
         WATER_TRAPS = group( new WaterTrapConfig( manager, dir, this ) );
+        SPIKE_TRAPS = group( new SpikeTrapConfig( manager, dir, this ) );
         ENV_HAZARDS = group( new EnvHazardConfig( manager, dir, this ) );
         SIMPLE_DUNGEONS = group( new DungeonConfig( manager, dir, this ) );
     }

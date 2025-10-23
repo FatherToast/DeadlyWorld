@@ -4,6 +4,7 @@ import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
@@ -58,7 +59,9 @@ public abstract class DWAbstractCFProvider {
     /** List of all spawner configurations. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> SPAWNER_FEATURES = new ArrayList<>();
     /** List of all trap configurations. */
-    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TRAP_FEATURES = new ArrayList<>();
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> FLOOR_TRAP_FEATURES = new ArrayList<>();
+    /** List of all trap configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> SPIKE_TRAP_FEATURES = new ArrayList<>();
     /** List of all tower configurations. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> TOWER_FEATURES = new ArrayList<>();
     /** List of all sea mine configurations. */
@@ -83,7 +86,7 @@ public abstract class DWAbstractCFProvider {
     protected static void registerLoneChest( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.LoneChest feature,
                                              DimensionConfigGroup overworldConfigs, BlockStateProvider overworldChest,
                                              DimensionConfigGroup netherConfigs, BlockStateProvider netherChest,
-                                             @Nullable FeatureKeys.Trap trapFeature ) {
+                                             @Nullable FeatureKeys.FloorTrap trapFeature ) {
         registerLoneChest( context, feature.overworldKeys, feature.chestType, overworldConfigs, overworldChest,
                 trapFeature == null ? null : trapFeature.overworldKeys );
         registerLoneChest( context, feature.netherKeys, feature.chestType, netherConfigs, netherChest,
@@ -113,13 +116,13 @@ public abstract class DWAbstractCFProvider {
                                                SpawnerType type, DimensionConfigGroup dimConfigs, BlockStateProvider topper, boolean vines ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.LONE_SPAWNER.get(),
                 new LoneSpawnerFeature.Configuration( block( DWBlocks.spawner( type ) ), topper,
-                        SpawnerSettings.of( type.getFeatureConfig( dimConfigs ) ),
+                        SpawnerSettings.of( type.getConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE, vines ) ) );
     }
     
     
     /** Registers a configured floor trap type feature to each supported dimension. */
-    protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.Trap feature,
+    protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.FloorTrap feature,
                                              DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         registerFloorTrap( context, feature.overworldKeys, feature.trapType, overworldConfigs );
         registerFloorTrap( context, feature.netherKeys, feature.trapType, netherConfigs );
@@ -130,7 +133,7 @@ public abstract class DWAbstractCFProvider {
                                             FloorTrapType type, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
                 new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( type ) ),
-                        FloorTrapSettings.of( type.getFeatureConfig( dimConfigs ) ),
+                        FloorTrapSettings.of( type.getConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
     
@@ -148,7 +151,7 @@ public abstract class DWAbstractCFProvider {
                                          TowerType type, BlockStateProvider base, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER.get(),
                 new TowerFeature.Configuration( block( DWBlocks.towerDispenser( type ) ), base,
-                        TowerDispenserSettings.of( type.getFeatureConfig( dimConfigs ) ),
+                        TowerDispenserSettings.of( type.getConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
     
@@ -167,8 +170,21 @@ public abstract class DWAbstractCFProvider {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SEA_MINE.get(),
                 new SeaMineFeature.Configuration( block( DWBlocks.seaMine( type ).get().defaultBlockState()
                         .setValue( SeaMineBlock.WATERLOGGED, true ) ), trailProvider,
-                        SeaMineSettings.of( type.getFeatureConfig( dimConfigs ) ) ) ) );
+                        SeaMineSettings.of( type.getConfig( dimConfigs ) ) ) ) );
     }
+
+    /** Registers a configured spike trap type feature. */
+    // TODO
+    /*
+    protected static void registerSpikeTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
+                                            SpikeTrapType type, BlockStateProvider trailProvider, DimensionConfigGroup dimConfigs ) {
+        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SEA_MINE.get(),
+                new SeaMineFeature.Configuration( block( DWBlocks.spikeTrap( type ).get().defaultBlockState()
+                        .setValue( SeaMineBlock.WATERLOGGED, true ) ), trailProvider,
+                        SeaMineSettings.of( type.getConfig( dimConfigs ) ) ) ) );
+    }
+
+     */
     
     
     /** Registers a configured feature. */

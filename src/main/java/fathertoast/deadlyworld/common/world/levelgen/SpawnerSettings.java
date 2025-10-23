@@ -40,7 +40,7 @@ public record SpawnerSettings(
             FloatProvider.CODEC.fieldOf( "mimic_chance" ).forGetter( SpawnerSettings::mimicChance )
     ).apply( instance, SpawnerSettings::new ) );
     
-    public static SpawnerSettings of( SpawnerType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
+    public static SpawnerSettings of( SpawnerType type, DimensionConfigGroup dimConfigs ) { return of( type.getConfig( dimConfigs ) ); }
     
     public static SpawnerSettings of( SpawnerConfig.SpawnerTypeCategory config ) {
         return new SpawnerSettings(

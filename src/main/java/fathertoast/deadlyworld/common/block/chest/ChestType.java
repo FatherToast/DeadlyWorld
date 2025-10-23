@@ -1,14 +1,18 @@
 package fathertoast.deadlyworld.common.block.chest;
 
+import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.ChestConfig;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Function;
 
-public enum ChestType {
+public enum ChestType implements IFeatureConfigProvider<ChestConfig.ChestTypeCategory> {
     
     SIMPLE( "simple", ( dimConfig ) -> dimConfig.CHESTS.SIMPLE ),
     VALUABLE( "valuable", ( dimConfig ) -> dimConfig.CHESTS.VALUABLE ),
@@ -19,25 +23,33 @@ public enum ChestType {
     private final String id;
     private final String displayName;
     /** A function that returns the feature config associated with this chest type for a given dimension config. */
-    private final Function<DimensionConfigGroup, ChestConfig.ChestTypeCategory> configFunction;
+    private final Function<DimensionConfigGroup, ChestConfig.ChestTypeCategory> configGetter;
+
     
-    
-    ChestType( String id, Function<DimensionConfigGroup, ChestConfig.ChestTypeCategory> configFunction ) {
-        this( id, id.replace( "_", " " ) + " chests", configFunction );
+    ChestType( String id, Function<DimensionConfigGroup, ChestConfig.ChestTypeCategory> configGetter ) {
+        this( id, id.replace( "_", " " ) + " chests", configGetter );
     }
     
-    ChestType( String id, String displayName, Function<DimensionConfigGroup, ChestConfig.ChestTypeCategory> configFunction ) {
+    ChestType( String id, String displayName, Function<DimensionConfigGroup, ChestConfig.ChestTypeCategory> configGetter ) {
         this.id = id;
         this.displayName = displayName;
-        this.configFunction = configFunction;
+        this.configGetter = configGetter;
     }
     
     public String getDisplayName() { return displayName; }
     
     public ResourceLocation getChestLootTable() { return DeadlyWorld.rl( References.CHEST_LOOT_PATH + this ); }
-    
-    public final ChestConfig.ChestTypeCategory getFeatureConfig( DimensionConfigGroup dimConfigs ) { return configFunction.apply( dimConfigs ); }
-    
+
+    @Override
+    public ChestConfig.ChestTypeCategory getConfig(Level level ) {
+        return configGetter.apply( Config.getDimensionConfigs( level ) );
+    }
+
+    @Override
+    public ChestConfig.ChestTypeCategory getConfig( DimensionConfigGroup dimConfig ) {
+        return configGetter.apply( dimConfig );
+    }
+
     @Override
     public String toString() { return id; }
     

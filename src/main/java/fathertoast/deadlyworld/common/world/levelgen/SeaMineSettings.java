@@ -15,7 +15,7 @@ public record SeaMineSettings(
             IntProvider.CODEC.fieldOf( "min_distance_from_bottom" ).forGetter( SeaMineSettings::distanceFromBottom )
     ).apply( instance, SeaMineSettings::new ) );
 
-    public static SeaMineSettings of( SeaMineType type, DimensionConfigGroup dimConfigs ) { return of( type.getFeatureConfig( dimConfigs ) ); }
+    public static SeaMineSettings of( SeaMineType type, DimensionConfigGroup dimConfigs ) { return of( type.getConfig( dimConfigs ) ); }
 
     public static SeaMineSettings of( WaterTrapConfig.SeaMineCategory config ) {
         return new SeaMineSettings(

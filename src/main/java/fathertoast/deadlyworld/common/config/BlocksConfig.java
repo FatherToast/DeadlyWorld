@@ -8,6 +8,7 @@ import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
@@ -48,9 +49,14 @@ public class BlocksConfig extends AbstractConfigFile {
         
         // Sea Mines
         for( SeaMineType type : SeaMineType.values() ) {
-            //TODO consider moving the sea mine type settings to the sea mine feature dimension configs
             LOOKUP.put( toKey( SeaMineType.BLOCK_CATEGORY, type.toString() ), new SeaMineBlockCategory( this, SeaMineType.BLOCK_CATEGORY, type.toString(),
                     0.0, 0.0, 1, type.defaultExplosionPower(), type.defaultPotions() ) );
+        }
+
+        // Spike Traps
+        for( SpikeTrapType type : SpikeTrapType.values() ) {
+            LOOKUP.put( toKey( SpikeTrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, SpikeTrapType.BLOCK_CATEGORY, type.toString(),
+                    5.0, 2.5, 1 ) );
         }
         
         //TODO add storm drain; will possibly include in a "water traps" category
@@ -63,8 +69,10 @@ public class BlocksConfig extends AbstractConfigFile {
     public BlockCategory get( TowerType type ) { return get( TowerType.BLOCK_CATEGORY, type.toString() ); }
     
     public SeaMineBlockCategory get( SeaMineType type ) { return (SeaMineBlockCategory) get( SeaMineType.BLOCK_CATEGORY, type.toString() ); }
-    
-    
+
+    public BlockCategory get( SpikeTrapType type ) { return get( SpikeTrapType.BLOCK_CATEGORY, type.toString() ); }
+
+
     private BlockCategory get( String category, String type ) {
         BlocksConfig.BlockCategory blockCategory = LOOKUP.get( toKey( category, type ) );
         

@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.config.dimension;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.crust.api.config.common.field.StringListField;
 import fathertoast.crust.api.config.common.value.EntityEntry;
 import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
@@ -17,7 +18,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import static fathertoast.deadlyworld.common.util.References.*;
 
-public class TrapConfig extends FeatureConfig {
+public class FloorTrapConfig extends FeatureConfig {
     
     public final TntTrapTypeCategory TNT;
     public final TntMobTrapTypeCategory TNT_MOB;
@@ -26,14 +27,11 @@ public class TrapConfig extends FeatureConfig {
     public final FireTrapTypeCategory FIRE;
     
     /** Builds the config spec that should be used for this config. */
-    TrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
+    FloorTrapConfig(ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "floor trap" );
         
         SPEC.newLine();
         SPEC.describeEntityList();
-        
-        //SPEC.newLine();
-        //SPEC.describePotionList();
         
         TNT = new TntTrapTypeCategory( this, FloorTrapType.TNT, 0.3, DEPTH_LAVA, DEPTH_0, 0.05,
                 4.0, true, 20, 60, 1, 40, 50, 4, 2.0 );

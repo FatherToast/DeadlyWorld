@@ -140,7 +140,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     public Level getLevel() { return blockEntity != null ? blockEntity.getLevel() : mobileEntity != null ? mobileEntity.level() : null; }
     
     public void initializeSpawner( WorldGenLevel level, BlockPos pos, RandomSource random, SpawnerSettings spawnerSettings ) {
-        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( Config.getDimensionConfigs( level.getLevel() ) );
+        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getConfig( level.getLevel() );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, spawnerConfig );
         initializeSpawner( getLevel(), pos, random,
                 spawnerSettings.requiredPlayerRange().sample( random ), spawnerSettings.checkSightChance().sample( random ),
@@ -154,7 +154,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     }
     
     public void initializeSpawner( Level level, BlockPos pos, RandomSource random ) {
-        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getFeatureConfig( Config.getDimensionConfigs( level ) );
+        final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getConfig( level );
         initializeSpawner( level, pos, random,
                 spawnerConfig.activationRange.get(), (float) spawnerConfig.checkSightChance.get(),
                 spawnerConfig.maxNearbyEntities.get(),

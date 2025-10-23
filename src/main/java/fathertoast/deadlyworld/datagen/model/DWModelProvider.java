@@ -7,6 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -30,10 +31,10 @@ public class DWModelProvider extends DWAbstractModelProvider {
         DWBlocks.FLOOR_TRAPS.forEach( this::simpleFloorTrap );
         DWBlocks.TOWER_DISPENSERS.forEach( this::simpleTowerDispenser );
         DWBlocks.SEA_MINES.forEach( this::simpleSeaMine );
+        DWBlocks.SPIKE_TRAPS.forEach( this::simpleSpikeTrap );
 
         emptyModelWithParticle( DWBlocks.MINI_CHEST, blockTexture( Blocks.OAK_PLANKS ) );
         emptyModelWithParticle( DWBlocks.RUNNY_LAVA, blockTextureExtend( Blocks.LAVA, "_still" ) );
-
 
         // Items
         simpleItem( DWItems.MIMIC_CORE );

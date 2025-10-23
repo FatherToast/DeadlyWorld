@@ -30,7 +30,7 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
         
         addAll( DWTags.ConfiguredFeatures.LONE_CHESTS, DWAbstractCFProvider.LONE_CHEST_FEATURES );
         addAll( DWTags.ConfiguredFeatures.SPAWNERS, DWAbstractCFProvider.SPAWNER_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.TRAPS, DWAbstractCFProvider.TRAP_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.TRAPS, DWAbstractCFProvider.FLOOR_TRAP_FEATURES);
         addAll( DWTags.ConfiguredFeatures.TOWERS, DWAbstractCFProvider.TOWER_FEATURES );
         addAll( DWTags.ConfiguredFeatures.SEA_MINES, DWAbstractCFProvider.SEA_MINE_FEATURES );
         addAll( DWTags.ConfiguredFeatures.DUNGEONS, DWAbstractCFProvider.DUNGEON_FEATURES );
