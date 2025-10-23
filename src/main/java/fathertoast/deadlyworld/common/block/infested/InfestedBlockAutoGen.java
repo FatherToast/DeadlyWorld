@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,6 +79,28 @@ public class InfestedBlockAutoGen {
         // Remove some dependencies we know don't matter and then apply
         List.of( ResourceLocation.DEFAULT_NAMESPACE, "forge", DeadlyWorld.MOD_ID, ICrustApi.MOD_ID ).forEach( dependencies::remove );
         InfestedBlockAutoGen.adjustLoadOrder( dependencies );
+    }
+    
+    /** Checks for any auto-generated infested blocks among the missing mappings and handles them accordingly. */
+    public static void remapMissingBlocks( List<MissingMappingsEvent.Mapping<Block>> mappings ) {
+        // Remap any mappings we can safely assume previously belonged to an infested block to the config default
+        final Block defaultInfestedBlock = Config.INFESTED_BLOCKS.AUTO_GEN.getFallbackBlock();
+        final StringBuilder message = new StringBuilder( "Missing host blocks are:" );
+        boolean missing = false;
+        for( MissingMappingsEvent.Mapping<Block> mapping : mappings ) {
+            ResourceLocation hostBlockLoc = DeadlyInfestedBlock.hostLocFrom( mapping.getKey() );
+            if( hostBlockLoc != null ) {
+                mapping.remap( defaultInfestedBlock );
+                message.append( " \"" ).append( hostBlockLoc ).append( "\"," );
+                missing = true;
+            }
+        }
+        // Give the user some helpful feedback and a string they can paste into their config
+        if( missing ) {
+            InfestedBlockAutoGen.LOG.warn( "Blocks missing from your '{}' config setting in '{}.toml'!",
+                    Config.INFESTED_BLOCKS.AUTO_GEN.hostBlocks.getKey(), Config.INFESTED_BLOCKS.SPEC.NAME );
+            InfestedBlockAutoGen.LOG.warn( message.substring( 0, message.length() - 1 ) );
+        }
     }
     
     /**

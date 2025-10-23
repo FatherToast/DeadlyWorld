@@ -5,6 +5,7 @@ import fathertoast.crust.api.lib.DeferredAction;
 import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
+import fathertoast.deadlyworld.common.block.infested.InfestedBlockAutoGen;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -16,6 +17,7 @@ import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.util.MimicHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -29,6 +31,7 @@ import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,6 +50,9 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.MissingMappingsEvent;
+
+import java.util.List;
 
 /**
  * Contains and automatically registers all needed forge events.
@@ -308,5 +314,18 @@ public final class GameEventHandler {
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onDatapackSync( OnDatapackSyncEvent event ) {
         NetworkHelper.syncPlaceableFeatures( event.getPlayers() );
+    }
+    
+    /**
+     * Called when game data is being read when a save file is being loaded or a server is syncing
+     * registry data to a client during connection handshake.
+     *
+     * @param event The event data.
+     */
+    @SubscribeEvent( priority = EventPriority.NORMAL )
+    public static void onMissingMappings( MissingMappingsEvent event ) {
+        // Missing block mappings
+        List<MissingMappingsEvent.Mapping<Block>> blockMappings = event.getMappings( Registries.BLOCK, DeadlyWorld.MOD_ID );
+        InfestedBlockAutoGen.remapMissingBlocks( blockMappings );
     }
 }

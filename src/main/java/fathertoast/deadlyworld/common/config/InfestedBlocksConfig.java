@@ -103,7 +103,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                             "this list, if you prefer to just crash instead of mucking with load order mid-loading."
             ), RestartNote.GAME );
             fallbackBlock = SPEC.define( new InjectionWrapperField<>( new StringField( "fallback_block", keyToString( Blocks.INFESTED_STONE ),
-                    "The fallback block to replace missing infested blocks with. If the \"host_blocks\" " +
+                    "The vanilla fallback block to replace missing infested blocks with. If the \"host_blocks\" " +
                             "list is changed and you load into a world that used to have infested blocks that no longer " +
                             "exist, they will be replaced with this block."
             ), this::checkFallbackBlock ) );
@@ -142,7 +142,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
             stepBreakChance = SPEC.define( new DoubleField( "break_chance.step", 0.01, DoubleField.Range.PERCENT,
                     "The chance for infested blocks to break when stepped on by a player. This chance " +
                             "is rolled each tick (20 times per second) while standing on an infested block, so it " +
-                            "should probably be kept pretty low."
+                            "should probably be kept pretty low." // what are you doing, step break chance?
             ) );
         }
         
