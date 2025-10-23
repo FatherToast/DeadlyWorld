@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.common.block.infested;
 import fathertoast.crust.api.lib.LevelEventHelper;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.InfestedBlocksConfig;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -57,8 +58,21 @@ public class DeadlyInfestedBlock extends InfestedBlock {
         return infestedBlock;
     }
     
+    private static final String PATH_PREFIX = "infested/";
+    
+    /** @return The path to assign for an infested block based on the given host block resource location. */
     public static String pathFor( ResourceLocation hostBlockLoc ) {
-        return "infested/" + hostBlockLoc.getNamespace() + "/" + hostBlockLoc.getPath();
+        return PATH_PREFIX + hostBlockLoc.getNamespace() + "/" + hostBlockLoc.getPath();
+    }
+    
+    /** @return The host block resource location parsed from an infested block resource location, or null if not an infested block. */
+    @Nullable
+    public static ResourceLocation hostLocFrom( ResourceLocation infestedBlockLoc ) {
+        if( DeadlyWorld.MOD_ID.equals( infestedBlockLoc.getNamespace() ) && infestedBlockLoc.getPath().startsWith( PATH_PREFIX ) ) {
+            String[] split = infestedBlockLoc.getPath().substring( PATH_PREFIX.length() ).split( "/", 2 );
+            return ResourceLocation.fromNamespaceAndPath( split[0], split[1] );
+        }
+        return null;
     }
     
     /** @return An infested version of the given host block if one exists, otherwise it just returns the host block. */

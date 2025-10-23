@@ -65,8 +65,8 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
     public static class AutoGen extends AbstractConfigCategory<InfestedBlocksConfig> {
         
         public final PredicateStringListField hostBlocks;
-        public final InjectionWrapperField<StringField> fallbackBlock;
         public final StringListField dependencies;
+        public final InjectionWrapperField<StringField> fallbackBlock;
         
         public final EnumField<NameStyle> nameStyle;
         
@@ -84,16 +84,14 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
             hostBlocks = SPEC.define( new PredicateStringListField( "host_blocks", "namespace:block_name",
                     buildDefaultSilverfishBlocks(), ResourceLocation::isValidResourceLocation,
                     "A list of blocks to generate an \"infested\" version for. The infested version of a block " +
-                            "looks identical, but has modified physical properties and spawns a silverfish when broken.",
-                    "All hosts for vanilla infested blocks are included here by default; this overrides the vanilla block in most cases.",
+                            "looks identical, but has modified behavior (see below) and spawns a silverfish when broken.",
                     "Only blocks that are solid, full cubes with no block entity should be put on this list.",
+                    "All hosts for vanilla infested blocks are included here by default; this overrides the vanilla block in most cases.",
                     "If any mod-added blocks on this list are not loaded by the time Deadly World loads its blocks, the " +
-                            "game will crash (see setting below)."
+                            "game will crash (see \"dependencies\" below).",
+                    "To connect to a server, this setting must be the same on both client and server or your connection " +
+                            "will be refused for failing to synchronize registry data."
             ), RestartNote.GAME );
-            fallbackBlock = SPEC.define( new InjectionWrapperField<>( new StringField( "fallback_block", keyToString( Blocks.INFESTED_STONE ),
-                    "The fallback block to replace missing infested blocks with.",
-                    "If the \"host_blocks\" list is changed and you load into a world that used to have infested blocks that no longer exist, they " +
-                            "will be replaced with this block." ), this::checkFallbackBlock ) );
             dependencies = SPEC.define( new StringListField( "dependencies", "mod_id",
                     new ArrayList<>(),
                     "By default (that is, when this list is empty), Deadly World will attempt to adjust load " +
@@ -104,6 +102,11 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                     "All load order adjustment is disabled if you only enter \"minecraft\" (or non-existent mods) in " +
                             "this list, if you prefer to just crash instead of mucking with load order mid-loading."
             ), RestartNote.GAME );
+            fallbackBlock = SPEC.define( new InjectionWrapperField<>( new StringField( "fallback_block", keyToString( Blocks.INFESTED_STONE ),
+                    "The vanilla fallback block to replace missing infested blocks with. If the \"host_blocks\" " +
+                            "list is changed and you load into a world that used to have infested blocks that no longer " +
+                            "exist, they will be replaced with this block."
+            ), this::checkFallbackBlock ) );
             
             SPEC.newLine();
             
@@ -139,32 +142,32 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
             stepBreakChance = SPEC.define( new DoubleField( "break_chance.step", 0.01, DoubleField.Range.PERCENT,
                     "The chance for infested blocks to break when stepped on by a player. This chance " +
                             "is rolled each tick (20 times per second) while standing on an infested block, so it " +
-                            "should probably be kept pretty low."
+                            "should probably be kept pretty low." // what are you doing, step break chance?
             ) );
         }
-
+        
         /** Logs a warning if the fallback block field value is invalid. */
         private void checkFallbackBlock( StringField field ) {
             String value = field.get();
-            if ( !ResourceLocation.isValidResourceLocation( value )
+            if( !ResourceLocation.isValidResourceLocation( value )
                     || !ForgeRegistries.BLOCKS.containsKey( ResourceLocation.parse( value ) ) )
                 DeadlyWorld.LOG.warn( "\"{}\" contains an invalid ID that is either malformed or doesn't exist in the block registry! Value: {}",
                         field.getKey(), value );
         }
-
+        
         /**
          * @return The fallback block to use for missing mappings.
-         *         If the configured fallback is invalid, we fall back
-         *         to {@link Blocks#INFESTED_STONE}.
+         * If the configured fallback is invalid, we fall back
+         * to {@link Blocks#INFESTED_STONE}.
          */
         public Block getFallbackBlock() {
             Block fallbackFallback = Blocks.INFESTED_STONE; // Lol
-
+            
             ResourceLocation id = ResourceLocation.tryParse( fallbackBlock.field().get() );
-
-            if ( id == null ) return fallbackFallback;
-            if ( !ForgeRegistries.BLOCKS.containsKey( id ) ) return fallbackFallback;
-
+            
+            if( id == null ) return fallbackFallback;
+            if( !ForgeRegistries.BLOCKS.containsKey( id ) ) return fallbackFallback;
+            
             // noinspection ConstantConditions
             return ForgeRegistries.BLOCKS.getValue( id );
         }
@@ -200,7 +203,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
             return strings;
         }
     }
-
+    
     private static String keyToString( Block block ) {
         return Objects.requireNonNull( ForgeRegistries.BLOCKS.getKey( block ) ).toString();
     }
