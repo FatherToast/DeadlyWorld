@@ -1,10 +1,10 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
@@ -31,7 +31,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.LoneChest TNT_TRAP_LONE_CHEST = FeatureKeys.LoneChest.of( ChestType.TNT_TRAP, "tnt_trap_lone_chest" );
     public static final FeatureKeys.LoneChest INFESTED_LONE_CHEST = FeatureKeys.LoneChest.of( ChestType.INFESTED, "infested_lone_chest" );
     public static final FeatureKeys.LoneChest SURPRISE_LONE_CHEST = FeatureKeys.LoneChest.of( ChestType.SURPRISE, "surprise_lone_chest" );
-
+    
     public static final FeatureKeys.Spawner SIMPLE_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.SIMPLE, "simple_spawner" );
     public static final FeatureKeys.Spawner STREAM_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.STREAM, "stream_spawner" );
     public static final FeatureKeys.Spawner SWARM_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.SWARM, "swarm_spawner" );
@@ -45,17 +45,17 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.FloorTrap LAVA_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.LAVA, "lava_trap" );
     public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
-
+    
     public static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower" );
     public static final FeatureKeys.TowerDispenser FIRE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIRE, "fire_tower" );
     public static final FeatureKeys.TowerDispenser POTION_TOWER = FeatureKeys.TowerDispenser.of( TowerType.POTION, "potion_tower" );
     public static final FeatureKeys.TowerDispenser GATLING_TOWER = FeatureKeys.TowerDispenser.of( TowerType.GATLING, "gatling_tower" );
     public static final FeatureKeys.TowerDispenser FIREBALL_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIREBALL, "fireball_tower" );
-
+    
     public static final FeatureKeys.SeaMine NORMAL_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.NORMAL, "normal_sea_mine" );
     public static final FeatureKeys.SeaMine PUFFER_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.PUFFER, "puffer_sea_mine" );
     public static final FeatureKeys.SeaMine GUARDIAN_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.GUARDIAN, "guardian_sea_mine" );
-
+    
     public static final FeatureKeys BURIED_LIQUID_ANY_DIMENSION = FeatureKeys.anyDimension( "buried_liquid" ).notPlaceable();
     
     public static final FeatureKeys.SimpleDungeon SIMPLE_DUNGEON = FeatureKeys.SimpleDungeon.of( "simple_dungeon" );
@@ -71,7 +71,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         register( context, BURIED_LIQUID_ANY_DIMENSION,
                 new ConfiguredFeature<>( DWFeatures.BURIED_LIQUID.get(),
                         new BuriedLiquidFeature.Configuration( BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-
+        
         // Plain lone chest features
         registerLoneChest( context, SIMPLE_LONE_CHEST,
                 overworldConfigs, block( Blocks.CHEST ), netherConfigs, block( Blocks.CHEST ), null );
@@ -83,7 +83,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 overworldConfigs, block( Blocks.CHEST ), netherConfigs, block( Blocks.CHEST ), null );
         registerLoneChest( context, SURPRISE_LONE_CHEST,
                 overworldConfigs, block( Blocks.CHEST ), netherConfigs, block( Blocks.CHEST ), null );
-
+        
         // Plain spawner features
         registerLoneSpawner( context, SIMPLE_SPAWNER,
                 overworldConfigs, block( Blocks.AIR ), false,
@@ -118,7 +118,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( FloorTrapType.SEA_MINE_MOB ) ),
                         FloorTrapSettings.of( FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-
+        
         // Potion floor traps
         register( context, POTION_TRAP.overworldKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
                 block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( overworldConfigs.FLOOR_TRAPS.POTION ),
@@ -143,26 +143,24 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         registerTower( context, FIREBALL_TOWER,
                 overworldConfigs, block( Blocks.DEEPSLATE_TILES ),
                 netherConfigs, block( Blocks.QUARTZ_PILLAR ) );
-
+        
         // Water traps
         registerSeaMine( context, NORMAL_SEA_MINE, overworldConfigs );
         registerSeaMine( context, PUFFER_SEA_MINE, overworldConfigs );
         registerSeaMine( context, GUARDIAN_SEA_MINE, overworldConfigs );
-
+        
         // Simple dungeons
-        register( context, SIMPLE_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(), new SimpleDungeonFeature.Configuration(
-                block( Blocks.COBBLESTONE ), block( Blocks.MOSSY_COBBLESTONE ),
+        register( context, SIMPLE_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(), SimpleDungeonFeature.Configuration.of(
+                overworldConfigs, Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE,
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-        register( context, SIMPLE_DUNGEON.netherKeys, new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(), new SimpleDungeonFeature.Configuration(
-                block( Blocks.NETHER_BRICKS ), block( Blocks.CRACKED_NETHER_BRICKS ),
+        register( context, SIMPLE_DUNGEON.netherKeys, new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(), SimpleDungeonFeature.Configuration.of(
+                netherConfigs, Blocks.NETHER_BRICKS, Blocks.CRACKED_NETHER_BRICKS,
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-        register( context, MINI_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(), new MiniDungeonFeature.Configuration(
-                block( Blocks.COBBLESTONE ), block( Blocks.MOSSY_COBBLESTONE ),
-                SpawnerSettings.of( MINI_SPAWNER.spawnerType, overworldConfigs ),
+        register( context, MINI_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(), MiniDungeonFeature.Configuration.of(
+                overworldConfigs, Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE,
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-        register( context, MINI_DUNGEON.netherKeys, new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(), new MiniDungeonFeature.Configuration(
-                block( Blocks.NETHER_BRICKS ), block( Blocks.CRACKED_NETHER_BRICKS ),
-                SpawnerSettings.of( MINI_SPAWNER.spawnerType, netherConfigs ),
+        register( context, MINI_DUNGEON.netherKeys, new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(), MiniDungeonFeature.Configuration.of(
+                netherConfigs, Blocks.NETHER_BRICKS, Blocks.CRACKED_NETHER_BRICKS,
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
 }

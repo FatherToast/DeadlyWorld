@@ -108,13 +108,13 @@ public class DWPlacedFeatureProvider {
 
         // Simple dungeon
         register( context, getter, SIMPLE_DUNGEON.overworldKeys,
-                simpleFeature( overworldConfigs.SIMPLE_DUNGEONS.NORMAL ) );
+                simpleFeature( overworldConfigs.DUNGEONS.NORMAL ) );
         register( context, getter, SIMPLE_DUNGEON.netherKeys,
-                simpleFeature( netherConfigs.SIMPLE_DUNGEONS.NORMAL ) );
+                simpleFeature( netherConfigs.DUNGEONS.NORMAL ) );
         register( context, getter, MINI_DUNGEON.overworldKeys,
-                simpleFeature( overworldConfigs.SIMPLE_DUNGEONS.MINI ) );
+                simpleFeature( overworldConfigs.DUNGEONS.MINI ) );
         register( context, getter, MINI_DUNGEON.netherKeys,
-                simpleFeature( netherConfigs.SIMPLE_DUNGEONS.MINI ) );
+                simpleFeature( netherConfigs.DUNGEONS.MINI ) );
     }
 
     /** @return Modifiers for a lone spawner feature. */
@@ -128,7 +128,7 @@ public class DWPlacedFeatureProvider {
     }
 
     /** @return Modifiers for a floor trap feature. */
-    protected static List<PlacementModifier> floorTrap(FloorTrapType type, DimensionConfigGroup dimConfigs ) {
+    protected static List<PlacementModifier> floorTrap( FloorTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
     }
 

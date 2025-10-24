@@ -12,6 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -77,6 +79,20 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     
     /** @return An infested version of the given host block if one exists, otherwise it just returns the host block. */
     public static BlockState tryInfest( BlockState hostState ) {
+        return isCompatibleHostBlock( hostState ) ? infestedStateByHost( hostState ) : hostState;
+    }
+    
+    /**
+     * Unlike the regular tryInfest method, this will also convert given infested blocks into the infested block last
+     * registered to a particular host block (e.g., vanilla infested blocks will become this mod's infested blocks).
+     * <p>
+     * Use this anywhere the given host block could be user-defined, such as a block state provider for world gen.
+     *
+     * @return An infested version of the given host block if one exists, otherwise it just returns the host block.
+     */
+    public static BlockState tryInfestUnknown( BlockState hostState ) {
+        if( hostState.getBlock() instanceof InfestedBlock infestedBlock ) // treat vanilla infested blocks like their host block
+            return tryInfestUnknown( infestedBlock.hostStateByInfested( hostState ) );
         return isCompatibleHostBlock( hostState ) ? infestedStateByHost( hostState ) : hostState;
     }
     
@@ -150,10 +166,21 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     /** Used for model mirroring. */
     public ResourceLocation getHostBlockLocation() { return hostBlockLocation; }
     
-    //TODO Perhaps AT InfestedBlock#spawnInfestation and override it (or do more work and override spawnAfterBreak)
-    // to make spawned silverfish target the entity that breaks their block or copy target when a silverfish breaks it;
-    // might require some way to figure out who broke the block...
-    // (or just do the SM thing and make them target the nearest player on spawn)
+    /**
+     * AT'd and modified from the private super method. Simply adds the setTarget call
+     * to prevent silverfish from hiding in another block immediately after spawning.
+     */
+    @Override
+    protected void spawnInfestation( ServerLevel level, BlockPos pos ) {
+        Silverfish silverfish = EntityType.SILVERFISH.create( level );
+        if( silverfish != null ) {
+            silverfish.moveTo( pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.0F, 0.0F );
+            level.addFreshEntity( silverfish );
+            silverfish.spawnAnim();
+            silverfish.setTarget( level.getNearestPlayer( TargetingConditions.forCombat().range(
+                    silverfish.getAttributeValue( Attributes.FOLLOW_RANGE ) ), silverfish ) );
+        }
+    }
     
     @SuppressWarnings( "deprecation" )
     @Override

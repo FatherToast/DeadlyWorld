@@ -2,6 +2,7 @@
     - Added trap decoys.
         - New Forge registry for DecoyTypes.
         - API for registering custom DecoyTypes and renderers.
+    - Added auto-generated infested blocks (based on config).
     - Added Runny Lava fluid / block.
     - Added Mini Chest block.
     - Dungeon / Monster Room overhaul.

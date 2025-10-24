@@ -68,7 +68,7 @@ public class SilverfishNestFeature extends DeadlyFeature<SilverfishNestFeature.C
                 for( int z = -1; z <= 1; z++ ) {
                     int abs = Math.abs( x ) + Math.abs( y ) + Math.abs( z );
                     if( abs != 0 && abs <= 2 ) {
-                        safeSetBlock( level, cursor.setWithOffset( context.origin(), x, y, z ),
+                        safeSetInfestedBlock( level, cursor.setWithOffset( context.origin(), x, y, z ),
                                 config.nestProvider, random, predicate );
                     }
                 }

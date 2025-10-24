@@ -36,7 +36,7 @@ public final class DeadlyWorld {
      *      o biome-based configs
      *  - blocks
      *      - configurable physical properties
-     *      o auto-generated infested blocks
+     *      - auto-generated infested blocks
      *      - deadly spawner
      *      - mini spawner
      *      - floor trap
@@ -219,7 +219,7 @@ public final class DeadlyWorld {
     }
     
     /** @return A ResourceLocation with the mod's modid. */
-    public static ResourceLocation rl(String path ) { return ResourceLocation.fromNamespaceAndPath( MOD_ID, path ); }
+    public static ResourceLocation rl( String path ) { return ResourceLocation.fromNamespaceAndPath( MOD_ID, path ); }
     
     public static String logPrefix( Class<?> clazz ) {
         return "[" + MOD_ID + "/" + clazz.getSimpleName() + "] ";
