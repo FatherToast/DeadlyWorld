@@ -104,21 +104,20 @@ public class EntitiesConfig extends AbstractConfigFile {
         
         private List<String> defaultChestMimicLootTables() {
             return List.of(
-                    chestMimicLootTableEntry( BuiltInLootTables.ABANDONED_MINESHAFT, 0.2 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.ANCIENT_CITY, 0.2 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.BASTION_BRIDGE, 0.2 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.BASTION_TREASURE, 0.2 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.DESERT_PYRAMID, 0.2 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.END_CITY_TREASURE, 0.2 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.IGLOO_CHEST, 0.1 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.JUNGLE_TEMPLE, 0.2 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.NETHER_BRIDGE, 0.2 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.ABANDONED_MINESHAFT, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.ANCIENT_CITY, 0.1 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.BASTION_BRIDGE, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.BASTION_TREASURE, 0.1 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.DESERT_PYRAMID, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.END_CITY_TREASURE, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.IGLOO_CHEST, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.JUNGLE_TEMPLE, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.NETHER_BRIDGE, 0.05 ),
                     chestMimicLootTableEntry( BuiltInLootTables.RUINED_PORTAL, 0.1 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.SIMPLE_DUNGEON, 0.3 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.SPAWN_BONUS_CHEST, 0.5 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CORRIDOR, 0.1 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CROSSING, 0.1 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_LIBRARY, 0.3 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.SIMPLE_DUNGEON, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CORRIDOR, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CROSSING, 0.05 ),
+                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_LIBRARY, 0.1 ),
                     chestMimicLootTableEntry( BuiltInLootTables.WOODLAND_MANSION, 0.1 )
             );
         }
