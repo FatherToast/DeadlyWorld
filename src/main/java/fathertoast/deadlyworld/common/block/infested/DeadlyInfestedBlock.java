@@ -80,6 +80,20 @@ public class DeadlyInfestedBlock extends InfestedBlock {
         return isCompatibleHostBlock( hostState ) ? infestedStateByHost( hostState ) : hostState;
     }
     
+    /**
+     * Unlike the regular tryInfest method, this will also convert given infested blocks into the infested block last
+     * registered to a particular host block (e.g., vanilla infested blocks will become this mod's infested blocks).
+     * <p>
+     * Use this anywhere the given host block could be user-defined, such as a block state provider for world gen.
+     *
+     * @return An infested version of the given host block if one exists, otherwise it just returns the host block.
+     */
+    public static BlockState tryInfestUnknown( BlockState hostState ) {
+        if( hostState.getBlock() instanceof InfestedBlock infestedBlock ) // treat vanilla infested blocks like their host block
+            return tryInfestUnknown( infestedBlock.hostStateByInfested( hostState ) );
+        return isCompatibleHostBlock( hostState ) ? infestedStateByHost( hostState ) : hostState;
+    }
+    
     /** Runs the logic for "infested block cleansing". */
     public static boolean tryCleanseBlock( PlayerInteractEvent.RightClickBlock event, ServerLevel level ) {
         if( config().GENERAL.cleanseTools.isEmpty() ) return false;

@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.config.dimension;
 
 import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.PredicateStringListField;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import fathertoast.deadlyworld.datagen.worldgen.DWConfiguredFeatureProvider;
@@ -13,23 +14,79 @@ import static fathertoast.deadlyworld.common.util.References.*;
 
 public class DungeonConfig extends FeatureConfig {
     
-    public final SimpleDungeonCategory NORMAL;
-    public final FeatureTypeCategory MINI;
+    public final ModularDungeonCategory NORMAL;
+    public final DungeonCategory MINI;
     
     /** Builds the config spec that should be used for this config. */
     DungeonConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "dungeon" );
         
-        NORMAL = new SimpleDungeonCategory( this, "normal", 10, DEPTH_LAVA, DEPTH_SKY );
-        MINI = new FeatureTypeCategory( this, "mini", 2, DEPTH_LAVA, DEPTH_0 );
+        NORMAL = new ModularDungeonCategory( this, "normal", 10, DEPTH_LAVA, DEPTH_SKY );
+        MINI = new DungeonCategory( this, "mini", 2, DEPTH_LAVA, DEPTH_0 );
     }
     
     
-    public static class SimpleDungeonCategory extends FeatureTypeCategory {
+    public static class DungeonCategory extends FeatureTypeCategory {
+        
+        public final DoubleField infestedChance;
+        
+        DungeonCategory( FeatureConfig parent, String name, double placements, int minHeight, int maxHeight ) {
+            super( parent, name, placements, minHeight, maxHeight );
+            
+            SPEC.newLine();
+            
+            infestedChance = SPEC.define( new DoubleField( "infested_chance", 0.15, DoubleField.Range.PERCENT,
+                    "The chance for floor and wall blocks to be infested with silverfish. The chance is " +
+                            "rolled for each block individually, and the block must be a valid host (see the " +
+                            "\"infested_blocks\" config).",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
+        }
+        
+        /** @return The default subfeature ID list to use for the simple dungeon type and dimension. */
+        private List<String> makeDefaultSubfeatures() {
+            if( isNetherDimension() ) {
+                return List.of(
+                        stringFromKey( DWConfiguredFeatureProvider.SIMPLE_SPAWNER.netherKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.BRUTAL_SPAWNER.netherKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.SWARM_SPAWNER.netherKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.STREAM_SPAWNER.netherKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.SILVERFISH_NEST.netherKeys.configuredKey ),
+                        
+                        stringFromKey( DWConfiguredFeatureProvider.SIMPLE_TOWER.netherKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.POTION_TOWER.netherKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.GATLING_TOWER.netherKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.FIRE_TOWER.netherKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.FIREBALL_TOWER.netherKeys.configuredKey )
+                );
+            }
+            else {
+                return List.of(
+                        stringFromKey( DWConfiguredFeatureProvider.SIMPLE_SPAWNER.overworldKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.BRUTAL_SPAWNER.overworldKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.SWARM_SPAWNER.overworldKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.STREAM_SPAWNER.overworldKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.SILVERFISH_NEST.overworldKeys.configuredKey ),
+                        
+                        stringFromKey( DWConfiguredFeatureProvider.SIMPLE_TOWER.overworldKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.POTION_TOWER.overworldKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.GATLING_TOWER.overworldKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.FIRE_TOWER.overworldKeys.configuredKey ),
+                        stringFromKey( DWConfiguredFeatureProvider.FIREBALL_TOWER.overworldKeys.configuredKey )
+                );
+            }
+        }
+        
+        private static String stringFromKey( ResourceKey<?> key ) {
+            return key.location().toString();
+        }
+    }
+    
+    
+    public static class ModularDungeonCategory extends DungeonCategory {
         
         public final PredicateStringListField subfeatures;
         
-        SimpleDungeonCategory( FeatureConfig parent, String name, double placements, int minHeight, int maxHeight ) {
+        ModularDungeonCategory( FeatureConfig parent, String name, double placements, int minHeight, int maxHeight ) {
             super( parent, name, placements, minHeight, maxHeight );
             
             SPEC.newLine();

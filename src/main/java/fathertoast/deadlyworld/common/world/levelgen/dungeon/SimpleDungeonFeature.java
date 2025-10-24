@@ -3,7 +3,9 @@ package fathertoast.deadlyworld.common.world.levelgen.dungeon;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.DungeonConfig;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;
@@ -12,6 +14,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -21,6 +25,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraftforge.common.Tags;
@@ -35,15 +40,26 @@ import java.util.function.Predicate;
  */
 public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Configuration> {
     public record Configuration(
-            BlockStateProvider baseProvider,
-            BlockStateProvider floorMixProvider,
+            BlockStateProvider floorProvider,
+            BlockStateProvider wallProvider,
+            FloatProvider infestedChance,
             TagKey<Block> cannotReplace
     ) implements FeatureConfiguration {
         public static final Codec<SimpleDungeonFeature.Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
-                BlockStateProvider.CODEC.fieldOf( "base_provider" ).forGetter( SimpleDungeonFeature.Configuration::baseProvider ),
-                BlockStateProvider.CODEC.fieldOf( "floor_mix_provider" ).forGetter( SimpleDungeonFeature.Configuration::floorMixProvider ),
+                BlockStateProvider.CODEC.fieldOf( "floor_provider" ).forGetter( SimpleDungeonFeature.Configuration::floorProvider ),
+                BlockStateProvider.CODEC.fieldOf( "wall_provider" ).forGetter( SimpleDungeonFeature.Configuration::wallProvider ),
+                FloatProvider.CODEC.fieldOf( "infested_chance" ).forGetter( SimpleDungeonFeature.Configuration::infestedChance ),
                 TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( SimpleDungeonFeature.Configuration::cannotReplace )
         ).apply( instance, SimpleDungeonFeature.Configuration::new ) );
+        
+        public static Configuration of( DimensionConfigGroup dimConfigs, Block baseBlock, Block altBlock, TagKey<Block> cannotReplace ) {
+            return new Configuration(
+                    new WeightedStateProvider( new SimpleWeightedRandomList.Builder<BlockState>()
+                            .add( baseBlock.defaultBlockState(), 1 ).add( altBlock.defaultBlockState(), 3 ) ),
+                    BlockStateProvider.simple( baseBlock ),
+                    ConfigConstantFloatProvider.of( dimConfigs.DUNGEONS.NORMAL.infestedChance ),
+                    cannotReplace );
+        }
     }
     
     public SimpleDungeonFeature() {
@@ -121,14 +137,8 @@ public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Con
                         level.setBlock( cursor, AIR, 2 );
                     }
                     else if( (state.isSolid() || !state.getFluidState().is( Fluids.EMPTY )) && !state.is( Blocks.CHEST ) ) {
-                        // Fill in the floor with a mix of mossy and normal cobble
-                        if( y == -1 && random.nextInt( 4 ) != 0 ) {
-                            safeSetBlock( level, cursor, config.floorMixProvider, random, predicate );
-                        }
-                        // Build the cobble walls
-                        else {
-                            safeSetBlock( level, cursor, config.baseProvider, random, predicate );
-                        }
+                        safeSetInfestedBlock( level, cursor, y == -1 ? config.floorProvider : config.wallProvider,
+                                config.infestedChance, random, predicate );
                     }
                 }
             }
@@ -166,7 +176,7 @@ public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Con
             }
         }
         
-        final DungeonConfig.SimpleDungeonCategory featureConfig = Config.getDimensionConfigs( level.getLevel() ).SIMPLE_DUNGEONS.NORMAL;
+        final DungeonConfig.ModularDungeonCategory featureConfig = Config.getDimensionConfigs( level.getLevel() ).DUNGEONS.NORMAL;
         
         // Generate debug marker
         debugMarkerIfEnabled( level, origin, featureConfig );

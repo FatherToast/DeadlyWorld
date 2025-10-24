@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
+import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelWriter;
 import net.minecraft.world.level.WorldGenLevel;
@@ -148,6 +150,32 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
     
     
     public DeadlyFeature( Codec<FC> codec ) { super( codec ); }
+    
+    /** Convenience method for placing infested blocks with a block state provider. */
+    protected void safeSetInfestedBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, FloatProvider chanceProvider, RandomSource random, @Nullable Predicate<BlockState> predicate ) {
+        if( random.nextFloat() < chanceProvider.sample( random ) )
+            safeSetInfestedBlock( level, pos, stateProvider, random, predicate );
+        else
+            safeSetBlock( level, pos, stateProvider, random, predicate );
+    }
+    
+    /** Convenience method for placing infested blocks with a block state provider. */
+    protected void setInfestedBlock( LevelWriter level, BlockPos pos, BlockStateProvider stateProvider, FloatProvider chanceProvider, RandomSource random ) {
+        if( random.nextFloat() < chanceProvider.sample( random ) )
+            setInfestedBlock( level, pos, stateProvider, random );
+        else
+            setBlock( level, pos, stateProvider, random );
+    }
+    
+    /** Convenience method for placing infested blocks with a block state provider. */
+    protected void safeSetInfestedBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random, @Nullable Predicate<BlockState> predicate ) {
+        safeSetBlock( level, pos, DeadlyInfestedBlock.tryInfestUnknown( stateProvider.getState( random, pos ) ), predicate );
+    }
+    
+    /** Convenience method for placing infested blocks with a block state provider. */
+    protected void setInfestedBlock( LevelWriter level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random ) {
+        setBlock( level, pos, DeadlyInfestedBlock.tryInfestUnknown( stateProvider.getState( random, pos ) ) );
+    }
     
     /** Convenience method for using safeSetBlock with a block state provider. */
     protected void safeSetBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random, @Nullable Predicate<BlockState> predicate ) {

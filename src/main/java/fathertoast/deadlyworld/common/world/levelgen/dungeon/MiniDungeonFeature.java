@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
@@ -13,6 +15,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -21,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraftforge.common.Tags;
@@ -29,17 +34,29 @@ import java.util.function.Predicate;
 
 public class MiniDungeonFeature extends DeadlyFeature<MiniDungeonFeature.Configuration> {
     public record Configuration(
-            BlockStateProvider baseProvider,
-            BlockStateProvider floorMixProvider,
+            BlockStateProvider floorProvider,
+            BlockStateProvider wallProvider,
+            FloatProvider infestedChance,
             SpawnerSettings spawnerSettings,
             TagKey<Block> cannotReplace
     ) implements FeatureConfiguration {
         public static final Codec<MiniDungeonFeature.Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
-                BlockStateProvider.CODEC.fieldOf( "base_provider" ).forGetter( MiniDungeonFeature.Configuration::baseProvider ),
-                BlockStateProvider.CODEC.fieldOf( "floor_mix_provider" ).forGetter( MiniDungeonFeature.Configuration::floorMixProvider ),
+                BlockStateProvider.CODEC.fieldOf( "floor_provider" ).forGetter( MiniDungeonFeature.Configuration::floorProvider ),
+                BlockStateProvider.CODEC.fieldOf( "wall_provider" ).forGetter( MiniDungeonFeature.Configuration::wallProvider ),
+                FloatProvider.CODEC.fieldOf( "infested_chance" ).forGetter( MiniDungeonFeature.Configuration::infestedChance ),
                 SpawnerSettings.CODEC.fieldOf( "spawner" ).forGetter( MiniDungeonFeature.Configuration::spawnerSettings ),
                 TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( MiniDungeonFeature.Configuration::cannotReplace )
         ).apply( instance, MiniDungeonFeature.Configuration::new ) );
+        
+        public static Configuration of( DimensionConfigGroup dimConfigs, Block baseBlock, Block altBlock, TagKey<Block> cannotReplace ) {
+            return new Configuration(
+                    new WeightedStateProvider( new SimpleWeightedRandomList.Builder<BlockState>()
+                            .add( baseBlock.defaultBlockState(), 1 ).add( altBlock.defaultBlockState(), 3 ) ),
+                    BlockStateProvider.simple( baseBlock ),
+                    ConfigConstantFloatProvider.of( dimConfigs.DUNGEONS.MINI.infestedChance ),
+                    SpawnerSettings.of( SpawnerType.MINI, dimConfigs ),
+                    cannotReplace );
+        }
     }
     
     public MiniDungeonFeature() {
@@ -116,14 +133,8 @@ public class MiniDungeonFeature extends DeadlyFeature<MiniDungeonFeature.Configu
                         level.setBlock( cursor, AIR, 2 );
                     }
                     else if( (state.isSolid() || !state.getFluidState().is( Fluids.EMPTY )) && !state.is( Blocks.CHEST ) ) {
-                        // Fill in the floor with a mix of mossy and normal cobble
-                        if( y == -1 && random.nextInt( 4 ) != 0 ) {
-                            safeSetBlock( level, cursor, config.floorMixProvider, random, predicate );
-                        }
-                        // Build the cobble walls
-                        else {
-                            safeSetBlock( level, cursor, config.baseProvider, random, predicate );
-                        }
+                        safeSetInfestedBlock( level, cursor, y == -1 ? config.floorProvider : config.wallProvider,
+                                config.infestedChance, random, predicate );
                     }
                 }
             }
@@ -162,7 +173,7 @@ public class MiniDungeonFeature extends DeadlyFeature<MiniDungeonFeature.Configu
         }
         
         // Generate debug marker if enabled
-        debugMarkerIfEnabled( level, origin, Config.getDimensionConfigs( level.getLevel() ).SIMPLE_DUNGEONS.MINI );
+        debugMarkerIfEnabled( level, origin, Config.getDimensionConfigs( level.getLevel() ).DUNGEONS.MINI );
         
         // Lastly, place mini spawner
         setBlock( level, origin, DWBlocks.spawner( SpawnerType.MINI ).get().defaultBlockState() );

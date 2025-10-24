@@ -17,7 +17,7 @@ public class DimensionConfigGroup extends ConfigGroup {
     public final TowerConfig TOWERS;
     public final WaterTrapConfig WATER_TRAPS;
     public final EnvHazardConfig ENV_HAZARDS;
-    public final DungeonConfig SIMPLE_DUNGEONS;
+    public final DungeonConfig DUNGEONS;
     
     public DimensionConfigGroup( ConfigManager manager, ResourceKey<Level> dimension ) {
         DIMENSION = dimension;
@@ -31,7 +31,7 @@ public class DimensionConfigGroup extends ConfigGroup {
         TOWERS = group( new TowerConfig( manager, dir, this ) );
         WATER_TRAPS = group( new WaterTrapConfig( manager, dir, this ) );
         ENV_HAZARDS = group( new EnvHazardConfig( manager, dir, this ) );
-        SIMPLE_DUNGEONS = group( new DungeonConfig( manager, dir, this ) );
+        DUNGEONS = group( new DungeonConfig( manager, dir, this ) );
     }
     
     /** @return The short name for this dimension (e.g. "'the_nether' dimension"). */

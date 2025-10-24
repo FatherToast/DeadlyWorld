@@ -301,10 +301,10 @@
             {
               "enchantments": [
                 "minecraft:bane_of_arthropods",
+                "minecraft:fortune",
                 "minecraft:luck_of_the_sea",
                 "minecraft:looting",
-                "minecraft:silk_touch",
-                "minecraft:fortune"
+                "minecraft:silk_touch"
               ],
               "function": "minecraft:enchant_randomly"
             }
