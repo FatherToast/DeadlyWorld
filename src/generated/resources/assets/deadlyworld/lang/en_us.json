@@ -1,11 +1,13 @@
 {
   "block.deadlyworld.brutal_deadly_spawner": "Monster Spawner of Brutality",
+  "block.deadlyworld.buried_deadly_spawner": "Buried Deadly Spawner",
   "block.deadlyworld.dungeon_deadly_spawner": "Dungeon Monster Spawner",
   "block.deadlyworld.fire_floor_trap": "Fire Floor Trap",
   "block.deadlyworld.fire_tower_dispenser": "Flaming Arrow Tower Dispenser",
   "block.deadlyworld.fireball_tower_dispenser": "Fireball Tower Dispenser",
   "block.deadlyworld.gatling_tower_dispenser": "Gatling Arrow Tower Dispenser",
   "block.deadlyworld.guardian_sea_mine": "Guardian Sea Mine",
+  "block.deadlyworld.inactive_buried_deadly_spawner": "Inactive Buried Deadly Spawner",
   "block.deadlyworld.infested_block.identity": "%1$s",
   "block.deadlyworld.infested_block.sus": "\"%1$s\"",
   "block.deadlyworld.infested_block.vanilla": "Infested %1$s",

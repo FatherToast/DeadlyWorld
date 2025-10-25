@@ -39,6 +39,7 @@ public final class DeadlyWorld {
      *      - auto-generated infested blocks
      *      - deadly spawner
      *      - mini spawner
+     *      - inactive buried spawner
      *      - floor trap
      *      - tower dispenser
      *      - sea mine

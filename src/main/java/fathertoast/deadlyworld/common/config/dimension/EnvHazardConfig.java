@@ -57,7 +57,7 @@ public class EnvHazardConfig extends AbstractConfigFile {
     
     public static class BuriedBlocksCategory extends AbstractConfigCategory<EnvHazardConfig> {
         
-        public final RegistryEntryValueListField<Block> buriedBlocks;
+        public final RegistryEntryValueListField<Block> list;
         
         
         public BuriedBlocksCategory( EnvHazardConfig parent, String categoryName ) {
@@ -67,7 +67,7 @@ public class EnvHazardConfig extends AbstractConfigFile {
             SPEC.describeRegistryEntryValueList();
             SPEC.newLine();
             
-            buriedBlocks = SPEC.define( new RegistryEntryValueListField<>( "buried_liquids",
+            list = SPEC.define( new RegistryEntryValueListField<>( "list",
                     new RegistryEntryValueList<>( null, () -> ForgeRegistries.BLOCKS, defaultBuriedLiquids() )
                             .setMultiValue( 3 ),
                     "This list defines buried liquid entries. Each entry consists of the following in the given order:",
@@ -83,16 +83,19 @@ public class EnvHazardConfig extends AbstractConfigFile {
         private List<RegistryValueEntry<Block>> defaultBuriedLiquids() {
             if( PARENT.isNetherDimension() ) {
                 return List.of(
+                        new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 12 ),
                         new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
                 );
             }
             if( PARENT.isEndDimension() ) {
                 return List.of(
+                        new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 12 ),
                         new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
                 );
             }
             // For the overworld, as well as any dimensions added by mods
             return List.of(
+                    new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_LAVA, DEPTH_3, 5 ),
                     new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_SEA_LEVEL + 14, 10 ),
                     new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_VOID, DEPTH_2, 5 ),
                     new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_VOID, DEPTH_4, 1 )

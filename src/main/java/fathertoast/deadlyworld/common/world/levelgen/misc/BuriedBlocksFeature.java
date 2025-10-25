@@ -44,11 +44,11 @@ public class BuriedBlocksFeature extends DeadlyFeature<BuriedBlocksFeature.Confi
     public boolean place( FeaturePlaceContext<Configuration> context ) {
         final WorldGenLevel level = context.level();
         final RandomSource random = context.random();
-        final EnvHazardConfig.BuriedBlocksCategory category = Config.getDimensionConfigs( level.getLevel().dimension() ).ENV_HAZARDS.BURIED_BLOCKS;
+        final EnvHazardConfig.BuriedBlocksCategory category = Config.getDimensionConfigs( level.getLevel() ).ENV_HAZARDS.BURIED_BLOCKS;
         final Predicate<BlockState> predicate = ( state ) -> !state.is( context.config().cannotReplace );
         
         try {
-            for( RegistryValueEntry<Block> entry : category.buriedBlocks.get().getEntries() ) {
+            for( RegistryValueEntry<Block> entry : category.list.get().getEntries() ) {
                 final BlockState liquid = ForgeRegistries.BLOCKS.getValue( entry.REG_KEY ).defaultBlockState();
                 final int minY = Math.max( (int) entry.VALUES[0], level.getMinBuildHeight() );
                 final int maxY = Math.min( (int) entry.VALUES[1], level.getMaxBuildHeight() );

@@ -28,6 +28,7 @@ public class SpawnerConfig extends FeatureConfig {
     public final SpawnerTypeCategory NEST;
     public final SpawnerTypeCategory MINI;
     
+    public final SubfeatureSpawnerCategory BURIED;
     public final DungeonSpawnerCategory DUNGEON;
     
     /** Builds the config spec that should be used for this config. */
@@ -53,22 +54,19 @@ public class SpawnerConfig extends FeatureConfig {
         
         SIMPLE = new SpawnerTypeCategory( this, SpawnerType.SIMPLE, 0.5, DEPTH_LAVA, DEPTH_0,
                 16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
-        
         STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.15, DEPTH_LAVA, DEPTH_1,
                 16, true, 0, 400, 10, 1, 2, 0.9, 0.05 );
-        
         SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.1, DEPTH_LAVA, DEPTH_2,
                 20, true, 400, 2400, 100, 12, 8, 0.05, 0.05 );
-        
         BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.05, DEPTH_LAVA, DEPTH_3,
                 16, true, 200, 800, 100, 2, 3, 0.05, 0.05 );
-        
         NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.5, DEPTH_LAVA, DEPTH_SEA_LEVEL,
                 16, false, 100, 400, 20, 6, 6, 0.0, 0.05 );
-        
         MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.02, DEPTH_LAVA, DEPTH_0,
                 12, false, 100, 400, 20, 6, 4, 0.2, 0.2 );
         
+        BURIED = new SubfeatureSpawnerCategory( this, SpawnerType.BURIED,
+                16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
         DUNGEON = new DungeonSpawnerCategory( this, SpawnerType.DUNGEON,
                 16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
     }

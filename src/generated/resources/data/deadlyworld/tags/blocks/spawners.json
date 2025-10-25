@@ -6,6 +6,7 @@
     "deadlyworld:brutal_deadly_spawner",
     "deadlyworld:nest_deadly_spawner",
     "deadlyworld:mini_deadly_spawner",
+    "deadlyworld:buried_deadly_spawner",
     "deadlyworld:dungeon_deadly_spawner"
   ]
 }
