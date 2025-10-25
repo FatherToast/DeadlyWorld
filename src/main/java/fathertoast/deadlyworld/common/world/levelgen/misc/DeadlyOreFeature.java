@@ -13,44 +13,46 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.InfestedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 
 import java.util.BitSet;
+import java.util.List;
 import java.util.function.Function;
 
 /**
  * Modified copy-paste of {@link net.minecraft.world.level.levelgen.feature.OreFeature}
- * to support replacement for all valid host blocks.
- *
- * @see DeadlyOreFeature
+ * to support config-driven data.
  */
-public class InfestedOreFeature extends DeadlyFeature<InfestedOreFeature.Configuration> {
+public class DeadlyOreFeature extends DeadlyFeature<DeadlyOreFeature.Configuration> {
     public record Configuration(
+            List<OreConfiguration.TargetBlockState> targetStates,
             IntProvider size,
             FloatProvider exposureDiscardChance
     ) implements FeatureConfiguration {
         public static final Codec<Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
+                Codec.list( OreConfiguration.TargetBlockState.CODEC ).fieldOf( "targets" ).forGetter( Configuration::targetStates ),
                 IntProvider.CODEC.fieldOf( "size" ).forGetter( Configuration::size ),
                 FloatProvider.CODEC.fieldOf( "discard_chance_on_air_exposure" ).forGetter( Configuration::exposureDiscardChance )
         ).apply( instance, Configuration::new ) );
         
-        public static Configuration of( VeinConfig.VeinCategory config ) {
+        public static Configuration of( VeinConfig.VeinCategory config, List<OreConfiguration.TargetBlockState> targetStates ) {
             return new Configuration(
+                    targetStates,
                     ConfigConstantIntProvider.of( config.size ),
                     ConfigConstantFloatProvider.of( config.exposureDiscardChance )
             );
         }
     }
     
-    public InfestedOreFeature() { this( Configuration.CODEC ); }
+    public DeadlyOreFeature() { this( Configuration.CODEC ); }
     
-    public InfestedOreFeature( Codec<Configuration> codec ) { super( codec ); }
+    public DeadlyOreFeature( Codec<Configuration> codec ) { super( codec ); }
     
     public boolean place( FeaturePlaceContext<Configuration> context ) {
         final Configuration config = context.config();
@@ -169,12 +171,14 @@ public class InfestedOreFeature extends DeadlyFeature<InfestedOreFeature.Configu
                                                         int secX = SectionPos.sectionRelative( x );
                                                         int secY = SectionPos.sectionRelative( y );
                                                         int secZ = SectionPos.sectionRelative( z );
-                                                        BlockState hostState = levelSection.getBlockState( secX, secY, secZ );
+                                                        BlockState blockState = levelSection.getBlockState( secX, secY, secZ );
                                                         
-                                                        if( canPlaceOre( hostState, bulkSection::getBlockState, random, exposureDiscardChance, cursor ) ) {
-                                                            levelSection.setBlockState( secX, secY, secZ,
-                                                                    InfestedBlock.infestedStateByHost( hostState ), false );
-                                                            blocksPlaced++;
+                                                        for( OreConfiguration.TargetBlockState targetState : config.targetStates ) {
+                                                            if( canPlaceOre( blockState, bulkSection::getBlockState, random, exposureDiscardChance, targetState, cursor ) ) {
+                                                                levelSection.setBlockState( secX, secY, secZ,
+                                                                        targetState.state, false );
+                                                                blocksPlaced++;
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -192,8 +196,8 @@ public class InfestedOreFeature extends DeadlyFeature<InfestedOreFeature.Configu
         return blocksPlaced > 0;
     }
     
-    public static boolean canPlaceOre( BlockState hostState, Function<BlockPos, BlockState> blockGetter, RandomSource random, float exposureDiscardChance, BlockPos.MutableBlockPos cursor ) {
-        if( !InfestedBlock.isCompatibleHostBlock( hostState ) ) {
+    public static boolean canPlaceOre( BlockState blockState, Function<BlockPos, BlockState> blockGetter, RandomSource random, float exposureDiscardChance, OreConfiguration.TargetBlockState targetState, BlockPos.MutableBlockPos cursor ) {
+        if( !targetState.target.test( blockState, random ) ) {
             return false;
         }
         else if( shouldSkipAirCheck( random, exposureDiscardChance ) ) {

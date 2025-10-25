@@ -16,8 +16,8 @@
         - Added Normal Sea Mine block.
         - Added Puffer Sea Mine block.
         - Added Guardian Sea Mine block.
-    - Added new floor trap variant:
-        - Sea mine mob trap
+    - Added new floor trap variant: Sea mine mob trap
+    - Added new veins feature with infested block, water, and sand veins.
     - Changed the voice/sound pitch of mini entities and mini blocks.
     - Updated some default configs.
 1.20.1-1.1.1

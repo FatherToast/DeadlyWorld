@@ -19,6 +19,7 @@ public class DimensionConfigGroup extends ConfigGroup {
     public final SpikeTrapConfig SPIKE_TRAPS;
     public final EnvHazardConfig ENV_HAZARDS;
     public final DungeonConfig DUNGEONS;
+    public final VeinConfig VEINS;
     
     public DimensionConfigGroup( ConfigManager manager, ResourceKey<Level> dimension ) {
         DIMENSION = dimension;
@@ -34,6 +35,7 @@ public class DimensionConfigGroup extends ConfigGroup {
         SPIKE_TRAPS = group( new SpikeTrapConfig( manager, dir, this ) );
         ENV_HAZARDS = group( new EnvHazardConfig( manager, dir, this ) );
         DUNGEONS = group( new DungeonConfig( manager, dir, this ) );
+        VEINS = group( new VeinConfig( manager, dir, this ) );
     }
     
     /** @return The short name for this dimension (e.g. "'the_nether' dimension"). */

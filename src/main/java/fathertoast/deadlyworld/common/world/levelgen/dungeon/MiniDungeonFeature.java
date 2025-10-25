@@ -40,13 +40,13 @@ public class MiniDungeonFeature extends DeadlyFeature<MiniDungeonFeature.Configu
             SpawnerSettings spawnerSettings,
             TagKey<Block> cannotReplace
     ) implements FeatureConfiguration {
-        public static final Codec<MiniDungeonFeature.Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
-                BlockStateProvider.CODEC.fieldOf( "floor_provider" ).forGetter( MiniDungeonFeature.Configuration::floorProvider ),
-                BlockStateProvider.CODEC.fieldOf( "wall_provider" ).forGetter( MiniDungeonFeature.Configuration::wallProvider ),
-                FloatProvider.CODEC.fieldOf( "infested_chance" ).forGetter( MiniDungeonFeature.Configuration::infestedChance ),
-                SpawnerSettings.CODEC.fieldOf( "spawner" ).forGetter( MiniDungeonFeature.Configuration::spawnerSettings ),
-                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( MiniDungeonFeature.Configuration::cannotReplace )
-        ).apply( instance, MiniDungeonFeature.Configuration::new ) );
+        public static final Codec<Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
+                BlockStateProvider.CODEC.fieldOf( "floor_provider" ).forGetter( Configuration::floorProvider ),
+                BlockStateProvider.CODEC.fieldOf( "wall_provider" ).forGetter( Configuration::wallProvider ),
+                FloatProvider.CODEC.fieldOf( "infested_chance" ).forGetter( Configuration::infestedChance ),
+                SpawnerSettings.CODEC.fieldOf( "spawner" ).forGetter( Configuration::spawnerSettings ),
+                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( Configuration::cannotReplace )
+        ).apply( instance, Configuration::new ) );
         
         public static Configuration of( DimensionConfigGroup dimConfigs, Block baseBlock, Block altBlock, TagKey<Block> cannotReplace ) {
             return new Configuration(
@@ -60,15 +60,15 @@ public class MiniDungeonFeature extends DeadlyFeature<MiniDungeonFeature.Configu
     }
     
     public MiniDungeonFeature() {
-        this( MiniDungeonFeature.Configuration.CODEC );
+        this( Configuration.CODEC );
     }
     
-    public MiniDungeonFeature( Codec<MiniDungeonFeature.Configuration> codec ) {
+    public MiniDungeonFeature( Codec<Configuration> codec ) {
         super( codec );
     }
     
     @Override
-    public boolean place( FeaturePlaceContext<MiniDungeonFeature.Configuration> context ) {
+    public boolean place( FeaturePlaceContext<Configuration> context ) {
         final boolean notSubfeature = context.topFeature().isEmpty();
         final Configuration config = context.config();
         final RandomSource random = context.random();

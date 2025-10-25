@@ -24,7 +24,7 @@ public class EnvHazardConfig extends AbstractConfigFile {
     /** The parent group containing this feature config. */
     public final DimensionConfigGroup DIMENSION_CONFIGS;
     
-    public final BuriedLiquidsCategory BURIED_LIQUIDS;
+    public final BuriedBlocksCategory BURIED_BLOCKS;
     
     
     public EnvHazardConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
@@ -43,26 +43,36 @@ public class EnvHazardConfig extends AbstractConfigFile {
             SPEC.increaseIndent();
         }
         
-        BURIED_LIQUIDS = new BuriedLiquidsCategory( this, "buried_liquids" );
+        BURIED_BLOCKS = new BuriedBlocksCategory( this, "buried_blocks" );
     }
     
-    public static class BuriedLiquidsCategory extends AbstractConfigCategory<EnvHazardConfig> {
+    /** @return True if this config is for the overworld dimension. */
+    protected boolean isOverworldDimension() { return Level.OVERWORLD.equals( DIMENSION_CONFIGS.DIMENSION ); }
+    
+    /** @return True if this config is for the Nether dimension. */
+    protected boolean isNetherDimension() { return Level.NETHER.equals( DIMENSION_CONFIGS.DIMENSION ); }
+    
+    /** @return True if this config is for the End dimension. */
+    protected boolean isEndDimension() { return Level.END.equals( DIMENSION_CONFIGS.DIMENSION ); }
+    
+    public static class BuriedBlocksCategory extends AbstractConfigCategory<EnvHazardConfig> {
         
-        public final RegistryEntryValueListField<Block> buriedLiquids;
+        public final RegistryEntryValueListField<Block> buriedBlocks;
         
         
-        public BuriedLiquidsCategory( EnvHazardConfig parent, String categoryName ) {
-            super( parent, categoryName, "Settings related to buried liquids in the world; single fluid source blocks of varying " +
-                    "kinds that generate in the ground and not exposed to air." );
+        public BuriedBlocksCategory( EnvHazardConfig parent, String categoryName ) {
+            super( parent, categoryName, "Settings related to buried blocks in the world; single-block " +
+                    "'ore veins' of varying kinds that generate in the ground, not exposed to air." );
             
             SPEC.describeRegistryEntryValueList();
             SPEC.newLine();
             
-            buriedLiquids = SPEC.define( new RegistryEntryValueListField<>( "buried_liquids",
+            buriedBlocks = SPEC.define( new RegistryEntryValueListField<>( "buried_liquids",
                     new RegistryEntryValueList<>( null, () -> ForgeRegistries.BLOCKS, defaultBuriedLiquids() )
                             .setMultiValue( 3 ),
                     "This list defines buried liquid entries. Each entry consists of the following in the given order:",
-                    "Liquid source block registry ID - for example \"minecraft:water\" or \"minecraft:lava\".",
+                    "Liquid source block registry ID - for example \"" + ForgeRegistries.BLOCKS.getKey( Blocks.WATER ) +
+                            "\" or \"" + ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ) + "\".",
                     "Min height - the lowest Y coordinate this liquid can generate at.",
                     "Max height - the highest Y coordinate this liquid can generate at.",
                     "Placements - the amount of times the world generator will try to place this liquid in a chunk.",
@@ -71,15 +81,21 @@ public class EnvHazardConfig extends AbstractConfigFile {
         
         @SuppressWarnings( "ConstantConditions" )
         private List<RegistryValueEntry<Block>> defaultBuriedLiquids() {
-            if( Level.NETHER.equals( PARENT.DIMENSION_CONFIGS.DIMENSION ) ) {
+            if( PARENT.isNetherDimension() ) {
                 return List.of(
                         new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
                 );
             }
+            if( PARENT.isEndDimension() ) {
+                return List.of(
+                        new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
+                );
+            }
+            // For the overworld, as well as any dimensions added by mods
             return List.of(
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_0, 20 ),
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_VOID, DEPTH_3, 5 ),
-                    new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_VOID, DEPTH_3, 1 )
+                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_SEA_LEVEL + 14, 10 ),
+                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_VOID, DEPTH_2, 5 ),
+                    new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_VOID, DEPTH_4, 1 )
             );
         }
     }

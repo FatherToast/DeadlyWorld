@@ -70,16 +70,11 @@ public final class DeadlyWorld {
      *      ? dispenser fish hook
      *      ? water monsters
      *      ? lava monsters
-     *  o vein world gen
-     *      o silverfish
-     *      - water (single block vein)
-     *      - lava (single block vein)
-     *      - runny lava (single block vein)
-     *      o sand
-     *      o vanilla vein disables
-     *      o vanilla vein replacements
-     *      o user-defined veins
-     *      ? new vein gen styles
+     *  - vein world gen
+     *      - buried block (config-defined single block veins - water, lava, and runny lava by default)
+     *      - infested block
+     *      - water
+     *      - sand
      *  - dungeon (monster room) world gen
      *      - simple (spawner/tower)
      *      - mini

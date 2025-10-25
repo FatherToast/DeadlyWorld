@@ -12,7 +12,8 @@ import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.Level;
 
-import static fathertoast.deadlyworld.common.util.References.*;
+import static fathertoast.deadlyworld.common.util.References.DEPTH_NETHER_CEIL;
+import static fathertoast.deadlyworld.common.util.References.DEPTH_NETHER_LAVA;
 
 /**
  * A config file for one set of features (e.g. spawners). Establishes framework and config options used by all features -
@@ -62,6 +63,16 @@ public abstract class FeatureConfig extends AbstractConfigFile {
             SPEC.increaseIndent();
         }
     }
+    
+    /** @return True if this config is for the overworld dimension. */
+    protected boolean isOverworldDimension() { return Level.OVERWORLD.equals( DIMENSION_CONFIGS.DIMENSION ); }
+    
+    /** @return True if this config is for the Nether dimension. */
+    protected boolean isNetherDimension() { return Level.NETHER.equals( DIMENSION_CONFIGS.DIMENSION ); }
+    
+    /** @return True if this config is for the End dimension. */
+    protected boolean isEndDimension() { return Level.END.equals( DIMENSION_CONFIGS.DIMENSION ); }
+    
     
     public static class FeatureTypeCategory extends AbstractConfigCategory<FeatureConfig> {
         /** The name of this feature type (e.g. "simple spawners"). */
@@ -121,11 +132,14 @@ public abstract class FeatureConfig extends AbstractConfigFile {
         /** @return True if this config is for a subfeature. */
         public final boolean isSubfeature() { return this instanceof SubfeatureCategory; }
         
+        /** @return True if this config is for the overworld dimension. */
+        protected boolean isOverworldDimension() { return PARENT.isOverworldDimension(); }
+        
         /** @return True if this config is for the Nether dimension. */
-        protected boolean isNetherDimension() { return Level.NETHER.equals( PARENT.DIMENSION_CONFIGS.DIMENSION ); }
+        protected boolean isNetherDimension() { return PARENT.isNetherDimension(); }
         
         /** @return True if this config is for the End dimension. */
-        protected boolean isEndDimension() { return Level.END.equals( PARENT.DIMENSION_CONFIGS.DIMENSION ); }
+        protected boolean isEndDimension() { return PARENT.isEndDimension(); }
         
         // Helper methods for commonly used fields below
         

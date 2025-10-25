@@ -1,16 +1,40 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
+import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.VeinConfig;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
+import java.util.function.Function;
+
 /** Used to link and simplify configured features and placed features that are one-to-one. */
 public class FeatureKeys {
+    
+    // Ore features
+    
+    public static FeatureKeys anyDimOre( String name ) {
+        return new FeatureKeys( DWConfiguredFeatureProvider.anyDimOreKey( name ),
+                DWPlacedFeatureProvider.anyDimOreKey( name ) ).notPlaceable();
+    }
+    
+    public static FeatureKeys overworldOre( String name ) {
+        return new FeatureKeys( DWConfiguredFeatureProvider.overworldOreKey( name ),
+                DWPlacedFeatureProvider.overworldOreKey( name ) ).notPlaceable();
+    }
+    
+    public static FeatureKeys netherOre( String name ) {
+        return new FeatureKeys( DWConfiguredFeatureProvider.netherOreKey( name ),
+                DWPlacedFeatureProvider.netherOreKey( name ) ).notPlaceable();
+    }
+    
+    
+    // Decoration features
     
     public static FeatureKeys overworld( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.overworldKey( name ),
@@ -22,10 +46,6 @@ public class FeatureKeys {
                 DWPlacedFeatureProvider.netherKey( name ) );
     }
     
-    public static FeatureKeys anyDimension( String name ) {
-        return new FeatureKeys( DWConfiguredFeatureProvider.anyDimKey( name ),
-                DWPlacedFeatureProvider.anyDimKey( name ) );
-    }
     
     public final ResourceKey<ConfiguredFeature<?, ?>> configuredKey;
     public final ResourceKey<PlacedFeature> placedKey;
@@ -35,7 +55,10 @@ public class FeatureKeys {
         placedKey = placed;
     }
     
-    /** Marks the configured feature as 'not placeable' and returns itself for ease in constructing. */
+    /**
+     * Marks the configured feature as 'not placeable' and returns itself for ease in constructing.
+     * Automatically called for ore features.
+     */
     public FeatureKeys notPlaceable() {
         DWAbstractCFProvider.NOT_PLACEABLE.add( configuredKey );
         return this;
@@ -59,6 +82,25 @@ public class FeatureKeys {
         protected TypicalFeature( FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld );
             netherKeys = nether;
+        }
+    }
+    
+    public static class Vein extends TypicalFeature {
+        
+        public static Vein of( Function<DimensionConfigGroup, VeinConfig.VeinCategory> configGetter, String name ) {
+            return new Vein( configGetter, overworldOre( name ), netherOre( name ) );
+        }
+        
+        public final Function<DimensionConfigGroup, VeinConfig.VeinCategory> configGetter;
+        
+        protected Vein( Function<DimensionConfigGroup, VeinConfig.VeinCategory> getter, FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld, nether );
+            configGetter = getter;
+            
+            DWAbstractCFProvider.VEIN_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.VEIN_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.VEIN_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.VEIN_FEATURES.add( nether.placedKey );
         }
     }
     
@@ -112,24 +154,24 @@ public class FeatureKeys {
             DWPlacedFeatureProvider.FLOOR_TRAP_FEATURES.add( nether.placedKey );
         }
     }
-
+    
     public static class SpikeTrap extends TypicalFeature {
-
+        
         public static SpikeTrap of( FloorTrapType type, String name ) { return new SpikeTrap( type, overworld( name ), nether( name ) ); }
-
+        
         public final FloorTrapType trapType;
-
+        
         protected SpikeTrap( FloorTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             trapType = type;
-
+            
             DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( overworld.configuredKey );
             DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( nether.configuredKey );
             DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( overworld.placedKey );
             DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( nether.placedKey );
         }
     }
-
+    
     public static class TowerDispenser extends TypicalFeature {
         
         public static TowerDispenser of( TowerType type, String name ) { return new TowerDispenser( type, overworld( name ), nether( name ) ); }

@@ -24,13 +24,21 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
     @Override
     protected void addTags( HolderLookup.Provider holderLookup ) {
         addAll( DWTags.ConfiguredFeatures.NOT_PLACEABLE, DWAbstractCFProvider.NOT_PLACEABLE );
+        
+        // Ore features
+        addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION_ORE, DWAbstractCFProvider.ANY_DIMENSION_ORE_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.OVERWORLD_ORE, DWAbstractCFProvider.OVERWORLD_ORE_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.THE_NETHER_ORE, DWAbstractCFProvider.NETHER_ORE_FEATURES );
+        
+        addAll( DWTags.ConfiguredFeatures.VEINS, DWAbstractCFProvider.VEIN_FEATURES );
+        
+        // Decoration features
         addAll( DWTags.ConfiguredFeatures.OVERWORLD, DWAbstractCFProvider.OVERWORLD_FEATURES );
         addAll( DWTags.ConfiguredFeatures.THE_NETHER, DWAbstractCFProvider.NETHER_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION, DWAbstractCFProvider.ANY_DIMENSION_FEATURES );
         
         addAll( DWTags.ConfiguredFeatures.LONE_CHESTS, DWAbstractCFProvider.LONE_CHEST_FEATURES );
         addAll( DWTags.ConfiguredFeatures.SPAWNERS, DWAbstractCFProvider.SPAWNER_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.TRAPS, DWAbstractCFProvider.FLOOR_TRAP_FEATURES);
+        addAll( DWTags.ConfiguredFeatures.TRAPS, DWAbstractCFProvider.FLOOR_TRAP_FEATURES );
         addAll( DWTags.ConfiguredFeatures.TOWERS, DWAbstractCFProvider.TOWER_FEATURES );
         addAll( DWTags.ConfiguredFeatures.SEA_MINES, DWAbstractCFProvider.SEA_MINE_FEATURES );
         addAll( DWTags.ConfiguredFeatures.DUNGEONS, DWAbstractCFProvider.DUNGEON_FEATURES );
