@@ -6,19 +6,23 @@ import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SpikeTrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.SpikeTrapTypeCategory> {
 
-    NORMAL( "normal", ( dimConfigs ) -> dimConfigs.SPIKE_TRAPS.NORMAL );
+    STATIC( "normal", ( dimConfigs ) -> dimConfigs.SPIKE_TRAPS.STATIC ),
+    MECHANICAL("mechanical", (dimConfigs ) -> dimConfigs.SPIKE_TRAPS.MECHANICAL ) {
+        @Override
+        public Supplier<BaseSpikeTrapBlock> getBlock() {
+            return () -> new MechanicalSpikeTrapBlock( this );
+        }
+    };
 
     public static final String BLOCK_CATEGORY = "spike_trap";
 
-    /** The unique id for this sea mine type. This is used to save and load from disk. */
+    /** The unique id for this spike trap type. This is used to save and load from disk. */
     private final String id;
     private final String displayName;
 
@@ -38,8 +42,8 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
 
     public String getDisplayName() { return displayName; }
 
-    /** @return A Supplier of the Spike FloorTrap Block to register for this Sea Mine Type */
-    public Supplier<SpikeTrapBlock> getBlock() { return () -> new SpikeTrapBlock( this ); }
+    /** @return A Supplier of the spike trap block to register for this spike trap type */
+    public Supplier<BaseSpikeTrapBlock> getBlock() { return () -> new BaseSpikeTrapBlock( this ); }
 
     @Override
     public SpikeTrapConfig.SpikeTrapTypeCategory getConfig( Level level ) {
@@ -53,10 +57,10 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
 
     /**
      * Returns a SpikeTrapType from ID.
-     * If there exists no SpikeTrapType with the given ID, default to {@link SpikeTrapType#NORMAL}
+     * If there exists no type with the given ID, default to {@link SpikeTrapType#STATIC}
      *
-     * @param ID The ID of the SpikeTrapType.
-     * @return A SpikeTrapType matching the given ID.
+     * @param ID The ID of the spike trap type.
+     * @return A spike trap type matching the given ID.
      */
     public static SpikeTrapType getFromID( String ID ) {
         for( SpikeTrapType spikeTrapType : values() ) {
@@ -64,7 +68,7 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
                 return spikeTrapType;
             }
         }
-        return NORMAL;
+        return STATIC;
     }
 
     @Override
@@ -73,7 +77,7 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
     public static SpikeTrapType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {
             DeadlyWorld.LOG.warn( "Attempted to fetch invalid spike trap type from index '{}'", index );
-            return NORMAL;
+            return STATIC;
         }
         return values()[index];
     }

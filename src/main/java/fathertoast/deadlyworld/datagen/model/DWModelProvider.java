@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.datagen.model;
 
 import fathertoast.deadlyworld.common.block.spawner.MiniSpawnerBlock;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.data.PackOutput;
@@ -31,7 +32,9 @@ public class DWModelProvider extends DWAbstractModelProvider {
         DWBlocks.FLOOR_TRAPS.forEach( this::simpleFloorTrap );
         DWBlocks.TOWER_DISPENSERS.forEach( this::simpleTowerDispenser );
         DWBlocks.SEA_MINES.forEach( this::simpleSeaMine );
-        DWBlocks.SPIKE_TRAPS.forEach( this::simpleSpikeTrap );
+
+        spikeTrap( DWBlocks.spikeTrap( SpikeTrapType.STATIC ), blockTexture( Blocks.STONE ) );
+        spikeTrap( DWBlocks.spikeTrap( SpikeTrapType.MECHANICAL ), blockTexture( Blocks.COBBLESTONE ) );
 
         emptyModelWithParticle( DWBlocks.MINI_CHEST, blockTexture( Blocks.OAK_PLANKS ) );
         emptyModelWithParticle( DWBlocks.RUNNY_LAVA, blockTextureExtend( Blocks.LAVA, "_still" ) );

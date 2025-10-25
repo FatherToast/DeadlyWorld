@@ -10,7 +10,9 @@ import static fathertoast.deadlyworld.common.util.References.DEPTH_LAVA;
 
 public class SpikeTrapConfig extends FeatureConfig {
 
-    public final SpikeTrapConfig.SpikeTrapTypeCategory NORMAL;
+    public final SpikeTrapConfig.SpikeTrapTypeCategory STATIC;
+    public final SpikeTrapConfig.SpikeTrapTypeCategory MECHANICAL;
+
 
     /** Builds the config spec that should be used for this config. */
     SpikeTrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
@@ -18,7 +20,8 @@ public class SpikeTrapConfig extends FeatureConfig {
 
         SPEC.newLine();
 
-        NORMAL = new SpikeTrapConfig.SpikeTrapTypeCategory( this, SpikeTrapType.NORMAL, 0.3, DEPTH_LAVA, DEPTH_0, 4.0F );
+        STATIC = new SpikeTrapConfig.SpikeTrapTypeCategory( this, SpikeTrapType.STATIC, 0.3, DEPTH_LAVA, DEPTH_0, 3.0F );
+        MECHANICAL = new SpikeTrapConfig.SpikeTrapTypeCategory( this, SpikeTrapType.MECHANICAL, 0.3, DEPTH_LAVA, DEPTH_0, 4.0F );
     }
 
     public static class SpikeTrapTypeCategory extends FeatureTypeCategory {

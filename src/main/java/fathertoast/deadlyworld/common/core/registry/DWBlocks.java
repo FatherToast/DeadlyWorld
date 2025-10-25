@@ -4,7 +4,8 @@ import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.infested.InfestedBlockAutoGen;
 import fathertoast.deadlyworld.common.block.chest.MiniChestBlock;
-import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapBlock;
+import fathertoast.deadlyworld.common.block.spike_trap.BaseSpikeTrapBlock;
+import fathertoast.deadlyworld.common.block.spike_trap.MechanicalSpikeTrapBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -40,7 +40,7 @@ public final class DWBlocks {
     public static final List<RegistryObject<FloorTrapBlock>> FLOOR_TRAPS;
     public static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
     public static final List<RegistryObject<SeaMineBlock>> SEA_MINES;
-    public static final List<RegistryObject<SpikeTrapBlock>> SPIKE_TRAPS;
+    public static final List<RegistryObject<BaseSpikeTrapBlock>> SPIKE_TRAPS;
 
     //    public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
     //    public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock( "sewer_bedrock", () -> new Block( AbstractBlock.Properties.of( Material.STONE, MaterialColor.COLOR_GRAY ).strength( -1.0F, 3600000.0F ).noDrops().sound( SoundType.STONE ) ), ItemGroup.TAB_BUILDING_BLOCKS );
@@ -68,7 +68,7 @@ public final class DWBlocks {
         floorTraps.trimToSize();
         FLOOR_TRAPS = Collections.unmodifiableList( floorTraps );
 
-        final ArrayList<RegistryObject<SpikeTrapBlock>> spikeTraps = new ArrayList<>();
+        final ArrayList<RegistryObject<BaseSpikeTrapBlock>> spikeTraps = new ArrayList<>();
         for( SpikeTrapType type : SpikeTrapType.values() ) {
             spikeTraps.add( type.ordinal(), registerBlock( type + "_spike_trap", type.getBlock() ) );
         }
@@ -112,7 +112,7 @@ public final class DWBlocks {
     public static RegistryObject<FloorTrapBlock> floorTrap( FloorTrapType type ) { return FLOOR_TRAPS.get( type.ordinal() ); }
 
     /** @return The block registry object for a particular spike trap type. */
-    public static RegistryObject<SpikeTrapBlock> spikeTrap( SpikeTrapType type ) { return SPIKE_TRAPS.get( type.ordinal() ); }
+    public static RegistryObject<BaseSpikeTrapBlock> spikeTrap( SpikeTrapType type ) { return SPIKE_TRAPS.get( type.ordinal() ); }
 
     /** @return The block registry object for a particular tower dispenser type. */
     public static RegistryObject<TowerDispenserBlock> towerDispenser( TowerType type ) { return TOWER_DISPENSERS.get( type.ordinal() ); }

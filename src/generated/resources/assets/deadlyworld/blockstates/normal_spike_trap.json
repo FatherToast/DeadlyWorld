@@ -1,54 +1,28 @@
 {
   "variants": {
-    "facing=down,pressed=false": {
+    "facing=down": {
       "model": "deadlyworld:block/normal_spike_trap",
       "x": 180
     },
-    "facing=down,pressed=true": {
-      "model": "deadlyworld:block/normal_spike_trap_pressed",
-      "x": 180
-    },
-    "facing=east,pressed=false": {
+    "facing=east": {
       "model": "deadlyworld:block/normal_spike_trap",
       "x": 90,
       "y": 90
     },
-    "facing=east,pressed=true": {
-      "model": "deadlyworld:block/normal_spike_trap_pressed",
-      "x": 90,
-      "y": 90
-    },
-    "facing=north,pressed=false": {
+    "facing=north": {
       "model": "deadlyworld:block/normal_spike_trap",
       "x": 90
     },
-    "facing=north,pressed=true": {
-      "model": "deadlyworld:block/normal_spike_trap_pressed",
-      "x": 90
-    },
-    "facing=south,pressed=false": {
+    "facing=south": {
       "model": "deadlyworld:block/normal_spike_trap",
       "x": 90,
       "y": 180
     },
-    "facing=south,pressed=true": {
-      "model": "deadlyworld:block/normal_spike_trap_pressed",
-      "x": 90,
-      "y": 180
-    },
-    "facing=up,pressed=false": {
+    "facing=up": {
       "model": "deadlyworld:block/normal_spike_trap"
     },
-    "facing=up,pressed=true": {
-      "model": "deadlyworld:block/normal_spike_trap_pressed"
-    },
-    "facing=west,pressed=false": {
+    "facing=west": {
       "model": "deadlyworld:block/normal_spike_trap",
-      "x": 90,
-      "y": 270
-    },
-    "facing=west,pressed=true": {
-      "model": "deadlyworld:block/normal_spike_trap_pressed",
       "x": 90,
       "y": 270
     }
