@@ -97,7 +97,8 @@ public final class DeadlyWorld {
      *      - silverfish nest
      *      - mini
      *      - mimic
-     *      - dungeon-only version
+     *      - buried (via buried block veins)
+     *      - dungeon (in vanilla dungeons)
      *      ? hanging from chain version (in large caves or perhaps elsewhere with high ceilings)
      *  - tower world gen
      *      - arrow
