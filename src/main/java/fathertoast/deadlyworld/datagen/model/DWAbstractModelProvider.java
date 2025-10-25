@@ -118,14 +118,29 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
     protected void spikeTrap( RegistryObject<? extends SpikeTrapBlock> regObj,
                                     ResourceLocation baseTexture, ResourceLocation spikeTexture, ResourceLocation overlay ) {
         final String name = Objects.requireNonNull( regObj.getId() ).getPath();
+        final Block block = regObj.get();
 
-        simpleBlockWithItem( regObj.get(), models()
-                .withExistingParent( name, templateLoc( "template_spike_trap" ) )
-                .texture( "base", baseTexture )
-                .texture( "overlay", overlay )
-                .texture( "spikes", spikeTexture )
-                .texture( PARTICLE_KEY, blockTexture( Blocks.COBBLESTONE ) )
-        );
+        getVariantBuilder( block ).forAllStates( (state) -> {
+            boolean pressed = state.getValue( SpikeTrapBlock.PRESSED );
+            Direction facing = state.getValue( SpikeTrapBlock.FACING );
+            // TODO - static variant uses static model
+            ResourceLocation staticModel = templateLoc( "template_spike_trap" );
+            ResourceLocation pressedModel = templateLoc( "template_spike_trap_pressed" );
+            ResourceLocation noSpikesModel = templateLoc( "template_spike_trap_spikeless" );
+
+            return ConfiguredModel.builder()
+                    .modelFile( models()
+                            .withExistingParent( pressed ? name + "_pressed" : name, pressed ? pressedModel : noSpikesModel )
+                            .texture( "base", baseTexture )
+                            .texture( "overlay", overlay )
+                            .texture( "spikes", spikeTexture )
+                            .texture( PARTICLE_KEY, blockTexture( Blocks.STONE ) )
+                    )
+                    .rotationX( facing == Direction.DOWN ? 180 : facing.getAxis().isHorizontal() ? 90 : 0 )
+                    .rotationY( facing.getAxis().isVertical() ? 0 : ( ((int) facing.toYRot() ) + 180 ) % 360 )
+                    .build();
+        });
+        itemModels().getBuilder( name ).parent( models().getExistingFile( modLoc( "block/" + name + "_pressed" ) ) );
     }
 
     protected void spikeTrap( RegistryObject<? extends SpikeTrapBlock> regObj, ResourceLocation baseTexture, ResourceLocation spikeTexture ) {
