@@ -55,7 +55,7 @@ public class SpawnerConfig extends FeatureConfig {
                 16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
         
         STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.15, DEPTH_LAVA, DEPTH_1,
-                16, true, 0, 400, 10, 1, 2, 0.95, 0.05 );
+                16, true, 0, 400, 10, 1, 2, 0.9, 0.05 );
         
         SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.1, DEPTH_LAVA, DEPTH_2,
                 20, true, 400, 2400, 100, 12, 8, 0.05, 0.05 );
