@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.block.spawner;
 
 import fathertoast.crust.api.lib.DeferredAction;
+import fathertoast.crust.api.lib.LevelEventHelper;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import net.minecraft.core.BlockPos;
@@ -35,6 +36,7 @@ public class BuriedSpawnerBlock extends Block {
     private static boolean tryInit( ServerLevel level, BlockPos pos ) {
         if( level.getBlockState( pos ).getBlock() instanceof IDeadlyBlock deadlyBlock ) {
             deadlyBlock.initDeadly( level, pos, level.getRandom() );
+            LevelEventHelper.SMOKE_AND_FLAME.play( level, pos );
         }
         return true;
     }
