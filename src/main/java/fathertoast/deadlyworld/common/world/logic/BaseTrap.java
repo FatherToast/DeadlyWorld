@@ -8,10 +8,12 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
 import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
+import fathertoast.deadlyworld.common.util.MimicHelper;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +22,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.tags.ITag;
 
 import javax.annotation.Nullable;
@@ -221,6 +225,7 @@ public abstract class BaseTrap {
         if( tripEntity == null ) tripEntity = findTripTarget( level, pos );
         
         triggerTrap( level, pos );
+        popDecoy( level, pos );
         
         if( triggersRemaining > 0 ) {
             triggersRemaining--;
@@ -256,15 +261,40 @@ public abstract class BaseTrap {
     
     /** Triggers this trap. */
     public abstract void triggerTrap( ServerLevel level, BlockPos pos );
+
+    public void popDecoy( ServerLevel level, BlockPos pos ) {
+        if ( decoyType != null ) {
+            decoyType = null;
+            BlockState state = getBlockEntity().getBlockState();
+            level.sendBlockUpdated( pos, state, state, Block.UPDATE_CLIENTS );
+
+            // Poof cloud, if unobstructed above
+            BlockPos abovePos = pos.above();
+
+            if ( !level.getBlockState( abovePos ).isSolidRender( level, abovePos ) ) {
+                level.sendParticles(ParticleTypes.CLOUD,
+                        pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5,
+                        10,
+                        level.random.nextGaussian(), level.random.nextGaussian(), level.random.nextGaussian(),
+                        0.1);
+            }
+        }
+    }
     
     public void load( @Nullable Level level, BlockPos pos, CompoundTag loadTag ) {
         if( NBTHelper.containsString( loadTag, TAG_DECOY_TYPE ) ) {
-            ResourceLocation typeId = ResourceLocation.tryParse( loadTag.getString( TAG_DECOY_TYPE ) );
-            
-            if( typeId != null )
-                decoyType = DWRegistries.DECOY_TYPE_REGISTRY.get().getValue( typeId );
+            String value = loadTag.getString( TAG_DECOY_TYPE );
+
+            if ( value.equals( "null" ) ) {
+                decoyType = null;
+            }
+            else {
+                ResourceLocation typeId = ResourceLocation.tryParse( value );
+
+                if (typeId != null)
+                    decoyType = DWRegistries.DECOY_TYPE_REGISTRY.get().getValue(typeId);
+            }
         }
-        
         if( NBTHelper.containsNumber( loadTag, TAG_ACTIVATION_RANGE ) )
             activationRange = loadTag.getFloat( TAG_ACTIVATION_RANGE );
         if( NBTHelper.containsNumber( loadTag, TAG_CHECK_SIGHT ) )
@@ -306,11 +336,11 @@ public abstract class BaseTrap {
     }
     
     public void writeToUpdateTag( CompoundTag updateTag ) {
-        if( decoyType != null ) {
-            ResourceLocation typeId = DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType );
-            if( typeId != null )
-                updateTag.putString( TAG_DECOY_TYPE, typeId.toString() );
-        }
+        String typeId = decoyType == null
+                ? "null"
+                : DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType ).toString();
+
+        updateTag.putString( TAG_DECOY_TYPE, typeId );
     }
     
     public void broadcastEvent( Level level, BlockPos pos, int eventId ) {
@@ -325,7 +355,7 @@ public abstract class BaseTrap {
     public Entity getSpawnerEntity() { return mobileEntity; }
     
     @Nullable
-    public BlockEntity getSpawnerBlockEntity() { return blockEntity; }
+    public BlockEntity getBlockEntity() { return blockEntity; }
     
     @Nullable
     public DecoyType getDecoyType() {
