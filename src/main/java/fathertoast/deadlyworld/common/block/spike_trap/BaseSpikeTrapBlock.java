@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -144,6 +146,12 @@ public class BaseSpikeTrapBlock extends Block {
             float damage = type.getConfig( level ).damage.getFloat();
             livingEntity.hurt( DWDamageTypes.of( level, DWDamageTypes.SPIKE_TRAP ), damage );
         }
+    }
+
+    @Override
+    @Nullable
+    public BlockPathTypes getBlockPathType( BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob ) {
+        return BlockPathTypes.DANGER_OTHER;
     }
 
     @Override

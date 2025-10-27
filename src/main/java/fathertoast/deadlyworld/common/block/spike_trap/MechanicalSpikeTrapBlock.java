@@ -10,6 +10,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -17,9 +18,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings( "deprecation" )
 public class MechanicalSpikeTrapBlock extends BaseSpikeTrapBlock {
@@ -57,7 +60,7 @@ public class MechanicalSpikeTrapBlock extends BaseSpikeTrapBlock {
     // TODO - Unique sound events with subtitles
     private void checkPressed( Level level, BlockPos pos, BlockState state ) {
         int aabbIndex = state.getValue( FACING ).getOpposite().ordinal();
-        boolean pressed = getEntitiesInBox( level, PRESS_CHECK_AABBS[aabbIndex].move( pos ), Player.class ) > 0;
+        boolean pressed = getEntitiesInBox( level, PRESS_CHECK_AABBS[aabbIndex].move( pos ), LivingEntity.class ) > 0;
 
         if ( !pressed )
             return;
@@ -87,12 +90,18 @@ public class MechanicalSpikeTrapBlock extends BaseSpikeTrapBlock {
         super.tick( state, level, pos, random );
 
         int aabbIndex = state.getValue( FACING ).getOpposite().ordinal();
-        boolean pressed = getEntitiesInBox( level, PRESS_CHECK_AABBS[aabbIndex].move( pos ), Player.class ) > 0;
+        boolean pressed = getEntitiesInBox( level, PRESS_CHECK_AABBS[aabbIndex].move( pos ), LivingEntity.class ) > 0;
 
         if ( !pressed ) {
             level.setBlock(pos, state.setValue(PRESSED, false), Block.UPDATE_CLIENTS);
             level.playSound(null, pos, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundSource.BLOCKS);
         }
+    }
+
+    @Override
+    @Nullable
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob ) {
+        return null;
     }
 
     @Override
