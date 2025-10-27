@@ -9,8 +9,6 @@
     "deadlyworld:lava_trap",
     "deadlyworld:lava_trap_nether",
     "deadlyworld:fire_trap",
-    "deadlyworld:fire_trap_nether",
-    "deadlyworld:sea_mine_mob_trap",
-    "deadlyworld:sea_mine_mob_trap_nether"
+    "deadlyworld:fire_trap_nether"
   ]
 }
