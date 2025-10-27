@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.SpikeTrapTypeCategory> {
 
-    STATIC( "normal", ( dimConfigs ) -> dimConfigs.SPIKE_TRAPS.STATIC ),
+    STATIC( "static", ( dimConfigs ) -> dimConfigs.SPIKE_TRAPS.STATIC ),
     MECHANICAL("mechanical", (dimConfigs ) -> dimConfigs.SPIKE_TRAPS.MECHANICAL ) {
         @Override
         public Supplier<BaseSpikeTrapBlock> getBlock() {
@@ -30,14 +30,14 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
     private final Function<DimensionConfigGroup, SpikeTrapConfig.SpikeTrapTypeCategory> configGetter;
 
 
-    SpikeTrapType( String name, Function<DimensionConfigGroup, SpikeTrapConfig.SpikeTrapTypeCategory> configFunction ) {
-        this( name, name.replace( "_", " " ) + " spike traps", configFunction );
+    SpikeTrapType( String name, Function<DimensionConfigGroup, SpikeTrapConfig.SpikeTrapTypeCategory> configGetter ) {
+        this( name, name.replace( "_", " " ) + " spike traps", configGetter );
     }
 
-    SpikeTrapType( String name, String prettyName, Function<DimensionConfigGroup, SpikeTrapConfig.SpikeTrapTypeCategory> configFunction ) {
+    SpikeTrapType( String name, String prettyName, Function<DimensionConfigGroup, SpikeTrapConfig.SpikeTrapTypeCategory> configGetter ) {
         id = name;
         displayName = prettyName;
-        configGetter = configFunction;
+        this.configGetter = configGetter;
     }
 
     public String getDisplayName() { return displayName; }
