@@ -1,0 +1,8 @@
+{
+  "type": "deadlyworld:config_remove_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "minecraft:ore_infested"
+  ],
+  "enabled": "deadlyworld:_main:general.disable_vanilla_infested_block_veins"
+}

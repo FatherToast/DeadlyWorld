@@ -13,7 +13,6 @@ import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +38,7 @@ public final class DeadlyWorld {
      *      - auto-generated infested blocks
      *      - deadly spawner
      *      - mini spawner
+     *      - inactive buried spawner
      *      - floor trap
      *      - tower dispenser
      *      - sea mine
@@ -70,16 +70,11 @@ public final class DeadlyWorld {
      *      ? dispenser fish hook
      *      ? water monsters
      *      ? lava monsters
-     *  o vein world gen
-     *      o silverfish
-     *      - water (single block vein)
-     *      - lava (single block vein)
-     *      - runny lava (single block vein)
-     *      o sand
-     *      o vanilla vein disables
-     *      o vanilla vein replacements
-     *      o user-defined veins
-     *      ? new vein gen styles
+     *  - vein world gen
+     *      - buried block (config-defined single block veins - water, lava, and runny lava by default)
+     *      - infested block
+     *      - water
+     *      - sand
      *  - dungeon (monster room) world gen
      *      - simple (spawner/tower)
      *      - mini
@@ -101,7 +96,8 @@ public final class DeadlyWorld {
      *      - silverfish nest
      *      - mini
      *      - mimic
-     *      - dungeon-only version
+     *      - buried (via buried block veins)
+     *      - dungeon (in vanilla dungeons)
      *      ? hanging from chain version (in large caves or perhaps elsewhere with high ceilings)
      *  - tower world gen
      *      - arrow
@@ -165,18 +161,11 @@ public final class DeadlyWorld {
     /** The logger used by this mod. */
     public static final Logger LOG = LogManager.getLogger( MOD_ID );
     
-    public static FMLModContainer CONTAINER;//TODO Temporary, for diagnostics
-    
-    public static void printCurrentState( String message ) {
-        LOG.error( "--------====:: {} - {} ::====-------- ", CONTAINER.getCurrentState().toString(), message );
-    }
-    
     /** Packet handler instance */
     public PacketHandler packetHandler = new PacketHandler();
     
     
     public DeadlyWorld( FMLJavaModLoadingContext context ) {
-        CONTAINER = context.getContainer();
         IEventBus eventBus = context.getModEventBus();
         
         packetHandler.registerMessages();

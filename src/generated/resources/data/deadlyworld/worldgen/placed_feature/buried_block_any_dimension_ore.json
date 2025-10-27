@@ -1,5 +1,5 @@
 {
-  "feature": "deadlyworld:buried_liquid_any_dimension",
+  "feature": "deadlyworld:buried_block_any_dimension_ore",
   "placement": [
     {
       "type": "minecraft:count",

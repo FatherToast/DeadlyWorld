@@ -4,7 +4,6 @@ import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
-import fathertoast.deadlyworld.common.config.dimension.SpikeTrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.BlockPos;
@@ -51,9 +50,8 @@ public enum SpawnerType implements IFeatureConfigProvider<SpawnerConfig.SpawnerT
     },
     
     // Subfeatures
-    DUNGEON( "dungeon", true, ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON ) {
-
-    };
+    BURIED( "buried", true, ( dimConfigs ) -> dimConfigs.SPAWNERS.BURIED ),
+    DUNGEON( "dungeon", true, ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON );
     
     /** The path for loot tables associated with these types. */
     public static final String LOOT_TABLE_PATH = "deadly_spawners/";
@@ -120,17 +118,17 @@ public enum SpawnerType implements IFeatureConfigProvider<SpawnerConfig.SpawnerT
             throw new UnsupportedOperationException( "Subfeatures do not have chest loot! (spawner type \"" + id + "\")" );
         return DeadlyWorld.rl( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
     }
-
+    
     @Override
     public SpawnerConfig.SpawnerTypeCategory getConfig( Level level ) {
         return configGetter.apply( Config.getDimensionConfigs( level ) );
     }
-
+    
     @Override
     public SpawnerConfig.SpawnerTypeCategory getConfig( DimensionConfigGroup dimConfig ) {
         return configGetter.apply( dimConfig );
     }
-
+    
     /** Applies any additional modifiers to entities spawned by spawners of this type. */
     public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level level, BlockPos pos ) {
         final SpawnerConfig.SpawnerTypeCategory config = getConfig( dimConfigs );

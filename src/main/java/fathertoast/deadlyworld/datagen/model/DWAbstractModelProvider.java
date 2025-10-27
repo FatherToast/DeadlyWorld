@@ -36,8 +36,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
     protected static final String PARTICLE_KEY = "particle";
 
 
-
-    public DWAbstractModelProvider(PackOutput output, ExistingFileHelper exFileHelper ) {
+    public DWAbstractModelProvider( PackOutput output, ExistingFileHelper exFileHelper ) {
         super( output, DeadlyWorld.MOD_ID, exFileHelper );
     }
 
@@ -47,7 +46,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
     // ----------------------------------------------------- //
 
     /** Generates state definition and models for simple deadly spawners. */
-    protected void simpleSpawner( RegistryObject<? extends DeadlySpawnerBlock> regObj ) {
+    protected void simpleSpawner( RegistryObject<? extends Block> regObj ) {
         final String name = Objects.requireNonNull( regObj.getId() ).getPath();
 
         simpleBlockWithItem( regObj.get(), models()
@@ -57,7 +56,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
     }
 
     /** Generates state definition and models for mini spawner blocks. */
-    protected void miniSpawner( RegistryObject<DeadlySpawnerBlock> regObj ) {
+    protected void miniSpawner( RegistryObject<? extends Block> regObj ) {
         final String name = Objects.requireNonNull( regObj.getId() ).getPath();
         final Block block = regObj.get();
         final ResourceLocation textureLoc = blockTexture( block );
@@ -71,7 +70,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
                             .texture( PARTICLE_KEY, textureLoc )
                     )
                     .rotationX( dir == Direction.DOWN ? 180 : dir.getAxis().isHorizontal() ? 90 : 0 )
-                    .rotationY( dir.getAxis().isVertical() ? 0 : ( ((int) dir.toYRot() ) + 180 ) % 360 )
+                    .rotationY( dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360 )
                     .build();
         }, BlockStateProperties.WATERLOGGED );
 
@@ -79,17 +78,17 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
     }
 
     /** Generates state definition and models for simple floor traps. */
-    protected void simpleFloorTrap( RegistryObject<? extends FloorTrapBlock> regObj ) {
+    protected void simpleFloorTrap( RegistryObject<? extends Block> regObj ) {
         final String name = Objects.requireNonNull( regObj.getId() ).getPath();
 
         simpleBlock( regObj.get(), models().getBuilder( name )
                 .texture( PARTICLE_KEY, blockTexture( Blocks.COBBLESTONE ) )
         );
-        itemModels().getBuilder( name ).parent( models().getExistingFile( mcLoc( "block/dropper_vertical" ) ));
+        itemModels().getBuilder( name ).parent( models().getExistingFile( mcLoc( "block/dropper_vertical" ) ) );
     }
 
     /** Generates state definition and models for simple tower dispensers. */
-    protected void simpleTowerDispenser( RegistryObject<? extends TowerDispenserBlock> regObj ) {
+    protected void simpleTowerDispenser( RegistryObject<? extends Block> regObj ) {
         final String name = Objects.requireNonNull( regObj.getId() ).getPath();
 
         simpleBlockWithItem( regObj.get(), models().cubeColumn( name,
@@ -99,7 +98,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
     }
 
     /** Generates state definition and models for simple sea mines. */
-    protected void simpleSeaMine( RegistryObject<? extends SeaMineBlock> regObj ) {
+    protected void simpleSeaMine( RegistryObject<? extends Block> regObj ) {
         final String name = Objects.requireNonNull( regObj.getId() ).getPath();
         final Block block = regObj.get();
 
@@ -230,7 +229,6 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
     }
 
 
-
     // ----------------------------------------------------- //
     //                        ITEMS                          //
     // ----------------------------------------------------- //
@@ -248,7 +246,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
     /**
      * Generates a simple item model for the given item.
      *
-     * @param regObj The registry object containing the item to generate a model for.
+     * @param regObj     The registry object containing the item to generate a model for.
      * @param textureLoc The location of the texture to use for the model.
      */
     protected void simpleItem( RegistryObject<? extends Item> regObj, ResourceLocation textureLoc ) {
@@ -268,7 +266,7 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
         final String name = Objects.requireNonNull( regObj.getId() ).getPath();
         final ResourceLocation parentId = Objects.requireNonNull( ForgeRegistries.ITEMS.getKey( parent ) );
 
-        if ( !parentId.getNamespace().equals( ResourceLocation.DEFAULT_NAMESPACE ) )
+        if( !parentId.getNamespace().equals( ResourceLocation.DEFAULT_NAMESPACE ) )
             throw new IllegalArgumentException( "\"simpleItemWithParent\" should not be called with a non-vanilla parent item!" );
 
         itemModels().getBuilder( name ).parent( itemModels().getExistingFile( mcLoc( "item/generated" ) ) )

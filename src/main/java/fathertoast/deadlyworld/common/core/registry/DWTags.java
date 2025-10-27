@@ -19,7 +19,7 @@ public final class DWTags {
     
     public static final class Blocks {
         public static final BlockWithItem SPAWNERS = tag( "spawners" );
-        public static final BlockWithItem TRAPS = tag( "traps" );
+        public static final BlockWithItem FLOOR_TRAPS = tag( "floor_traps" );
         public static final BlockWithItem TOWER_DISPENSERS = tag( "tower_dispensers" );
         public static final BlockWithItem SEA_MINES = tag( "sea_mines" );
         
@@ -50,7 +50,6 @@ public final class DWTags {
     }
     
     public static final class DecoyTypes {
-        
         public static final TagKey<DecoyType> OVERWORLD = tag( "overworld" );
         public static final TagKey<DecoyType> THE_NETHER = tag( "nether" );
         public static final TagKey<DecoyType> ANY_DIMENSION = tag( "any_dimension" );
@@ -60,10 +59,18 @@ public final class DWTags {
         }
     }
     
+    // These tags do not affect world gen; only here for the feature placer item and to help data pack makers
     public static final class ConfiguredFeatures {
         public static final TagKey<ConfiguredFeature<?, ?>> NOT_PLACEABLE = tag( "not_placeable" );
         
-        public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION = tag( "any_dimension" );
+        // Ore features
+        public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION_ORE = tag( "any_dimension_ore" );
+        public static final TagKey<ConfiguredFeature<?, ?>> OVERWORLD_ORE = tag( "overworld_ore" );
+        public static final TagKey<ConfiguredFeature<?, ?>> THE_NETHER_ORE = tag( "nether_ore" );
+        
+        public static final TagKey<ConfiguredFeature<?, ?>> VEINS = tag( "veins" );
+        
+        // Decoration features
         public static final TagKey<ConfiguredFeature<?, ?>> OVERWORLD = tag( "overworld" );
         public static final TagKey<ConfiguredFeature<?, ?>> THE_NETHER = tag( "nether" );
         
@@ -79,8 +86,19 @@ public final class DWTags {
         }
     }
     
+    /**
+     * Generation steps are listed in {@link net.minecraft.world.level.levelgen.GenerationStep.Decoration},
+     * in the order they generate.
+     */
     public static final class PlacedFeatures {
-        public static final TagKey<PlacedFeature> ANY_DIMENSION = tag( "any_dimension" );
+        // World gen step "underground_ores"
+        public static final TagKey<PlacedFeature> ANY_DIMENSION_ORE = tag( "any_dimension_ore" );
+        public static final TagKey<PlacedFeature> OVERWORLD_ORE = tag( "overworld_ore" );
+        public static final TagKey<PlacedFeature> THE_NETHER_ORE = tag( "nether_ore" );
+        
+        public static final TagKey<PlacedFeature> VEINS = tag( "veins" );
+        
+        // World gen step "underground_decoration"
         public static final TagKey<PlacedFeature> OVERWORLD = tag( "overworld" );
         public static final TagKey<PlacedFeature> THE_NETHER = tag( "nether" );
         

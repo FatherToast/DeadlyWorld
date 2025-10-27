@@ -12,9 +12,9 @@ import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
+import fathertoast.deadlyworld.common.world.levelgen.dungeon.NormalDungeonFeature;
 import fathertoast.deadlyworld.common.world.levelgen.dungeon.MiniDungeonFeature;
-import fathertoast.deadlyworld.common.world.levelgen.dungeon.SimpleDungeonFeature;
-import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedLiquidFeature;
+import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedBlocksFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
@@ -24,8 +24,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 
+/**
+ * For vanilla ore configured features, see {@link net.minecraft.data.worldgen.features.OreFeatures}.
+ * For vanilla decoration configured features, see {@link net.minecraft.data.worldgen.features.CaveFeatures} (mostly).
+ */
 public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
+    // Ore features
+    public static final FeatureKeys BURIED_BLOCK_ORE = FeatureKeys.anyDimOre( "buried_block" );
     
+    public static final FeatureKeys.Vein BASE_INFESTED_BLOCK_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.INFESTED_VANILLA, "base_infested_block" );
+    public static final FeatureKeys.Vein ADDED_INFESTED_BLOCK_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.INFESTED_ADDED, "added_infested_block" );
+    public static final FeatureKeys.Vein WATER_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.WATER, "water" );
+    public static final FeatureKeys.Vein SAND_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.SAND, "sand" );
+    
+    // Decoration features
     public static final FeatureKeys.LoneChest SIMPLE_LONE_CHEST = FeatureKeys.LoneChest.of( ChestType.SIMPLE, "simple_lone_chest" );
     public static final FeatureKeys.LoneChest VALUABLE_LONE_CHEST = FeatureKeys.LoneChest.of( ChestType.VALUABLE, "valuable_lone_chest" );
     public static final FeatureKeys.LoneChest TNT_TRAP_LONE_CHEST = FeatureKeys.LoneChest.of( ChestType.TNT_TRAP, "tnt_trap_lone_chest" );
@@ -56,9 +68,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.SeaMine PUFFER_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.PUFFER, "puffer_sea_mine" );
     public static final FeatureKeys.SeaMine GUARDIAN_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.GUARDIAN, "guardian_sea_mine" );
     
-    public static final FeatureKeys BURIED_LIQUID_ANY_DIMENSION = FeatureKeys.anyDimension( "buried_liquid" ).notPlaceable();
-    
-    public static final FeatureKeys.SimpleDungeon SIMPLE_DUNGEON = FeatureKeys.SimpleDungeon.of( "simple_dungeon" );
+    public static final FeatureKeys.SimpleDungeon NORMAL_DUNGEON = FeatureKeys.SimpleDungeon.of( "simple_dungeon" );
     public static final FeatureKeys.SimpleDungeon MINI_DUNGEON = FeatureKeys.SimpleDungeon.of( "mini_dungeon" );
     
     
@@ -67,10 +77,15 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         final DimensionConfigGroup overworldConfigs = Config.getDimensionConfigs( Level.OVERWORLD );
         final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         
-        // Special stuff
-        register( context, BURIED_LIQUID_ANY_DIMENSION,
+        // Ore features
+        register( context, BURIED_BLOCK_ORE,
                 new ConfiguredFeature<>( DWFeatures.BURIED_LIQUID.get(),
-                        new BuriedLiquidFeature.Configuration( BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+                        new BuriedBlocksFeature.Configuration( BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+        
+        registerInfestedVein( context, BASE_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
+        registerInfestedVein( context, ADDED_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
+        registerVein( context, WATER_ORE, overworldConfigs, Blocks.WATER, netherConfigs, Blocks.WATER );
+        registerVein( context, SAND_ORE, overworldConfigs, Blocks.SAND, netherConfigs, Blocks.SAND );
         
         // Plain lone chest features
         registerLoneChest( context, SIMPLE_LONE_CHEST,
@@ -144,16 +159,16 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 overworldConfigs, block( Blocks.DEEPSLATE_TILES ),
                 netherConfigs, block( Blocks.QUARTZ_PILLAR ) );
         
-        // Water traps
+        // Sea mines
         registerSeaMine( context, NORMAL_SEA_MINE, overworldConfigs );
         registerSeaMine( context, PUFFER_SEA_MINE, overworldConfigs );
         registerSeaMine( context, GUARDIAN_SEA_MINE, overworldConfigs );
         
-        // Simple dungeons
-        register( context, SIMPLE_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(), SimpleDungeonFeature.Configuration.of(
+        // Dungeons
+        register( context, NORMAL_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.NORMAL_DUNGEON.get(), NormalDungeonFeature.Configuration.of(
                 overworldConfigs, Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE,
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-        register( context, SIMPLE_DUNGEON.netherKeys, new ConfiguredFeature<>( DWFeatures.SIMPLE_DUNGEON.get(), SimpleDungeonFeature.Configuration.of(
+        register( context, NORMAL_DUNGEON.netherKeys, new ConfiguredFeature<>( DWFeatures.NORMAL_DUNGEON.get(), NormalDungeonFeature.Configuration.of(
                 netherConfigs, Blocks.NETHER_BRICKS, Blocks.CRACKED_NETHER_BRICKS,
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         register( context, MINI_DUNGEON.overworldKeys, new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(), MiniDungeonFeature.Configuration.of(

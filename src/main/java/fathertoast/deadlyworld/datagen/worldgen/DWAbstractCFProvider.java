@@ -1,17 +1,19 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
+import com.google.common.collect.ImmutableList;
 import fathertoast.deadlyworld.common.block.chest.ChestType;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
-import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.*;
+import fathertoast.deadlyworld.common.world.levelgen.misc.DeadlyOreFeature;
+import fathertoast.deadlyworld.common.world.levelgen.misc.InfestedOreFeature;
 import fathertoast.deadlyworld.common.world.levelgen.misc.LoneChestFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.LoneSpawnerFeature;
@@ -28,7 +30,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -45,13 +50,21 @@ public abstract class DWAbstractCFProvider {
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NOT_PLACEABLE = new ArrayList<>();
     
     /**
-     * List of all configurations that don't care about dimension type and should generate anywhere.
+     * List of all ore configurations that don't care about dimension type and should generate anywhere.
      * Any restrictions are handled in the feature itself, usually config based.
      */
-    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> ANY_DIMENSION_FEATURES = new ArrayList<>();
-    /** List of all configurations that should generate in overworld biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> ANY_DIMENSION_ORE_FEATURES = new ArrayList<>();
+    /** List of all ore configurations that should generate in overworld biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_ORE_FEATURES = new ArrayList<>();
+    /** List of all ore configurations that should generate in nether biomes. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NETHER_ORE_FEATURES = new ArrayList<>();
+    
+    /** List of all vein configurations. */
+    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> VEIN_FEATURES = new ArrayList<>();
+    
+    /** List of all decoration configurations that should generate in overworld biomes. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_FEATURES = new ArrayList<>();
-    /** List of all configurations that should generate in nether biomes. */
+    /** List of all decoration configurations that should generate in nether biomes. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NETHER_FEATURES = new ArrayList<>();
     
     /** List of all lone chest configurations. */
@@ -71,6 +84,9 @@ public abstract class DWAbstractCFProvider {
     
     private static final ResourceLocation EMPTY_RESOURCE_LOCATION = ResourceLocation.fromNamespaceAndPath( "", "" );
     
+    // We aren't adding any "actual" ores, so we just use the base stone replace rules like dirt, etc. does
+    private static final RuleTest TARGET_RULE_OVERWORLD = new TagMatchTest( BlockTags.BASE_STONE_OVERWORLD );
+    private static final RuleTest TARGET_RULE_NETHER = new TagMatchTest( BlockTags.BASE_STONE_NETHER );
     
     /** Convenience method for making a simple block state provider. */
     protected static BlockStateProvider block( Supplier<? extends Block> block ) { return block( block.get() ); }
@@ -81,6 +97,27 @@ public abstract class DWAbstractCFProvider {
     /** Convenience method for making a simple block state provider. */
     protected static BlockStateProvider block( BlockState block ) { return BlockStateProvider.simple( block ); }
     
+    
+    /** Registers a configured vein type feature to each supported dimension. */
+    protected static void registerInfestedVein( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.Vein feature,
+                                                DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        register( context, feature.overworldKeys, new ConfiguredFeature<>( DWFeatures.INFESTED_ORE.get(),
+                InfestedOreFeature.Configuration.of( feature.configGetter.apply( overworldConfigs ) ) ) );
+        register( context, feature.netherKeys, new ConfiguredFeature<>( DWFeatures.INFESTED_ORE.get(),
+                InfestedOreFeature.Configuration.of( feature.configGetter.apply( netherConfigs ) ) ) );
+    }
+    
+    /** Registers a configured vein type feature to each supported dimension. */
+    protected static void registerVein( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.Vein feature,
+                                        DimensionConfigGroup overworldConfigs, Block overworldBlock,
+                                        DimensionConfigGroup netherConfigs, Block netherBlock ) {
+        register( context, feature.overworldKeys, new ConfiguredFeature<>( DWFeatures.DEADLY_ORE.get(),
+                DeadlyOreFeature.Configuration.of( feature.configGetter.apply( overworldConfigs ),
+                        ImmutableList.of( OreConfiguration.target( TARGET_RULE_OVERWORLD, overworldBlock.defaultBlockState() ) ) ) ) );
+        register( context, feature.netherKeys, new ConfiguredFeature<>( DWFeatures.DEADLY_ORE.get(),
+                DeadlyOreFeature.Configuration.of( feature.configGetter.apply( netherConfigs ),
+                        ImmutableList.of( OreConfiguration.target( TARGET_RULE_NETHER, netherBlock.defaultBlockState() ) ) ) ) );
+    }
     
     /** Registers a configured lone chest type feature to each supported dimension. */
     protected static void registerLoneChest( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.LoneChest feature,
@@ -129,8 +166,8 @@ public abstract class DWAbstractCFProvider {
     }
     
     /** Registers a configured floor trap type feature. */
-    protected static void registerFloorTrap(BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                            FloorTrapType type, DimensionConfigGroup dimConfigs ) {
+    protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                             FloorTrapType type, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
                 new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( type ) ),
                         FloorTrapSettings.of( type.getConfig( dimConfigs ) ),
@@ -172,7 +209,7 @@ public abstract class DWAbstractCFProvider {
                         .setValue( SeaMineBlock.WATERLOGGED, true ) ), trailProvider,
                         SeaMineSettings.of( type.getConfig( dimConfigs ) ) ) ) );
     }
-
+    
     /** Registers a configured spike trap type feature. */
     // TODO
     /*
@@ -186,7 +223,6 @@ public abstract class DWAbstractCFProvider {
 
      */
     
-    
     /** Registers a configured feature. */
     protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys, ConfiguredFeature<?, ?> configuredFeature ) {
         context.register( featureKeys.configuredKey, configuredFeature );
@@ -198,24 +234,38 @@ public abstract class DWAbstractCFProvider {
     }
     
     
-    /** Creates a configured feature key. */
+    /** Creates a configured ore feature key. */
+    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimOreKey( String name ) {
+        ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension_ore" );
+        ANY_DIMENSION_ORE_FEATURES.add( key );
+        return key;
+    }
+    
+    /** Creates a configured ore feature key. */
+    protected static ResourceKey<ConfiguredFeature<?, ?>> overworldOreKey( String name ) {
+        final ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_ore" );
+        OVERWORLD_ORE_FEATURES.add( key );
+        return key;
+    }
+    
+    /** Creates a configured ore feature key. */
+    protected static ResourceKey<ConfiguredFeature<?, ?>> netherOreKey( String name ) {
+        final ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_nether_ore" );
+        NETHER_ORE_FEATURES.add( key );
+        return key;
+    }
+    
+    /** Creates a configured decoration feature key. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> overworldKey( String name ) {
         final ResourceKey<ConfiguredFeature<?, ?>> key = key( name );
         OVERWORLD_FEATURES.add( key );
         return key;
     }
     
-    /** Creates a configured feature key. */
+    /** Creates a configured decoration feature key. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> netherKey( String name ) {
         final ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_nether" );
         NETHER_FEATURES.add( key );
-        return key;
-    }
-    
-    /** Creates a configured feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimKey( String name ) {
-        final ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension" );
-        ANY_DIMENSION_FEATURES.add( key );
         return key;
     }
     

@@ -33,6 +33,7 @@ public class MainConfig extends AbstractConfigFile {
         public final BooleanField activateSpawnersVsCreative;
         
         public final BooleanField disableVanillaMonsterRooms;
+        public final BooleanField disableVanillaInfestedOre;
         
         General( MainConfig parent ) {
             super( parent, "general",
@@ -65,9 +66,14 @@ public class MainConfig extends AbstractConfigFile {
             SPEC.newLine();
             
             disableVanillaMonsterRooms = SPEC.define( new BooleanField( "disable_vanilla_monster_rooms", true,
-                            "If true, the vanilla monster room feature / dungeon that generates underground " +
-                                    "in the overworld will be disabled.",
-                            "Handy if you prefer only DeadlyWorld's dungeon room feature to generate instead." ),
+                            "If true, the vanilla monster room features (also known as dungeons) that " +
+                                    "generate underground in the overworld will be disabled.",
+                            "Handy if you prefer only Deadly World's dungeon features to generate instead." ),
+                    RestartNote.WORLD );
+            disableVanillaInfestedOre = SPEC.define( new BooleanField( "disable_vanilla_infested_block_veins", true,
+                            "If true, the vanilla infested stone/deepslate \"ore\" vein features that " +
+                                    "generate underground in the overworld will be disabled.",
+                            "Handy if you prefer only Deadly World's infested block vein features to generate instead." ),
                     RestartNote.WORLD );
         }
     }

@@ -38,19 +38,19 @@ import java.util.function.Predicate;
  * <br><br>
  * Generates mostly the same way, except a list of subfeatures is used to pick what generates in the middle.
  */
-public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Configuration> {
+public class NormalDungeonFeature extends DeadlyFeature<NormalDungeonFeature.Configuration> {
     public record Configuration(
             BlockStateProvider floorProvider,
             BlockStateProvider wallProvider,
             FloatProvider infestedChance,
             TagKey<Block> cannotReplace
     ) implements FeatureConfiguration {
-        public static final Codec<SimpleDungeonFeature.Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
-                BlockStateProvider.CODEC.fieldOf( "floor_provider" ).forGetter( SimpleDungeonFeature.Configuration::floorProvider ),
-                BlockStateProvider.CODEC.fieldOf( "wall_provider" ).forGetter( SimpleDungeonFeature.Configuration::wallProvider ),
-                FloatProvider.CODEC.fieldOf( "infested_chance" ).forGetter( SimpleDungeonFeature.Configuration::infestedChance ),
-                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( SimpleDungeonFeature.Configuration::cannotReplace )
-        ).apply( instance, SimpleDungeonFeature.Configuration::new ) );
+        public static final Codec<Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
+                BlockStateProvider.CODEC.fieldOf( "floor_provider" ).forGetter( Configuration::floorProvider ),
+                BlockStateProvider.CODEC.fieldOf( "wall_provider" ).forGetter( Configuration::wallProvider ),
+                FloatProvider.CODEC.fieldOf( "infested_chance" ).forGetter( Configuration::infestedChance ),
+                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( Configuration::cannotReplace )
+        ).apply( instance, Configuration::new ) );
         
         public static Configuration of( DimensionConfigGroup dimConfigs, Block baseBlock, Block altBlock, TagKey<Block> cannotReplace ) {
             return new Configuration(
@@ -62,11 +62,11 @@ public class SimpleDungeonFeature extends DeadlyFeature<SimpleDungeonFeature.Con
         }
     }
     
-    public SimpleDungeonFeature() {
+    public NormalDungeonFeature() {
         this( Configuration.CODEC );
     }
     
-    public SimpleDungeonFeature( Codec<Configuration> codec ) {
+    public NormalDungeonFeature( Codec<Configuration> codec ) {
         super( codec );
     }
     

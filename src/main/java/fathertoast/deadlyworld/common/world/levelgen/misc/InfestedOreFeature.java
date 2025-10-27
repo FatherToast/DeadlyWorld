@@ -2,6 +2,9 @@ package fathertoast.deadlyworld.common.world.levelgen.misc;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import fathertoast.deadlyworld.common.config.dimension.VeinConfig;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -24,6 +27,8 @@ import java.util.function.Function;
 /**
  * Modified copy-paste of {@link net.minecraft.world.level.levelgen.feature.OreFeature}
  * to support replacement for all valid host blocks.
+ *
+ * @see DeadlyOreFeature
  */
 public class InfestedOreFeature extends DeadlyFeature<InfestedOreFeature.Configuration> {
     public record Configuration(
@@ -34,6 +39,13 @@ public class InfestedOreFeature extends DeadlyFeature<InfestedOreFeature.Configu
                 IntProvider.CODEC.fieldOf( "size" ).forGetter( Configuration::size ),
                 FloatProvider.CODEC.fieldOf( "discard_chance_on_air_exposure" ).forGetter( Configuration::exposureDiscardChance )
         ).apply( instance, Configuration::new ) );
+        
+        public static Configuration of( VeinConfig.VeinCategory config ) {
+            return new Configuration(
+                    ConfigConstantIntProvider.of( config.size ),
+                    ConfigConstantFloatProvider.of( config.exposureDiscardChance )
+            );
+        }
     }
     
     public InfestedOreFeature() { this( Configuration.CODEC ); }
@@ -61,15 +73,15 @@ public class InfestedOreFeature extends DeadlyFeature<InfestedOreFeature.Configu
         int x = pos.getX() - Mth.ceil( r ) - i;
         int y = pos.getY() - 2 - i;
         int z = pos.getZ() - Mth.ceil( r ) - i;
-        int j1 = 2 * (Mth.ceil( r ) + i);
-        int k1 = 2 * (2 + i);
+        int xLen = 2 * (Mth.ceil( r ) + i);
+        int yLen = 2 * (2 + i);
         
-        for( int xi = x; xi <= x + j1; ++xi ) {
-            for( int zi = z; zi <= z + j1; ++zi ) {
+        for( int xi = x; xi <= x + xLen; ++xi ) {
+            for( int zi = z; zi <= z + xLen; ++zi ) {
                 if( y <= level.getHeight( Heightmap.Types.OCEAN_FLOOR_WG, xi, zi ) ) {
                     return doPlace( level, random, config, size,
                             x1, x2, z1, z2, y1, y2,
-                            x, y, z, j1, k1 );
+                            x, y, z, xLen, yLen );
                 }
             }
         }
@@ -77,8 +89,9 @@ public class InfestedOreFeature extends DeadlyFeature<InfestedOreFeature.Configu
         return false;
     }
     
-    protected boolean doPlace( WorldGenLevel level, RandomSource random, Configuration config, int size, double x1, double x2, double z1, double z2,
-                               double y1, double y2, int xo, int yo, int zo, int xLen, int yLen ) {
+    protected boolean doPlace( WorldGenLevel level, RandomSource random, Configuration config, int size,
+                               double x1, double x2, double z1, double z2, double y1, double y2,
+                               int xo, int yo, int zo, int xLen, int yLen ) {
         int blocksPlaced = 0;
         final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         final float exposureDiscardChance = config.exposureDiscardChance.sample( random );
@@ -138,13 +151,13 @@ public class InfestedOreFeature extends DeadlyFeature<InfestedOreFeature.Configu
                     int zMax = Math.max( Mth.floor( zn + wn ), zMin );
                     
                     for( int x = xMin; x <= xMax; x++ ) {
-                        double wX = ((double) x + 0.5 - xn) / wn;
+                        double wX = (x + 0.5 - xn) / wn;
                         if( wX * wX < 1.0 ) {
                             for( int y = yMin; y <= yMax; y++ ) {
-                                double wY = ((double) y + 0.5 - yn) / wn;
+                                double wY = (y + 0.5 - yn) / wn;
                                 if( wX * wX + wY * wY < 1.0 && !level.isOutsideBuildHeight( y ) ) {
                                     for( int z = zMin; z <= zMax; z++ ) {
-                                        double wZ = ((double) z + 0.5 - zn) / wn;
+                                        double wZ = (z + 0.5 - zn) / wn;
                                         if( wX * wX + wY * wY + wZ * wZ < 1.0 ) {
                                             int zyx = x - xo + (y - yo) * xLen + (z - zo) * xLen * yLen;
                                             if( !checked.get( zyx ) ) {

@@ -8,7 +8,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -18,17 +17,17 @@ import java.util.Objects;
 
 public class DWModelProvider extends DWAbstractModelProvider {
 
-    public DWModelProvider(PackOutput output, ExistingFileHelper fileHelper ) {
+    public DWModelProvider( PackOutput output, ExistingFileHelper fileHelper ) {
         super( output, fileHelper );
     }
 
     @Override
     protected void registerStatesAndModels() {
         // Blocks and block-items
-        DWBlocks.SPAWNERS.forEach( (spawner) -> {
-            if ( spawner.get() instanceof MiniSpawnerBlock ) { miniSpawner( spawner ); }
+        DWBlocks.SPAWNERS.forEach( ( spawner ) -> {
+            if( spawner.get() instanceof MiniSpawnerBlock ) { miniSpawner( spawner ); }
             else { simpleSpawner( spawner ); }
-        });
+        } );
         DWBlocks.FLOOR_TRAPS.forEach( this::simpleFloorTrap );
         DWBlocks.TOWER_DISPENSERS.forEach( this::simpleTowerDispenser );
         DWBlocks.SEA_MINES.forEach( this::simpleSeaMine );
@@ -50,13 +49,9 @@ public class DWModelProvider extends DWAbstractModelProvider {
     }
 
 
-
     // ----------------------------------------------------- //
     //                        BLOCKS                         //
     // ----------------------------------------------------- //
-
-
-
 
 
     // ----------------------------------------------------- //
@@ -67,8 +62,8 @@ public class DWModelProvider extends DWAbstractModelProvider {
         final ModelFile.ExistingModelFile normalModel = itemModels().getExistingFile( mcLoc( "item/template_spawn_egg" ) );
         final ModelFile.ExistingModelFile miniModel = itemModels().getExistingFile( modLoc( "item/template/template_mini_spawn_egg" ) );
 
-        for ( RegistryObject<Item> regObj : DWItems.REGISTRY.getEntries() ) {
-            if ( regObj.get() instanceof ForgeSpawnEggItem ) {
+        for( RegistryObject<Item> regObj : DWItems.REGISTRY.getEntries() ) {
+            if( regObj.get() instanceof ForgeSpawnEggItem ) {
                 String name = Objects.requireNonNull( regObj.getId() ).getPath();
                 boolean mini = name.startsWith( "mini" ) || name.startsWith( "micro" );
 

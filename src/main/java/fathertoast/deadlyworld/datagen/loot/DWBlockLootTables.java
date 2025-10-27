@@ -2,12 +2,12 @@ package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
@@ -33,6 +33,8 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
     /** Builds all loot tables for this provider. */
     @Override
     public void generate() {
+        add( DWBlocks.INACTIVE_BURIED_SPAWNER, new LootTableBuilder()
+                .addLootTable( "active", DWBlocks.spawner( SpawnerType.BURIED ).get().getLootTable() ) );
         dropSelf( DWBlocks.MINI_CHEST.get() );
         
         for( SpawnerType type : SpawnerType.values() ) {
@@ -64,7 +66,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         final LootTableBuilder loot = new LootTableBuilder();
         switch( type ) {
             case SIMPLE, MINI, DUNGEON -> { } // No extras
-            case STREAM -> loot.addPool( buildExplorationLootPool() );
+            case STREAM, BURIED -> loot.addPool( buildExplorationLootPool() );
             case SWARM -> loot.addPool( buildExplosivesLootPool() );
             case BRUTAL -> loot.addPool( buildValuableLootPool() );
             case NEST -> { return loot.addPool( buildBuggyLootPool() ); } // Skip base loot
