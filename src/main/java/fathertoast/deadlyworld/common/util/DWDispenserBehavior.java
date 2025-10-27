@@ -25,7 +25,7 @@ public final class DWDispenserBehavior {
     public static void register() {
         DispenserBlock.registerBehavior( DWItems.RUNNY_LAVA_BUCKET.get(), fluidBucketBehavior() );
 
-        DispenserBlock.registerBehavior( Items.FISHING_ROD, fishingRodBehavior() );
+        //DispenserBlock.registerBehavior( Items.FISHING_ROD, fishingRodBehavior() );
     }
 
     private static DispenseItemBehavior fluidBucketBehavior() {
@@ -49,6 +49,7 @@ public final class DWDispenserBehavior {
         };
     }
 
+    // TODO - Make a universal fishhook entity in Crust first
     private static DispenseItemBehavior fishingRodBehavior() {
         return new DefaultDispenseItemBehavior() {
             private final DefaultDispenseItemBehavior defaultBehavior = new DefaultDispenseItemBehavior();
