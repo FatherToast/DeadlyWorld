@@ -43,7 +43,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         for( FloorTrapType type : FloorTrapType.values() ) {
             add( DWBlocks.floorTrap( type ), buildFloorTrapLoot( type ) );
         }
-        // TODO - dunno what these should drops
+        // TODO - dunno what these should drop
         for( SpikeTrapType type : SpikeTrapType.values() ) {
             add( DWBlocks.spikeTrap( type ).get(), noDrop() );
         }

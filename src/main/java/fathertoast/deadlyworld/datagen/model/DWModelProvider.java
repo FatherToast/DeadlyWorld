@@ -28,6 +28,7 @@ public class DWModelProvider extends DWAbstractModelProvider {
             if( spawner.get() instanceof MiniSpawnerBlock ) { miniSpawner( spawner ); }
             else { simpleSpawner( spawner ); }
         } );
+        simpleSpawner( DWBlocks.INACTIVE_BURIED_SPAWNER );
         DWBlocks.FLOOR_TRAPS.forEach( this::simpleFloorTrap );
         DWBlocks.TOWER_DISPENSERS.forEach( this::simpleTowerDispenser );
         DWBlocks.SEA_MINES.forEach( this::simpleSeaMine );
