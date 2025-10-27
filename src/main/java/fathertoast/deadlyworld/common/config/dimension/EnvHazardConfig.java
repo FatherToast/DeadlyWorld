@@ -68,19 +68,19 @@ public class EnvHazardConfig extends AbstractConfigFile {
             SPEC.newLine();
             
             list = SPEC.define( new RegistryEntryValueListField<>( "list",
-                    new RegistryEntryValueList<>( null, () -> ForgeRegistries.BLOCKS, defaultBuriedLiquids() )
+                    new RegistryEntryValueList<>( null, () -> ForgeRegistries.BLOCKS, defaultBuriedBlocks() )
                             .setMultiValue( 3 ),
-                    "This list defines buried liquid entries. Each entry consists of the following in the given order:",
-                    "Liquid source block registry ID - for example \"" + ForgeRegistries.BLOCKS.getKey( Blocks.WATER ) +
-                            "\" or \"" + ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ) + "\".",
-                    "Min height - the lowest Y coordinate this liquid can generate at.",
-                    "Max height - the highest Y coordinate this liquid can generate at.",
-                    "Placements - the amount of times the world generator will try to place this liquid in a chunk.",
+                    "This list defines buried block entries. Each entry consists of the following in the given order:",
+                    "Block ID - for example \"" + ForgeRegistries.BLOCKS.getKey( Blocks.WATER ) +
+                            "\" or \"" + ForgeRegistries.BLOCKS.getKey( Blocks.CACTUS ) + "\".",
+                    "Min height - the lowest Y coordinate this block can generate at.",
+                    "Max height - the highest Y coordinate this block can generate at.",
+                    "Placements - the amount of times the world generator will try to place this block in a chunk.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
         
         @SuppressWarnings( "ConstantConditions" )
-        private List<RegistryValueEntry<Block>> defaultBuriedLiquids() {
+        private List<RegistryValueEntry<Block>> defaultBuriedBlocks() {
             if( PARENT.isNetherDimension() ) {
                 return List.of(
                         new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 12 ),
