@@ -74,11 +74,14 @@ public class DWLangProvider extends DWAbstractLangProvider {
         tooltip( DWItems.CONTAINER_TRAP, "runny_lava", "Spews runny lava" );
         tooltip( DWItems.CONTAINER_TRAP, "poison_gas", "Releases poison gas" );
         tooltip( DWItems.CONTAINER_TRAP, "wither_gas", "Releases withering gas" );
-
+        
         deathMessage( DWDamageTypes.SPIKE_TRAP,
                 MsgPlaceholder.FIRST + " was impaled on a spike trap",
                 MsgPlaceholder.FIRST + " was impaled on a spike trap while trying to escape " + MsgPlaceholder.SECOND );
-
+        deathMessage( DWDamageTypes.TRIGGER_SILVERFISH,
+                MsgPlaceholder.FIRST + " was consumed by anger",
+                MsgPlaceholder.FIRST + " was consumed by anger for " + MsgPlaceholder.SECOND );
+        
         // Auto-gen for registries
         items( DWItems.REGISTRY );
         blocks( DWBlocks.REGISTRY );
