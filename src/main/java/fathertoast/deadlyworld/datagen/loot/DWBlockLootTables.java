@@ -4,6 +4,7 @@ import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
+import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
@@ -51,6 +52,9 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         }
         for( SeaMineType type : SeaMineType.values() ) {
             add( DWBlocks.seaMine( type ).get(), noDrop() );
+        }
+        for( PitfallTrapType type : PitfallTrapType.values() ) {
+            add( DWBlocks.pitfallTrap( type ).get(), noDrop() );
         }
     }
     

@@ -272,11 +272,7 @@ public abstract class BaseTrap {
             BlockPos abovePos = pos.above();
 
             if ( !level.getBlockState( abovePos ).isSolidRender( level, abovePos ) ) {
-                level.sendParticles(ParticleTypes.CLOUD,
-                        pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5,
-                        10,
-                        level.random.nextGaussian(), level.random.nextGaussian(), level.random.nextGaussian(),
-                        0.1);
+                TrapHelper.spawnPoofCloud( level, abovePos );
             }
         }
     }

@@ -6,9 +6,11 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -46,7 +48,7 @@ public final class TrapHelper {
         for( int i = 0; i < level.players().size(); i++ ) {
             Player player = level.players().get( i );
             if( canActivateSpawner( player ) && player.distanceToSqr( x, y, z ) <= rangeSq &&
-                    (!checkSight || canEntitySeeBlock( level, pos, player )) ) {
+                    ( !checkSight || canEntitySeeBlock( level, pos, player ) ) ) {
                 return true;
             }
         }
@@ -67,7 +69,7 @@ public final class TrapHelper {
         for( int i = 0; i < level.players().size(); i++ ) {
             Player player = level.players().get( i );
             if( canTrapTarget( player ) && player.distanceToSqr( x, y, z ) <= rangeSq &&
-                    (!checkSight || canEntitySeeBlock( level, pos, player )) ) {
+                    ( !checkSight || canEntitySeeBlock( level, pos, player ) ) ) {
                 return player;
             }
         }
@@ -92,7 +94,7 @@ public final class TrapHelper {
             double distSq = player.distanceToSqr( x, y, z );
             
             if( canTrapTarget( player ) && distSq <= rangeSq && distSq < closestDistSq &&
-                    (!checkSight || canEntitySeeBlock( level, pos, player )) ) {
+                    ( !checkSight || canEntitySeeBlock( level, pos, player ) ) ) {
                 closestPlayer = player;
                 closestDistSq = distSq;
             }
@@ -107,7 +109,7 @@ public final class TrapHelper {
     
     /** @return True if the entity can be targeted by a trap. */
     public static boolean canTrapTarget( Entity entity ) {
-        return (Config.MAIN.GENERAL.activateTrapsInPeaceful.get() || entity.level().getDifficulty() != Difficulty.PEACEFUL) &&
+        return ( Config.MAIN.GENERAL.activateTrapsInPeaceful.get() || entity.level().getDifficulty() != Difficulty.PEACEFUL ) &&
                 isTangible( entity ) && (Config.MAIN.GENERAL.activateTrapsVsCreative.get() || isVulnerable( entity ));
     }
     
@@ -138,6 +140,15 @@ public final class TrapHelper {
                 return false;
         }
         return true;
+    }
+
+    /** Creates a "cloud poof" effect with cloud particles. */
+    public static void spawnPoofCloud( ServerLevel level, BlockPos pos ) {
+        level.sendParticles( ParticleTypes.CLOUD,
+                pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                10,
+                0, 0, 0,
+                0.1 );
     }
     
     /** @return A thrown potion item stack with a randomly picked effect instance from the given weighted potion list. */

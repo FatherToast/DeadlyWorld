@@ -92,11 +92,7 @@ public final class MimicHelper {
                 chestMimic.playSound( DWSoundEvents.MIMIC_APPEAR.get() );
                 
                 // Poof cloud
-                level.sendParticles( ParticleTypes.CLOUD,
-                        pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        10,
-                        level.random.nextGaussian(), level.random.nextGaussian(), level.random.nextGaussian(),
-                        0.1 );
+                TrapHelper.spawnPoofCloud( level, pos );
                 
                 // Copy items from chest and save them to the mimic
                 chestMimic.setItems( chestBlockEntity.getItems() );

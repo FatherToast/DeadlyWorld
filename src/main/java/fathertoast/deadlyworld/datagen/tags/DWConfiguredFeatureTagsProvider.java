@@ -38,10 +38,15 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
         
         addAll( DWTags.ConfiguredFeatures.LONE_CHESTS, DWAbstractCFProvider.LONE_CHEST_FEATURES );
         addAll( DWTags.ConfiguredFeatures.SPAWNERS, DWAbstractCFProvider.SPAWNER_FEATURES );
-        addAll( DWTags.ConfiguredFeatures.TRAPS, DWAbstractCFProvider.FLOOR_TRAP_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.FLOOR_TRAPS, DWAbstractCFProvider.FLOOR_TRAP_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.SPIKE_TRAPS, DWAbstractCFProvider.SPIKE_TRAP_FEATURES );
+        addAll( DWTags.ConfiguredFeatures.PITFALL_TRAPS, DWAbstractCFProvider.PITFALL_TRAP_FEATURES );
         addAll( DWTags.ConfiguredFeatures.TOWERS, DWAbstractCFProvider.TOWER_FEATURES );
         addAll( DWTags.ConfiguredFeatures.SEA_MINES, DWAbstractCFProvider.SEA_MINE_FEATURES );
         addAll( DWTags.ConfiguredFeatures.DUNGEONS, DWAbstractCFProvider.DUNGEON_FEATURES );
+
+        // Post decoration features
+        addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION_POST_DECORATION, DWAbstractCFProvider.ANY_DIMENSION_POST_DECORATION );
     }
     
     /** Add all features in a list to a tag. */

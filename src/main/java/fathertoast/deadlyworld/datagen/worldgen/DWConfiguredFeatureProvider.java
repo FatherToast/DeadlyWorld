@@ -2,8 +2,10 @@ package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
@@ -23,6 +25,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 
 /**
  * For vanilla ore configured features, see {@link net.minecraft.data.worldgen.features.OreFeatures}.
@@ -30,7 +33,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
  */
 public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     // Ore features
-    public static final FeatureKeys BURIED_BLOCK_ORE = FeatureKeys.anyDimOre( "buried_block" );
+    public static final FeatureKeys BURIED_BLOCK_POST_DECOR = FeatureKeys.anyDimPostDecoration( "buried_block" ).notPlaceable();
     
     public static final FeatureKeys.Vein BASE_INFESTED_BLOCK_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.INFESTED_VANILLA, "base_infested_block" );
     public static final FeatureKeys.Vein ADDED_INFESTED_BLOCK_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.INFESTED_ADDED, "added_infested_block" );
@@ -57,7 +60,11 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.FloorTrap LAVA_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.LAVA, "lava_trap" );
     public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
-    
+
+    public static final FeatureKeys.PitfallTrap SPIKES_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.SPIKES, "spikes_pitfall_trap" );
+    public static final FeatureKeys.PitfallTrap LAVA_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.LAVA, "lava_pitfall_trap" );
+    public static final FeatureKeys.PitfallTrap COBWEB_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.COBWEB, "cobweb_pitfall_trap" );
+
     public static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower" );
     public static final FeatureKeys.TowerDispenser FIRE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIRE, "fire_tower" );
     public static final FeatureKeys.TowerDispenser POTION_TOWER = FeatureKeys.TowerDispenser.of( TowerType.POTION, "potion_tower" );
@@ -67,7 +74,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.SeaMine NORMAL_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.NORMAL, "normal_sea_mine" );
     public static final FeatureKeys.SeaMine PUFFER_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.PUFFER, "puffer_sea_mine" );
     public static final FeatureKeys.SeaMine GUARDIAN_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.GUARDIAN, "guardian_sea_mine" );
-    
+
     public static final FeatureKeys.SimpleDungeon NORMAL_DUNGEON = FeatureKeys.SimpleDungeon.of( "simple_dungeon" );
     public static final FeatureKeys.SimpleDungeon MINI_DUNGEON = FeatureKeys.SimpleDungeon.of( "mini_dungeon" );
     
@@ -78,8 +85,8 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         
         // Ore features
-        register( context, BURIED_BLOCK_ORE,
-                new ConfiguredFeature<>( DWFeatures.BURIED_LIQUID.get(),
+        register( context, BURIED_BLOCK_POST_DECOR,
+                new ConfiguredFeature<>( DWFeatures.BURIED_BLOCK.get(),
                         new BuriedBlocksFeature.Configuration( BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         
         registerInfestedVein( context, BASE_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
@@ -141,7 +148,25 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         register( context, POTION_TRAP.netherKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
                 block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( netherConfigs.FLOOR_TRAPS.POTION ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-        
+
+        // Pitfall traps
+        registerPitfallTrap( context, SPIKES_PITFALL_TRAP,
+                block( DWBlocks.spikeTrap( SpikeTrapType.STATIC ) ),
+                blocks( Blocks.SAND.defaultBlockState(),
+                        Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.AIR ),
+                overworldConfigs, netherConfigs );
+        registerPitfallTrap( context, LAVA_PITFALL_TRAP,
+                block( Blocks.LAVA ),
+                block( Blocks.SAND ),
+                block( Blocks.AIR ),
+                overworldConfigs, netherConfigs );
+        registerPitfallTrap( context, COBWEB_PITFALL_TRAP,
+                block( Blocks.COBWEB ),
+                block( Blocks.SAND ),
+                block( Blocks.COBWEB ),
+                overworldConfigs, netherConfigs );
+
         // Towers
         registerTower( context, SIMPLE_TOWER,
                 overworldConfigs, block( Blocks.COBBLESTONE ),

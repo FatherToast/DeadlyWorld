@@ -71,6 +71,7 @@ public class FeaturePlacerItem extends Item implements ICustomTabContents {
         buildFeatureKeysFor( featureKeys, registry, DWTags.ConfiguredFeatures.THE_NETHER );
         // Note: ores are tagged as not placeable by default - putting these in just in case
         buildFeatureKeysFor( featureKeys, registry, DWTags.ConfiguredFeatures.ANY_DIMENSION_ORE );
+        buildFeatureKeysFor( featureKeys, registry, DWTags.ConfiguredFeatures.ANY_DIMENSION_POST_DECORATION );
         buildFeatureKeysFor( featureKeys, registry, DWTags.ConfiguredFeatures.OVERWORLD_ORE );
         buildFeatureKeysFor( featureKeys, registry, DWTags.ConfiguredFeatures.THE_NETHER_ORE );
         

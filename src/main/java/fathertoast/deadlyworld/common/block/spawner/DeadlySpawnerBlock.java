@@ -8,6 +8,7 @@ import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import fathertoast.deadlyworld.common.entity.SpawnerMimic;
+import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -191,17 +192,7 @@ public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock 
             spawnerMimic.playSound( DWSoundEvents.MIMIC_APPEAR.get() );
             
             // Poof cloud
-            level.sendParticles(
-                    ParticleTypes.CLOUD,
-                    pos.getX() + 0.5,
-                    pos.getY() + 0.5,
-                    pos.getZ() + 0.5,
-                    10,
-                    level.random.nextGaussian(),
-                    level.random.nextGaussian(),
-                    level.random.nextGaussian(),
-                    0.1
-            );
+            TrapHelper.spawnPoofCloud( level, pos );
             return true;
         }
         return false;

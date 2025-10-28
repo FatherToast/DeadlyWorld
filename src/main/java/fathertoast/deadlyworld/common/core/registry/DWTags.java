@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +24,9 @@ public final class DWTags {
         public static final BlockWithItem TOWER_DISPENSERS = tag( "tower_dispensers" );
         public static final BlockWithItem SEA_MINES = tag( "sea_mines" );
         public static final BlockWithItem SPIKE_TRAPS = tag( "spike_traps" );
-        
+        public static final BlockWithItem PITFALL_TRAPS = tag( "pitfall_traps" );
+
+
         private static BlockWithItem tag( String name ) {
             return new BlockWithItem( BlockTags.create( DeadlyWorld.rl( name ) ),
                     ItemTags.create( DeadlyWorld.rl( name ) ) );
@@ -77,10 +80,15 @@ public final class DWTags {
         
         public static final TagKey<ConfiguredFeature<?, ?>> LONE_CHESTS = tag( "lone_chests" );
         public static final TagKey<ConfiguredFeature<?, ?>> SPAWNERS = tag( "spawners" );
-        public static final TagKey<ConfiguredFeature<?, ?>> TRAPS = tag( "traps" );
+        public static final TagKey<ConfiguredFeature<?, ?>> FLOOR_TRAPS = tag( "floor_traps" );
+        public static final TagKey<ConfiguredFeature<?, ?>> SPIKE_TRAPS = tag( "spike_traps" );
+        public static final TagKey<ConfiguredFeature<?, ?>> PITFALL_TRAPS = tag( "pitfall_traps" );
         public static final TagKey<ConfiguredFeature<?, ?>> TOWERS = tag( "towers" );
         public static final TagKey<ConfiguredFeature<?, ?>> SEA_MINES = tag( "sea_mines" );
         public static final TagKey<ConfiguredFeature<?, ?>> DUNGEONS = tag( "dungeons" );
+
+        // Post decoration features
+        public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION_POST_DECORATION = tag( "any_dimension_post_decoration" );
         
         private static TagKey<ConfiguredFeature<?, ?>> tag( String name ) {
             return TagKey.create( Registries.CONFIGURED_FEATURE, DeadlyWorld.rl( name ) );
@@ -105,10 +113,15 @@ public final class DWTags {
         
         public static final TagKey<PlacedFeature> LONE_CHESTS = tag( "lone_chests" );
         public static final TagKey<PlacedFeature> SPAWNERS = tag( "spawners" );
-        public static final TagKey<PlacedFeature> TRAPS = tag( "traps" );
+        public static final TagKey<PlacedFeature> FLOOR_TRAPS = tag( "floor_traps" );
+        public static final TagKey<PlacedFeature> SPIKE_TRAPS = tag( "spike_traps" );
+        public static final TagKey<PlacedFeature> PITFALL_TRAPS = tag( "pitfall_traps" );
         public static final TagKey<PlacedFeature> TOWERS = tag( "towers" );
         public static final TagKey<PlacedFeature> SEA_MINES = tag( "sea_mines" );
         public static final TagKey<PlacedFeature> DUNGEONS = tag( "dungeons" );
+
+        // World gen step "fluid_springs"
+        public static final TagKey<PlacedFeature> ANY_DIMENSION_POST_DECORATION = tag( "any_dimension_post_decorations" );
         
         private static TagKey<PlacedFeature> tag( String name ) {
             return TagKey.create( Registries.PLACED_FEATURE, DeadlyWorld.rl( name ) );

@@ -6,6 +6,7 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
@@ -58,6 +59,12 @@ public class BlocksConfig extends AbstractConfigFile {
             LOOKUP.put( toKey( SpikeTrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, SpikeTrapType.BLOCK_CATEGORY, type.toString(),
                     5.0, 2.5, 1 ) );
         }
+
+        // Pitfall Traps
+        for( PitfallTrapType type : PitfallTrapType.values() ) {
+            LOOKUP.put( toKey( PitfallTrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, PitfallTrapType.BLOCK_CATEGORY, type.toString(),
+                    5.0, 0.0, 1 ) );
+        }
         
         //TODO add storm drain; will possibly include in a "water traps" category
     }
@@ -71,6 +78,8 @@ public class BlocksConfig extends AbstractConfigFile {
     public SeaMineBlockCategory get( SeaMineType type ) { return (SeaMineBlockCategory) get( SeaMineType.BLOCK_CATEGORY, type.toString() ); }
 
     public BlockCategory get( SpikeTrapType type ) { return get( SpikeTrapType.BLOCK_CATEGORY, type.toString() ); }
+
+    public BlockCategory get( PitfallTrapType type ) { return get( PitfallTrapType.BLOCK_CATEGORY, type.toString() ); }
 
 
     private BlockCategory get( String category, String type ) {

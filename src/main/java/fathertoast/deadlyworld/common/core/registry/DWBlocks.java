@@ -6,6 +6,8 @@ import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.infested.InfestedBlockAutoGen;
+import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapBlock;
+import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.BuriedSpawnerBlock;
@@ -43,6 +45,8 @@ public final class DWBlocks {
     public static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
     public static final List<RegistryObject<SeaMineBlock>> SEA_MINES;
     public static final List<RegistryObject<BaseSpikeTrapBlock>> SPIKE_TRAPS;
+    public static final List<RegistryObject<PitfallTrapBlock>> PITFALL_TRAPS;
+
 
     //    public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
     //    public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock( "sewer_bedrock", () -> new Block( AbstractBlock.Properties.of( Material.STONE, MaterialColor.COLOR_GRAY ).strength( -1.0F, 3600000.0F ).noDrops().sound( SoundType.STONE ) ), ItemGroup.TAB_BUILDING_BLOCKS );
@@ -58,13 +62,15 @@ public final class DWBlocks {
     private static List<RegistryObject<DeadlyInfestedBlock>> INFESTED_BLOCKS;
     
     static {
+        // SPAWNERS
         final ArrayList<RegistryObject<DeadlySpawnerBlock>> spawners = new ArrayList<>();
         for( SpawnerType type : SpawnerType.values() ) {
             spawners.add( type.ordinal(), registerBlock( type + "_deadly_spawner", type.getBlock() ) );
         }
         spawners.trimToSize();
         SPAWNERS = Collections.unmodifiableList( spawners );
-        
+
+        // FLOOR TRAPS
         final ArrayList<RegistryObject<FloorTrapBlock>> floorTraps = new ArrayList<>();
         for( FloorTrapType type : FloorTrapType.values() ) {
             floorTraps.add( type.ordinal(), registerBlock( type + "_floor_trap", type.getBlock() ) );
@@ -72,6 +78,7 @@ public final class DWBlocks {
         floorTraps.trimToSize();
         FLOOR_TRAPS = Collections.unmodifiableList( floorTraps );
 
+        // SPIKE TRAPS
         final ArrayList<RegistryObject<BaseSpikeTrapBlock>> spikeTraps = new ArrayList<>();
         for( SpikeTrapType type : SpikeTrapType.values() ) {
             spikeTraps.add( type.ordinal(), registerBlock( type + "_spike_trap", type.getBlock() ) );
@@ -79,13 +86,23 @@ public final class DWBlocks {
         spikeTraps.trimToSize();
         SPIKE_TRAPS = Collections.unmodifiableList( spikeTraps );
 
+        // PITFALL TRAPS
+        final ArrayList<RegistryObject<PitfallTrapBlock>> pitfallTraps = new ArrayList<>();
+        for( PitfallTrapType type : PitfallTrapType.values() ) {
+            pitfallTraps.add( type.ordinal(), registerBlock( type + "_pitfall_trap", type.getBlock() ) );
+        }
+        pitfallTraps.trimToSize();
+        PITFALL_TRAPS = Collections.unmodifiableList( pitfallTraps );
+
+        // TOWER DISPENSERS
         final ArrayList<RegistryObject<TowerDispenserBlock>> towerDispensers = new ArrayList<>();
         for( TowerType type : TowerType.values() ) {
             towerDispensers.add( type.ordinal(), registerBlock( type + "_tower_dispenser", type.getBlock() ) );
         }
         towerDispensers.trimToSize();
         TOWER_DISPENSERS = Collections.unmodifiableList( towerDispensers );
-        
+
+        // SEA MINES
         final ArrayList<RegistryObject<SeaMineBlock>> seaMines = new ArrayList<>();
         for( SeaMineType type : SeaMineType.values() ) {
             Supplier<SeaMineBlock> block = type.getBlock();
@@ -117,6 +134,9 @@ public final class DWBlocks {
 
     /** @return The block registry object for a particular spike trap type. */
     public static RegistryObject<BaseSpikeTrapBlock> spikeTrap( SpikeTrapType type ) { return SPIKE_TRAPS.get( type.ordinal() ); }
+
+    /** @return The block registry object for a particular spike trap type. */
+    public static RegistryObject<PitfallTrapBlock> pitfallTrap( PitfallTrapType type ) { return PITFALL_TRAPS.get( type.ordinal() ); }
 
     /** @return The block registry object for a particular tower dispenser type. */
     public static RegistryObject<TowerDispenserBlock> towerDispenser( TowerType type ) { return TOWER_DISPENSERS.get( type.ordinal() ); }

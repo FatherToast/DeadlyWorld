@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
@@ -50,7 +51,14 @@ public class DWPlacedFeatureProvider {
     public static final List<ResourceKey<PlacedFeature>> OVERWORLD_FEATURES = new ArrayList<>();
     /** List of all decoration placements that should generate in nether biomes. */
     public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
-    
+
+    /**
+     * List of all placements that don't care about dimension type and should generate anywhere,
+     * AFTER {@link net.minecraft.world.level.levelgen.GenerationStep.Decoration#UNDERGROUND_DECORATION}.
+     * Any restrictions are handled in the feature itself, usually config based.
+     */
+    public static final List<ResourceKey<PlacedFeature>> ANY_DIMENSION_POST_DECORATION = new ArrayList<>();
+
     /** List of all lone chest placements. */
     public static final List<ResourceKey<PlacedFeature>> LONE_CHEST_FEATURES = new ArrayList<>();
     /** List of all spawner placements. */
@@ -59,13 +67,15 @@ public class DWPlacedFeatureProvider {
     public static final List<ResourceKey<PlacedFeature>> FLOOR_TRAP_FEATURES = new ArrayList<>();
     /** List of all spike trap placements. */
     public static final List<ResourceKey<PlacedFeature>> SPIKE_TRAP_FEATURES = new ArrayList<>();
+    /** List of all pitfall trap placements. */
+    public static final List<ResourceKey<PlacedFeature>> PITFALL_TRAP_FEATURES = new ArrayList<>();
     /** List of all tower dispenser placements. */
     public static final List<ResourceKey<PlacedFeature>> TOWER_FEATURES = new ArrayList<>();
     /** List of all sea mine placements. */
     public static final List<ResourceKey<PlacedFeature>> SEA_MINE_FEATURES = new ArrayList<>();
     /** List of all dungeon placements. */
     public static final List<ResourceKey<PlacedFeature>> DUNGEON_FEATURES = new ArrayList<>();
-    
+
     
     private static final BlockPredicate PREDICATE_ANY_FLUID = BlockPredicate.not( BlockPredicate.noFluid() );
     private static final BlockPredicate PREDICATE_WATER = BlockPredicate.matchesFluids( Fluids.WATER );
@@ -79,7 +89,7 @@ public class DWPlacedFeatureProvider {
         final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         
         // Ore placements
-        register( context, getter, BURIED_BLOCK_ORE, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
+        register( context, getter, BURIED_BLOCK_POST_DECOR, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
         
         registerVein( context, getter, BASE_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
         registerVein( context, getter, ADDED_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
@@ -110,7 +120,12 @@ public class DWPlacedFeatureProvider {
         // Water trap variant
         register( context, getter, SEA_MINE_MOB_TRAP,
                 waterFloorFeature( FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs ) ) );
-        
+
+        // Standard pitfall trap placements
+        registerPitfallTrap( context, getter, SPIKES_PITFALL_TRAP, overworldConfigs, netherConfigs );
+        registerPitfallTrap( context, getter, LAVA_PITFALL_TRAP, overworldConfigs, netherConfigs );
+        registerPitfallTrap( context, getter, COBWEB_PITFALL_TRAP, overworldConfigs, netherConfigs );
+
         // Standard tower placements
         registerTower( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );
         registerTower( context, getter, FIRE_TOWER, overworldConfigs, netherConfigs );
@@ -146,6 +161,11 @@ public class DWPlacedFeatureProvider {
     
     /** @return Modifiers for a floor trap feature. */
     protected static List<PlacementModifier> floorTrap( FloorTrapType type, DimensionConfigGroup dimConfigs ) {
+        return floorFeature( type.getConfig( dimConfigs ) );
+    }
+
+    /** @return Modifiers for a pitfall trap feature. */
+    protected static List<PlacementModifier> pitfallTrap( PitfallTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
     }
     
@@ -264,6 +284,13 @@ public class DWPlacedFeatureProvider {
         register( context, getter, featureKeys.overworldKeys, floorTrap( featureKeys.trapType, overworldConfigs ) );
         register( context, getter, featureKeys.netherKeys, floorTrap( featureKeys.trapType, netherConfigs ) );
     }
+
+    /** Registers a placed floor trap type feature to each supported dimension. */
+    protected static void registerPitfallTrap( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
+                                             FeatureKeys.PitfallTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        register( context, getter, featureKeys.overworldKeys, pitfallTrap( featureKeys.trapType, overworldConfigs ) );
+        register( context, getter, featureKeys.netherKeys, pitfallTrap( featureKeys.trapType, netherConfigs ) );
+    }
     
     /** Registers a placed tower type feature to each supported dimension. */
     protected static void registerTower( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
@@ -327,6 +354,13 @@ public class DWPlacedFeatureProvider {
     protected static ResourceKey<PlacedFeature> netherOreKey( String name ) {
         final ResourceKey<PlacedFeature> key = key( name + "_nether_ore" );
         NETHER_ORE_FEATURES.add( key );
+        return key;
+    }
+
+    /** Creates a placed feature key that is automatically added to all biomes. */
+    protected static ResourceKey<PlacedFeature> anyDimPostDecor( String name ) {
+        final ResourceKey<PlacedFeature> key = key( name + "_any_dimension_post_decoration" );
+        ANY_DIMENSION_POST_DECORATION.add( key );
         return key;
     }
     

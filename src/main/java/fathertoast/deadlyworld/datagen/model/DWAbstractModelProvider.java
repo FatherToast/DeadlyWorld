@@ -179,17 +179,21 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
         itemModels().getBuilder( name ).parent( models().getExistingFile( modLoc( "block/" + name + "_pressed" ) ) );
     }
 
-    protected void spikeTrap(RegistryObject<? extends BaseSpikeTrapBlock> regObj, ResourceLocation baseTexture, ResourceLocation spikeTexture ) {
+    protected void spikeTrap( RegistryObject<? extends BaseSpikeTrapBlock> regObj, ResourceLocation baseTexture, ResourceLocation spikeTexture ) {
         if ( regObj.get() instanceof MechanicalSpikeTrapBlock )
             mechanicalSpikeTrap( regObj, baseTexture, spikeTexture, modBlockTexture( "regular_spike_trap_overlay" ) );
         else
             spikeTrap( regObj, baseTexture, spikeTexture, modBlockTexture( "regular_spike_trap_overlay" ) );
     }
 
-    protected void spikeTrap(RegistryObject<? extends BaseSpikeTrapBlock> regObj, ResourceLocation baseTexture ) {
-        String typeName = regObj.get().getSpikeTrapType().name().toLowerCase( Locale.ROOT );
+    protected void spikeTrap( RegistryObject<? extends BaseSpikeTrapBlock> regObj, ResourceLocation baseTexture ) {
         ResourceLocation spikeTexture = modBlockTexture( "normal_spikes" );
         spikeTrap( regObj, baseTexture, spikeTexture );
+    }
+
+    protected void pitfallTrap( RegistryObject<? extends Block> regObj, Block parentBlock ) {
+        ModelFile model = models().pressurePlate( regObj.getId().getPath(), blockTexture( parentBlock ) );
+        simpleBlockWithItem( regObj.get(), model );
     }
 
 

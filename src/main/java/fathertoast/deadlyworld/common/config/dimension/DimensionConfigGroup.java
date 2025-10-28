@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.config.dimension;
 
 import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.ConfigGroup;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -17,6 +18,7 @@ public class DimensionConfigGroup extends ConfigGroup {
     public final FloorTrapConfig FLOOR_TRAPS;
     public final WaterTrapConfig WATER_TRAPS;
     public final SpikeTrapConfig SPIKE_TRAPS;
+    public final PitfallTrapConfig PITFALL_TRAPS;
     public final EnvHazardConfig ENV_HAZARDS;
     public final DungeonConfig DUNGEONS;
     public final VeinConfig VEINS;
@@ -33,6 +35,7 @@ public class DimensionConfigGroup extends ConfigGroup {
         FLOOR_TRAPS = group( new FloorTrapConfig( manager, dir, this ) );
         WATER_TRAPS = group( new WaterTrapConfig( manager, dir, this ) );
         SPIKE_TRAPS = group( new SpikeTrapConfig( manager, dir, this ) );
+        PITFALL_TRAPS = group( new PitfallTrapConfig( manager, dir, this ) );
         ENV_HAZARDS = group( new EnvHazardConfig( manager, dir, this ) );
         DUNGEONS = group( new DungeonConfig( manager, dir, this ) );
         VEINS = group( new VeinConfig( manager, dir, this ) );

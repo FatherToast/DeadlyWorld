@@ -41,44 +41,6 @@ public class DungeonConfig extends FeatureConfig {
                             "\"infested_blocks\" config).",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
         }
-        
-        /** @return The default subfeature ID list to use for the simple dungeon type and dimension. */
-        private List<String> makeDefaultSubfeatures() {
-            if( isNetherDimension() ) {
-                return List.of(
-                        stringFromKey( DWConfiguredFeatureProvider.SIMPLE_SPAWNER.netherKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.BRUTAL_SPAWNER.netherKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.SWARM_SPAWNER.netherKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.STREAM_SPAWNER.netherKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.SILVERFISH_NEST.netherKeys.configuredKey ),
-                        
-                        stringFromKey( DWConfiguredFeatureProvider.SIMPLE_TOWER.netherKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.POTION_TOWER.netherKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.GATLING_TOWER.netherKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.FIRE_TOWER.netherKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.FIREBALL_TOWER.netherKeys.configuredKey )
-                );
-            }
-            else {
-                return List.of(
-                        stringFromKey( DWConfiguredFeatureProvider.SIMPLE_SPAWNER.overworldKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.BRUTAL_SPAWNER.overworldKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.SWARM_SPAWNER.overworldKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.STREAM_SPAWNER.overworldKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.SILVERFISH_NEST.overworldKeys.configuredKey ),
-                        
-                        stringFromKey( DWConfiguredFeatureProvider.SIMPLE_TOWER.overworldKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.POTION_TOWER.overworldKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.GATLING_TOWER.overworldKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.FIRE_TOWER.overworldKeys.configuredKey ),
-                        stringFromKey( DWConfiguredFeatureProvider.FIREBALL_TOWER.overworldKeys.configuredKey )
-                );
-            }
-        }
-        
-        private static String stringFromKey( ResourceKey<?> key ) {
-            return key.location().toString();
-        }
     }
     
     

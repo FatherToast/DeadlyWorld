@@ -36,10 +36,15 @@ public class DWPlacedFeatureTagsProvider extends TagsProvider<PlacedFeature> {
         
         addAll( DWTags.PlacedFeatures.LONE_CHESTS, DWPlacedFeatureProvider.LONE_CHEST_FEATURES );
         addAll( DWTags.PlacedFeatures.SPAWNERS, DWPlacedFeatureProvider.SPAWNER_FEATURES );
-        addAll( DWTags.PlacedFeatures.TRAPS, DWPlacedFeatureProvider.FLOOR_TRAP_FEATURES );
+        addAll( DWTags.PlacedFeatures.FLOOR_TRAPS, DWPlacedFeatureProvider.FLOOR_TRAP_FEATURES );
+        addAll( DWTags.PlacedFeatures.SPIKE_TRAPS, DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES );
+        addAll( DWTags.PlacedFeatures.PITFALL_TRAPS, DWPlacedFeatureProvider.PITFALL_TRAP_FEATURES );
         addAll( DWTags.PlacedFeatures.TOWERS, DWPlacedFeatureProvider.TOWER_FEATURES );
         addAll( DWTags.PlacedFeatures.SEA_MINES, DWPlacedFeatureProvider.SEA_MINE_FEATURES );
         addAll( DWTags.PlacedFeatures.DUNGEONS, DWPlacedFeatureProvider.DUNGEON_FEATURES );
+
+        // Post decoration features
+        addAll( DWTags.PlacedFeatures.ANY_DIMENSION_POST_DECORATION, DWPlacedFeatureProvider.ANY_DIMENSION_POST_DECORATION );
     }
     
     /** Add all features in a list to a tag. */
