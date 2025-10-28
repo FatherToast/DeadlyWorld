@@ -1,7 +1,0 @@
-{
-  "parent": "deadlyworld:block/template/template_sea_mine",
-  "textures": {
-    "mine": "deadlyworld:block/puffer_sea_mine_chainless",
-    "particle": "minecraft:block/cobblestone"
-  }
-}

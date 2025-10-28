@@ -1,9 +1,0 @@
-{
-  "feature": "deadlyworld:buried_block_any_dimension_ore",
-  "placement": [
-    {
-      "type": "minecraft:count",
-      "count": 1
-    }
-  ]
-}

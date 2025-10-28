@@ -1,4 +1,0 @@
-{
-  "parent": "minecraft:block/spawner",
-  "render_type": "minecraft:cutout"
-}

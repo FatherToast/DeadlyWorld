@@ -1,9 +1,0 @@
-{
-  "parent": "deadlyworld:block/template/template_spike_trap",
-  "textures": {
-    "base": "minecraft:block/stone",
-    "overlay": "deadlyworld:block/regular_spike_trap_overlay",
-    "particle": "minecraft:block/stone",
-    "spikes": "deadlyworld:block/normal_spikes"
-  }
-}
