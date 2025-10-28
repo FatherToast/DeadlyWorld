@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,6 +36,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     protected final BaseTrap trapLogic;
     protected final FloorTrapType trapType;
 
+    @Nullable
     private BlockState camoState;
 
     
@@ -69,7 +69,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
             BlockPos pos = getBlockPos().relative( direction );
             BlockState neighborState = level.getBlockState( pos );
 
-            if ( neighborState.getBlock() instanceof ICamoTrap) continue;
+            if ( neighborState.getBlock() instanceof ICamoTrap ) continue;
 
             if ( neighborState.isSolidRender( level, pos ) ) {
                 camoState = neighborState;
@@ -80,7 +80,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
             camoState = Blocks.DROPPER.defaultBlockState().setValue( DropperBlock.FACING, Direction.UP );
     }
 
-    @Nonnull
+    @Nullable
     public BlockState getCamoState() {
         return camoState;
     }
@@ -176,6 +176,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     }
 
     @Override // IDecoyProvider
+    @Nullable
     public DecoyType getDecoyType() {
         return getTrapLogic().getDecoyType();
     }

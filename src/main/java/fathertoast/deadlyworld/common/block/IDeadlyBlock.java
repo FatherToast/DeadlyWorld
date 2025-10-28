@@ -10,5 +10,5 @@ import net.minecraft.util.RandomSource;
  */
 public interface IDeadlyBlock {
 
-    void initDeadly(ServerLevel level, BlockPos pos, RandomSource random );
+    void initDeadly( ServerLevel level, BlockPos pos, RandomSource random );
 }

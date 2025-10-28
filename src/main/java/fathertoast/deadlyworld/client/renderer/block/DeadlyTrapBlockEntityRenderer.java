@@ -56,11 +56,14 @@ public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<Deadly
 
     @Override
     public void render( DeadlyTrapBlockEntity deadlyTrap, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlayTexture ) {
-        poseStack.pushPose( );
-
         BlockState camoState = deadlyTrap.getCamoState();
+
+        if ( camoState == null ) return;
+
         BlockPos pos = deadlyTrap.getBlockPos();
         Level level = deadlyTrap.getLevel();
+
+        poseStack.pushPose( );
 
         Minecraft.getInstance().getBlockRenderer().renderBatched( camoState, pos, level, poseStack, buffer.getBuffer( RenderType.cutout() ),
                 false, level.random, ModelData.EMPTY, RenderType.cutout() );
@@ -81,7 +84,7 @@ public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<Deadly
                 decoyRenderer.render( deadlyTrap, poseStack, buffer, partialTick, packedLight );
             }
             catch ( Exception e ) {
-                e.printStackTrace();
+                e.printStackTrace( System.err );
             }
         }
         poseStack.popPose( );
