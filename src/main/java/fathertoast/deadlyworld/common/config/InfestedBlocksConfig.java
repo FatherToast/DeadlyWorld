@@ -73,6 +73,8 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
         public final DoubleField breakSpeedMulti;
         public final DoubleField explosionResistMulti;
         
+        public final DoubleField aggressiveChance;
+        
         public final DoubleField projBreakChance;
         public final DoubleField stepBreakChance;
         
@@ -132,6 +134,15 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
             explosionResistMulti = SPEC.define( new DoubleField( "explosion_resistance", 0.75, DoubleField.Range.NON_NEGATIVE,
                     "Explosion resistance for infested blocks.",
                     "For reference, some vanilla block explosion resistances are: Dirt = 0.5, Stone = 6, Obsidian = 1200"
+            ) );
+            
+            SPEC.newLine();
+            
+            aggressiveChance = SPEC.define( new DoubleField( "aggressive_chance", 0.05, DoubleField.Range.PERCENT,
+                    "The chance for silverfish to immediately start calling for reinforcements when they " +
+                            "spawn from an infested block being broken. Does not trigger for silverfish spawned by " +
+                            "'cleansing', but can trigger from silverfish summoned by this effect. With a high enough " +
+                            "chance, silverfish tend to chain this effect to pop all infested blocks."
             ) );
             
             SPEC.newLine();

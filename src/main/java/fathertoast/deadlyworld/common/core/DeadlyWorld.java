@@ -36,6 +36,7 @@ public final class DeadlyWorld {
      *  - blocks
      *      - configurable physical properties
      *      - auto-generated infested blocks
+     *          - prevent silverfish from hiding immediately after spawning
      *      - deadly spawner
      *      - mini spawner
      *      - inactive buried spawner

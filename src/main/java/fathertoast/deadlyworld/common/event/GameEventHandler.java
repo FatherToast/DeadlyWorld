@@ -14,6 +14,7 @@ import fathertoast.deadlyworld.common.entity.YeetTnt;
 import fathertoast.deadlyworld.common.item.EventItem;
 import fathertoast.deadlyworld.common.item.SeaMineBlockItem;
 import fathertoast.deadlyworld.common.network.NetworkHelper;
+import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import fathertoast.deadlyworld.common.util.MimicHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,6 +43,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
@@ -86,8 +88,24 @@ public final class GameEventHandler {
     }
     
     /**
+     * Called at the start of {@link LivingEntity#hurt(DamageSource, float)} before all damage calculations.
+     * If the event is canceled, no damage is dealt.
+     *
+     * @param event The event data.
+     */
+    @SubscribeEvent( priority = EventPriority.NORMAL )
+    public static void onLivingAttack( LivingAttackEvent event ) {
+        // Cancel the dummy damage we use to trigger silverfish call for help; it has already done its job
+        if( event.getSource().is( DWDamageTypes.TRIGGER_SILVERFISH ) ) {
+            event.setCanceled( true );
+        }
+    }
+    
+    /**
      * Called during {@link LivingEntity#actuallyHurt(DamageSource, float)} after all damage calculations,
      * right before damage is applied.
+     * If the event is canceled, no damage is dealt - however, armor damage and other on hit effects may
+     * have already been applied.
      *
      * @param event The event data.
      */

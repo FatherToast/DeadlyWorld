@@ -4,6 +4,7 @@ import fathertoast.crust.api.lib.LevelEventHelper;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.InfestedBlocksConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -139,6 +140,11 @@ public class DeadlyInfestedBlock extends InfestedBlock {
         return false;
     }
     
+    /** Flags the silverfish AI to call for help; it will try to break nearby infested blocks one second later. */
+    public static void triggerCallForHelp( Silverfish silverfish ) {
+        silverfish.hurt( DWDamageTypes.of( silverfish.level(), DWDamageTypes.TRIGGER_SILVERFISH ), 0.0F );
+    }
+    
     private static InfestedBlocksConfig config() { return Config.INFESTED_BLOCKS; }
     
     
@@ -166,19 +172,21 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     /** Used for model mirroring. */
     public ResourceLocation getHostBlockLocation() { return hostBlockLocation; }
     
-    /**
-     * AT'd and modified from the private super method. Simply adds the setTarget call
-     * to prevent silverfish from hiding in another block immediately after spawning.
-     */
+    /** AT'd to modify the private super method. */
     @Override
-    protected void spawnInfestation( ServerLevel level, BlockPos pos ) {
+    public void spawnInfestation( ServerLevel level, BlockPos pos ) {
         Silverfish silverfish = EntityType.SILVERFISH.create( level );
         if( silverfish != null ) {
-            silverfish.moveTo( pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.0F, 0.0F );
+            silverfish.moveTo( pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5,
+                    // Apply random rotation
+                    360.0F * level.random.nextFloat(), 0.0F );
             level.addFreshEntity( silverfish );
             silverfish.spawnAnim();
-            silverfish.setTarget( level.getNearestPlayer( TargetingConditions.forCombat().range(
+            // Set target on spawn; the hope is to prevent the silverfish from immediately hiding
+            silverfish.setTarget( level.getNearestPlayer( TargetingConditions.forCombat().ignoreLineOfSight().range(
                     silverfish.getAttributeValue( Attributes.FOLLOW_RANGE ) ), silverfish ) );
+            // Check for aggressive chance config option
+            if( config().AUTO_GEN.aggressiveChance.rollChance( level.random ) ) triggerCallForHelp( silverfish );
         }
     }
     

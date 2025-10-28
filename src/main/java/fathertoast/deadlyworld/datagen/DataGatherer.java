@@ -64,6 +64,7 @@ public class DataGatherer {
             generator.addProvider( true, new DWPlacedFeatureTagsProvider( packOutput, builtInProvider.getRegistryProvider(), fileHelper ) );
             generator.addProvider( true, new DWDecoyTagsProvider( packOutput, builtInProvider.getRegistryProvider(), fileHelper ) );
             generator.addProvider( true, new DWFluidTagsProvider( packOutput, lookupProvider, fileHelper ) );
+            generator.addProvider( true, new DWDamageTypeTagsProvider( packOutput, lookupProvider, fileHelper ) );
         }
     }
 }
