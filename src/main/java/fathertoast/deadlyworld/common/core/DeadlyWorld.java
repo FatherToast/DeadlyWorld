@@ -42,6 +42,8 @@ public final class DeadlyWorld {
      *      - floor trap
      *      - tower dispenser
      *      - sea mine
+     *      - static spike trap
+     *      - mechanical spike trap
      *      ? water trap - actual impl TBD
      *      + ceiling trap
      *      ? wall trap
@@ -118,7 +120,14 @@ public final class DeadlyWorld {
      *      + unique/boss mob
      *      ? ambush
      *      ? blackout ambush
-     *      ? pit
+     *  + spike trap world gen
+     *      + static
+     *      + mechanical
+     *      ? potion
+     *  + pitfall trap world gen
+     *      + spikes
+     *      + lava
+     *      + cobwebs
      *  - water trap world gen
      *      - sea mine (normal/puffer/guardian)
      *      + vortex (storm drain thingy)
@@ -155,7 +164,7 @@ public final class DeadlyWorld {
      *  - allow vanilla dispensers to fire the custom fish hook entity when activating a fishing rod
      */
     
-    /** The mod id and modid used by this mod. */
+    /** The mod ID used by this mod. */
     public static final String MOD_ID = "deadlyworld";
     
     /** The logger used by this mod. */
@@ -186,7 +195,7 @@ public final class DeadlyWorld {
         DWFluids.REGISTRY.register( eventBus );
         DWFluids.TYPE_REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
-        
+
         Config.initializeEarly();
         DeferredWorkQueue.lookup( Optional.of( ModLoadingStage.COMMON_SETUP ) ).ifPresent(
                 ( workQueue ) -> workQueue.enqueueWork( ModList.get().getModContainerById( MOD_ID ).orElseThrow(),
