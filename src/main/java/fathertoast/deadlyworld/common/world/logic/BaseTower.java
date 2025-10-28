@@ -193,7 +193,7 @@ public abstract class BaseTower {
     /** @return A target that meets the conditions to activate this tower, or null if none is found. */
     @Nullable
     protected Entity findTarget( ServerLevel level, BlockPos pos ) {
-        return TrapHelper.getTrapTargetInRange( level, pos, activationRange, checkSight );
+        return TrapHelper.getNearestTrapTargetInRange( level, pos, activationRange, checkSight );
     }
     
     @Nullable
