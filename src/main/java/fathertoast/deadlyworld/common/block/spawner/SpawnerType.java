@@ -43,6 +43,22 @@ public enum SpawnerType implements IFeatureConfigProvider<SpawnerConfig.SpawnerT
             }
         }
     },
+    FLOATY( "floaty", ( dimConfigs ) -> dimConfigs.SPAWNERS.FLOATY ) {
+        /** Applies any additional modifiers to entities spawned by spawners of this type. */
+        @Override
+        public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level level, BlockPos pos ) {
+            super.initEntity( entity, dimConfigs, level, pos );
+
+            // Apply potion effects
+            final boolean hide = dimConfigs.SPAWNERS.FLOATY.ambientFx.get();
+            if( dimConfigs.SPAWNERS.FLOATY.slowFalling.get() ) {
+                entity.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, MobEffectInstance.INFINITE_DURATION, 0, hide, !hide ) );
+            }
+            if( dimConfigs.SPAWNERS.FLOATY.jumpBoost.get() ) {
+                entity.addEffect( new MobEffectInstance( MobEffects.JUMP, MobEffectInstance.INFINITE_DURATION, 1, hide, !hide ) );
+            }
+        }
+    },
     NEST( "nest", "silverfish nests", ( dimConfigs ) -> dimConfigs.SPAWNERS.NEST ),
     MINI( "mini", ( dimConfigs ) -> dimConfigs.SPAWNERS.MINI ) {
         @Override

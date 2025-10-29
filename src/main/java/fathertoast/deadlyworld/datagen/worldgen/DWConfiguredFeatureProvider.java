@@ -9,6 +9,7 @@ import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
@@ -18,12 +19,15 @@ import fathertoast.deadlyworld.common.world.levelgen.dungeon.NormalDungeonFeatur
 import fathertoast.deadlyworld.common.world.levelgen.dungeon.MiniDungeonFeature;
 import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedBlocksFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.LoneHangingSpawnerFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
+import net.minecraft.core.Direction;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 
@@ -51,6 +55,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.Spawner STREAM_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.STREAM, "stream_spawner" );
     public static final FeatureKeys.Spawner SWARM_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.SWARM, "swarm_spawner" );
     public static final FeatureKeys.Spawner BRUTAL_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.BRUTAL, "brutal_spawner" );
+    public static final FeatureKeys.Spawner FLOATY_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.FLOATY, "floaty_spawner" );
     public static final FeatureKeys.Spawner MINI_SPAWNER = FeatureKeys.Spawner.of( SpawnerType.MINI, "mini_spawner" );
     public static final FeatureKeys.Spawner SILVERFISH_NEST = FeatureKeys.Spawner.of( SpawnerType.NEST, "silverfish_nest" );
     
@@ -125,11 +130,28 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         
         // Fancy spawner features
         register( context, SILVERFISH_NEST.overworldKeys, new ConfiguredFeature<>( DWFeatures.SILVERFISH_NEST.get(), new SilverfishNestFeature.Configuration(
-                block( DWBlocks.spawner( SILVERFISH_NEST.spawnerType ) ), block( Blocks.INFESTED_COBBLESTONE ),
-                SpawnerSettings.of( SILVERFISH_NEST.spawnerType, overworldConfigs ), BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+                block( DWBlocks.spawner( SILVERFISH_NEST.spawnerType ) ),
+                block( Blocks.INFESTED_COBBLESTONE ),
+                SpawnerSettings.of( SILVERFISH_NEST.spawnerType, overworldConfigs ),
+                BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+
         register( context, SILVERFISH_NEST.netherKeys, new ConfiguredFeature<>( DWFeatures.SILVERFISH_NEST.get(), new SilverfishNestFeature.Configuration(
-                block( DWBlocks.spawner( SILVERFISH_NEST.spawnerType ) ), block( Blocks.INFESTED_DEEPSLATE ),
-                SpawnerSettings.of( SILVERFISH_NEST.spawnerType, netherConfigs ), BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+                block( DWBlocks.spawner( SILVERFISH_NEST.spawnerType ) ),
+                block( Blocks.INFESTED_DEEPSLATE ),
+                SpawnerSettings.of( SILVERFISH_NEST.spawnerType, netherConfigs ),
+                BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+
+        register( context, FLOATY_SPAWNER.overworldKeys, new ConfiguredFeature<>( DWFeatures.LONE_HANGING_SPAWNER.get(), new LoneHangingSpawnerFeature.Configuration(
+                block( DWBlocks.spawner( FLOATY_SPAWNER.spawnerType ) ),
+                block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y ) ),
+                ConfigConstantIntProvider.of( overworldConfigs.SPAWNERS.FLOATY.distFromFloor ),
+                SpawnerSettings.of( FLOATY_SPAWNER.spawnerType, overworldConfigs ), BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+
+        register( context, FLOATY_SPAWNER.netherKeys, new ConfiguredFeature<>( DWFeatures.LONE_HANGING_SPAWNER.get(), new LoneHangingSpawnerFeature.Configuration(
+                block( DWBlocks.spawner( FLOATY_SPAWNER.spawnerType ) ),
+                block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y ) ),
+                ConfigConstantIntProvider.of( netherConfigs.SPAWNERS.FLOATY.distFromFloor ),
+                SpawnerSettings.of( FLOATY_SPAWNER.spawnerType, netherConfigs ), BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         
         // Floor traps
         registerFloorTrap( context, TNT_TRAP, overworldConfigs, netherConfigs );

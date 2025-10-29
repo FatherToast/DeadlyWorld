@@ -72,6 +72,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
             case STREAM, BURIED -> loot.addPool( buildExplorationLootPool() );
             case SWARM -> loot.addPool( buildExplosivesLootPool() );
             case BRUTAL -> loot.addPool( buildValuableLootPool() );
+            case FLOATY -> loot.addPool( buildTravelLootPool() );
             case NEST -> { return loot.addPool( buildBuggyLootPool() ); } // Skip base loot
             default ->
                     throw new IllegalArgumentException( "Spawner type \"" + type + "\" is missing block loot table data gen code!" );
@@ -277,6 +278,24 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
                 .addExplorerMapMonument( 2 )
                 // Enchanted book
                 .addEnchantedBook( 10, 30, true )
+                .toLootPool();
+    }
+
+    private LootPool.Builder buildTravelLootPool() {
+        return new DWLootPoolBuilder( "travel" ).setRolls( 1 )
+                // Travel items
+                .addItem( Items.SADDLE, 15 )
+                .addItem( Items.OAK_BOAT, 20 )
+                .addItem( Items.MINECART, 20 )
+                .addItem( Items.LEAD, 10 )
+                // Armor
+                .addEntry( new LootEntryItemBuilder( Items.LEATHER_BOOTS ).setWeight( 5 ).applyOneRandomEnchant( Enchantments.SWIFT_SNEAK ).toLootEntry() )
+                .addEntry( new LootEntryItemBuilder( Items.IRON_BOOTS ).setWeight( 5 ).applyOneRandomEnchant( Enchantments.SWIFT_SNEAK ).toLootEntry() )
+                // Floaty things
+                .addItemClusterLarge( Items.FEATHER, 15 )
+                .addItemClusterSmall( Items.PHANTOM_MEMBRANE, 10 )
+                // Enchanted book
+                .addEnchantedBook( 5, Enchantments.AQUA_AFFINITY, Enchantments.FROST_WALKER, Enchantments.DEPTH_STRIDER, Enchantments.RIPTIDE )
                 .toLootPool();
     }
     

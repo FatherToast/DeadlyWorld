@@ -25,6 +25,7 @@ public class SpawnerConfig extends FeatureConfig {
     public final SpawnerTypeCategory STREAM;
     public final SpawnerTypeCategory SWARM;
     public final BrutalSpawnerCategory BRUTAL;
+    public final FloatySpawnerCategory FLOATY;
     public final SpawnerTypeCategory NEST;
     public final SpawnerTypeCategory MINI;
     
@@ -60,11 +61,12 @@ public class SpawnerConfig extends FeatureConfig {
                 20, true, 400, 2400, 100, 12, 8, 0.05, 0.05 );
         BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.05, DEPTH_LAVA, DEPTH_3,
                 16, true, 200, 800, 100, 2, 3, 0.05, 0.05 );
+        FLOATY = new FloatySpawnerCategory( this, SpawnerType.FLOATY, 0.05, DEPTH_LAVA, DEPTH_2,
+                25, true, 200, 800, 100, 3, 4, 0.05, 0.05, 5 );
         NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.5, DEPTH_LAVA, DEPTH_SEA_LEVEL,
                 16, false, 100, 400, 20, 6, 6, 0.0, 0.05 );
         MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.02, DEPTH_LAVA, DEPTH_0,
                 12, false, 100, 400, 20, 6, 4, 0.2, 0.2 );
-        
         BURIED = new SubfeatureSpawnerCategory( this, SpawnerType.BURIED,
                 16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
         DUNGEON = new DungeonSpawnerCategory( this, SpawnerType.DUNGEON,
@@ -267,6 +269,43 @@ public class SpawnerConfig extends FeatureConfig {
             waterBreathing = SPEC.define( new BooleanField( "brutal_water_breathing", true,
                     "If true, non-creeper mobs spawned by " + FEATURE_TYPE_NAME + " will have the " +
                             "'water breathing' potion effect.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
+        }
+    }
+
+    public static class FloatySpawnerCategory extends SpawnerTypeCategory {
+
+        public final IntField distFromFloor;
+
+        public final BooleanField ambientFx;
+        public final BooleanField slowFalling;
+        public final BooleanField jumpBoost;
+
+        FloatySpawnerCategory( FeatureConfig parent, SpawnerType type,
+                               double placements, int minHeight, int maxHeight, int activationRng, boolean checkSight,
+                               int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh, double mimicCh, int dstFromFloor ) {
+            super( parent, type, placements, minHeight, maxHeight, activationRng, checkSight,
+                    minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh, mimicCh );
+
+            SPEC.newLine();
+
+            distFromFloor = SPEC.define( new IntField( "distance_from_floor", dstFromFloor, IntField.Range.POSITIVE,
+                    "How many blocks up from the floor the spawner generates.",
+                    "Keep in mind that the default feature requires that there is space for at least one chain block above before hitting the ceiling.",
+                    "This also means the spawner doesn't generate unless there is a ceiling above where it is trying to generate") );
+
+            SPEC.newLine();
+
+            ambientFx = SPEC.define( new BooleanField( "brutal_ambient_fx", false,
+                    "If true, the potion effects below will not display potion effects particles.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
+            slowFalling = SPEC.define( new BooleanField( "floaty_slow_falling", true,
+                    "If true, mobs spawned by " + FEATURE_TYPE_NAME + " will have the " +
+                            "'slow falling' potion effect.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
+            jumpBoost = SPEC.define( new BooleanField( "floaty_jump_boost", true,
+                    "If true, mobs spawned by " + FEATURE_TYPE_NAME + " will have the " +
+                            "'jump boost' potion effect.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
     }

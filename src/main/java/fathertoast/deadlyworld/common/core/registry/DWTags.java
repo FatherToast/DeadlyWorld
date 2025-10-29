@@ -121,7 +121,7 @@ public final class DWTags {
         public static final TagKey<PlacedFeature> DUNGEONS = tag( "dungeons" );
 
         // World gen step "fluid_springs"
-        public static final TagKey<PlacedFeature> ANY_DIMENSION_POST_DECORATION = tag( "any_dimension_post_decorations" );
+        public static final TagKey<PlacedFeature> ANY_DIMENSION_POST_DECORATION = tag( "any_dimension_post_decoration" );
         
         private static TagKey<PlacedFeature> tag( String name ) {
             return TagKey.create( Registries.PLACED_FEATURE, DeadlyWorld.rl( name ) );

@@ -186,8 +186,7 @@ public abstract class DWAbstractCFProvider {
                         SpawnerSettings.of( type.getConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE, vines ) ) );
     }
-    
-    
+
     /** Registers a configured floor trap type feature to each supported dimension. */
     protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.FloorTrap featureKeys,
                                              DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
@@ -293,7 +292,7 @@ public abstract class DWAbstractCFProvider {
 
     /** Creates a configured key for an "any dimension" post-decor feature. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimPostDecor( String name ) {
-        ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension_post_decor" );
+        ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension_post_decoration" );
         ANY_DIMENSION_POST_DECORATION.add( key );
         return key;
     }

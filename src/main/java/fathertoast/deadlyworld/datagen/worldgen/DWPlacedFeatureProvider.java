@@ -108,6 +108,7 @@ public class DWPlacedFeatureProvider {
         registerLoneSpawner( context, getter, STREAM_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, SWARM_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, BRUTAL_SPAWNER, overworldConfigs, netherConfigs );
+        registerLoneSpawner( context, getter, FLOATY_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, MINI_SPAWNER, overworldConfigs, netherConfigs );
         registerLoneSpawner( context, getter, SILVERFISH_NEST, overworldConfigs, netherConfigs );
         

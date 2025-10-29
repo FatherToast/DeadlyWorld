@@ -21,6 +21,7 @@ public final class DWFeatures {
     // Decoration features
     public static RegistryObject<LoneChestFeature> LONE_CHEST = register( "lone_chest", LoneChestFeature::new );
     public static RegistryObject<LoneSpawnerFeature> LONE_SPAWNER = register( "lone_spawner", LoneSpawnerFeature::new );
+    public static RegistryObject<LoneHangingSpawnerFeature> LONE_HANGING_SPAWNER = register( "lone_hanging_spawner", LoneHangingSpawnerFeature::new );
     public static RegistryObject<SilverfishNestFeature> SILVERFISH_NEST = register( "silverfish_nest", SilverfishNestFeature::new );
     public static RegistryObject<FloorTrapFeature> FLOOR_TRAP = register( "floor_trap", FloorTrapFeature::new );
     public static RegistryObject<PotionFloorTrapFeature> POTION_FLOOR_TRAP = register( "potion_floor_trap", PotionFloorTrapFeature::new );
