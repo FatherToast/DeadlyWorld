@@ -292,7 +292,8 @@ public class SpawnerConfig extends FeatureConfig {
             distFromFloor = SPEC.define( new IntField( "distance_from_floor", dstFromFloor, IntField.Range.POSITIVE,
                     "How many blocks up from the floor the spawner generates.",
                     "Keep in mind that the default feature requires that there is space for at least one chain block above before hitting the ceiling.",
-                    "This also means the spawner doesn't generate unless there is a ceiling above where it is trying to generate") );
+                    "This also means the spawner doesn't generate unless there is a ceiling above where it is trying to generate",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
 
             SPEC.newLine();
 
