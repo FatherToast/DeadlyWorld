@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.datagen.lang;
 
-import fathertoast.deadlyworld.common.block.infested.NameStyle;
+import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
+import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.*;
@@ -45,10 +46,13 @@ public class DWLangProvider extends DWAbstractLangProvider {
         creativeTab( DWCreativeModeTabs.ALL, "Deadly World" );
         creativeTab( DWCreativeModeTabs.PLACERS, "Deadly World - Feature Placers" );
         
-        // Infested block stuff
-        add( NameStyle.VANILLA.getLangKey(), "Infested " + MsgPlaceholder.FIRST );
-        add( NameStyle.SUSPICIOUS.getLangKey(), "\"" + MsgPlaceholder.FIRST + "\"" );
-        add( NameStyle.IDENTITY.getLangKey(), MsgPlaceholder.FIRST );
+        // Auto-gen block stuff
+        add( BlockAutoGen.NameStyle.VANILLA.getLangKey( DeadlyInfestedBlock.BLOCK_KEY ), "Infested " + MsgPlaceholder.FIRST );
+        add( BlockAutoGen.NameStyle.SUSPICIOUS.getLangKey( DeadlyInfestedBlock.BLOCK_KEY ), "\"" + MsgPlaceholder.FIRST + "\"" );
+        add( BlockAutoGen.NameStyle.IDENTITY.getLangKey( DeadlyInfestedBlock.BLOCK_KEY ), MsgPlaceholder.FIRST );
+        add( BlockAutoGen.NameStyle.VANILLA.getLangKey( UnstableBlock.BLOCK_KEY ), "Unstable " + MsgPlaceholder.FIRST );
+        add( BlockAutoGen.NameStyle.SUSPICIOUS.getLangKey( UnstableBlock.BLOCK_KEY ), "\"" + MsgPlaceholder.FIRST + "\"" );
+        add( BlockAutoGen.NameStyle.IDENTITY.getLangKey( UnstableBlock.BLOCK_KEY ), MsgPlaceholder.FIRST );
         
         // Sound event subtitles
         soundSubtitle( DWSoundEvents.TOWER_DISPENSER_SHOOT, "Tower Dispenser shoots" );

@@ -3,7 +3,8 @@ package fathertoast.deadlyworld.common.block.infested;
 import fathertoast.crust.api.lib.LevelEventHelper;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.InfestedBlocksConfig;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
+import fathertoast.deadlyworld.common.core.registry.IAutoGenBlock;
 import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +29,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootDataType;
@@ -43,40 +43,8 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class DeadlyInfestedBlock extends InfestedBlock {
-    /**
-     * This holds the 'hostBlock' for the current DeadlyInfestedBlock construction.
-     * We do this hacky workaround so that we have access to the parameter during block state definition,
-     * which is permanently assigned in the superclass constructor before 'hostBlock' is available.
-     */
-    @Nullable
-    protected static Block blockForStateDef;
-    
-    public static DeadlyInfestedBlock factory( ResourceLocation hostBlockLoc ) {
-        Block hostBlock = InfestedBlockAutoGen.getHostBlockOrThrow( hostBlockLoc );
-        blockForStateDef = hostBlock;
-        DeadlyInfestedBlock infestedBlock = new DeadlyInfestedBlock( hostBlock, hostBlockLoc, copyProperties( hostBlock ) );
-        // Note: Properties are copied, but destroy time is fixed at half and explosion resist fixed at 0.75 by superclass
-        blockForStateDef = null;
-        return infestedBlock;
-    }
-    
-    private static final String PATH_PREFIX = "infested/";
-    
-    /** @return The path to assign for an infested block based on the given host block resource location. */
-    public static String pathFor( ResourceLocation hostBlockLoc ) {
-        return PATH_PREFIX + hostBlockLoc.getNamespace() + "/" + hostBlockLoc.getPath();
-    }
-    
-    /** @return The host block resource location parsed from an infested block resource location, or null if not an infested block. */
-    @Nullable
-    public static ResourceLocation hostLocFrom( ResourceLocation infestedBlockLoc ) {
-        if( DeadlyWorld.MOD_ID.equals( infestedBlockLoc.getNamespace() ) && infestedBlockLoc.getPath().startsWith( PATH_PREFIX ) ) {
-            String[] split = infestedBlockLoc.getPath().substring( PATH_PREFIX.length() ).split( "/", 2 );
-            return ResourceLocation.fromNamespaceAndPath( split[0], split[1] );
-        }
-        return null;
-    }
+public class DeadlyInfestedBlock extends InfestedBlock implements IAutoGenBlock {
+    public static String BLOCK_KEY = "infested";
     
     /** @return An infested version of the given host block if one exists, otherwise it just returns the host block. */
     public static BlockState tryInfest( BlockState hostState ) {
@@ -148,29 +116,36 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     private static InfestedBlocksConfig config() { return Config.INFESTED_BLOCKS; }
     
     
-    // Infested block implementation
+    // Auto-gen block implementation
     
     private final ResourceLocation hostBlockLocation;
     
-    protected DeadlyInfestedBlock( Block hostBlock, ResourceLocation hostBlockLoc, BlockBehaviour.Properties properties ) {
-        super( hostBlock, properties );
+    public DeadlyInfestedBlock( Block hostBlock, ResourceLocation hostBlockLoc ) {
+        super( hostBlock, copyProperties( hostBlock ) );
         hostBlockLocation = hostBlockLoc;
-        registerDefaultState( toInfested( hostBlock.defaultBlockState() ) );
+        registerDefaultState( toAutoGen( hostBlock.defaultBlockState() ) );
     }
     
+    /** Called by the Block.class constructor; we defer to the auto-generation logic. */
     @Override
     protected void createBlockStateDefinition( StateDefinition.Builder<Block, BlockState> builder ) {
-        super.createBlockStateDefinition( builder );
-        // Copy the block state definition from the host
-        if( blockForStateDef != null ) {
-            for( Property<?> property : blockForStateDef.getStateDefinition().getProperties() ) {
-                builder.add( property );
-            }
-        }
+        BlockAutoGen.copyBlockStateDefinition( builder );
     }
     
-    /** Used for model mirroring. */
-    public ResourceLocation getHostBlockLocation() { return hostBlockLocation; }
+    /** @return The origin block's resource location. Used for model lookups. */
+    @Override
+    public ResourceLocation getOriginBlockLocation() { return hostBlockLocation; }
+    
+    /** @return The auto-generated block state corresponding to a specific origin block state. */
+    @Override
+    public BlockState toAutoGen( BlockState originState ) { return infestedStateByHost( originState ); }
+    
+    /** @return The origin block state corresponding to a specific auto-generated block state. */
+    @Override
+    public BlockState toOrigin( BlockState autoGenState ) { return hostStateByInfested( autoGenState ); }
+    
+    
+    // Infested block implementation
     
     /** AT'd to modify the private super method. */
     @Override
@@ -240,13 +215,9 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     
     // Host block emulation
     
-    public BlockState toInfested( BlockState hostState ) { return infestedStateByHost( hostState ); }
-    
-    public BlockState toHost( BlockState infestedState ) { return hostStateByInfested( infestedState ); }
-    
     @Override
     public MutableComponent getName() {
-        return Component.translatable( config().AUTO_GEN.nameStyle.get().getLangKey(),
+        return Component.translatable( config().AUTO_GEN.nameStyle.get().getLangKey( BLOCK_KEY ),
                 Component.translatable( getHostBlock().getDescriptionId() ) );
     }
     
@@ -270,23 +241,23 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     
     @Override
     public MapColor getMapColor( BlockState infestedState, BlockGetter level, BlockPos pos, MapColor defaultColor ) {
-        return getHostBlock().getMapColor( toHost( infestedState ), level, pos, defaultColor );
+        return getHostBlock().getMapColor( toOrigin( infestedState ), level, pos, defaultColor );
     }
     
     @Override
     public SoundType getSoundType( BlockState infestedState, LevelReader level, BlockPos pos, @Nullable Entity entity ) {
-        return getHostBlock().getSoundType( toHost( infestedState ), level, pos, entity );
+        return getHostBlock().getSoundType( toOrigin( infestedState ), level, pos, entity );
     }
     
     @SuppressWarnings( "deprecation" )
     @Override
     public SoundType getSoundType( BlockState infestedState ) {
-        return getHostBlock().getSoundType( toHost( infestedState ) );
+        return getHostBlock().getSoundType( toOrigin( infestedState ) );
     }
     
     @Override
     public int getLightEmission( BlockState infestedState, BlockGetter level, BlockPos pos ) {
-        return getHostBlock().getLightEmission( toHost( infestedState ), level, pos );
+        return getHostBlock().getLightEmission( toOrigin( infestedState ), level, pos );
     }
     
     
@@ -295,39 +266,39 @@ public class DeadlyInfestedBlock extends InfestedBlock {
     @SuppressWarnings( "deprecation" )
     @Override
     public BlockState rotate( BlockState infestedState, Rotation rotation ) {
-        return toInfested( getHostBlock().rotate( toHost( infestedState ), rotation ) );
+        return toAutoGen( getHostBlock().rotate( toOrigin( infestedState ), rotation ) );
     }
     
     @SuppressWarnings( "deprecation" )
     @Override
     public BlockState mirror( BlockState infestedState, Mirror mirror ) {
-        return toInfested( getHostBlock().mirror( toHost( infestedState ), mirror ) );
+        return toAutoGen( getHostBlock().mirror( toOrigin( infestedState ), mirror ) );
     }
     
     @Nullable
     @Override
     public BlockState getStateForPlacement( BlockPlaceContext context ) {
         BlockState hostState = getHostBlock().getStateForPlacement( context );
-        return hostState == null ? null : toInfested( hostState );
+        return hostState == null ? null : toAutoGen( hostState );
     }
     
     @Override
     public int getFlammability( BlockState infestedState, BlockGetter level, BlockPos pos, Direction direction ) {
-        return getHostBlock().getFlammability( toHost( infestedState ), level, pos, direction );
+        return getHostBlock().getFlammability( toOrigin( infestedState ), level, pos, direction );
     }
     
     @Override
     public boolean isFlammable( BlockState infestedState, BlockGetter level, BlockPos pos, Direction direction ) {
-        return getHostBlock().isFlammable( toHost( infestedState ), level, pos, direction );
+        return getHostBlock().isFlammable( toOrigin( infestedState ), level, pos, direction );
     }
     
     @Override
     public int getFireSpreadSpeed( BlockState infestedState, BlockGetter level, BlockPos pos, Direction direction ) {
-        return getHostBlock().getFireSpreadSpeed( toHost( infestedState ), level, pos, direction );
+        return getHostBlock().getFireSpreadSpeed( toOrigin( infestedState ), level, pos, direction );
     }
     
     @Override
     public boolean isFireSource( BlockState infestedState, LevelReader level, BlockPos pos, Direction direction ) {
-        return getHostBlock().isFireSource( toHost( infestedState ), level, pos, direction );
+        return getHostBlock().isFireSource( toOrigin( infestedState ), level, pos, direction );
     }
 }

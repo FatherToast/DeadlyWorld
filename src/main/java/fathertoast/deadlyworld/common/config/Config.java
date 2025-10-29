@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.config;
 
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.deadlyworld.common.block.infested.InfestedBlockAutoGen;
+import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.registries.Registries;
@@ -68,7 +68,7 @@ public class Config {
         MANAGER.freezeFileWatcher = true;
         
         BLOCKS.SPEC.initialize();
-        InfestedBlockAutoGen.initialize();
+        BlockAutoGen.initialize();
         ENTITIES.SPEC.initialize();
         
         MANAGER.freezeFileWatcher = false;

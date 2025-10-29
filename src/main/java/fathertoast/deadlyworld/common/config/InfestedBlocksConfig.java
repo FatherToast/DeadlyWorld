@@ -6,7 +6,7 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.*;
 import fathertoast.crust.api.config.common.file.TomlHelper;
 import fathertoast.crust.api.config.common.value.RegistryEntryList;
-import fathertoast.deadlyworld.common.block.infested.NameStyle;
+import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -68,7 +68,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
         public final StringListField dependencies;
         public final InjectionWrapperField<StringField> fallbackBlock;
         
-        public final EnumField<NameStyle> nameStyle;
+        public final EnumField<BlockAutoGen.NameStyle> nameStyle;
         
         public final DoubleField breakSpeedMulti;
         public final DoubleField explosionResistMulti;
@@ -112,12 +112,12 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
             
             SPEC.newLine();
             
-            nameStyle = SPEC.define( new EnumField<>( "name_style", NameStyle.SUSPICIOUS,
+            nameStyle = SPEC.define( new EnumField<>( "name_style", BlockAutoGen.NameStyle.SUSPICIOUS,
                     "The style to use for infested blocks' display names.",
                     "The available styles are:",
-                    " * " + TomlHelper.enumToString( NameStyle.VANILLA ) + ": Follows the vanilla name pattern (Dirt -> Infested Dirt)",
-                    " * " + TomlHelper.enumToString( NameStyle.SUSPICIOUS ) + ": Puts the host name in quotes (Dirt -> \"Dirt\")",
-                    " * " + TomlHelper.enumToString( NameStyle.IDENTITY ) + ": Directly uses the host name (Dirt -> Dirt)",
+                    " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.VANILLA ) + ": Follows the vanilla name pattern (Dirt -> Infested Dirt)",
+                    " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.SUSPICIOUS ) + ": Puts the host name in quotes (Dirt -> \"Dirt\")",
+                    " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.IDENTITY ) + ": Directly uses the host name (Dirt -> Dirt)",
                     "Note: If you are using Jade, by default its block tooltip will not reveal \"infested\" blocks in " +
                             "survival mode, so this setting has little effect. You may set \"builtinCamouflage\" to false " +
                             "in 'jade.json' if you wish to see this name style in tooltips."

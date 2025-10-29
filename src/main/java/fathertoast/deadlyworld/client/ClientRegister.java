@@ -156,6 +156,6 @@ public class ClientRegister {
     
     @SubscribeEvent
     public static void modifyBakingResult( ModelEvent.ModifyBakingResult event ) {
-        InfestedBlockClientHelper.injectModels( event.getModels() );
+        ClientBlockAutoGen.injectModels( event.getModels() );
     }
 }

@@ -5,7 +5,7 @@ import fathertoast.crust.api.lib.DeferredAction;
 import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
-import fathertoast.deadlyworld.common.block.infested.InfestedBlockAutoGen;
+import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -344,6 +344,6 @@ public final class GameEventHandler {
     public static void onMissingMappings( MissingMappingsEvent event ) {
         // Missing block mappings
         List<MissingMappingsEvent.Mapping<Block>> blockMappings = event.getMappings( Registries.BLOCK, DeadlyWorld.MOD_ID );
-        InfestedBlockAutoGen.remapMissingBlocks( blockMappings );
+        BlockAutoGen.remapMissingBlocks( blockMappings );
     }
 }

@@ -4,8 +4,6 @@ import fathertoast.deadlyworld.common.block.chest.MiniChestBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
-import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
-import fathertoast.deadlyworld.common.block.infested.InfestedBlockAutoGen;
 import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapBlock;
 import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
@@ -35,6 +33,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public final class DWBlocks {
@@ -46,20 +45,20 @@ public final class DWBlocks {
     public static final List<RegistryObject<SeaMineBlock>> SEA_MINES;
     public static final List<RegistryObject<BaseSpikeTrapBlock>> SPIKE_TRAPS;
     public static final List<RegistryObject<PitfallTrapBlock>> PITFALL_TRAPS;
-
-
+    
+    
     //    public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
     //    public static final RegistryObject<Block> SEWER_BEDROCK = registerBlock( "sewer_bedrock", () -> new Block( AbstractBlock.Properties.of( Material.STONE, MaterialColor.COLOR_GRAY ).strength( -1.0F, 3600000.0F ).noDrops().sound( SoundType.STONE ) ), ItemGroup.TAB_BUILDING_BLOCKS );
     
     public static final RegistryObject<Block> INACTIVE_BURIED_SPAWNER = registerBlock( "inactive_" + SpawnerType.BURIED + "_deadly_spawner", BuriedSpawnerBlock::new );
-
+    
     public static final RegistryObject<Block> MINI_CHEST = registerBlock( "mini_chest",
             () -> new MiniChestBlock( BlockBehaviour.Properties.of().mapColor( MapColor.WOOD ).instrument( NoteBlockInstrument.BASS ).strength( 2.5F ).sound( SoundType.WOOD ).ignitedByLava() ),
             () -> new MiniChestBlockItem( DWBlocks.MINI_CHEST.get() ) );
     
     public static final RegistryObject<LiquidBlock> RUNNY_LAVA = registerBlockNoItem( "runny_lava", () -> new RunnyLavaBlock( DWFluids.RUNNY_LAVA_SOURCE ) );
     
-    private static List<RegistryObject<DeadlyInfestedBlock>> INFESTED_BLOCKS;
+    static List<RegistryObject<? extends IAutoGenBlock>> AUTO_GEN_BLOCKS;
     
     static {
         // SPAWNERS
@@ -69,7 +68,7 @@ public final class DWBlocks {
         }
         spawners.trimToSize();
         SPAWNERS = Collections.unmodifiableList( spawners );
-
+        
         // FLOOR TRAPS
         final ArrayList<RegistryObject<FloorTrapBlock>> floorTraps = new ArrayList<>();
         for( FloorTrapType type : FloorTrapType.values() ) {
@@ -77,7 +76,7 @@ public final class DWBlocks {
         }
         floorTraps.trimToSize();
         FLOOR_TRAPS = Collections.unmodifiableList( floorTraps );
-
+        
         // SPIKE TRAPS
         final ArrayList<RegistryObject<BaseSpikeTrapBlock>> spikeTraps = new ArrayList<>();
         for( SpikeTrapType type : SpikeTrapType.values() ) {
@@ -85,7 +84,7 @@ public final class DWBlocks {
         }
         spikeTraps.trimToSize();
         SPIKE_TRAPS = Collections.unmodifiableList( spikeTraps );
-
+        
         // PITFALL TRAPS
         final ArrayList<RegistryObject<PitfallTrapBlock>> pitfallTraps = new ArrayList<>();
         for( PitfallTrapType type : PitfallTrapType.values() ) {
@@ -93,7 +92,7 @@ public final class DWBlocks {
         }
         pitfallTraps.trimToSize();
         PITFALL_TRAPS = Collections.unmodifiableList( pitfallTraps );
-
+        
         // TOWER DISPENSERS
         final ArrayList<RegistryObject<TowerDispenserBlock>> towerDispensers = new ArrayList<>();
         for( TowerType type : TowerType.values() ) {
@@ -101,7 +100,7 @@ public final class DWBlocks {
         }
         towerDispensers.trimToSize();
         TOWER_DISPENSERS = Collections.unmodifiableList( towerDispensers );
-
+        
         // SEA MINES
         final ArrayList<RegistryObject<SeaMineBlock>> seaMines = new ArrayList<>();
         for( SeaMineType type : SeaMineType.values() ) {
@@ -115,39 +114,32 @@ public final class DWBlocks {
         SEA_MINES = Collections.unmodifiableList( seaMines );
     }
     
-    public static void registerInfestedBlocks() {
-        if( INFESTED_BLOCKS != null ) return;
-        final ArrayList<RegistryObject<DeadlyInfestedBlock>> infestedBlocks = new ArrayList<>();
-        InfestedBlockAutoGen.buildInfestedBlocks( infestedBlocks, DWBlocks::registerInfestedBlock );
-        infestedBlocks.trimToSize();
-        INFESTED_BLOCKS = Collections.unmodifiableList( infestedBlocks );
-    }
-    
-    /** @return The list of block registry objects for auto-generated infested blocks. */
-    public static List<RegistryObject<DeadlyInfestedBlock>> getInfestedBlocks() { return INFESTED_BLOCKS; }
+    /** @return The list of block registry objects for auto-generated blocks. */
+    public static List<RegistryObject<? extends IAutoGenBlock>> getAutoGenBlocks() { return AUTO_GEN_BLOCKS; }
     
     /** @return The block registry object for a particular spawner type. */
     public static RegistryObject<DeadlySpawnerBlock> spawner( SpawnerType type ) { return SPAWNERS.get( type.ordinal() ); }
     
     /** @return The block registry object for a particular floor trap type. */
     public static RegistryObject<FloorTrapBlock> floorTrap( FloorTrapType type ) { return FLOOR_TRAPS.get( type.ordinal() ); }
-
+    
     /** @return The block registry object for a particular spike trap type. */
     public static RegistryObject<BaseSpikeTrapBlock> spikeTrap( SpikeTrapType type ) { return SPIKE_TRAPS.get( type.ordinal() ); }
-
+    
     /** @return The block registry object for a particular spike trap type. */
     public static RegistryObject<PitfallTrapBlock> pitfallTrap( PitfallTrapType type ) { return PITFALL_TRAPS.get( type.ordinal() ); }
-
+    
     /** @return The block registry object for a particular tower dispenser type. */
     public static RegistryObject<TowerDispenserBlock> towerDispenser( TowerType type ) { return TOWER_DISPENSERS.get( type.ordinal() ); }
     
     /** @return The block registry object for a particular sea mine type. */
     public static RegistryObject<SeaMineBlock> seaMine( SeaMineType type ) { return SEA_MINES.get( type.ordinal() ); }
-
-    /** Registers an infested block with a simple item. */
-    private static RegistryObject<DeadlyInfestedBlock> registerInfestedBlock( ResourceLocation hostBlockLoc ) {
-        String name = DeadlyInfestedBlock.pathFor( hostBlockLoc );
-        RegistryObject<DeadlyInfestedBlock> block = registerBlockNoItem( name, () -> DeadlyInfestedBlock.factory( hostBlockLoc ) );
+    
+    /** Registers an auto-generated block with a simple item. */
+    static <T extends Block & IAutoGenBlock> RegistryObject<T> registerAutoGenBlock(
+            String blockKey, ResourceLocation originBlockLoc, BiFunction<Block, ResourceLocation, T> factory ) {
+        String name = BlockAutoGen.pathFor( blockKey, originBlockLoc );
+        RegistryObject<T> block = registerBlockNoItem( name, () -> BlockAutoGen.generate( originBlockLoc, factory ) );
         DWItems.registerBlockItem( name, block );
         return block;
     }
