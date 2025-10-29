@@ -45,7 +45,7 @@ public final class DeadlyWorld {
      *      - sea mine
      *      - static spike trap
      *      - mechanical spike trap
-     *      ? water trap - actual impl TBD
+     *      ? storm drain / vortex thing
      *      + ceiling trap
      *      ? wall trap
      *      - runny lava
@@ -96,12 +96,12 @@ public final class DeadlyWorld {
      *      - stream
      *      - swarm
      *      - brutal
+     *      - floaty (hanging from chain)
      *      - silverfish nest
      *      - mini
      *      - mimic
      *      - buried (via buried block veins)
      *      - dungeon (in vanilla dungeons)
-     *      ? hanging from chain version (in large caves or perhaps elsewhere with high ceilings)
      *  - tower world gen
      *      - arrow
      *      - fire arrow
