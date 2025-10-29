@@ -1,5 +1,5 @@
 {
   "type": "deadlyworld:global_add_features",
-  "features": "#deadlyworld:any_dimension_post_decor",
+  "features": "#deadlyworld:any_dimension_post_decoration",
   "step": "fluid_springs"
 }
