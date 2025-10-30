@@ -62,8 +62,7 @@ public class LoneHangingSpawnerFeature extends DeadlyFeature<LoneHangingSpawnerF
             // Don't replace blocks with block entities
             if( level.getExistingBlockEntity( cursor ) != null ) return false;
 
-            // Make sure we have enough air above us to place the spawner
-            // and at least one piece of chain above it before hitting a ceiling
+            // Check that at least one chain can be placed above the spawner
             boolean enoughSpace = level.getBlockState( cursor.move( Direction.UP ) ).isAir();
             boolean foundCeiling = false;
 
