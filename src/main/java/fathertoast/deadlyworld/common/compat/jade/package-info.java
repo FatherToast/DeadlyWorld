@@ -1,6 +1,6 @@
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package fathertoast.deadlyworld.common.block.infested;
+@ParametersAreNonnullByDefault
+package fathertoast.deadlyworld.common.compat.jade;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

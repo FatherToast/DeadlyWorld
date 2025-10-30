@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
-import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
+import fathertoast.deadlyworld.common.block.misc.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -177,7 +177,7 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
     protected void setInfestedBlock( LevelWriter level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random ) {
         setBlock( level, pos, DeadlyInfestedBlock.tryInfestUnknown( stateProvider.getState( random, pos ) ) );
     }
-
+    
     /** Convenience method for placing unstable blocks with a block state provider. */
     protected void safeSetUnstableBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, FloatProvider chanceProvider, RandomSource random, @Nullable Predicate<BlockState> predicate ) {
         if( random.nextFloat() < chanceProvider.sample( random ) )
@@ -185,7 +185,7 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
         else
             safeSetBlock( level, pos, stateProvider, random, predicate );
     }
-
+    
     /** Convenience method for placing unstable blocks with a block state provider. */
     protected void setUnstableBlock( LevelWriter level, BlockPos pos, BlockStateProvider stateProvider, FloatProvider chanceProvider, RandomSource random ) {
         if( random.nextFloat() < chanceProvider.sample( random ) )
@@ -193,17 +193,17 @@ public abstract class DeadlyFeature<FC extends FeatureConfiguration> extends Fea
         else
             setBlock( level, pos, stateProvider, random );
     }
-
+    
     /** Convenience method for placing unstable blocks with a block state provider. */
     protected void safeSetUnstableBlock( WorldGenLevel level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random, @Nullable Predicate<BlockState> predicate ) {
         safeSetBlock( level, pos, UnstableBlock.tryDestabilizing( stateProvider.getState( random, pos ) ), predicate );
     }
-
+    
     /** Convenience method for placing unstable blocks with a block state provider. */
     protected void safeSetUnstableBlock( WorldGenLevel level, BlockPos pos, BlockState state, @Nullable Predicate<BlockState> predicate ) {
         safeSetBlock( level, pos, UnstableBlock.tryDestabilizing( state ), predicate );
     }
-
+    
     /** Convenience method for placing unstable blocks with a block state provider. */
     protected void setUnstableBlock( LevelWriter level, BlockPos pos, BlockStateProvider stateProvider, RandomSource random ) {
         setBlock( level, pos, UnstableBlock.tryDestabilizing( stateProvider.getState( random, pos ) ) );

@@ -3,8 +3,6 @@ package fathertoast.deadlyworld.datagen.loot;
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
-import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
@@ -278,7 +276,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
                 .addEnchantedBook( 10, 30, true )
                 .toLootPool();
     }
-
+    
     private LootPool.Builder buildTravelLootPool() {
         return new DWLootPoolBuilder( "travel" ).setRolls( 1 )
                 // Travel items

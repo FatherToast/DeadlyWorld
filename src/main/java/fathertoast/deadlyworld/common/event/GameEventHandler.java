@@ -4,7 +4,7 @@ package fathertoast.deadlyworld.common.event;
 import fathertoast.crust.api.lib.DeferredAction;
 import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
-import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
+import fathertoast.deadlyworld.common.block.misc.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.config.Config;
