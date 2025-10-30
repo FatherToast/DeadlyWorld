@@ -51,11 +51,14 @@ public enum SpawnerType implements IFeatureConfigProvider<SpawnerConfig.SpawnerT
 
             // Apply potion effects
             final boolean hide = dimConfigs.SPAWNERS.FLOATY.ambientFx.get();
-            if( dimConfigs.SPAWNERS.FLOATY.slowFalling.get() ) {
-                entity.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, MobEffectInstance.INFINITE_DURATION, 0, hide, !hide ) );
+            final int slowFallingAmlp = dimConfigs.SPAWNERS.FLOATY.slowFallingAmpl.get();
+            final int jumpBoostAmpl = dimConfigs.SPAWNERS.FLOATY.jumpBoostAmpl.get();
+
+            if( slowFallingAmlp > -1 ) {
+                entity.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, MobEffectInstance.INFINITE_DURATION, slowFallingAmlp, hide, !hide ) );
             }
-            if( dimConfigs.SPAWNERS.FLOATY.jumpBoost.get() ) {
-                entity.addEffect( new MobEffectInstance( MobEffects.JUMP, MobEffectInstance.INFINITE_DURATION, 1, hide, !hide ) );
+            if( jumpBoostAmpl > -1 ) {
+                entity.addEffect( new MobEffectInstance( MobEffects.JUMP, MobEffectInstance.INFINITE_DURATION, jumpBoostAmpl, hide, !hide ) );
             }
         }
     },

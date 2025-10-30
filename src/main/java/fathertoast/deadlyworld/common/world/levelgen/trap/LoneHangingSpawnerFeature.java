@@ -12,8 +12,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
@@ -66,24 +64,18 @@ public class LoneHangingSpawnerFeature extends DeadlyFeature<LoneHangingSpawnerF
 
             // Make sure we have enough air above us to place the spawner
             // and at least one piece of chain above it before hitting a ceiling
-            boolean enoughSpace = true;
-            boolean isNearCeiling = false;
+            boolean enoughSpace = level.getBlockState( cursor.move( Direction.UP ) ).isAir();
+            boolean foundCeiling = false;
 
             // Scan up 50 blocks at most to find a ceiling
             for ( int y = 0; y < 50; y++ ) {
-                if ( y < distFromFloor + 1 ) {
-                    if ( !level.getBlockState( cursor ).isAir() ) {
-                        enoughSpace = false;
-                        break;
-                    }
-                }
-                else if ( level.getBlockState( cursor ).isAir() ) {
-                    isNearCeiling = true;
+                if ( level.getBlockState( cursor ).isSolid() ) {
+                    foundCeiling = true;
                     break;
                 }
                 cursor = cursor.move( Direction.UP, 1 );
             }
-            if ( !enoughSpace || !isNearCeiling )
+            if ( !enoughSpace || !foundCeiling )
                 return false;
         }
 
@@ -103,17 +95,8 @@ public class LoneHangingSpawnerFeature extends DeadlyFeature<LoneHangingSpawnerF
 
             if ( level.getBlockState( cursor ).isAir() )
                 safeSetBlock( level, cursor, trailBlock, predicate );
+            else return true;
         }
         return true;
-    }
-
-    protected void placeVinesAround( WorldGenLevel level, BlockPos center, BlockPos.MutableBlockPos cursor, RandomSource random ) {
-        for( Direction dir : Direction.Plane.HORIZONTAL ) {
-            if( random.nextInt( 4 ) == 0 ) {
-                cursor.setWithOffset( center, dir );
-                safeSetBlock( level, cursor, Blocks.VINE.defaultBlockState()
-                        .setValue( VineBlock.getPropertyForFace( dir.getOpposite() ), true ), IS_AIR );
-            }
-        }
     }
 }

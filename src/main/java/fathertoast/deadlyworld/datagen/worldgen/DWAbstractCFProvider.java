@@ -205,11 +205,16 @@ public abstract class DWAbstractCFProvider {
 
     /** Registers a configured pitfall trap type feature to each supported dimension. */
     protected static void registerPitfallTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.PitfallTrap featureKeys,
-                                               BlockStateProvider coverProvider, BlockStateProvider fillProvider,
-                                               BlockStateProvider floorProvider, DimensionConfigGroup overworldConfigs,
+                                               BlockStateProvider overworldCoverProvider, BlockStateProvider overworldFillProvider,
+                                               BlockStateProvider overworldFloorProvider,
+                                               BlockStateProvider netherCoverProvider, BlockStateProvider netherFillProvider,
+                                               BlockStateProvider netherFloorProvider,
+                                               DimensionConfigGroup overworldConfigs,
                                                DimensionConfigGroup netherConfigs ) {
-        registerPitfallTrap( context, featureKeys.overworldKeys, featureKeys.trapType, floorProvider, coverProvider, fillProvider, overworldConfigs );
-        registerPitfallTrap( context, featureKeys.netherKeys, featureKeys.trapType, floorProvider, coverProvider, fillProvider, netherConfigs );
+        registerPitfallTrap( context, featureKeys.overworldKeys, featureKeys.trapType,
+                overworldCoverProvider, overworldFillProvider, overworldFloorProvider, overworldConfigs );
+        registerPitfallTrap( context, featureKeys.netherKeys, featureKeys.trapType,
+                netherCoverProvider, netherFillProvider, netherFloorProvider, netherConfigs );
     }
 
     /** Registers a configured pitfall trap type feature. */
@@ -218,8 +223,8 @@ public abstract class DWAbstractCFProvider {
                                                BlockStateProvider floorProvider, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.PITFALL_TRAP.get(),
                 new PitfallTrapFeature.Configuration(
-                        floorProvider, coverProvider, fillProvider,
-                        PitfallTrapSettings.of( type.getConfig( dimConfigs ) ),
+                        coverProvider, fillProvider, floorProvider,
+                        PitfallTrapSettings.of( type, type.getConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
     

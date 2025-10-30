@@ -278,8 +278,8 @@ public class SpawnerConfig extends FeatureConfig {
         public final IntField distFromFloor;
 
         public final BooleanField ambientFx;
-        public final BooleanField slowFalling;
-        public final BooleanField jumpBoost;
+        public final IntField slowFallingAmpl;
+        public final IntField jumpBoostAmpl;
 
         FloatySpawnerCategory( FeatureConfig parent, SpawnerType type,
                                double placements, int minHeight, int maxHeight, int activationRng, boolean checkSight,
@@ -300,13 +300,13 @@ public class SpawnerConfig extends FeatureConfig {
             ambientFx = SPEC.define( new BooleanField( "brutal_ambient_fx", false,
                     "If true, the potion effects below will not display potion effects particles.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
-            slowFalling = SPEC.define( new BooleanField( "floaty_slow_falling", true,
-                    "If true, mobs spawned by " + FEATURE_TYPE_NAME + " will have the " +
-                            "'slow falling' potion effect.",
+            slowFallingAmpl = SPEC.define( new IntField( "floaty_slow_falling.amplifier", 2, -1, 255,
+                    "The effect amplifier for the 'slow falling' effect given to mobs spawned by " + FEATURE_TYPE_NAME + ".",
+                    "Setting this to -1 will prevent the spawned mobs from getting the potion effect.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
-            jumpBoost = SPEC.define( new BooleanField( "floaty_jump_boost", true,
-                    "If true, mobs spawned by " + FEATURE_TYPE_NAME + " will have the " +
-                            "'jump boost' potion effect.",
+            jumpBoostAmpl = SPEC.define( new IntField( "floaty_jump_boost.amplifier", 2, -1, 255,
+                    "The effect amplifier for the 'jump boost' effect given to mobs spawned by " + FEATURE_TYPE_NAME + ".",
+                    "Setting this to -1 will prevent the spawned mobs from getting the potion effect.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
     }
