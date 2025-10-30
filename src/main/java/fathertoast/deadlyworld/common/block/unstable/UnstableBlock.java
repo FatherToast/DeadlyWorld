@@ -1,8 +1,7 @@
-package fathertoast.deadlyworld.common.block.pitfall;
+package fathertoast.deadlyworld.common.block.unstable;
 
 import com.google.common.collect.Maps;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.InfestedBlocksConfig;
 import fathertoast.deadlyworld.common.config.UnstableBlocksConfig;
 import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.core.registry.IAutoGenBlock;
@@ -14,10 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -39,9 +34,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.TickPriority;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -165,7 +158,7 @@ public class UnstableBlock extends Block implements IAutoGenBlock {
     public void onProjectileHit( Level level, BlockState unstableState, BlockHitResult context, Projectile projectile ) {
         if( !level.isClientSide() && config().AUTO_GEN.projBreakChance.get() > 0.0 &&
                 config().AUTO_GEN.projBreakChance.rollChance( level.random ) ) {
-            popBlock( (ServerLevel) level, context.getBlockPos(), projectile.getEffectSource() );
+            level.destroyBlock( context.getBlockPos(), true, projectile.getEffectSource() );
         }
     }
 
@@ -173,27 +166,33 @@ public class UnstableBlock extends Block implements IAutoGenBlock {
     public void stepOn( Level level, BlockPos pos, BlockState unstableState, Entity entity ) {
         if( !level.isClientSide() && config().AUTO_GEN.stepBreakChance.get() > 0.0 && entity instanceof Player player &&
                 !player.isCreative() && config().AUTO_GEN.stepBreakChance.rollChance( level.random ) ) {
-            popBlock( (ServerLevel) level, pos, entity );
+            level.destroyBlock( pos, true, entity );
         }
     }
 
     @Override
     public void tick( BlockState unstableState, ServerLevel level, BlockPos pos, RandomSource random ) {
-        popBlock( level, pos, null );
+        level.destroyBlock( pos, true, null );
     }
 
-    private static void popBlock( ServerLevel level, BlockPos pos, @Nullable Entity entity ) {
-        BlockState state = level.getBlockState( pos );
-        Block.dropResources( state, level, pos );
+    @Override
+    public void onRemove( BlockState state, Level level, BlockPos pos, BlockState newState, boolean updateNeighbors ) {
+        super.onRemove( state, level, pos, newState, updateNeighbors );
 
-        level.destroyBlock( pos, true, entity );
+        if ( level instanceof ServerLevel serverLevel )
+            nudgeUnstableNeighbors( serverLevel,  pos );
+    }
+
+    private static void nudgeUnstableNeighbors(ServerLevel level, BlockPos pos ) {
+        final int ticksForScheduling = config().AUTO_GEN.neighborUpdateTicks.get();
 
         for ( Direction direction : Direction.values() ) {
             BlockPos neighborPos = pos.relative( direction );
             BlockState neighborState = level.getBlockState( neighborPos );
 
-            if ( neighborState.getBlock() instanceof UnstableBlock ) {
-                level.scheduleTick( neighborPos, neighborState.getBlock(), 5, TickPriority.NORMAL );
+            if ( neighborState.getBlock() instanceof UnstableBlock block
+                    && !level.getBlockTicks().hasScheduledTick( neighborPos, block ) ) {
+                level.scheduleTick( neighborPos, neighborState.getBlock(), ticksForScheduling, TickPriority.NORMAL );
             }
         }
     }

@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.crust.api.ICrustApi;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
-import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
+import fathertoast.deadlyworld.common.block.unstable.UnstableBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.ResourceLocationException;

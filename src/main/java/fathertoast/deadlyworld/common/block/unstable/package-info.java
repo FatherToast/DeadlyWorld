@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package fathertoast.deadlyworld.common.block.pitfall;
+package fathertoast.deadlyworld.common.block.unstable;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

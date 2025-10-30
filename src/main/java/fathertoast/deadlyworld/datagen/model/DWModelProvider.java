@@ -1,6 +1,5 @@
 package fathertoast.deadlyworld.datagen.model;
 
-import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.spawner.MiniSpawnerBlock;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;

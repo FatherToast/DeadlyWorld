@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 import com.mojang.serialization.Codec;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
-import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
+import fathertoast.deadlyworld.common.block.unstable.UnstableBlock;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;

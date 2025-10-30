@@ -1,7 +1,6 @@
 package fathertoast.deadlyworld.common.config.dimension;
 
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.ConfigGroup;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;

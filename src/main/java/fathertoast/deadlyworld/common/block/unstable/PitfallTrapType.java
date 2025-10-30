@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.pitfall;
+package fathertoast.deadlyworld.common.block.unstable;
 
 import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
 import fathertoast.deadlyworld.common.config.Config;

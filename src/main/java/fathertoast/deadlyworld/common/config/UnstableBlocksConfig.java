@@ -11,6 +11,7 @@ import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -21,7 +22,6 @@ import java.util.Objects;
 
 public class UnstableBlocksConfig extends AbstractConfigFile {
 
-    public final UnstableBlocksConfig.General GENERAL;
     public final UnstableBlocksConfig.AutoGen AUTO_GEN;
 
     /** Builds the config spec that should be used for this config. */
@@ -30,35 +30,7 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
                 "This config contains options to customize auto-generated unstable blocks, including " +
                         "which to generate and how they behave."
         );
-
-        GENERAL = new UnstableBlocksConfig.General( this );
         AUTO_GEN = new UnstableBlocksConfig.AutoGen( this );
-    }
-
-    public static class General extends AbstractConfigCategory<UnstableBlocksConfig> {
-
-        public final RegistryEntryListField<Item> busterTools;
-        public final IntField busterDamage;
-        public final BooleanField popWhenBusted;
-
-        General( UnstableBlocksConfig parent ) {
-            super( parent, "general",
-                    "Options that apply to unstable blocks as a whole." );
-
-            busterTools = SPEC.define( new LazyRegistryEntryListField<>( "buster.tools",
-                    new RegistryEntryList<>( ForgeRegistries.ITEMS, null, List.of( ItemTags.SHOVELS ) ),
-                    "A list of items that can interact with unstable blocks to reveal them safely " +
-                            " without disturbing neighboring unstable blocks. This will pop the unstable block and damage the tool, depending on " +
-                            "the settings below.",
-                    "For reference, the standard tool tags are: " +
-                            TomlHelper.literalList( new RegistryEntryList<>( ForgeRegistries.ITEMS, null, List.of(
-                                    ItemTags.SWORDS, ItemTags.AXES, ItemTags.HOES, ItemTags.PICKAXES, ItemTags.SHOVELS, ItemTags.TOOLS
-                            ) ).toStringList() ) + "." ) );
-            busterDamage = SPEC.define( new IntField( "buster.tool_damage", 2, IntField.Range.NON_NEGATIVE,
-                    "The amount of damage tools take when successfully busting and popping an unstable block." ) );
-            popWhenBusted = SPEC.define( new BooleanField( "buster.pops_when_busted", true,
-                    "If true, busting an unstable block will pop it, as if a player was standing on it." ) );
-        }
     }
 
     public static class AutoGen extends AbstractConfigCategory<UnstableBlocksConfig> {
@@ -73,6 +45,8 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
 
         public final DoubleField projBreakChance;
         public final DoubleField stepBreakChance;
+
+        public final IntField neighborUpdateTicks;
 
         AutoGen( UnstableBlocksConfig parent ) {
             super( parent, "auto_generated_blocks",
@@ -131,6 +105,12 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
                             "is rolled each tick (20 times per second) while standing on an unstable block, so it " +
                             "should probably be kept pretty low." // what are you doing, step break chance?
             ) );
+
+            SPEC.newLine();
+
+            neighborUpdateTicks = SPEC.define( new IntField( "neighbor_update_tick_speed", 5, 1, 40,
+                    "When an unstable block is destroyed, neighboring unstable blocks will also start to disintegrate.",
+                    "This value determines how many ticks it takes before neighbors get destroyed.") );
         }
 
         /** Logs a warning if the fallback block field value is invalid. */

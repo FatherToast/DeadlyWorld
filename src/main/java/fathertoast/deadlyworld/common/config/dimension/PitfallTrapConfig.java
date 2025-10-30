@@ -1,9 +1,8 @@
 package fathertoast.deadlyworld.common.config.dimension;
 
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
+import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 
 import static fathertoast.deadlyworld.common.util.References.*;
