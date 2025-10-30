@@ -6,6 +6,7 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.*;
 import net.minecraft.world.level.Level;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainConfig extends AbstractConfigFile {
@@ -26,7 +27,7 @@ public class MainConfig extends AbstractConfigFile {
     public static class General extends AbstractConfigCategory<MainConfig> {
         
         public final StringListField extraDimensions;
-        
+
         public final BooleanField activateTrapsInPeaceful;
         public final BooleanField activateTrapsVsCreative;
         
@@ -48,7 +49,7 @@ public class MainConfig extends AbstractConfigFile {
                             "world gen, and can also overwrite most world gen config settings. This mod generally only " +
                             "supports the default values here without the use of a data pack."
             ), RestartNote.GAME );
-            
+
             SPEC.newLine();
             
             activateTrapsInPeaceful = SPEC.define( new BooleanField( "trigger_traps_in_peaceful", true,

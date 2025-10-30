@@ -28,14 +28,12 @@ public class DWBlockTagsProvider extends BlockTagsProvider {
         addAll( DWTags.Blocks.TOWER_DISPENSERS, DWBlocks.TOWER_DISPENSERS );
         addAll( DWTags.Blocks.SEA_MINES, DWBlocks.SEA_MINES );
         addAll( DWTags.Blocks.SPIKE_TRAPS, DWBlocks.SPIKE_TRAPS );
-        addAll( DWTags.Blocks.PITFALL_TRAPS, DWBlocks.PITFALL_TRAPS );
 
         addTags( BlockTags.MINEABLE_WITH_PICKAXE,
                 DWTags.Blocks.SPAWNERS.get(),
                 DWTags.Blocks.FLOOR_TRAPS.get(),
                 DWTags.Blocks.TOWER_DISPENSERS.get(),
-                DWTags.Blocks.SPIKE_TRAPS.get(),
-                DWTags.Blocks.PITFALL_TRAPS.get()
+                DWTags.Blocks.SPIKE_TRAPS.get()
         );
         addTags( BlockTags.NEEDS_IRON_TOOL, DWTags.Blocks.SPAWNERS.get() );
     }

@@ -26,7 +26,9 @@ public class Config {
     public static FishingPrankConfig FISHING_PRANKS;
     
     public static final BlocksConfig BLOCKS = new BlocksConfig( MANAGER, "blocks" );
+    public static final BlockAutoGenConfig BLOCK_AUTO_GEN = new BlockAutoGenConfig( MANAGER, "block_auto_gen" );
     public static final InfestedBlocksConfig INFESTED_BLOCKS = new InfestedBlocksConfig( MANAGER, "infested_blocks" );
+    public static final UnstableBlocksConfig UNSTABLE_BLOCKS = new UnstableBlocksConfig( MANAGER, "unstable_blocks" );
     public static final EntitiesConfig ENTITIES = new EntitiesConfig( MANAGER, "entities" );
     
     /** Mapping of each dimension type to its config. */

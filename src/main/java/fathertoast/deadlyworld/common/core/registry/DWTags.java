@@ -24,7 +24,6 @@ public final class DWTags {
         public static final BlockWithItem TOWER_DISPENSERS = tag( "tower_dispensers" );
         public static final BlockWithItem SEA_MINES = tag( "sea_mines" );
         public static final BlockWithItem SPIKE_TRAPS = tag( "spike_traps" );
-        public static final BlockWithItem PITFALL_TRAPS = tag( "pitfall_traps" );
 
 
         private static BlockWithItem tag( String name ) {

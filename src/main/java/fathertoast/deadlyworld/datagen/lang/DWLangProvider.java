@@ -1,10 +1,12 @@
 package fathertoast.deadlyworld.datagen.lang;
 
+import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
 import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.*;
+import fathertoast.deadlyworld.common.item.AutoGenBlockItem;
 import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import net.minecraft.data.PackOutput;
 
@@ -78,7 +80,9 @@ public class DWLangProvider extends DWAbstractLangProvider {
         tooltip( DWItems.CONTAINER_TRAP, "runny_lava", "Spews runny lava" );
         tooltip( DWItems.CONTAINER_TRAP, "poison_gas", "Releases poison gas" );
         tooltip( DWItems.CONTAINER_TRAP, "wither_gas", "Releases withering gas" );
-        
+        add( AutoGenBlockItem.translationKey( DeadlyInfestedBlock.BLOCK_KEY ), "Infested" );
+        add( AutoGenBlockItem.translationKey( UnstableBlock.BLOCK_KEY ), "Unstable" );
+
         deathMessage( DWDamageTypes.SPIKE_TRAP,
                 MsgPlaceholder.FIRST + " was impaled on a spike trap",
                 MsgPlaceholder.FIRST + " was impaled on a spike trap while trying to escape " + MsgPlaceholder.SECOND );

@@ -65,7 +65,6 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
     public static class AutoGen extends AbstractConfigCategory<InfestedBlocksConfig> {
         
         public final PredicateStringListField hostBlocks;
-        public final StringListField dependencies;
         public final InjectionWrapperField<StringField> fallbackBlock;
         
         public final EnumField<BlockAutoGen.NameStyle> nameStyle;
@@ -93,16 +92,6 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                             "game will crash (see \"dependencies\" below).",
                     "To connect to a server, this setting must be the same on both client and server or your connection " +
                             "will be refused for failing to synchronize registry data."
-            ), RestartNote.GAME );
-            dependencies = SPEC.define( new StringListField( "dependencies", "mod_id",
-                    new ArrayList<>(),
-                    "By default (that is, when this list is empty), Deadly World will attempt to adjust load " +
-                            "order such that it loads its blocks after all namespaces used in the \"host_blocks\" list " +
-                            "and any blocks with a namespace that not equal to a loaded mod's id will be skipped.",
-                    "If you enter any ids in this list, instead Deadly World will attempt to adjust load order after " +
-                            "only the mods on this list and will not skip any blocks on the above list.",
-                    "All load order adjustment is disabled if you only enter \"minecraft\" (or non-existent mods) in " +
-                            "this list, if you prefer to just crash instead of mucking with load order mid-loading."
             ), RestartNote.GAME );
             fallbackBlock = SPEC.define( new InjectionWrapperField<>( new StringField( "fallback_block", keyToString( Blocks.INFESTED_STONE ),
                     "The vanilla fallback block to replace missing infested blocks with. If the \"host_blocks\" " +

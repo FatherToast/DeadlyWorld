@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.crust.api.ICrustApi;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
+import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.ResourceLocationException;
@@ -35,8 +36,9 @@ public class BlockAutoGen {
     
     /** Called during the mod construction phase to initialize block auto-generation. */
     public static void initialize() {
+        Config.BLOCK_AUTO_GEN.SPEC.initialize();
         Config.INFESTED_BLOCKS.SPEC.initialize();
-        //TODO initialize whatever config houses the unstable blocks
+        Config.UNSTABLE_BLOCKS.SPEC.initialize();
         registerAutoGenBlocks();
     }
     
@@ -46,16 +48,18 @@ public class BlockAutoGen {
      */
     public static void registerAutoGenBlocks() {
         final ArrayList<RegistryObject<? extends IAutoGenBlock>> autoGenBlocks = new ArrayList<>();
-        //TODO Decide the best home (config file) for the dependencies list config option
-        final Set<String> dependencies = new HashSet<>( Config.INFESTED_BLOCKS.AUTO_GEN.dependencies.get() );
+        final Set<String> dependencies = new HashSet<>( Config.BLOCK_AUTO_GEN.GENERAL.blockAutoGenDependencies.get() );
         final boolean autoDependencies = dependencies.isEmpty();
         
         // Register infested blocks
         registerAutoGenBlockCategory( autoGenBlocks, dependencies, autoDependencies, DeadlyInfestedBlock.BLOCK_KEY,
                 Config.INFESTED_BLOCKS.AUTO_GEN.hostBlocks.get(), ( originBlockLoc ) -> DWBlocks.registerAutoGenBlock(
                         DeadlyInfestedBlock.BLOCK_KEY, originBlockLoc, DeadlyInfestedBlock::new ) );
-        //TODO Register unstable blocks
-        
+        // Register unstable blocks
+        registerAutoGenBlockCategory( autoGenBlocks, dependencies, autoDependencies, UnstableBlock.BLOCK_KEY,
+                Config.UNSTABLE_BLOCKS.AUTO_GEN.hostBlocks.get(), ( originBlockLoc ) -> DWBlocks.registerAutoGenBlock(
+                        UnstableBlock.BLOCK_KEY, originBlockLoc, UnstableBlock::new ) );
+
         autoGenBlocks.trimToSize();
         DWBlocks.AUTO_GEN_BLOCKS = Collections.unmodifiableList( autoGenBlocks );
         
@@ -69,8 +73,8 @@ public class BlockAutoGen {
         final Map<String, StringBuilder> messages = new HashMap<>();
         final Map<String, Block> fallbackBlock = new HashMap<>();
         fallbackBlock.put( DeadlyInfestedBlock.BLOCK_KEY, Config.INFESTED_BLOCKS.AUTO_GEN.getFallbackBlock() );
-        //TODO put fallback for unstable blocks
-        
+        fallbackBlock.put( UnstableBlock.BLOCK_KEY, Config.UNSTABLE_BLOCKS.AUTO_GEN.getFallbackBlock() );
+
         // Remap any mappings we can safely assume previously belonged to an auto-generated block to the config default
         for( MissingMappingsEvent.Mapping<Block> mapping : mappings ) {
             if( !DeadlyWorld.MOD_ID.equals( mapping.getKey().getNamespace() ) ) continue;
@@ -137,12 +141,14 @@ public class BlockAutoGen {
         blockForStateDef = null;
         return autoGenBlock;
     }
-    
+
+
     /**
      * Call this from the auto-generated block's {@link Block#createBlockStateDefinition(StateDefinition.Builder)}
      * override to copy all state properties from its origin block.
      */
-    public static void copyBlockStateDefinition( StateDefinition.Builder<Block, BlockState> builder ) {
+    @SuppressWarnings( "JavadocReference" )
+    public static void copyBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder ) {
         // Copy the block state definition from the host
         if( blockForStateDef != null ) {
             for( Property<?> property : blockForStateDef.getStateDefinition().getProperties() ) {

@@ -191,12 +191,6 @@ public abstract class DWAbstractModelProvider extends BlockStateProvider {
         spikeTrap( regObj, baseTexture, spikeTexture );
     }
 
-    protected void pitfallTrap( RegistryObject<? extends Block> regObj, Block parentBlock ) {
-        ModelFile model = models().pressurePlate( regObj.getId().getPath(), blockTexture( parentBlock ) );
-        simpleBlockWithItem( regObj.get(), model );
-    }
-
-
     /**
      * Generates state definition and a block model for blocks
      * that have no block model data except particle texture,

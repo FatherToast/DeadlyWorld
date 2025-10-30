@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapBlock;
+import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.world.levelgen.PitfallTrapSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -60,13 +60,15 @@ public class PitfallTrapFeature extends DeadlyFeature<PitfallTrapFeature.Configu
 
         int radSqr = radius * radius;
 
-        // Check that we are building inside a solid cuboid area
+        // Check that we are building inside a solid cuboid area.
+        // We want to avoid building if there are holes in the walls and whatnot.
         if ( notSubfeature ) {
             for ( int y = centerY; y > centerY - outerDepth; y-- ) {
                 for ( int x = centerX - outerRadius; x <= centerX + outerRadius; x++ ) {
                     for ( int z = centerZ - outerRadius; z <= centerZ + outerRadius; z++ ) {
                         cursor.set( x, y, z );
 
+                        // In case pack creators specify a huge radius or something
                         if ( !level.hasChunkAt( cursor ) ) return false;
 
                         BlockState state = level.getBlockState( cursor );
@@ -77,8 +79,9 @@ public class PitfallTrapFeature extends DeadlyFeature<PitfallTrapFeature.Configu
                 }
             }
         }
-
-        final BlockState coverState = config.coverProvider.getState( random, origin );
+        final BlockState coverBlock = config.coverProvider.getState( random, origin );
+        final BlockState fillBlock = config.fillProvider.getState( random, origin );
+        final BlockState floorBlock = config.floorProvider.getState( random, origin );
 
         // Build the pit
         for ( int x = centerX - radius; x <= centerX + radius; x++  ) {
@@ -92,31 +95,117 @@ public class PitfallTrapFeature extends DeadlyFeature<PitfallTrapFeature.Configu
 
                         // Building the top cover
                         if ( y == buildPos.getY() ) {
-                            safeSetBlock( level, cursor, coverState, predicate );
+                            safeSetUnstableBlock( level, cursor, coverBlock, predicate );
                         }
                         // Building the floor
                         else if ( y == centerY - (depth - 1) ) {
-                            safeSetBlock( level, cursor, context.config().floorProvider(), random, predicate );
+                            safeSetBlock( level, cursor, floorBlock, predicate );
                         }
                         // Fill the rest with the configured filling
                         else {
-                            safeSetBlock(level, cursor, context.config().fillProvider(), random, predicate);
+                            safeSetBlock( level, cursor, fillBlock, predicate );
                         }
                     }
                 }
             }
         }
-        // TODO - entire cover should be "trap" blocks (auto gen block stuff)
-        /*
-        BlockState trapState = config.trapProvider.getState( random, origin );
-        setBlock( level, origin, trapState );
+        PitfallTrapType type = PitfallTrapType.getFromID( config.pitfallTrapSettings.pitfallTrapId() );
 
-        if ( trapState.getBlock() instanceof PitfallTrapBlock pitfallTrapBlock ) {
+        if ( type != null ) {
             // Generate debug marker
-            debugMarkerIfEnabled( level, origin, pitfallTrapBlock.getPitfallTrapType().getConfig( level.getLevel() ) );
+            debugMarkerIfEnabled( level, origin, type.getConfig( level.getLevel() ) );
         }
-
-         */
         return true;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Hello :D
 }

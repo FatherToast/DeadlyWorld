@@ -4,7 +4,7 @@ import fathertoast.deadlyworld.common.block.chest.MiniChestBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
-import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapBlock;
+import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
 import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
@@ -16,6 +16,7 @@ import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.item.AutoGenBlockItem;
 import fathertoast.deadlyworld.common.item.MiniChestBlockItem;
 import fathertoast.deadlyworld.common.item.SeaMineBlockItem;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +45,6 @@ public final class DWBlocks {
     public static final List<RegistryObject<TowerDispenserBlock>> TOWER_DISPENSERS;
     public static final List<RegistryObject<SeaMineBlock>> SEA_MINES;
     public static final List<RegistryObject<BaseSpikeTrapBlock>> SPIKE_TRAPS;
-    public static final List<RegistryObject<PitfallTrapBlock>> PITFALL_TRAPS;
     
     
     //    public static final RegistryObject<Block> STORM_DRAIN = registerBlock( "storm_drain", StormDrainBlock::new, ItemGroup.TAB_MISC );
@@ -85,14 +85,6 @@ public final class DWBlocks {
         spikeTraps.trimToSize();
         SPIKE_TRAPS = Collections.unmodifiableList( spikeTraps );
         
-        // PITFALL TRAPS
-        final ArrayList<RegistryObject<PitfallTrapBlock>> pitfallTraps = new ArrayList<>();
-        for( PitfallTrapType type : PitfallTrapType.values() ) {
-            pitfallTraps.add( type.ordinal(), registerBlock( type + "_pitfall_trap", type.getBlock() ) );
-        }
-        pitfallTraps.trimToSize();
-        PITFALL_TRAPS = Collections.unmodifiableList( pitfallTraps );
-        
         // TOWER DISPENSERS
         final ArrayList<RegistryObject<TowerDispenserBlock>> towerDispensers = new ArrayList<>();
         for( TowerType type : TowerType.values() ) {
@@ -126,9 +118,6 @@ public final class DWBlocks {
     /** @return The block registry object for a particular spike trap type. */
     public static RegistryObject<BaseSpikeTrapBlock> spikeTrap( SpikeTrapType type ) { return SPIKE_TRAPS.get( type.ordinal() ); }
     
-    /** @return The block registry object for a particular spike trap type. */
-    public static RegistryObject<PitfallTrapBlock> pitfallTrap( PitfallTrapType type ) { return PITFALL_TRAPS.get( type.ordinal() ); }
-    
     /** @return The block registry object for a particular tower dispenser type. */
     public static RegistryObject<TowerDispenserBlock> towerDispenser( TowerType type ) { return TOWER_DISPENSERS.get( type.ordinal() ); }
     
@@ -140,7 +129,7 @@ public final class DWBlocks {
             String blockKey, ResourceLocation originBlockLoc, BiFunction<Block, ResourceLocation, T> factory ) {
         String name = BlockAutoGen.pathFor( blockKey, originBlockLoc );
         RegistryObject<T> block = registerBlockNoItem( name, () -> BlockAutoGen.generate( originBlockLoc, factory ) );
-        DWItems.registerBlockItem( name, block );
+        DWItems.register( name, () -> new AutoGenBlockItem( blockKey, block.get(), new Item.Properties() ) );
         return block;
     }
     

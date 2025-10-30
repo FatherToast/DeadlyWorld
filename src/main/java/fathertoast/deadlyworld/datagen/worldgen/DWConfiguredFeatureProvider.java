@@ -173,19 +173,33 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
 
         // Pitfall traps
         registerPitfallTrap( context, SPIKES_PITFALL_TRAP,
-                block( DWBlocks.spikeTrap( SpikeTrapType.STATIC ) ),
-                blocks( Blocks.SAND.defaultBlockState(),
-                        Blocks.GRAVEL.defaultBlockState() ),
+                // overworld
+                blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
                 block( Blocks.AIR ),
+                block( DWBlocks.spikeTrap( SpikeTrapType.STATIC ) ),
+                // nether
+                blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.AIR ),
+                block( DWBlocks.spikeTrap( SpikeTrapType.STATIC ) ),
                 overworldConfigs, netherConfigs );
         registerPitfallTrap( context, LAVA_PITFALL_TRAP,
-                block( Blocks.LAVA ),
-                block( Blocks.SAND ),
+                // overworld
+                blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
                 block( Blocks.AIR ),
+                blocks( Blocks.LAVA.defaultBlockState(), DWBlocks.RUNNY_LAVA.get().defaultBlockState() ),
+                // nether
+                blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.AIR ),
+                blocks( Blocks.LAVA.defaultBlockState(), DWBlocks.RUNNY_LAVA.get().defaultBlockState() ),
                 overworldConfigs, netherConfigs );
         registerPitfallTrap( context, COBWEB_PITFALL_TRAP,
+                // overworld
+                blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
                 block( Blocks.COBWEB ),
-                block( Blocks.SAND ),
+                block( Blocks.COBWEB ),
+                // nether
+                blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.COBWEB ),
                 block( Blocks.COBWEB ),
                 overworldConfigs, netherConfigs );
 

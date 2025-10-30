@@ -11,6 +11,7 @@ import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
+import fathertoast.deadlyworld.common.core.registry.IAutoGenBlock;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffects;
@@ -53,16 +54,13 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
         for( SeaMineType type : SeaMineType.values() ) {
             add( DWBlocks.seaMine( type ).get(), noDrop() );
         }
-        for( PitfallTrapType type : PitfallTrapType.values() ) {
-            add( DWBlocks.pitfallTrap( type ).get(), noDrop() );
-        }
     }
     
     @Override
     protected Iterable<Block> getKnownBlocks() {
         // This is basically pulled straight from the forge docs on data gen for block/entity loot tables
         return DWBlocks.REGISTRY.getEntries().stream().flatMap( RegistryObject::stream )
-                .filter( ( block ) -> !(block instanceof DeadlyInfestedBlock) ).collect( Collectors.toList() );
+                .filter( ( block ) -> !(block instanceof IAutoGenBlock) ).collect( Collectors.toList() );
     }
     
     private LootTableBuilder buildSpawnerLoot( SpawnerType type ) {

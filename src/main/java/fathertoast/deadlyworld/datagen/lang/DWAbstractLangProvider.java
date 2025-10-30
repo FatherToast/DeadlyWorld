@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.datagen.lang;
 import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
+import fathertoast.deadlyworld.common.core.registry.IAutoGenBlock;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
@@ -131,8 +132,8 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         for ( RegistryObject<Block> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
 
-            // Ignore infested blocks, they are handled manually
-            if ( regObj.get() instanceof DeadlyInfestedBlock )
+            // Ignore auto-gen blocks, they are handled separately
+            if ( regObj.get() instanceof IAutoGenBlock )
                 continue;
 
             // Key already exists in exceptions, next entry

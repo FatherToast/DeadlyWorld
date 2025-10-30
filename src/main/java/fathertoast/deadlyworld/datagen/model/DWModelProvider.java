@@ -37,10 +37,6 @@ public class DWModelProvider extends DWAbstractModelProvider {
         spikeTrap( DWBlocks.spikeTrap( SpikeTrapType.STATIC ), blockTexture( Blocks.STONE ) );
         spikeTrap( DWBlocks.spikeTrap( SpikeTrapType.MECHANICAL ), blockTexture( Blocks.COBBLESTONE ) );
 
-        pitfallTrap( DWBlocks.pitfallTrap( PitfallTrapType.SPIKES ), Blocks.STONE );
-        pitfallTrap( DWBlocks.pitfallTrap( PitfallTrapType.LAVA ), Blocks.GRANITE );
-        pitfallTrap( DWBlocks.pitfallTrap( PitfallTrapType.COBWEB ), Blocks.DIORITE );
-
         emptyModelWithParticle( DWBlocks.MINI_CHEST, blockTexture( Blocks.OAK_PLANKS ) );
         emptyModelWithParticle( DWBlocks.RUNNY_LAVA, blockTextureExtend( Blocks.LAVA, "_still" ) );
 

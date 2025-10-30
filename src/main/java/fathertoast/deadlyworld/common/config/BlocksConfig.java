@@ -59,13 +59,6 @@ public class BlocksConfig extends AbstractConfigFile {
             LOOKUP.put( toKey( SpikeTrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, SpikeTrapType.BLOCK_CATEGORY, type.toString(),
                     5.0, 2.5, 1 ) );
         }
-
-        // Pitfall Traps
-        for( PitfallTrapType type : PitfallTrapType.values() ) {
-            LOOKUP.put( toKey( PitfallTrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, PitfallTrapType.BLOCK_CATEGORY, type.toString(),
-                    5.0, 0.0, 1 ) );
-        }
-        
         //TODO add storm drain; will possibly include in a "water traps" category
     }
     
@@ -79,7 +72,6 @@ public class BlocksConfig extends AbstractConfigFile {
 
     public BlockCategory get( SpikeTrapType type ) { return get( SpikeTrapType.BLOCK_CATEGORY, type.toString() ); }
 
-    public BlockCategory get( PitfallTrapType type ) { return get( PitfallTrapType.BLOCK_CATEGORY, type.toString() ); }
 
 
     private BlockCategory get( String category, String type ) {
@@ -110,7 +102,7 @@ public class BlocksConfig extends AbstractConfigFile {
             super( parent, toKey( blockCat, type ), // TODO implement tool level somehow
                     "Options to customize the physical properties of the " + type + " " + blockCat + " block." );
             final String name = type + " " + blockCat + " block";
-            
+
             destroyTime = SPEC.define( new DoubleField( "hardness", breakTime, -1.0, Double.POSITIVE_INFINITY,
                     "Influences the time it takes to break " + name + "s. Actual time in seconds is 1.5 times",
                     "this value when using a valid tool (ignoring any tool speed modifiers), and 5 times this value when",

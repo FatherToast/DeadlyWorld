@@ -62,7 +62,7 @@ public class DeadlyInfestedBlock extends InfestedBlock implements IAutoGenBlock 
     public static BlockState tryInfestUnknown( BlockState hostState ) {
         if( hostState.getBlock() instanceof InfestedBlock infestedBlock ) // treat vanilla infested blocks like their host block
             return tryInfestUnknown( infestedBlock.hostStateByInfested( hostState ) );
-        return isCompatibleHostBlock( hostState ) ? infestedStateByHost( hostState ) : hostState;
+        return tryInfest( hostState );
     }
     
     /** Runs the logic for "infested block cleansing". */
