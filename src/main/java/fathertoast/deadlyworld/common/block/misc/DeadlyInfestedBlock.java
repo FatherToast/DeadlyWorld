@@ -1,4 +1,4 @@
-package fathertoast.deadlyworld.common.block.infested;
+package fathertoast.deadlyworld.common.block.misc;
 
 import fathertoast.crust.api.lib.LevelEventHelper;
 import fathertoast.deadlyworld.common.config.Config;
@@ -131,6 +131,10 @@ public class DeadlyInfestedBlock extends InfestedBlock implements IAutoGenBlock 
     protected void createBlockStateDefinition( StateDefinition.Builder<Block, BlockState> builder ) {
         BlockAutoGen.copyBlockStateDefinition( builder );
     }
+    
+    /** @return The origin block. */
+    @Override
+    public Block getOriginBlock() { return getHostBlock(); }
     
     /** @return The origin block's resource location. Used for model lookups. */
     @Override

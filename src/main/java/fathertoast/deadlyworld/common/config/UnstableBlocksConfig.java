@@ -43,8 +43,8 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
         public final DoubleField breakSpeedMulti;
         public final DoubleField explosionResistMulti;
 
-        public final DoubleField projBreakChance;
-        public final DoubleField stepBreakChance;
+        public final DoubleField projFallChance;
+        public final DoubleField stepFallChance;
 
         public final IntField neighborUpdateTicks;
 
@@ -76,12 +76,8 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
                     "The available styles are:",
                     " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.VANILLA ) + ": Follows the vanilla name pattern (Dirt -> Unstable Dirt)",
                     " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.SUSPICIOUS ) + ": Puts the host name in quotes (Dirt -> \"Dirt\")",
-                    " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.IDENTITY ) + ": Directly uses the host name (Dirt -> Dirt)",
-                    "Note: If you are using Jade, by default its block tooltip will not reveal \"unstable\" blocks in " +
-                            "survival mode, so this setting has little effect. You may set \"builtinCamouflage\" to false " +
-                            "in 'jade.json' if you wish to see this name style in tooltips."
+                    " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.IDENTITY ) + ": Directly uses the host name (Dirt -> Dirt)"
             ) );
-            //TODO Jade compat setting to show host block's mod instead of Deadly World in block tooltips
 
             SPEC.newLine();
 
@@ -97,13 +93,12 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
 
             SPEC.newLine();
 
-            projBreakChance = SPEC.define( new DoubleField( "break_chance.projectile", 0.3, DoubleField.Range.PERCENT,
-                    "The chance for unstable blocks to pop when hit by a projectile."
+            projFallChance = SPEC.define( new DoubleField( "fall_chance.projectile", 0.3, DoubleField.Range.PERCENT,
+                    "The chance for unstable blocks to fall when hit by a projectile."
             ) );
-            stepBreakChance = SPEC.define( new DoubleField( "break_chance.step", 1.0, DoubleField.Range.PERCENT,
+            stepFallChance = SPEC.define( new DoubleField( "fall_chance.step", 0.05, DoubleField.Range.PERCENT,
                     "The chance for unstable blocks to pop/break when stepped on by a player. This chance " +
-                            "is rolled each tick (20 times per second) while standing on an unstable block, so it " +
-                            "should probably be kept pretty low." // what are you doing, step break chance?
+                            "is rolled each tick (20 times per second) while standing on an unstable block."
             ) );
 
             SPEC.newLine();

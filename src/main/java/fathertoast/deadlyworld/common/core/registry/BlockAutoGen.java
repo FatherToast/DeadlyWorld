@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.crust.api.ICrustApi;
-import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
+import fathertoast.deadlyworld.common.block.misc.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.unstable.UnstableBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -148,7 +148,7 @@ public class BlockAutoGen {
      * override to copy all state properties from its origin block.
      */
     @SuppressWarnings( "JavadocReference" )
-    public static void copyBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder ) {
+    public static void copyBlockStateDefinition( StateDefinition.Builder<Block, BlockState> builder ) {
         // Copy the block state definition from the host
         if( blockForStateDef != null ) {
             for( Property<?> property : blockForStateDef.getStateDefinition().getProperties() ) {

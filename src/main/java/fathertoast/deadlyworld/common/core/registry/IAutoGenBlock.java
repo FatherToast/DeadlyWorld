@@ -12,6 +12,9 @@ public interface IAutoGenBlock {
     /** @return This auto-generated block's block state definition. The Block.class implementation is fine as-is. */
     StateDefinition<Block, BlockState> getStateDefinition();
     
+    /** @return The origin block. */
+    Block getOriginBlock();
+    
     /** @return The origin block's resource location. Used for model lookups. */
     ResourceLocation getOriginBlockLocation();
     

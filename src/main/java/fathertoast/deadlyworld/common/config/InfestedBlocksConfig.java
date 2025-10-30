@@ -108,10 +108,9 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                     " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.SUSPICIOUS ) + ": Puts the host name in quotes (Dirt -> \"Dirt\")",
                     " * " + TomlHelper.enumToString( BlockAutoGen.NameStyle.IDENTITY ) + ": Directly uses the host name (Dirt -> Dirt)",
                     "Note: If you are using Jade, by default its block tooltip will not reveal \"infested\" blocks in " +
-                            "survival mode, so this setting has little effect. You may set \"builtinCamouflage\" to false " +
-                            "in 'jade.json' if you wish to see this name style in tooltips."
+                            "survival mode, so this setting has little effect. Set \"builtinCamouflage\" to false in " +
+                            "'jade.json' if you wish to see this name style in its tooltips."
             ) );
-            //TODO Jade compat setting to show host block's mod instead of Deadly World in block tooltips
             
             SPEC.newLine();
             

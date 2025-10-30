@@ -276,7 +276,7 @@ public class DWBlockLootTables extends VanillaBlockLoot { // Extending vanilla b
                 .addEnchantedBook( 10, 30, true )
                 .toLootPool();
     }
-
+    
     private LootPool.Builder buildTravelLootPool() {
         return new DWLootPoolBuilder( "travel" ).setRolls( 1 )
                 // Travel items

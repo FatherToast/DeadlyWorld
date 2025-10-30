@@ -1,6 +1,5 @@
 package fathertoast.deadlyworld.datagen.lang;
 
-import fathertoast.deadlyworld.common.block.infested.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
 import fathertoast.deadlyworld.common.core.registry.IAutoGenBlock;
@@ -32,48 +31,48 @@ import java.util.Objects;
  * For now, we only generate for american english (en_us).
  */
 public abstract class DWAbstractLangProvider extends LanguageProvider {
-
+    
     /** A map of key-translation pairs that should override auto-generated entries. */
     private final Map<String, String> exceptions = new HashMap<>();
-
-
+    
+    
     public DWAbstractLangProvider( PackOutput output ) {
         super( output, DeadlyWorld.MOD_ID, "en_us" );
     }
-
+    
     @Override
     protected void addTranslations() {
         addExceptions();
         exceptions.forEach( this::add );
     }
-
+    
     /**
      * Called before exception translations are processed.<br>
      * Add any exceptions here.
      */
     protected abstract void addExceptions();
-
+    
     /** Adds an exception translation to the map of translation exceptions. */
     protected void exception( String key, String translation ) {
         Objects.requireNonNull( key );
         Objects.requireNonNull( translation );
         exceptions.put( key, translation );
     }
-
+    
     /**
      * Adds a creative mode tab name translation for the given creative tab using the tab's registry key.
      */
     protected void creativeTab( DWCreativeModeTabs.CreativeTabRegObj regObj, String translation ) {
         // Assume display name is a translatable component
         try {
-            add(((TranslatableContents) regObj.regObj().get().getDisplayName().getContents()).getKey(), translation);
+            add( ((TranslatableContents) regObj.regObj().get().getDisplayName().getContents()).getKey(), translation );
         }
-        catch ( ClassCastException e ) {
+        catch( ClassCastException e ) {
             e.printStackTrace();
             DeadlyWorld.LOG.error( "Attempted to generate localization for creative mode tab with a display name component that doesn't have translatable content!" );
         }
     }
-
+    
     /**
      * Adds a subtitle translation for the given sound event.
      */
@@ -81,7 +80,7 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         String key = "sound_event." + regObj.getId().getNamespace() + ".subtitle." + regObj.getId().getPath();
         add( key, translation );
     }
-
+    
     /**
      * Adds an item sub-tooltip translation for the given item,
      * creating a translation key with the format <b>"item.{namespace}.{path}.tooltip.{subKey}"</b>.
@@ -89,14 +88,14 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
     protected void tooltip( RegistryObject<? extends Item> regObj, @Nullable String subKey, String translation ) {
         StringBuilder builder = new StringBuilder( regObj.get().getDescriptionId() );
         builder.append( ".tooltip" );
-
-        if ( subKey != null && !subKey.isEmpty() ) {
+        
+        if( subKey != null && !subKey.isEmpty() ) {
             builder.append( "." );
             builder.append( subKey );
         }
         add( builder.toString(), translation );
     }
-
+    
     /**
      * Adds an item tooltip translation for the given item,
      * creating a translation key with the format <b>"item.{namespace}.{path}.tooltip"</b>.
@@ -104,12 +103,12 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
     protected void tooltip( RegistryObject<? extends Item> regObj, String translation ) {
         tooltip( regObj, null, translation );
     }
-
+    
     /**
      * Adds death message translations for the given damage type key.
      *
      * @param damageTypeKey The registry key for the damage type.
-     * @param message The translated death message displayed when a player dies without any other entity being involved.
+     * @param message       The translated death message displayed when a player dies without any other entity being involved.
      * @param chasedMessage The translated death message displayed when a player dies after recently being attacked by an entity.
      */
     protected void deathMessage( ResourceKey<DamageType> damageTypeKey, String message, String chasedMessage ) {
@@ -118,88 +117,88 @@ public abstract class DWAbstractLangProvider extends LanguageProvider {
         add( baseKey, message );
         add( baseKey + ".player", chasedMessage );
     }
-
+    
     /**
      * Adds a container name translation for the given container ID.<br>
      * We assume we are only adding for our own containers.
      */
     protected void container( String containerName, String translation ) {
-        add( "container." + DeadlyWorld.MOD_ID + "." + containerName , translation );
+        add( "container." + DeadlyWorld.MOD_ID + "." + containerName, translation );
     }
-
+    
     /** Auto-generates translations for all blocks in the provided deferred register. */
     protected void blocks( DeferredRegister<Block> registry ) {
-        for ( RegistryObject<Block> regObj : registry.getEntries() ) {
+        for( RegistryObject<Block> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
-
+            
             // Ignore auto-gen blocks, they are handled separately
-            if ( regObj.get() instanceof IAutoGenBlock )
+            if( regObj.get() instanceof IAutoGenBlock )
                 continue;
-
+            
             // Key already exists in exceptions, next entry
-            if ( exceptions.containsKey( key ) )
+            if( exceptions.containsKey( key ) )
                 continue;
-
+            
             String translation = regObj.getId().getPath().replaceAll( "_", " " );
             translation = WordUtils.capitalizeFully( translation );
-
+            
             add( key, translation );
         }
     }
-
+    
     /** Auto-generates translations for all items in the provided deferred register. */
     protected void items( DeferredRegister<Item> registry ) {
-        for ( RegistryObject<Item> regObj : registry.getEntries() ) {
+        for( RegistryObject<Item> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
-
+            
             // Assume block items have already been taken care of
             // since they use their block's description ID normally.
-            if ( regObj.get() instanceof BlockItem )
+            if( regObj.get() instanceof BlockItem )
                 continue;
-
+            
             // Key already exists in exceptions, next entry
-            if ( exceptions.containsKey( key ) )
+            if( exceptions.containsKey( key ) )
                 continue;
-
+            
             String translation = regObj.getId().getPath().replaceAll( "_", " " );
             translation = WordUtils.capitalizeFully( translation );
-
+            
             add( key, translation );
         }
     }
-
+    
     /** Auto-generates translations for all entity types in the provided deferred register. */
     protected void entityTypes( DeferredRegister<EntityType<?>> registry ) {
-        for ( RegistryObject<EntityType<?>> regObj : registry.getEntries() ) {
+        for( RegistryObject<EntityType<?>> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
-
+            
             // Key already exists in exceptions, next entry
-            if ( exceptions.containsKey( key ) )
+            if( exceptions.containsKey( key ) )
                 continue;
-
+            
             String translation = regObj.getId().getPath().replaceAll( "_", " " );
             translation = WordUtils.capitalizeFully( translation );
-
+            
             add( key, translation );
         }
     }
-
+    
     /** Auto-generates translations for all mob effects in the provided deferred register. */
     protected void mobEffects( DeferredRegister<MobEffect> registry ) {
-        for ( RegistryObject<MobEffect> regObj : registry.getEntries() ) {
+        for( RegistryObject<MobEffect> regObj : registry.getEntries() ) {
             String key = regObj.get().getDescriptionId();
-
+            
             // Key already exists in exceptions, next entry
-            if ( exceptions.containsKey( key ) )
+            if( exceptions.containsKey( key ) )
                 continue;
-
+            
             String translation = regObj.getId().getPath().replaceAll( "_", " " );
             translation = WordUtils.capitalizeFully( translation );
-
+            
             add( key, translation );
         }
     }
-
+    
     static class MsgPlaceholder {
         protected static final String FIRST = "%1$s";
         protected static final String SECOND = "%2$s";
