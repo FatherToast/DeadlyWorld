@@ -57,7 +57,7 @@ public class ClientRegister {
     
     @SubscribeEvent
     public static void onClientSetup( FMLClientSetupEvent event ) {
-        MinecraftForge.EVENT_BUS.register( new ClientEvents() );
+        //MinecraftForge.EVENT_BUS.register( new ClientEvents() ); Only used for sewer dim so far
         
         DecoyRendererRegistry.registerDefaults();
         ChestMimicChestLayer.validateChestTextures();
