@@ -14,7 +14,10 @@ import net.minecraftforge.common.world.ModifiableBiomeInfo;
 
 import java.util.function.Supplier;
 
-public record GlobalAddFeaturesModifier(HolderSet<PlacedFeature> features, GenerationStep.Decoration step) implements BiomeModifier {
+public record GlobalAddFeaturesModifier(
+        HolderSet<PlacedFeature> features,
+        GenerationStep.Decoration step
+) implements BiomeModifier {
 
     public static Supplier<Codec<GlobalAddFeaturesModifier>> codecForRegistry() {
         return () -> RecordCodecBuilder.create( builder -> builder.group(

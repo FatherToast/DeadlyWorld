@@ -49,7 +49,7 @@ public class BuriedBlocksFeature extends DeadlyFeature<BuriedBlocksFeature.Confi
         
         try {
             for( RegistryValueEntry<Block> entry : category.list.get().getEntries() ) {
-                final BlockState liquid = ForgeRegistries.BLOCKS.getValue( entry.REG_KEY ).defaultBlockState();
+                final BlockState block = ForgeRegistries.BLOCKS.getValue( entry.REG_KEY ).defaultBlockState();
                 final int minY = Math.max( (int) entry.VALUES[0], level.getMinBuildHeight() );
                 final int maxY = Math.min( (int) entry.VALUES[1], level.getMaxBuildHeight() );
                 final boolean areYEqual = minY >= maxY;
@@ -68,14 +68,15 @@ public class BuriedBlocksFeature extends DeadlyFeature<BuriedBlocksFeature.Confi
                     
                     for( Direction dir : Direction.values() ) {
                         BlockPos neighborPos = pos.relative( dir );
-                        if( level.getExistingBlockEntity( neighborPos ) != null || !level.getBlockState( neighborPos ).isSolidRender( level, neighborPos ) ) {
+                        if( level.getExistingBlockEntity( neighborPos ) != null
+                                || !level.getBlockState( neighborPos ).isSolidRender( level, neighborPos ) ) {
                             canPlace = false;
                             break;
                         }
                     }
                     
                     if( canPlace ) {
-                        safeSetBlock( level, pos, liquid, predicate );
+                        safeSetBlock( level, pos, block, predicate );
                     }
                 }
             }

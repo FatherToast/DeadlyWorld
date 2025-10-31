@@ -24,9 +24,12 @@ import java.util.function.Supplier;
  * A copy-paste of {@link net.minecraftforge.common.world.ForgeBiomeModifiers.RemoveFeaturesBiomeModifier}
  * with the addition of a config-driven boolean value used to determine if the modifier should run or not.
  */
-public record ConfigRemoveFeaturesModifier(BooleanFieldSetting enabled, HolderSet<Biome> biomes,
-                                           HolderSet<PlacedFeature> features, Set<GenerationStep.Decoration> steps)
-        implements BiomeModifier {
+public record ConfigRemoveFeaturesModifier(
+        BooleanFieldSetting enabled,
+        HolderSet<Biome> biomes,
+        HolderSet<PlacedFeature> features,
+        Set<GenerationStep.Decoration> steps
+) implements BiomeModifier {
     
     public static Supplier<Codec<ConfigRemoveFeaturesModifier>> codecForRegistry() {
         return () -> RecordCodecBuilder.create( builder -> builder.group(
