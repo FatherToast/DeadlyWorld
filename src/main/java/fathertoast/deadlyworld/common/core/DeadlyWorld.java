@@ -37,6 +37,7 @@ public final class DeadlyWorld {
      *      - configurable physical properties
      *      - auto-generated infested blocks
      *          - prevent silverfish from hiding immediately after spawning
+     *      - auto-generated unstable blocks
      *      - deadly spawner
      *      - mini spawner
      *      - inactive buried spawner
@@ -126,13 +127,14 @@ public final class DeadlyWorld {
      *      + mechanical
      *      ? potion
      *  + pitfall trap world gen
-     *      + spikes
-     *      + lava
-     *      + cobwebs
+     *      - spikes
+     *      - lava
+     *      - cobwebs
      *  - water trap world gen
      *      - sea mine (normal/puffer/guardian)
+     *      - sea mine mob
      *      + vortex (storm drain thingy)
-     *      ? need more than just two!
+     *      ? more, maychance
      *  + ceiling trap world gen
      *      + cave-in
      *      + lava
