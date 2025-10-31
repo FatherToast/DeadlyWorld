@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -174,6 +175,12 @@ public class UnstableBlock extends Block implements IAutoGenBlock {
 
         if ( level instanceof ServerLevel serverLevel )
             nudgeUnstableNeighbors( serverLevel,  pos );
+    }
+
+    @Override
+    @Nullable
+    public PushReaction getPistonPushReaction( BlockState state ) {
+        return PushReaction.DESTROY;
     }
 
     private static void nudgeUnstableNeighbors(ServerLevel level, BlockPos pos ) {
