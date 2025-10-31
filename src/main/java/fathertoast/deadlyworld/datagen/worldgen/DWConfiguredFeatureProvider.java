@@ -19,7 +19,7 @@ import fathertoast.deadlyworld.common.world.levelgen.dungeon.NormalDungeonFeatur
 import fathertoast.deadlyworld.common.world.levelgen.dungeon.MiniDungeonFeature;
 import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedBlocksFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
-import fathertoast.deadlyworld.common.world.levelgen.trap.LoneHangingSpawnerFeature;
+import fathertoast.deadlyworld.common.world.levelgen.misc.LoneHangingSpawnerFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
 import net.minecraft.core.Direction;
@@ -92,7 +92,6 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     
     /** Called by registry set builder to generate our configured features. */
     public static void bootstrap( BootstapContext<ConfiguredFeature<?, ?>> context ) {
-        HolderGetter<PlacedFeature> placedGetter = context.lookup( Registries.PLACED_FEATURE );
         final DimensionConfigGroup overworldConfigs = Config.getDimensionConfigs( Level.OVERWORLD );
         final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         

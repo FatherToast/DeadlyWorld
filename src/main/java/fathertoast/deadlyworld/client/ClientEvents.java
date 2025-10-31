@@ -4,8 +4,7 @@ import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ClientEvents {//TODO
-    
+public class ClientEvents {
     /** Makes the fog T H I C C in the sewer dimension. */
     @SubscribeEvent( priority = EventPriority.HIGH )
     public void onRenderFog( ViewportEvent.RenderFog event ) {

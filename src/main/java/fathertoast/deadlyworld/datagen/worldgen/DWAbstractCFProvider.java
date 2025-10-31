@@ -19,6 +19,7 @@ import fathertoast.deadlyworld.common.world.levelgen.*;
 import fathertoast.deadlyworld.common.world.levelgen.misc.DeadlyOreFeature;
 import fathertoast.deadlyworld.common.world.levelgen.misc.InfestedOreFeature;
 import fathertoast.deadlyworld.common.world.levelgen.misc.LoneChestFeature;
+import fathertoast.deadlyworld.common.world.levelgen.misc.LoneSpawnerFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.*;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -114,7 +115,7 @@ public abstract class DWAbstractCFProvider {
     protected static BlockStateProvider blocks( BlockState... blocks ) {
         SimpleWeightedRandomList.Builder<BlockState> builder = new SimpleWeightedRandomList.Builder<>();
 
-        for ( BlockState state : blocks ) {
+        for( BlockState state : blocks ) {
             builder.add( state, 1 );
         }
         return new WeightedStateProvider( builder );
@@ -124,7 +125,7 @@ public abstract class DWAbstractCFProvider {
     protected static BlockStateProvider weightedBlocks( Pair<BlockState, Integer>... stateWeightPairs ) {
         SimpleWeightedRandomList.Builder<BlockState> builder = new SimpleWeightedRandomList.Builder<>();
 
-        for ( Pair<BlockState, Integer> pair : stateWeightPairs ) {
+        for( Pair<BlockState, Integer> pair : stateWeightPairs ) {
             builder.add( pair.getFirst(), pair.getSecond() );
         }
         return new WeightedStateProvider( builder );
@@ -206,6 +207,7 @@ public abstract class DWAbstractCFProvider {
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
 
+
     /** Registers a configured spike trap type feature to each supported dimension. */
     protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
                                               DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
@@ -285,7 +287,7 @@ public abstract class DWAbstractCFProvider {
                         .setValue( SeaMineBlock.WATERLOGGED, true ) ), trailProvider,
                         SeaMineSettings.of( type.getConfig( dimConfigs ) ) ) ) );
     }
-    
+
     /** Registers a configured feature. */
     protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys, ConfiguredFeature<?, ?> configuredFeature ) {
         context.register( featureKeys.configuredKey, configuredFeature );
