@@ -1,9 +1,10 @@
-package fathertoast.deadlyworld.common.world.levelgen.trap;
+package fathertoast.deadlyworld.common.world.levelgen.misc;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
+import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
