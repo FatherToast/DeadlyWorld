@@ -1,9 +1,11 @@
 package fathertoast.deadlyworld.common.config;
 
+import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
+import fathertoast.crust.api.config.common.field.AbstractConfigField;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -99,5 +101,19 @@ public class Config {
         }
         
         MANAGER.freezeFileWatcher = false;
+    }
+    
+    // TODO Move this to Crust, update Crust to provide a spec.NAME:file map to avoid needing to loop thru files
+    @Nullable
+    public static AbstractConfigField getField( String modId, String specName, String fieldKey ) {
+        final ConfigManager manager = ConfigManager.get( modId );
+        if( manager != null ) {
+            for( AbstractConfigFile config : manager.getConfigs() ) {
+                if( config.SPEC.NAME.equals( specName ) ) {
+                    return config.SPEC.getFields().get( fieldKey );
+                }
+            }
+        }
+        return null;
     }
 }

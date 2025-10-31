@@ -1,14 +1,12 @@
 package fathertoast.deadlyworld.common.config.levelgen.setting;
 
 import com.mojang.serialization.Codec;
-import fathertoast.crust.api.config.common.AbstractConfigFile;
-import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.AbstractConfigField;
 import fathertoast.crust.api.config.common.field.DoubleField;
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class FloatFieldSetting {
     public static final Codec<FloatFieldSetting> CODEC = Codec.STRING.xmap( FloatFieldSetting::new, FloatFieldSetting::toString );
@@ -58,21 +56,11 @@ public class FloatFieldSetting {
     /** @return True if the set field reference has been found. */
     private boolean check() {
         if( setField != null ) return true;
-        
-        final ConfigManager manager = ConfigManager.get( MOD_ID );
-        if( manager == null ) return false;
-        
-        final List<AbstractConfigFile> configs = manager.getConfigs(); // TODO update Crust to provide a spec.NAME:spec map
-        AbstractConfigField foundField = null;
-        for( AbstractConfigFile config : configs ) {
-            if( config.SPEC.NAME.equals( FILE ) ) {
-                foundField = config.SPEC.getFields().get( KEY );
-                break;
-            }
+        AbstractConfigField foundField = Config.getField( MOD_ID, FILE, KEY );
+        if( foundField instanceof DoubleField doubleField ) {
+            setField = doubleField;
+            return true;
         }
-        if( !(foundField instanceof DoubleField) ) return false;
-        
-        setField = (DoubleField) foundField;
-        return true;
+        return false;
     }
 }
