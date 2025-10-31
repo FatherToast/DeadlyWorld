@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
+import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.world.levelgen.PitfallTrapSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;

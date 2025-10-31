@@ -4,8 +4,6 @@ import fathertoast.deadlyworld.common.block.chest.MiniChestBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.fluid.RunnyLavaBlock;
-import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
-import fathertoast.deadlyworld.common.block.pitfall.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.BuriedSpawnerBlock;

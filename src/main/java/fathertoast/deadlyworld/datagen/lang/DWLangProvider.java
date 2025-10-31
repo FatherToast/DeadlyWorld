@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.datagen.lang;
 
-import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
+import fathertoast.deadlyworld.common.block.unstable.UnstableBlock;
 import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.block.misc.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;

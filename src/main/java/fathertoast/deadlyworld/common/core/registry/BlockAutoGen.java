@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.crust.api.ICrustApi;
 import fathertoast.deadlyworld.common.block.misc.DeadlyInfestedBlock;
-import fathertoast.deadlyworld.common.block.pitfall.UnstableBlock;
+import fathertoast.deadlyworld.common.block.unstable.UnstableBlock;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.ResourceLocationException;
@@ -59,7 +59,7 @@ public class BlockAutoGen {
         registerAutoGenBlockCategory( autoGenBlocks, dependencies, autoDependencies, UnstableBlock.BLOCK_KEY,
                 Config.UNSTABLE_BLOCKS.AUTO_GEN.hostBlocks.get(), ( originBlockLoc ) -> DWBlocks.registerAutoGenBlock(
                         UnstableBlock.BLOCK_KEY, originBlockLoc, UnstableBlock::new ) );
-        
+
         autoGenBlocks.trimToSize();
         DWBlocks.AUTO_GEN_BLOCKS = Collections.unmodifiableList( autoGenBlocks );
         
@@ -74,7 +74,7 @@ public class BlockAutoGen {
         final Map<String, Block> fallbackBlock = new HashMap<>();
         fallbackBlock.put( DeadlyInfestedBlock.BLOCK_KEY, Config.INFESTED_BLOCKS.AUTO_GEN.getFallbackBlock() );
         fallbackBlock.put( UnstableBlock.BLOCK_KEY, Config.UNSTABLE_BLOCKS.AUTO_GEN.getFallbackBlock() );
-        
+
         // Remap any mappings we can safely assume previously belonged to an auto-generated block to the config default
         for( MissingMappingsEvent.Mapping<Block> mapping : mappings ) {
             if( !DeadlyWorld.MOD_ID.equals( mapping.getKey().getNamespace() ) ) continue;
@@ -141,8 +141,8 @@ public class BlockAutoGen {
         blockForStateDef = null;
         return autoGenBlock;
     }
-    
-    
+
+
     /**
      * Call this from the auto-generated block's {@link Block#createBlockStateDefinition(StateDefinition.Builder)}
      * override to copy all state properties from its origin block.
