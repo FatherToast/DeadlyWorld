@@ -3,10 +3,7 @@ package fathertoast.deadlyworld.common.core.registry;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.world.levelgen.dungeon.MiniDungeonFeature;
 import fathertoast.deadlyworld.common.world.levelgen.dungeon.NormalDungeonFeature;
-import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedBlocksFeature;
-import fathertoast.deadlyworld.common.world.levelgen.misc.DeadlyOreFeature;
-import fathertoast.deadlyworld.common.world.levelgen.misc.InfestedOreFeature;
-import fathertoast.deadlyworld.common.world.levelgen.misc.LoneChestFeature;
+import fathertoast.deadlyworld.common.world.levelgen.misc.*;
 import fathertoast.deadlyworld.common.world.levelgen.trap.*;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.registries.DeferredRegister;
@@ -28,7 +25,8 @@ public final class DWFeatures {
     public static RegistryObject<TowerFeature> TOWER = register( "tower", TowerFeature::new );
     public static RegistryObject<SeaMineFeature> SEA_MINE = register( "sea_mine", SeaMineFeature::new );
     public static RegistryObject<PitfallTrapFeature> PITFALL_TRAP = register( "pitfall_trap", PitfallTrapFeature::new );
-    
+    public static RegistryObject<SpikeTrapPatchFeature> SINGLE_BLOCK = register( "single_block", SpikeTrapPatchFeature::new );
+
     // Dungeon features
     public static RegistryObject<NormalDungeonFeature> NORMAL_DUNGEON = register( "simple_dungeon", NormalDungeonFeature::new );
     public static RegistryObject<MiniDungeonFeature> MINI_DUNGEON = register( "mini_dungeon", MiniDungeonFeature::new );

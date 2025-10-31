@@ -4,12 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineBlock;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
+import fathertoast.deadlyworld.common.config.dimension.SpikeTrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
@@ -198,9 +200,29 @@ public abstract class DWAbstractCFProvider {
     protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
                                              FloorTrapType type, DimensionConfigGroup dimConfigs ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.FLOOR_TRAP.get(),
-                new FloorTrapFeature.Configuration( block( DWBlocks.floorTrap( type ) ),
+                new FloorTrapFeature.Configuration(
+                        block( DWBlocks.floorTrap( type ) ),
                         FloorTrapSettings.of( type.getConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+    }
+
+    /** Registers a configured spike trap type feature to each supported dimension. */
+    protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
+                                              DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        registerSpikePatch( context, featureKeys.overworldKeys, featureKeys.trapType, overworldConfigs );
+        registerSpikePatch( context, featureKeys.netherKeys, featureKeys.trapType, netherConfigs );
+    }
+
+    /** Registers a configured spike trap type feature. */
+    protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                              SpikeTrapType type, DimensionConfigGroup dimConfigs ) {
+        SpikeTrapConfig.SpikeTrapTypeCategory config = type.getConfig( dimConfigs );
+
+        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SINGLE_BLOCK.get(),
+                new SpikeTrapPatchFeature.Configuration(
+                        block( DWBlocks.spikeTrap( type ) ),
+                        SpikePatchSettings.of( config ),
+                        BlockTags.REPLACEABLE ) ) );
     }
 
     /** Registers a configured pitfall trap type feature to each supported dimension. */
@@ -263,19 +285,6 @@ public abstract class DWAbstractCFProvider {
                         .setValue( SeaMineBlock.WATERLOGGED, true ) ), trailProvider,
                         SeaMineSettings.of( type.getConfig( dimConfigs ) ) ) ) );
     }
-    
-    /** Registers a configured spike trap type feature. */
-    // TODO
-    /*
-    protected static void registerSpikeTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
-                                            SpikeTrapType type, BlockStateProvider trailProvider, DimensionConfigGroup dimConfigs ) {
-        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SEA_MINE.get(),
-                new SeaMineFeature.Configuration( block( DWBlocks.spikeTrap( type ).get().defaultBlockState()
-                        .setValue( SeaMineBlock.WATERLOGGED, true ) ), trailProvider,
-                        SeaMineSettings.of( type.getConfig( dimConfigs ) ) ) ) );
-    }
-
-     */
     
     /** Registers a configured feature. */
     protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys, ConfiguredFeature<?, ?> configuredFeature ) {

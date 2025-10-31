@@ -2,6 +2,7 @@ package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
@@ -174,12 +175,13 @@ public class FeatureKeys {
     
     public static class SpikeTrap extends TypicalFeature {
         
-        public static SpikeTrap of( FloorTrapType type, String name ) { return new SpikeTrap( type, overworld( name ), nether( name ) ); }
+        public static SpikeTrap of( SpikeTrapType type, String name ) { return new SpikeTrap( type, overworld( name ), nether( name ) ); }
+
+        public final SpikeTrapType trapType;
         
-        public final FloorTrapType trapType;
-        
-        protected SpikeTrap( FloorTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
+        protected SpikeTrap( SpikeTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
+
             trapType = type;
             
             DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( overworld.configuredKey );

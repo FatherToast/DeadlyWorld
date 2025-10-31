@@ -23,12 +23,16 @@ import fathertoast.deadlyworld.common.world.levelgen.trap.LoneHangingSpawnerFeat
 import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 /**
  * For vanilla ore configured features, see {@link net.minecraft.data.worldgen.features.OreFeatures}.
@@ -65,6 +69,9 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
 
+    public static final FeatureKeys.SpikeTrap STATIC_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.STATIC, "static_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL, "mechanical_spikes" );
+
     public static final FeatureKeys.PitfallTrap SPIKES_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.SPIKES, "spikes_pitfall_trap" );
     public static final FeatureKeys.PitfallTrap LAVA_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.LAVA, "lava_pitfall_trap" );
     public static final FeatureKeys.PitfallTrap COBWEB_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.COBWEB, "cobweb_pitfall_trap" );
@@ -85,6 +92,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     
     /** Called by registry set builder to generate our configured features. */
     public static void bootstrap( BootstapContext<ConfiguredFeature<?, ?>> context ) {
+        HolderGetter<PlacedFeature> placedGetter = context.lookup( Registries.PLACED_FEATURE );
         final DimensionConfigGroup overworldConfigs = Config.getDimensionConfigs( Level.OVERWORLD );
         final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         
@@ -169,6 +177,10 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         register( context, POTION_TRAP.netherKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
                 block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( netherConfigs.FLOOR_TRAPS.POTION ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+
+        // Spike traps
+        registerSpikePatch( context, STATIC_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_SPIKES, overworldConfigs, netherConfigs );
 
         // Pitfall traps
         registerPitfallTrap( context, SPIKES_PITFALL_TRAP,
