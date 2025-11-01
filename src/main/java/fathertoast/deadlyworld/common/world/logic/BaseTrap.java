@@ -3,26 +3,29 @@ package fathertoast.deadlyworld.common.world.logic;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.api.DWRegistries;
 import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.common.block.ICamoTrap;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
 import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
-import fathertoast.deadlyworld.common.util.MimicHelper;
 import fathertoast.deadlyworld.common.util.TrapHelper;
-import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
+import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.tags.ITag;
@@ -46,12 +49,13 @@ public abstract class BaseTrap {
     }
     
     // Settings tags
+    public static final String TAG_CAMO = "Camo";
+    public static final String TAG_DECOY_TYPE = "DecoyType";
     public static final String TAG_ACTIVATION_RANGE = "RequiredPlayerRange";
     public static final String TAG_CHECK_SIGHT = "CheckSight";
     public static final String TAG_MIN_RESET_TIME = "MinResetTime";
     public static final String TAG_MAX_RESET_TIME = "MaxResetTime";
     public static final String TAG_MAX_TRIGGER_DELAY = "MaxTriggerDelay";
-    public static final String TAG_DECOY_TYPE = "DecoyType";
     // Logic tags
     public static final String TAG_TRIGGERS_REMAINING = "TriggersRemaining";
     public static final String TAG_DELAY = "Delay";
@@ -64,19 +68,22 @@ public abstract class BaseTrap {
     private final ITrapObject trapObject;
     
     // Settings
-    /** True if line of sight is required to trip this trap. */
-    protected boolean checkSight;
+    /** The camo block state for this trap. Can be null. */
+    @Nullable
+    private BlockState camoState;
+    /** The decoy type for this trap. Can be null. */
+    @Nullable
+    protected DecoyType decoyType;
     /** The maximum distance at which players trip this trap. */
     protected double activationRange;
+    /** True if line of sight is required to trip this trap. */
+    protected boolean checkSight;
     /** The minimum ticks this trap takes to reset (become able to trip again after triggering). */
     protected int minResetTime;
     /** The maximum ticks this trap takes to reset (become able to trip again after triggering). */
     protected int maxResetTime;
     /** The maximum ticks this trap takes to trigger after tripping. */
     protected int maxTriggerDelay;
-    /** The decoy type for this trap. Can be null */
-    @Nullable
-    protected DecoyType decoyType;
     
     // Logic
     protected final FloorTrapType trapType;
@@ -96,15 +103,15 @@ public abstract class BaseTrap {
     protected int tripCheckDelay;
     
     @SuppressWarnings( "unused" ) // For possible future use
-    public <T extends Entity & ITrapObject> BaseTrap(FloorTrapType trapType, T entity ) { this( trapType, entity, entity ); }
+    public <T extends Entity & ITrapObject> BaseTrap( FloorTrapType trapType, T entity ) { this( trapType, entity, entity ); }
     
-    public BaseTrap(FloorTrapType trapType, Entity entity, ITrapObject trapObj ) { this( trapType, entity, null, trapObj ); }
+    public BaseTrap( FloorTrapType trapType, Entity entity, ITrapObject trapObj ) { this( trapType, entity, null, trapObj ); }
     
-    public <T extends BlockEntity & ITrapObject> BaseTrap(FloorTrapType trapType, T block ) { this( trapType, block, block ); }
+    public <T extends BlockEntity & ITrapObject> BaseTrap( FloorTrapType trapType, T block ) { this( trapType, block, block ); }
     
-    public BaseTrap(FloorTrapType trapType, BlockEntity block, ITrapObject trapObj ) { this( trapType, null, block, trapObj ); }
+    public BaseTrap( FloorTrapType trapType, BlockEntity block, ITrapObject trapObj ) { this( trapType, null, block, trapObj ); }
     
-    protected BaseTrap(FloorTrapType trapType, @Nullable Entity entity, @Nullable BlockEntity block, ITrapObject trapObj ) {
+    protected BaseTrap( FloorTrapType trapType, @Nullable Entity entity, @Nullable BlockEntity block, ITrapObject trapObj ) {
         this.trapType = trapType;
         mobileEntity = entity;
         blockEntity = block;
@@ -125,7 +132,8 @@ public abstract class BaseTrap {
         final FloorTrapConfig.TrapTypeCategory trapConfig = trapType.getConfig( level.getLevel() );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, trapConfig );
         
-        initializeTrap( level.getLevel(), pos, random,
+        initializeTrap( level, level.getLevel().dimension(), pos, random,
+                trapSettings.camoChance().sample( random ) > random.nextFloat(),
                 trapSettings.decoyChance().sample( random ) > random.nextFloat(),
                 trapSettings.requiredPlayerRange().sample( random ),
                 trapSettings.checkSightChance().sample( random ) > random.nextFloat(),
@@ -134,16 +142,16 @@ public abstract class BaseTrap {
                 trapSettings.resetTime().getMaxValue()
         );
     }
-
+    
     public void initializeTrap( Level level, BlockPos pos, RandomSource random ) {
         final FloorTrapConfig.TrapTypeCategory trapConfig = trapType.getConfig( level );
-        initializeTrap( level, pos, random, trapConfig.decoyChance.rollChance( random ),
+        initializeTrap( level, level.dimension(), pos, random, trapConfig.camoChance.rollChance( random ), trapConfig.decoyChance.rollChance( random ),
                 trapConfig.activationRange.get(), trapConfig.checkSightChance.rollChance( random ),
                 trapConfig.triggersRemaining.get(), trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax()
         );
     }
     
-    public void initializeTrap( Level level, BlockPos pos, RandomSource random, boolean spawnDecoy,
+    public void initializeTrap( LevelReader level, ResourceKey<Level> dimension, BlockPos pos, RandomSource random, boolean useCamo, boolean spawnDecoy,
                                 double activationRange, boolean checkSight, int triggersRemaining, int minResetTime, int maxResetTime ) {
         this.checkSight = checkSight;
         this.activationRange = activationRange;
@@ -151,11 +159,23 @@ public abstract class BaseTrap {
         this.maxResetTime = maxResetTime;
         this.triggersRemaining = triggersRemaining;
         
+        if( useCamo ) {
+            // Try to pick a block to hide as
+            for( Direction direction : Direction.allShuffled( random ) ) {
+                BlockPos neighborPos = pos.relative( direction );
+                BlockState neighborState = level.getBlockState( neighborPos );
+                
+                if( neighborState.getBlock() instanceof ICamoTrap ) continue;
+                
+                if( neighborState.isSolidRender( level, neighborPos ) ) {
+                    this.camoState = neighborState;
+                    break;
+                }
+            }
+        }
         if( spawnDecoy ) {
             // Pick a decoy suitable for the dimension we are in if level is not null
-            ResourceKey<Level> dimension = level.dimension();
             ITag<DecoyType> tag;
-                
             if( dimension.equals( Level.OVERWORLD ) ) {
                 tag = DWRegistries.DECOY_TYPE_REGISTRY.get().tags().getTag( DWTags.DecoyTypes.OVERWORLD );
             }
@@ -261,36 +281,43 @@ public abstract class BaseTrap {
     
     /** Triggers this trap. */
     public abstract void triggerTrap( ServerLevel level, BlockPos pos );
-
+    
     public void popDecoy( ServerLevel level, BlockPos pos ) {
-        if ( decoyType != null ) {
+        if( decoyType != null ) {
             decoyType = null;
             BlockState state = getBlockEntity().getBlockState();
             level.sendBlockUpdated( pos, state, state, Block.UPDATE_CLIENTS );
-
+            
             // Poof cloud, if unobstructed above
             BlockPos abovePos = pos.above();
-
-            if ( !level.getBlockState( abovePos ).isSolidRender( level, abovePos ) ) {
+            
+            if( !level.getBlockState( abovePos ).isSolidRender( level, abovePos ) ) {
                 TrapHelper.spawnPoofCloud( level, abovePos );
             }
         }
     }
     
     public void load( @Nullable Level level, BlockPos pos, CompoundTag loadTag ) {
+        if( NBTHelper.containsCompound( loadTag, TAG_CAMO ) ) {
+            camoState = TrapHelper.readBlockState( loadTag.getCompound( TAG_CAMO ) );
+            
+            // NbtUtils#readBlockState returns air default state if something goes wrong.
+            if( camoState == Blocks.AIR.defaultBlockState() ) camoState = null;
+        }
         if( NBTHelper.containsString( loadTag, TAG_DECOY_TYPE ) ) {
             String value = loadTag.getString( TAG_DECOY_TYPE );
-
-            if ( value.equals( "null" ) ) {
+            
+            if( value.equals( "null" ) ) {
                 decoyType = null;
             }
             else {
                 ResourceLocation typeId = ResourceLocation.tryParse( value );
-
-                if (typeId != null)
-                    decoyType = DWRegistries.DECOY_TYPE_REGISTRY.get().getValue(typeId);
+                
+                if( typeId != null )
+                    decoyType = DWRegistries.DECOY_TYPE_REGISTRY.get().getValue( typeId );
             }
         }
+        
         if( NBTHelper.containsNumber( loadTag, TAG_ACTIVATION_RANGE ) )
             activationRange = loadTag.getFloat( TAG_ACTIVATION_RANGE );
         if( NBTHelper.containsNumber( loadTag, TAG_CHECK_SIGHT ) )
@@ -312,6 +339,9 @@ public abstract class BaseTrap {
     }
     
     public CompoundTag save( CompoundTag saveTag ) {
+        if( camoState != null ) {
+            saveTag.put( TAG_CAMO, NbtUtils.writeBlockState( camoState ) );
+        }
         if( decoyType != null ) {
             ResourceLocation typeId = DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType );
             if( typeId != null )
@@ -332,10 +362,11 @@ public abstract class BaseTrap {
     }
     
     public void writeToUpdateTag( CompoundTag updateTag ) {
-        String typeId = decoyType == null
-                ? "null"
-                : DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType ).toString();
-
+        if( camoState != null ) {
+            updateTag.put( TAG_CAMO, NbtUtils.writeBlockState( camoState ) );
+        }
+        String typeId = decoyType == null ? "null" :
+                DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType ).toString();
         updateTag.putString( TAG_DECOY_TYPE, typeId );
     }
     
@@ -354,7 +385,8 @@ public abstract class BaseTrap {
     public BlockEntity getBlockEntity() { return blockEntity; }
     
     @Nullable
-    public DecoyType getDecoyType() {
-        return decoyType;
-    }
+    public BlockState getCamoState() { return camoState; }
+    
+    @Nullable
+    public DecoyType getDecoyType() { return decoyType; }
 }

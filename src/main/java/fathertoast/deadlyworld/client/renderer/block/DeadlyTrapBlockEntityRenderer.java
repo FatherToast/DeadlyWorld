@@ -29,75 +29,73 @@ import net.minecraftforge.client.model.data.ModelData;
 import javax.annotation.Nullable;
 
 public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<DeadlyTrapBlockEntity> {
-
-    private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.rl("textures/misc/floor_trap_overlay.png" );
-
+    
+    private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.rl( "textures/misc/floor_trap_overlay.png" );
+    
     private final ModelPart topOverlay;
-
-
+    
+    
     public DeadlyTrapBlockEntityRenderer( BlockEntityRendererProvider.Context renderContext ) {
         ModelPart root = renderContext.bakeLayer( DWModelLayers.DEADLY_TRAP_OVERLAY );
         topOverlay = root.getChild( "overlay" );
     }
-
+    
     public static LayerDefinition createOverlayLayer() {
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
-
-        partDefinition.addOrReplaceChild("overlay",
+        
+        partDefinition.addOrReplaceChild( "overlay",
                 CubeListBuilder.create()
                         .texOffs( -16, 0 )
-                        .addBox(-8.0F, -16.0F, -8.0F, 16.0F, 0.0F, 16.0F),
+                        .addBox( -8.0F, -16.0F, -8.0F, 16.0F, 0.0F, 16.0F ),
                 PartPose.offset( 0.0F, 32.0F, 0.0F )
         );
-
+        
         return LayerDefinition.create( meshDefinition, 16, 16 );
     }
-
+    
     @Override
     public void render( DeadlyTrapBlockEntity deadlyTrap, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlayTexture ) {
         BlockState camoState = deadlyTrap.getCamoState();
-
-        if ( camoState == null ) return;
-
+        
         BlockPos pos = deadlyTrap.getBlockPos();
         Level level = deadlyTrap.getLevel();
-
-        poseStack.pushPose( );
-
+        
+        poseStack.pushPose();
+        
         Minecraft.getInstance().getBlockRenderer().renderBatched( camoState, pos, level, poseStack, buffer.getBuffer( RenderType.cutout() ),
                 false, level.random, ModelData.EMPTY, RenderType.cutout() );
-
+        
         renderTop( poseStack, level, pos, buffer, overlayTexture );
-
+        
         // Render decoy if trap has a decoy type
         DecoyType decoyType = deadlyTrap.getDecoyType();
-
-        if ( decoyType != null && deadlyTrap.isDecoyActive() ) {
+        
+        if( decoyType != null && deadlyTrap.isDecoyActive() ) {
             try {
                 IDecoyRenderer decoyRenderer = DecoyRendererRegistry.getRendererForType( deadlyTrap.getDecoyType() );
-
-                if ( decoyRenderer == null ) {
+                
+                if( decoyRenderer == null ) {
                     throw new NullPointerException( "Decoy type with ID \" " + DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType )
                             + " \"is missing decoy renderer!" );
                 }
                 decoyRenderer.render( deadlyTrap, poseStack, buffer, partialTick, packedLight );
             }
-            catch ( Exception e ) {
+            catch( Exception e ) {
                 e.printStackTrace( System.err );
             }
         }
-        poseStack.popPose( );
+        poseStack.popPose();
     }
-
+    
     private void renderTop( PoseStack poseStack, @Nullable Level level, BlockPos origin, MultiBufferSource buffer, int overlayTexture ) {
         poseStack.pushPose();
         // Move the overlay model a tiiiny bit up to avoid Z-fighting at close ranges (hardly noticeable at longer ranges)
         poseStack.translate( 0.5D, 0.001D, 0.5D );
         int packedLight;
-
+        
         // Use light color of above position since the block we are at is solid
-        if ( level != null ) {
+        if( level != null ) {
             packedLight = LevelRenderer.getLightColor( level, origin.above() );
         }
         else {

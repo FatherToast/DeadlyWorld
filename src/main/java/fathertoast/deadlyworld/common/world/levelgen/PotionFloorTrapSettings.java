@@ -15,27 +15,31 @@ import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.WorldGenLevel;
 
 public record PotionFloorTrapSettings(
-        FloatProvider requiredPlayerRange, FloatProvider checkSightChance,
-        IntProvider resetTime, IntProvider triggersRemaining, FloatProvider decoyChance, FloatProvider dynamicChance
+        FloatProvider camoChance, FloatProvider decoyChance, FloatProvider requiredPlayerRange,
+        FloatProvider checkSightChance, IntProvider triggersRemaining, IntProvider resetTime,
+        FloatProvider dynamicChance
 ) {
     public static final Codec<PotionFloorTrapSettings> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
+            FloatProvider.CODEC.fieldOf( "camo_chance" ).forGetter( PotionFloorTrapSettings::camoChance ),
+            FloatProvider.CODEC.fieldOf( "decoy_chance" ).forGetter( PotionFloorTrapSettings::decoyChance ),
             FloatProvider.CODEC.fieldOf( "required_player_range" ).forGetter( PotionFloorTrapSettings::requiredPlayerRange ),
             FloatProvider.CODEC.fieldOf( "activation_sight_check" ).forGetter( PotionFloorTrapSettings::checkSightChance ),
-            IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( PotionFloorTrapSettings::resetTime ),
             IntProvider.CODEC.fieldOf( "triggers_remaining" ).forGetter( PotionFloorTrapSettings::triggersRemaining ),
-            FloatProvider.CODEC.fieldOf( "decoy_chance" ).forGetter( PotionFloorTrapSettings::decoyChance ),
+            IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( PotionFloorTrapSettings::resetTime ),
             FloatProvider.CODEC.fieldOf( "dynamic_chance" ).forGetter( PotionFloorTrapSettings::dynamicChance )
     ).apply( instance, PotionFloorTrapSettings::new ) );
     
     public static PotionFloorTrapSettings create( FloorTrapConfig.PotionTrapTypeCategory config ) {
         return new PotionFloorTrapSettings(
+                ConfigConstantFloatProvider.of( config.camoChance ),
+                ConfigConstantFloatProvider.of( config.decoyChance ),
+                
                 ConfigConstantFloatProvider.of( config.activationRange ),
                 ConfigConstantFloatProvider.of( config.checkSightChance ),
                 
-                ConfigUniformIntProvider.of( config.resetTime ),
                 ConfigConstantIntProvider.of( config.triggersRemaining ),
+                ConfigUniformIntProvider.of( config.resetTime ),
                 
-                ConfigConstantFloatProvider.of( config.decoyChance ),
                 ConfigConstantFloatProvider.of( config.dynamicChance )
         );
     }
