@@ -22,7 +22,7 @@ public class DungeonConfig extends FeatureConfig {
         super( manager, dir, dimConfigs, "dungeon" );
         
         NORMAL = new ModularDungeonCategory( this, "normal", 10, DEPTH_LAVA, DEPTH_SKY );
-        MINI = new DungeonCategory( this, "mini", 2, DEPTH_LAVA, DEPTH_0 );
+        MINI = new DungeonCategory( this, "mini", 1, DEPTH_LAVA, DEPTH_0 );
     }
     
     

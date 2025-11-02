@@ -19,20 +19,22 @@ public class WaterTrapConfig extends FeatureConfig {
     public final SeaMineCategory GUARDIAN_SEA_MINE;
     public final SeaMineMobTrapTypeCategory SEA_MINE_MOB;
     
-    
     WaterTrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "water trap" );
         
         flagAsWaterFeature();
         
-        NORMAL_SEA_MINE = new SeaMineCategory( this, SeaMineType.NORMAL, 0.4, DEPTH_5, DEPTH_SEA_LEVEL,
-                0.3, 2, 8 );
-        PUFFER_SEA_MINE = new SeaMineCategory( this, SeaMineType.PUFFER, 0.2, DEPTH_5, DEPTH_SEA_LEVEL,
-                0.1, 2, 8 );
-        GUARDIAN_SEA_MINE = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.2, DEPTH_5, DEPTH_SEA_LEVEL,
-                0.1, 2, 8 );
-        SEA_MINE_MOB = new SeaMineMobTrapTypeCategory( this, "sea_mine_mob", 0.3, DEPTH_2, DEPTH_SEA_LEVEL,
-                0.2, 0.05, 6.0, true, 1 );
+        NORMAL_SEA_MINE = new SeaMineCategory( this, SeaMineType.NORMAL, 0.6, 0.3,
+                DEPTH_LAVA, DEPTH_SEA_LEVEL, 2, 8 );
+        
+        PUFFER_SEA_MINE = new SeaMineCategory( this, SeaMineType.PUFFER, 0.3, 0.1,
+                DEPTH_LAVA, DEPTH_SEA_LEVEL, 2, 10 );
+        
+        GUARDIAN_SEA_MINE = new SeaMineCategory( this, SeaMineType.GUARDIAN, 0.2, 0.1,
+                DEPTH_LAVA, DEPTH_SEA_LEVEL, 2, 6 );
+        
+        SEA_MINE_MOB = new SeaMineMobTrapTypeCategory( this, "sea_mine_mob", 0.3, 0.2,
+                DEPTH_LAVA, DEPTH_SEA_LEVEL, 0.05, 6.0, true, 1, 20, 60 );
     }
     
     public static class SeaMineCategory extends FeatureTypeCategory {
@@ -41,16 +43,16 @@ public class WaterTrapConfig extends FeatureConfig {
         
         public final IntField.RandomRange distanceFromBottom;
         
-        SeaMineCategory( FeatureConfig parent, SeaMineType type, double placements, int minHeight, int maxHeight,
-                         double oceanPlacements, int minDistFromBottom, int maxDistFromBottom ) {
+        SeaMineCategory( FeatureConfig parent, SeaMineType type, double placements, double oceanPlacements,
+                         int minHeight, int maxHeight, int minDistFromBottom, int maxDistFromBottom ) {
             super( parent, type + "_sea_mine", placements, minHeight, maxHeight );
             
             SPEC.newLine();
             
             countPerChunkInOcean = SPEC.define( new DoubleField( "placements_ocean",
                     parent.DISABLED ? 0.0 : oceanPlacements, DoubleField.Range.NON_NEGATIVE,
-                    "The number of placement attempts in the ocean per chunk (16x16 blocks) for " + FEATURE_TYPE_NAME + ". " +
-                            "A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt).",
+                    "The number of placement attempts in surface water per chunk (16x16 blocks) for " + FEATURE_TYPE_NAME +
+                            ". A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt).",
                     DimensionConfigHelper.MESSAGE_PLACED_FEATURE_OVERRIDE ) );
             
             SPEC.newLine();
@@ -70,16 +72,17 @@ public class WaterTrapConfig extends FeatureConfig {
         public final DoubleField speedMultiplier;
         public final DoubleField healthMultiplier;
         
-        SeaMineMobTrapTypeCategory( FeatureConfig parent, String name, double placements, int minHeight, int maxHeight,
-                                    double oceanPlacements, double decoyCh, double activationRng, boolean checkSight, int triggers ) {
-            super( parent, name, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minHeight, maxHeight );
+        SeaMineMobTrapTypeCategory( FeatureConfig parent, String name, double placements, double oceanPlacements,
+                                    int minHeight, int maxHeight, double decoyCh, double activationRng, boolean checkSight,
+                                    int triggers, int minResetTime, int maxResetTime ) {
+            super( parent, name, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minResetTime, maxResetTime );
             
             SPEC.newLine();
             
             countPerChunkInOcean = SPEC.define( new DoubleField( "placements_ocean",
                     parent.DISABLED ? 0.0 : oceanPlacements, DoubleField.Range.NON_NEGATIVE,
-                    "The number of placement attempts in the ocean per chunk (16x16 blocks) for " + FEATURE_TYPE_NAME + ". " +
-                            "A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt).",
+                    "The number of placement attempts in surface water per chunk (16x16 blocks) for " + FEATURE_TYPE_NAME +
+                            ". A decimal represents a chance for a placement attempt (e.g., 0.3 means 30% chance for one attempt).",
                     DimensionConfigHelper.MESSAGE_PLACED_FEATURE_OVERRIDE ) );
             
             SPEC.newLine();

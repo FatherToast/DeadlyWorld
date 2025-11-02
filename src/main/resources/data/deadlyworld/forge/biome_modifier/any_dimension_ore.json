@@ -1,5 +1,0 @@
-{
-  "type": "deadlyworld:global_add_features",
-  "features": "#deadlyworld:any_dimension_ore",
-  "step": "underground_ores"
-}

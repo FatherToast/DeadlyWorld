@@ -12,6 +12,8 @@ import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nullable;
+
 import static fathertoast.deadlyworld.common.util.References.DEPTH_NETHER_CEIL;
 import static fathertoast.deadlyworld.common.util.References.DEPTH_NETHER_LAVA;
 
@@ -78,10 +80,13 @@ public abstract class FeatureConfig extends AbstractConfigFile {
         /** The name of this feature type (e.g. "simple spawners"). */
         final String FEATURE_TYPE_NAME;
         
+        @Nullable
         public final BooleanField debugMarker;
         
+        @Nullable
         public final DoubleField countPerChunk;
         
+        @Nullable
         public final IntField.RandomRange heights;
         
         /**
@@ -105,9 +110,11 @@ public abstract class FeatureConfig extends AbstractConfigFile {
                 boolean isNether = isNetherDimension();
                 
                 debugMarker = SPEC.define( new BooleanField( "testing_markers", false,
-                        "When set to true, places a 1x1 column of glass to the height limit from a few blocks above each " +
-                                "generated " + FEATURE_TYPE_NAME + ". This is game-breaking and laggy. Also prints a message to the console.",
-                        "Consider using a tool to strip away all stone/dirt/etc. or xray after world gen for more intensive testing.",
+                        "When set to true, places a 1x1 column of glass to the height limit from a few " +
+                                "blocks above each generated " + FEATURE_TYPE_NAME + ". This is game-breaking and " +
+                                "laggy. Also prints a message to the console.",
+                        "Consider using a tool to strip away all stone/dirt/etc. or xray via spectator mode after " +
+                                "world gen for more intensive testing.",
                         DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
                 
                 SPEC.newLine();

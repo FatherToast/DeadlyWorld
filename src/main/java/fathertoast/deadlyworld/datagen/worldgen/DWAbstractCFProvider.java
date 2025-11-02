@@ -53,11 +53,6 @@ public abstract class DWAbstractCFProvider {
     /** List of all configurations that cannot be (reasonably) placed by a feature placer. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> NOT_PLACEABLE = new ArrayList<>();
     
-    /**
-     * List of all ore configurations that don't care about dimension type and should generate anywhere.
-     * Any restrictions are handled in the feature itself, usually config based.
-     */
-    public static final List<ResourceKey<ConfiguredFeature<?, ?>>> ANY_DIMENSION_ORE_FEATURES = new ArrayList<>();
     /** List of all ore configurations that should generate in overworld biomes. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> OVERWORLD_ORE_FEATURES = new ArrayList<>();
     /** List of all ore configurations that should generate in nether biomes. */
@@ -122,6 +117,7 @@ public abstract class DWAbstractCFProvider {
     }
     
     /** Convenience method for making a simple weighted random state provider. */
+    @SafeVarargs
     protected static BlockStateProvider weightedBlocks( Pair<BlockState, Integer>... stateWeightPairs ) {
         SimpleWeightedRandomList.Builder<BlockState> builder = new SimpleWeightedRandomList.Builder<>();
         
@@ -298,20 +294,6 @@ public abstract class DWAbstractCFProvider {
     
     
     /** Creates a configured ore feature key. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimOreKey( String name ) {
-        ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension_ore" );
-        ANY_DIMENSION_ORE_FEATURES.add( key );
-        return key;
-    }
-    
-    /** Creates a configured key for an "any dimension" post-decor feature. */
-    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimPostDecor( String name ) {
-        ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension_post_decoration" );
-        ANY_DIMENSION_POST_DECORATION.add( key );
-        return key;
-    }
-    
-    /** Creates a configured ore feature key. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> overworldOreKey( String name ) {
         final ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_ore" );
         OVERWORLD_ORE_FEATURES.add( key );
@@ -336,6 +318,13 @@ public abstract class DWAbstractCFProvider {
     protected static ResourceKey<ConfiguredFeature<?, ?>> netherKey( String name ) {
         final ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_nether" );
         NETHER_FEATURES.add( key );
+        return key;
+    }
+    
+    /** Creates a configured post-decoration feature key. */
+    protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimPostDecor( String name ) {
+        ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension_post_decoration" );
+        ANY_DIMENSION_POST_DECORATION.add( key );
         return key;
     }
     

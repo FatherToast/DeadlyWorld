@@ -9,7 +9,7 @@ import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
+import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
@@ -38,8 +38,6 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
  */
 public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     // Ore features
-    public static final FeatureKeys BURIED_BLOCK_POST_DECOR = FeatureKeys.anyDimPostDecoration( "buried_block" ).notPlaceable();
-    
     public static final FeatureKeys.Vein BASE_INFESTED_BLOCK_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.INFESTED_VANILLA, "base_infested_block" );
     public static final FeatureKeys.Vein ADDED_INFESTED_BLOCK_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.INFESTED_ADDED, "added_infested_block" );
     public static final FeatureKeys.Vein WATER_ORE = FeatureKeys.Vein.of( ( dimConfigs ) -> dimConfigs.VEINS.WATER, "water" );
@@ -88,6 +86,9 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.SimpleDungeon NORMAL_DUNGEON = FeatureKeys.SimpleDungeon.of( "simple_dungeon" );
     public static final FeatureKeys.SimpleDungeon MINI_DUNGEON = FeatureKeys.SimpleDungeon.of( "mini_dungeon" );
     
+    // Post-decoration features
+    public static final FeatureKeys BURIED_BLOCK_POST_DECOR = FeatureKeys.anyDimPostDecoration( "buried_block" ).notPlaceable();
+    
     
     /** Called by registry set builder to generate our configured features. */
     public static void bootstrap( BootstapContext<ConfiguredFeature<?, ?>> context ) {
@@ -95,10 +96,6 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         
         // Ore features
-        register( context, BURIED_BLOCK_POST_DECOR,
-                new ConfiguredFeature<>( DWFeatures.BURIED_BLOCK.get(),
-                        new BuriedBlocksFeature.Configuration( BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-        
         registerInfestedVein( context, BASE_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
         registerInfestedVein( context, ADDED_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
         registerVein( context, WATER_ORE, overworldConfigs, Blocks.WATER, netherConfigs, Blocks.WATER );
@@ -139,7 +136,6 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 block( Blocks.INFESTED_COBBLESTONE ),
                 SpawnerSettings.of( SILVERFISH_NEST.spawnerType, overworldConfigs ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-        
         register( context, SILVERFISH_NEST.netherKeys, new ConfiguredFeature<>( DWFeatures.SILVERFISH_NEST.get(), new SilverfishNestFeature.Configuration(
                 block( DWBlocks.spawner( SILVERFISH_NEST.spawnerType ) ),
                 block( Blocks.INFESTED_DEEPSLATE ),
@@ -149,13 +145,12 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         register( context, FLOATY_SPAWNER.overworldKeys, new ConfiguredFeature<>( DWFeatures.LONE_HANGING_SPAWNER.get(), new LoneHangingSpawnerFeature.Configuration(
                 block( DWBlocks.spawner( FLOATY_SPAWNER.spawnerType ) ),
                 block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y ) ),
-                ConfigConstantIntProvider.of( overworldConfigs.SPAWNERS.FLOATY.distFromFloor ),
+                ConfigUniformIntProvider.of( overworldConfigs.SPAWNERS.FLOATY.distFromFloor ),
                 SpawnerSettings.of( FLOATY_SPAWNER.spawnerType, overworldConfigs ), BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-        
         register( context, FLOATY_SPAWNER.netherKeys, new ConfiguredFeature<>( DWFeatures.LONE_HANGING_SPAWNER.get(), new LoneHangingSpawnerFeature.Configuration(
                 block( DWBlocks.spawner( FLOATY_SPAWNER.spawnerType ) ),
                 block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y ) ),
-                ConfigConstantIntProvider.of( netherConfigs.SPAWNERS.FLOATY.distFromFloor ),
+                ConfigUniformIntProvider.of( netherConfigs.SPAWNERS.FLOATY.distFromFloor ),
                 SpawnerSettings.of( FLOATY_SPAWNER.spawnerType, netherConfigs ), BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         
         // Floor traps
@@ -212,7 +207,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 netherConfigs, block( Blocks.POLISHED_BLACKSTONE_BRICKS ) );
         registerTower( context, FIREBALL_TOWER,
                 overworldConfigs, block( Blocks.DEEPSLATE_TILES ),
-                netherConfigs, block( Blocks.QUARTZ_PILLAR ) );
+                netherConfigs, block( Blocks.CHISELED_QUARTZ_BLOCK ) );
         
         // Sea mines
         registerSeaMine( context, NORMAL_SEA_MINE, overworldConfigs );
@@ -232,5 +227,10 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         register( context, MINI_DUNGEON.netherKeys, new ConfiguredFeature<>( DWFeatures.MINI_DUNGEON.get(), MiniDungeonFeature.Configuration.of(
                 netherConfigs, Blocks.NETHER_BRICKS, Blocks.CRACKED_NETHER_BRICKS,
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
+        
+        // Post-decoration features
+        register( context, BURIED_BLOCK_POST_DECOR,
+                new ConfiguredFeature<>( DWFeatures.BURIED_BLOCK.get(),
+                        new BuriedBlocksFeature.Configuration( BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
 }

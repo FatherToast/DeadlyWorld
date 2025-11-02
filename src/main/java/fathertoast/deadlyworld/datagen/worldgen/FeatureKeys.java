@@ -20,11 +20,6 @@ public class FeatureKeys {
     
     // Ore features
     
-    public static FeatureKeys anyDimOre( String name ) {
-        return new FeatureKeys( DWConfiguredFeatureProvider.anyDimOreKey( name ),
-                DWPlacedFeatureProvider.anyDimOreKey( name ) ).notPlaceable();
-    }
-    
     public static FeatureKeys overworldOre( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.overworldOreKey( name ),
                 DWPlacedFeatureProvider.overworldOreKey( name ) ).notPlaceable();
@@ -52,7 +47,7 @@ public class FeatureKeys {
                 DWPlacedFeatureProvider.netherKey( name ) );
     }
     
-    // Post decoration features
+    // Post-decoration features
     
     public static FeatureKeys anyDimPostDecoration( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.anyDimPostDecor( name ),

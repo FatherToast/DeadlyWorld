@@ -31,10 +31,10 @@ public class TowerConfig extends FeatureConfig {
         //SPEC.newLine();
         //SPEC.describePotionList();
         
-        SIMPLE = new TowerTypeCategory( this, TowerType.SIMPLE, 0.5, DEPTH_LAVA, DEPTH_0,
+        SIMPLE = new TowerTypeCategory( this, TowerType.SIMPLE, 0.3, DEPTH_LAVA, DEPTH_0,
                 11.0, true, 20, 40, 3.0, 1.2, 0.08 );
         
-        FIRE = new TowerTypeCategory( this, TowerType.FIRE, 0.2, DEPTH_LAVA, DEPTH_0,
+        FIRE = new TowerTypeCategory( this, TowerType.FIRE, 0.1, DEPTH_LAVA, DEPTH_0,
                 9.0, true, 20, 40, 1.0, 1.0, 0.1 );
         
         POTION = new PotionTowerTypeCategory( this, TowerType.POTION, 0.1, DEPTH_LAVA, DEPTH_0,
@@ -44,7 +44,7 @@ public class TowerConfig extends FeatureConfig {
         GATLING = new TowerTypeCategory( this, TowerType.GATLING, 0.1, DEPTH_LAVA, DEPTH_0,
                 9.0, true, 6, 8, 1.0, 1.0, 0.2 );
         
-        FIREBALL = new TowerTypeCategory( this, TowerType.FIREBALL, 0.1, DEPTH_LAVA, DEPTH_0,
+        FIREBALL = new TowerTypeCategory( this, TowerType.FIREBALL, 0.05, DEPTH_LAVA, DEPTH_0,
                 16.0, true, 40, 60, 3.0, 1.3, 0.4 );
     }
     
@@ -98,7 +98,7 @@ public class TowerConfig extends FeatureConfig {
         public final WeightedPotionListField potionList;
         
         PotionTowerTypeCategory( FeatureConfig parent, TowerType type, double
-                placements, int minHeight, int maxHeight, double activationRange, boolean checkSight, int minAttackDelay,
+                                         placements, int minHeight, int maxHeight, double activationRange, boolean checkSight, int minAttackDelay,
                                  int maxAttackDelay, double damage, double projectileSpeed, double projectileVariance, double dynamicCh ) {
             super( parent, type, placements, minHeight, maxHeight, activationRange, checkSight, minAttackDelay, maxAttackDelay,
                     damage, projectileSpeed, projectileVariance );

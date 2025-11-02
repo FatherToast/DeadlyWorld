@@ -49,54 +49,78 @@ public class LoneHangingSpawnerFeature extends DeadlyFeature<LoneHangingSpawnerF
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
         final int distFromFloor = config.distFromFloor.sample( random );
-        final BlockPos origin = context.origin();
-        BlockPos.MutableBlockPos cursor = origin.mutable();
+        final BlockPos.MutableBlockPos cursor = context.origin().mutable();
         
+        boolean makeChain;
         
-        // Check if we can place here
-        if( notSubfeature ) {
-            // TODO - replace with something less bad
-            if( hasNearbyTraps( level, cursor, 3 ) ) return false;
-            
-            // Make sure the spawner block at least can be placed
-            if( !predicate.test( level.getBlockState( cursor ) ) ) return false;
-            // Don't replace blocks with block entities
-            if( level.getExistingBlockEntity( cursor ) != null ) return false;
-            
-            // Check that at least one chain can be placed above the spawner
-            boolean enoughSpace = level.getBlockState( cursor.move( Direction.UP ) ).isAir();
+        // Find spawner pos
+        final BlockPos spawnerPos;
+        if( !level.getBlockState( cursor.move( Direction.UP ) ).isAir() ) {
+            // No open space for the spawner to be off the ground
+            spawnerPos = context.origin();
+            makeChain = false;
+        }
+        else if( !level.getBlockState( cursor.move( Direction.UP ) ).isAir() ) {
+            // No open space for a chain
+            spawnerPos = cursor.move( Direction.DOWN ).immutable();
+            makeChain = false;
+        }
+        else {
+            // Get as close to the selected distance from floor as we can
+            int y = 1;
+            while( y < distFromFloor && cursor.getY() < level.getMaxBuildHeight() ) {
+                if( !level.getBlockState( cursor.move( Direction.UP ) ).isAir() ) {
+                    // Failed to move up
+                    cursor.move( Direction.DOWN );
+                    break;
+                }
+                y++;
+            }
+            spawnerPos = cursor.move( Direction.DOWN ).immutable();
+            makeChain = true;
+        }
+        
+        // Scan up to find a ceiling we can reach with a chain
+        if( makeChain ) {
             boolean foundCeiling = false;
-            
-            // Scan up 50 blocks at most to find a ceiling
-            for( int y = 0; y < 50; y++ ) {
-                if( level.getBlockState( cursor ).isSolid() ) {
+            for( int y = 0; y < 50 && cursor.getY() < level.getMaxBuildHeight(); y++ ) {
+                if( level.getBlockState( cursor.move( Direction.UP ) ).isSolid() ) {
                     foundCeiling = true;
                     break;
                 }
-                cursor = cursor.move( Direction.UP, 1 );
             }
-            if( !enoughSpace || !foundCeiling )
-                return false;
+            if( !foundCeiling ) makeChain = false;
         }
         
-        // Reset cursor to spawner pos
-        cursor.set( origin ).move( Direction.UP, distFromFloor );
-        // Place the spawner
-        BlockState spawnerBlock = config.spawnerProvider.getState( random, cursor );
-        setBlock( level, cursor, spawnerBlock );
-        if( spawnerBlock.getBlock() instanceof DeadlySpawnerBlock ) {
-            config.spawnerSettings.initializeSpawner( level, cursor, random );
-        }
-        
-        // Place chains until we hit the ceiling
-        BlockState trailBlock = config.trailProvider.getState( random, cursor );
-        for( int y = 0; y < 50; y++ ) {
-            cursor.move( Direction.UP, 1 );
+        // Check if we can place here
+        if( notSubfeature ) {
+            if( !makeChain ) return false;
             
-            if( level.getBlockState( cursor ).isAir() )
-                safeSetBlock( level, cursor, trailBlock, predicate );
-            else return true;
+            // TODO - replace with something less bad
+            if( hasNearbyTraps( level, spawnerPos, 3 ) ) return false;
+            
+            // Make sure the spawner block at least can be placed
+            if( !predicate.test( level.getBlockState( spawnerPos ) ) ) return false;
+            // Don't replace blocks with block entities
+            if( level.getExistingBlockEntity( spawnerPos ) != null ) return false;
         }
+        
+        // Place the spawner
+        BlockState spawnerBlock = config.spawnerProvider.getState( random, spawnerPos );
+        setBlock( level, spawnerPos, spawnerBlock );
+        if( spawnerBlock.getBlock() instanceof DeadlySpawnerBlock ) {
+            config.spawnerSettings.initializeSpawner( level, spawnerPos, random );
+        }
+        
+        // Place chains from the ceiling back down to the spawner
+        if( makeChain ) {
+            cursor.move( Direction.DOWN ); // Last cursor pos was the solid ceiling block
+            while( cursor.getY() > spawnerPos.getY() ) {
+                safeSetBlock( level, cursor, config.trailProvider, random, predicate );
+                cursor.move( Direction.DOWN );
+            }
+        }
+        
         return true;
     }
 }

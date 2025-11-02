@@ -1,7 +1,6 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.api.DecoyType;
-import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -24,8 +23,8 @@ public final class DWTags {
         public static final BlockWithItem TOWER_DISPENSERS = tag( "tower_dispensers" );
         public static final BlockWithItem SEA_MINES = tag( "sea_mines" );
         public static final BlockWithItem SPIKE_TRAPS = tag( "spike_traps" );
-
-
+        
+        
         private static BlockWithItem tag( String name ) {
             return new BlockWithItem( BlockTags.create( DeadlyWorld.rl( name ) ),
                     ItemTags.create( DeadlyWorld.rl( name ) ) );
@@ -67,7 +66,6 @@ public final class DWTags {
         public static final TagKey<ConfiguredFeature<?, ?>> NOT_PLACEABLE = tag( "not_placeable" );
         
         // Ore features
-        public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION_ORE = tag( "any_dimension_ore" );
         public static final TagKey<ConfiguredFeature<?, ?>> OVERWORLD_ORE = tag( "overworld_ore" );
         public static final TagKey<ConfiguredFeature<?, ?>> THE_NETHER_ORE = tag( "nether_ore" );
         
@@ -85,8 +83,8 @@ public final class DWTags {
         public static final TagKey<ConfiguredFeature<?, ?>> TOWERS = tag( "towers" );
         public static final TagKey<ConfiguredFeature<?, ?>> SEA_MINES = tag( "sea_mines" );
         public static final TagKey<ConfiguredFeature<?, ?>> DUNGEONS = tag( "dungeons" );
-
-        // Post decoration features
+        
+        // Post-decoration features
         public static final TagKey<ConfiguredFeature<?, ?>> ANY_DIMENSION_POST_DECORATION = tag( "any_dimension_post_decoration" );
         
         private static TagKey<ConfiguredFeature<?, ?>> tag( String name ) {
@@ -100,7 +98,6 @@ public final class DWTags {
      */
     public static final class PlacedFeatures {
         // World gen step "underground_ores"
-        public static final TagKey<PlacedFeature> ANY_DIMENSION_ORE = tag( "any_dimension_ore" );
         public static final TagKey<PlacedFeature> OVERWORLD_ORE = tag( "overworld_ore" );
         public static final TagKey<PlacedFeature> THE_NETHER_ORE = tag( "nether_ore" );
         
@@ -118,7 +115,7 @@ public final class DWTags {
         public static final TagKey<PlacedFeature> TOWERS = tag( "towers" );
         public static final TagKey<PlacedFeature> SEA_MINES = tag( "sea_mines" );
         public static final TagKey<PlacedFeature> DUNGEONS = tag( "dungeons" );
-
+        
         // World gen step "fluid_springs"
         public static final TagKey<PlacedFeature> ANY_DIMENSION_POST_DECORATION = tag( "any_dimension_post_decoration" );
         

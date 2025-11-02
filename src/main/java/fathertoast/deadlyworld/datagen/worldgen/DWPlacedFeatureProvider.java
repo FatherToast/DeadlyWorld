@@ -36,11 +36,6 @@ import static fathertoast.deadlyworld.datagen.worldgen.DWConfiguredFeatureProvid
  * For vanilla decoration placed features, see {@link net.minecraft.data.worldgen.placement.CavePlacements} (mostly).
  */
 public class DWPlacedFeatureProvider {
-    /**
-     * List of all ore placements that don't care about dimension type and should generate anywhere.
-     * Any restrictions are handled in the feature itself, usually config based.
-     */
-    public static final List<ResourceKey<PlacedFeature>> ANY_DIMENSION_ORE_FEATURES = new ArrayList<>();
     /** List of all ore placements that should generate in overworld biomes. */
     public static final List<ResourceKey<PlacedFeature>> OVERWORLD_ORE_FEATURES = new ArrayList<>();
     /** List of all ore placements that should generate in nether biomes. */
@@ -91,8 +86,6 @@ public class DWPlacedFeatureProvider {
         final DimensionConfigGroup netherConfigs = Config.getDimensionConfigs( Level.NETHER );
         
         // Ore placements
-        register( context, getter, BURIED_BLOCK_POST_DECOR, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
-        
         registerVein( context, getter, BASE_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
         registerVein( context, getter, ADDED_INFESTED_BLOCK_ORE, overworldConfigs, netherConfigs );
         registerVein( context, getter, WATER_ORE, overworldConfigs, netherConfigs );
@@ -157,6 +150,9 @@ public class DWPlacedFeatureProvider {
                 simpleFeature( overworldConfigs.DUNGEONS.MINI ) );
         register( context, getter, MINI_DUNGEON.netherKeys,
                 simpleFeature( netherConfigs.DUNGEONS.MINI ) );
+        
+        // Post-decoration placements
+        register( context, getter, BURIED_BLOCK_POST_DECOR, CountPlacement.of( 1 ) ); // Placement is handled in the feature itself
     }
     
     /** @return Modifiers for a lone spawner feature. */
@@ -390,13 +386,6 @@ public class DWPlacedFeatureProvider {
     }
     
     
-    /** Creates a placed ore feature key that is automatically added to all biomes. */
-    protected static ResourceKey<PlacedFeature> anyDimOreKey( String name ) {
-        final ResourceKey<PlacedFeature> key = key( name + "_any_dimension_ore" );
-        ANY_DIMENSION_ORE_FEATURES.add( key );
-        return key;
-    }
-    
     /** Creates a placed ore feature key that is automatically added to all overworld biomes. */
     protected static ResourceKey<PlacedFeature> overworldOreKey( String name ) {
         final ResourceKey<PlacedFeature> key = key( name + "_ore" );
@@ -411,13 +400,6 @@ public class DWPlacedFeatureProvider {
         return key;
     }
     
-    /** Creates a placed feature key that is automatically added to all biomes. */
-    protected static ResourceKey<PlacedFeature> anyDimPostDecor( String name ) {
-        final ResourceKey<PlacedFeature> key = key( name + "_any_dimension_post_decoration" );
-        ANY_DIMENSION_POST_DECORATION.add( key );
-        return key;
-    }
-    
     /** Creates a placed decoration feature key that is automatically added to all overworld biomes. */
     protected static ResourceKey<PlacedFeature> overworldKey( String name ) {
         final ResourceKey<PlacedFeature> key = key( name );
@@ -429,6 +411,13 @@ public class DWPlacedFeatureProvider {
     protected static ResourceKey<PlacedFeature> netherKey( String name ) {
         final ResourceKey<PlacedFeature> key = key( name + "_nether" );
         NETHER_FEATURES.add( key );
+        return key;
+    }
+    
+    /** Creates a placed post-decoration feature key that is automatically added to all biomes. */
+    protected static ResourceKey<PlacedFeature> anyDimPostDecor( String name ) {
+        final ResourceKey<PlacedFeature> key = key( name + "_any_dimension_post_decoration" );
+        ANY_DIMENSION_POST_DECORATION.add( key );
         return key;
     }
     

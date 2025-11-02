@@ -53,17 +53,17 @@ public class SpawnerConfig extends FeatureConfig {
                         "the 'configured_feature' json file when generated or placed and can then be overwritten for individual " +
                         "spawners by nbt editing." );
         
-        SIMPLE = new SpawnerTypeCategory( this, SpawnerType.SIMPLE, 0.5, DEPTH_LAVA, DEPTH_0,
+        SIMPLE = new SpawnerTypeCategory( this, SpawnerType.SIMPLE, 0.4, DEPTH_LAVA, DEPTH_0,
                 16, false, 200, 800, 40, 4, 4, 0.1, 0.05 );
-        STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.15, DEPTH_LAVA, DEPTH_1,
+        STREAM = new SpawnerTypeCategory( this, SpawnerType.STREAM, 0.1, DEPTH_LAVA, DEPTH_1,
                 16, true, 0, 400, 10, 1, 2, 0.9, 0.05 );
         SWARM = new SpawnerTypeCategory( this, SpawnerType.SWARM, 0.1, DEPTH_LAVA, DEPTH_2,
                 20, true, 400, 2400, 100, 12, 8, 0.05, 0.05 );
         BRUTAL = new BrutalSpawnerCategory( this, SpawnerType.BRUTAL, 0.05, DEPTH_LAVA, DEPTH_3,
                 16, true, 200, 800, 100, 2, 3, 0.05, 0.05 );
-        FLOATY = new FloatySpawnerCategory( this, SpawnerType.FLOATY, 0.05, DEPTH_LAVA, DEPTH_2,
-                25, true, 200, 800, 100, 3, 4, 0.05, 0.05, 5 );
-        NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.5, DEPTH_LAVA, DEPTH_SEA_LEVEL,
+        FLOATY = new FloatySpawnerCategory( this, SpawnerType.FLOATY, 0.2, DEPTH_LAVA, DEPTH_2,
+                25, true, 200, 800, 100, 3, 4, 0.05, 0.05 );
+        NEST = new NestSpawnerCategory( this, SpawnerType.NEST, 0.3, DEPTH_LAVA, DEPTH_SEA_LEVEL,
                 16, false, 100, 400, 20, 6, 6, 0.0, 0.05 );
         MINI = new MiniSpawnerCategory( this, SpawnerType.MINI, 0.02, DEPTH_LAVA, DEPTH_0,
                 12, false, 100, 400, 20, 6, 4, 0.2, 0.2 );
@@ -145,7 +145,7 @@ public class SpawnerConfig extends FeatureConfig {
                     "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamic'.",
                     "Dynamic spawners pick a new mob to spawn after each spawn.",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
-            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList( parent ),
+            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList(),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME +
                             ". One of these is chosen at random when the spawner is generated.",
                     "Spawners generated as 'dynamic' pick again after each spawn.",
@@ -155,7 +155,8 @@ public class SpawnerConfig extends FeatureConfig {
             
             mimicChance = SPEC.define( new DoubleField( "mimic_chance", mimicCh, DoubleField.Range.PERCENT,
                     "The chance for " + FEATURE_TYPE_NAME + " to generate as a mimic.",
-                    "The mimic reveals itself when the spawner block is destroyed." ) );
+                    "The mimic reveals itself when the spawner block is destroyed.",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             
             SPEC.newLine();
             
@@ -183,7 +184,7 @@ public class SpawnerConfig extends FeatureConfig {
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */
-        protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
+        protected WeightedEntityList makeDefaultSpawnList() {
             if( isNetherDimension() ) {
                 return new WeightedEntityList(
                         new EntityEntry( EntityType.WITHER_SKELETON, 200 ),
@@ -272,31 +273,31 @@ public class SpawnerConfig extends FeatureConfig {
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
     }
-
+    
     public static class FloatySpawnerCategory extends SpawnerTypeCategory {
-
-        public final IntField distFromFloor;
-
+        
+        public final IntField.RandomRange distFromFloor;
+        
         public final BooleanField ambientFx;
         public final IntField slowFallingAmpl;
         public final IntField jumpBoostAmpl;
-
+        
         FloatySpawnerCategory( FeatureConfig parent, SpawnerType type,
                                double placements, int minHeight, int maxHeight, int activationRng, boolean checkSight,
-                               int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh, double mimicCh, int dstFromFloor ) {
+                               int minDelay, int maxDelay, int delayPrgr, int spawnCnt, int spawnRng, double dynamicCh, double mimicCh ) {
             super( parent, type, placements, minHeight, maxHeight, activationRng, checkSight,
                     minDelay, maxDelay, delayPrgr, spawnCnt, spawnRng, dynamicCh, mimicCh );
-
+            
             SPEC.newLine();
-
-            distFromFloor = SPEC.define( new IntField( "distance_from_floor", dstFromFloor, IntField.Range.POSITIVE,
+            
+            distFromFloor = new IntField.RandomRange( SPEC, "distance_from_floor", 4, 8, IntField.Range.POSITIVE,
                     "How many blocks up from the floor the spawner generates.",
-                    "Keep in mind that the default feature requires that there is space for at least one chain block above before hitting the ceiling.",
-                    "This also means the spawner doesn't generate unless there is a ceiling above where it is trying to generate",
-                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
-
+                    "Keep in mind that the feature requires space for at least one chain block above before hitting the ceiling.",
+                    "This also means the spawner doesn't generate unless there is a ceiling above where it is trying to generate.",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE );
+            
             SPEC.newLine();
-
+            
             ambientFx = SPEC.define( new BooleanField( "brutal_ambient_fx", false,
                     "If true, the potion effects below will not display potion effects particles.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
@@ -321,7 +322,7 @@ public class SpawnerConfig extends FeatureConfig {
         
         /** @return The default spawn list to use for this spawner type and dimension. */
         @Override
-        protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
+        protected WeightedEntityList makeDefaultSpawnList() {
             return new WeightedEntityList( new EntityEntry( EntityType.SILVERFISH, 100 ) );
         }
     }
@@ -336,22 +337,22 @@ public class SpawnerConfig extends FeatureConfig {
         
         /** @return The default spawn list to use for this spawner type and dimension. */
         @Override
-        protected WeightedEntityList makeDefaultSpawnList( FeatureConfig feature ) {
+        protected WeightedEntityList makeDefaultSpawnList() {
             if( isNetherDimension() ) {
                 return new WeightedEntityList(
-                        new EntityEntry( null, DWEntities.MINI_ZOMBIE.getId(), true, 200 ),
-                        new EntityEntry( null, DWEntities.MINI_SKELETON.getId(), true, 100 ),
-                        new EntityEntry( null, DWEntities.MINI_SPIDER.getId(), true, 100 ),
-                        new EntityEntry( null, DWEntities.MINI_CREEPER.getId(), true, 50 ),
-                        new EntityEntry( null, DWEntities.MICRO_GHAST.getId(), true, 40 )
+                        new EntityEntry( DWEntities.MINI_ZOMBIE.get(), true, 200 ),
+                        new EntityEntry( DWEntities.MINI_SKELETON.get(), true, 100 ),
+                        new EntityEntry( DWEntities.MINI_SPIDER.get(), true, 100 ),
+                        new EntityEntry( DWEntities.MINI_CREEPER.get(), true, 50 ),
+                        new EntityEntry( DWEntities.MICRO_GHAST.get(), true, 40 )
                 );
             }
             else {
                 return new WeightedEntityList(
-                        new EntityEntry( null, DWEntities.MINI_ZOMBIE.getId(), true, 200 ),
-                        new EntityEntry( null, DWEntities.MINI_SKELETON.getId(), true, 100 ),
-                        new EntityEntry( null, DWEntities.MINI_SPIDER.getId(), true, 100 ),
-                        new EntityEntry( null, DWEntities.MINI_CREEPER.getId(), true, 50 )
+                        new EntityEntry( DWEntities.MINI_ZOMBIE.get(), true, 200 ),
+                        new EntityEntry( DWEntities.MINI_SKELETON.get(), true, 100 ),
+                        new EntityEntry( DWEntities.MINI_SPIDER.get(), true, 100 ),
+                        new EntityEntry( DWEntities.MINI_CREEPER.get(), true, 50 )
                 );
             }
         }

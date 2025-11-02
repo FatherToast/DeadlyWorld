@@ -26,7 +26,6 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
         addAll( DWTags.ConfiguredFeatures.NOT_PLACEABLE, DWAbstractCFProvider.NOT_PLACEABLE );
         
         // Ore features
-        addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION_ORE, DWAbstractCFProvider.ANY_DIMENSION_ORE_FEATURES );
         addAll( DWTags.ConfiguredFeatures.OVERWORLD_ORE, DWAbstractCFProvider.OVERWORLD_ORE_FEATURES );
         addAll( DWTags.ConfiguredFeatures.THE_NETHER_ORE, DWAbstractCFProvider.NETHER_ORE_FEATURES );
         
@@ -44,8 +43,8 @@ public class DWConfiguredFeatureTagsProvider extends TagsProvider<ConfiguredFeat
         addAll( DWTags.ConfiguredFeatures.TOWERS, DWAbstractCFProvider.TOWER_FEATURES );
         addAll( DWTags.ConfiguredFeatures.SEA_MINES, DWAbstractCFProvider.SEA_MINE_FEATURES );
         addAll( DWTags.ConfiguredFeatures.DUNGEONS, DWAbstractCFProvider.DUNGEON_FEATURES );
-
-        // Post decoration features
+        
+        // Post-decoration features
         addAll( DWTags.ConfiguredFeatures.ANY_DIMENSION_POST_DECORATION, DWAbstractCFProvider.ANY_DIMENSION_POST_DECORATION );
     }
     

@@ -24,7 +24,6 @@ public class DWPlacedFeatureTagsProvider extends TagsProvider<PlacedFeature> {
     @Override
     protected void addTags( HolderLookup.Provider holderLookup ) {
         // Ore features
-        addAll( DWTags.PlacedFeatures.ANY_DIMENSION_ORE, DWPlacedFeatureProvider.ANY_DIMENSION_ORE_FEATURES );
         addAll( DWTags.PlacedFeatures.OVERWORLD_ORE, DWPlacedFeatureProvider.OVERWORLD_ORE_FEATURES );
         addAll( DWTags.PlacedFeatures.THE_NETHER_ORE, DWPlacedFeatureProvider.NETHER_ORE_FEATURES );
         
@@ -42,8 +41,8 @@ public class DWPlacedFeatureTagsProvider extends TagsProvider<PlacedFeature> {
         addAll( DWTags.PlacedFeatures.TOWERS, DWPlacedFeatureProvider.TOWER_FEATURES );
         addAll( DWTags.PlacedFeatures.SEA_MINES, DWPlacedFeatureProvider.SEA_MINE_FEATURES );
         addAll( DWTags.PlacedFeatures.DUNGEONS, DWPlacedFeatureProvider.DUNGEON_FEATURES );
-
-        // Post decoration features
+        
+        // Post-decoration features
         addAll( DWTags.PlacedFeatures.ANY_DIMENSION_POST_DECORATION, DWPlacedFeatureProvider.ANY_DIMENSION_POST_DECORATION );
     }
     

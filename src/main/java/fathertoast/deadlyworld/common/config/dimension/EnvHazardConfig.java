@@ -106,23 +106,23 @@ public class EnvHazardConfig extends AbstractConfigFile {
         private List<RegistryValueEntry<Block>> defaultBuriedBlocks() {
             if( PARENT.isNetherDimension() ) {
                 return List.of(
-                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 6 ),
-                        new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 12 ),
+                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 5 ),
+                        new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 ),
                         new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
                 );
             }
             if( PARENT.isEndDimension() ) {
                 return List.of(
-                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 6 ),
-                        new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 12 ),
+                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 5 ),
+                        new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 ),
                         new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
                 );
             }
             // For the overworld, as well as any dimensions added by mods
             return List.of(
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_LAVA, DEPTH_1, 3 ),
+                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_LAVA, DEPTH_1, 2.5 ),
                     new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_LAVA, DEPTH_3, 5 ),
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_SEA_LEVEL + 14, 10 ),
+                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_SEA_LEVEL + 14, 8 ),
                     new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_VOID, DEPTH_2, 5 ),
                     new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_VOID, DEPTH_4, 1 )
             );

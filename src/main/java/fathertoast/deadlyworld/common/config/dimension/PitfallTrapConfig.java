@@ -21,9 +21,9 @@ public class PitfallTrapConfig extends FeatureConfig {
         SPIKES = new PitfallTrapConfig.PitfallTrapTypeCategory( this, PitfallTrapType.SPIKES,
                 0.3, DEPTH_LAVA, DEPTH_1, 2, 4, 2, 4 );
         LAVA = new PitfallTrapConfig.PitfallTrapTypeCategory( this, PitfallTrapType.LAVA,
-                0.3, DEPTH_LAVA, DEPTH_4, 2, 5, 2, 4 );
+                0.2, DEPTH_LAVA, DEPTH_4, 2, 5, 2, 4 );
         COBWEB = new PitfallTrapConfig.PitfallTrapTypeCategory( this, PitfallTrapType.COBWEB,
-                0.3, DEPTH_LAVA, DEPTH_1, 2, 4, 2, 4 );
+                0.2, DEPTH_LAVA, DEPTH_1, 2, 4, 2, 4 );
     }
     
     public static class PitfallTrapTypeCategory extends FeatureTypeCategory {

@@ -12,7 +12,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
-import net.minecraft.world.level.levelgen.heightproviders.UniformHeight;
 import net.minecraft.world.level.levelgen.placement.*;
 
 import java.util.ArrayList;
@@ -36,10 +35,14 @@ public class PlacementBuilder {
         return this;
     }
     
-    /** Multiplies the number of placements based on the feature config's setting. */
+    /**
+     * Multiplies the number of placements based on the feature config's setting.
+     *
+     * @throws NullPointerException if the config is for a subfeature.
+     */
     public PlacementBuilder multiply( FeatureConfig.FeatureTypeCategory config ) {
         //noinspection ConstantConditions
-        return multiply( ConfigCountProvider.of( config.countPerChunk ) ); // throws NPE if you use a subfeature
+        return multiply( ConfigCountProvider.of( config.countPerChunk ) );
     }
     
     /** Multiplies the number of placements based on the config field's setting. */
@@ -59,10 +62,14 @@ public class PlacementBuilder {
     /** Randomizes the y coord of each placement. */
     public PlacementBuilder spreadInChunkHeight() { return spreadInHeightsUniform( VerticalAnchor.BOTTOM, VerticalAnchor.TOP ); }
     
-    /** Randomizes the y coord of each placement based on the feature config's setting. */
+    /**
+     * Randomizes the y coord of each placement based on the feature config's setting.
+     *
+     * @throws NullPointerException if the config is for a subfeature.
+     */
     public PlacementBuilder spreadInHeights( FeatureConfig.FeatureTypeCategory config ) {
         //noinspection ConstantConditions
-        return spreadInHeights( ConfigHeightProvider.of( config.heights ) ); // throws NPE if you use a subfeature
+        return spreadInHeights( ConfigHeightProvider.of( config.heights ) );
     }
     
     /** Randomizes the y coord of each placement within normal ocean ranges. */

@@ -27,7 +27,7 @@ public class ChestConfig extends FeatureConfig {
         
         SIMPLE = new ChestTypeCategory( this, ChestType.SIMPLE, 0.3, DEPTH_LAVA, DEPTH_0 );
         VALUABLE = new ChestTypeCategory( this, ChestType.VALUABLE, 0.05, DEPTH_LAVA, DEPTH_3 );
-        TNT_TRAP = new ChestTypeCategory( this, ChestType.TNT_TRAP, 0.1, DEPTH_LAVA, DEPTH_2 );
+        TNT_TRAP = new ChestTypeCategory( this, ChestType.TNT_TRAP, 0.05, DEPTH_LAVA, DEPTH_2 );
         INFESTED = new InfestedChestTypeCategory( this, ChestType.INFESTED, 0.1, DEPTH_LAVA, DEPTH_0,
                 InfestedEventType.values() );
         SURPRISE = new SurpriseChestTypeCategory( this, ChestType.SURPRISE, 0.1, DEPTH_LAVA, DEPTH_1,
@@ -37,13 +37,17 @@ public class ChestConfig extends FeatureConfig {
     public static class ChestTypeCategory extends FeatureTypeCategory {
         ChestTypeCategory( FeatureConfig parent, ChestType type, double placements, int minHeight, int maxHeight ) {
             super( parent, type.toString(), placements, minHeight, maxHeight );
+            
+            if( isSubfeature() ) {
+                // Chest types should not be used for chests that are strictly subfeatures; just use a regular chest
+                throw new IllegalStateException( "Chest type features must have placements!" );
+            }
         }
     }
     
     public static class EventChestTypeCategory extends ChestTypeCategory {
-        
-        private boolean dirty = true;
-        private int cachedTotalWeight;
+        /** The total weight of included events. A negative value means the weight needs to be calculated. */
+        private int cachedTotalWeight = -1;
         
         private final IntField[] eventWeights;
         
@@ -78,13 +82,13 @@ public class ChestConfig extends FeatureConfig {
             return -1;
         }
         
-        private void invalidate( IntField field ) { dirty = true; }
+        private void invalidate( IntField field ) { cachedTotalWeight = -1; } // Clear cached value
         
         private void validate() {
-            if( dirty ) {
+            if( cachedTotalWeight < 0 ) {
+                // No cached value; calculate total weight
                 cachedTotalWeight = 0;
                 for( IntField eventWeight : eventWeights ) cachedTotalWeight += eventWeight.get();
-                dirty = false;
             }
         }
     }
