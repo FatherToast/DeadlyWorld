@@ -43,13 +43,17 @@ public class FeatureKeys {
                 DWPlacedFeatureProvider.overworldKey( name ) );
     }
     
+    public static ResourceKey<PlacedFeature> overworldOcean( String name ) {
+        return DWPlacedFeatureProvider.overworldKey( name + "_ocean" );
+    }
+    
     public static FeatureKeys nether( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.netherKey( name ),
                 DWPlacedFeatureProvider.netherKey( name ) );
     }
-
+    
     // Post decoration features
-
+    
     public static FeatureKeys anyDimPostDecoration( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.anyDimPostDecor( name ),
                 DWPlacedFeatureProvider.anyDimPostDecor( name ) );
@@ -72,7 +76,7 @@ public class FeatureKeys {
         DWAbstractCFProvider.NOT_PLACEABLE.add( configuredKey );
         return this;
     }
-
+    
     /**
      * Marks the configured feature as 'post decor',
      * delaying generation to after {@link net.minecraft.world.level.levelgen.GenerationStep.Decoration#UNDERGROUND_DECORATION}.
@@ -89,6 +93,17 @@ public class FeatureKeys {
         
         protected WaterFeature( FeatureKeys overworld ) {
             overworldKeys = overworld;
+        }
+    }
+    
+    /** Feature key-pair for features that generate in only in dimensions with naturally generating water. */
+    public static class OceanFeature extends WaterFeature {
+        
+        public final ResourceKey<PlacedFeature> overworldOceanKey;
+        
+        protected OceanFeature( FeatureKeys overworld, ResourceKey<PlacedFeature> overworldOcean ) {
+            super( overworld );
+            overworldOceanKey = overworldOcean;
         }
     }
     
@@ -176,12 +191,12 @@ public class FeatureKeys {
     public static class SpikeTrap extends TypicalFeature {
         
         public static SpikeTrap of( SpikeTrapType type, String name ) { return new SpikeTrap( type, overworld( name ), nether( name ) ); }
-
+        
         public final SpikeTrapType trapType;
         
         protected SpikeTrap( SpikeTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
-
+            
             trapType = type;
             
             DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( overworld.configuredKey );
@@ -190,17 +205,17 @@ public class FeatureKeys {
             DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( nether.placedKey );
         }
     }
-
+    
     public static class PitfallTrap extends TypicalFeature {
-
+        
         public static PitfallTrap of( PitfallTrapType type, String name ) { return new PitfallTrap( type, overworld( name ), nether( name ) ); }
-
+        
         public final PitfallTrapType trapType;
-
+        
         protected PitfallTrap( PitfallTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             trapType = type;
-
+            
             DWAbstractCFProvider.PITFALL_TRAP_FEATURES.add( overworld.configuredKey );
             DWAbstractCFProvider.PITFALL_TRAP_FEATURES.add( nether.configuredKey );
             DWPlacedFeatureProvider.PITFALL_TRAP_FEATURES.add( overworld.placedKey );
@@ -239,18 +254,19 @@ public class FeatureKeys {
         }
     }
     
-    public static class SeaMine extends WaterFeature {
+    public static class SeaMine extends OceanFeature {
         
-        public static SeaMine of( SeaMineType type, String name ) { return new SeaMine( type, overworld( name ) ); }
+        public static SeaMine of( SeaMineType type, String name ) { return new SeaMine( type, overworld( name ), overworldOcean( name ) ); }
         
         public final SeaMineType seaMineType;
         
-        protected SeaMine( SeaMineType type, FeatureKeys overworld ) {
-            super( overworld );
+        protected SeaMine( SeaMineType type, FeatureKeys overworld, ResourceKey<PlacedFeature> overworldOcean ) {
+            super( overworld, overworldOcean );
             seaMineType = type;
             
             DWAbstractCFProvider.SEA_MINE_FEATURES.add( overworld.configuredKey );
             DWPlacedFeatureProvider.SEA_MINE_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.SEA_MINE_FEATURES.add( overworldOcean );
         }
     }
 }

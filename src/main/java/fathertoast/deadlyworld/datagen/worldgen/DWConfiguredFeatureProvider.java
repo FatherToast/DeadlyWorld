@@ -24,11 +24,13 @@ import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature
 import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
 import net.minecraft.core.Direction;
 import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 /**
  * For vanilla ore configured features, see {@link net.minecraft.data.worldgen.features.OreFeatures}.
@@ -64,6 +66,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.FloorTrap LAVA_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.LAVA, "lava_trap" );
     public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
+    public static final ResourceKey<PlacedFeature> SEA_MINE_MOB_TRAP_OCEAN = FeatureKeys.overworldOcean( "sea_mine_mob_trap" );
     
     public static final FeatureKeys.SpikeTrap STATIC_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.STATIC, "static_spikes" );
     public static final FeatureKeys.SpikeTrap MECHANICAL_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL, "mechanical_spikes" );

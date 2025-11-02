@@ -1,15 +1,16 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
+import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
-import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
-import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
+import fathertoast.deadlyworld.common.config.dimension.WaterTrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -52,14 +53,14 @@ public class DWPlacedFeatureProvider {
     public static final List<ResourceKey<PlacedFeature>> OVERWORLD_FEATURES = new ArrayList<>();
     /** List of all decoration placements that should generate in nether biomes. */
     public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
-
+    
     /**
      * List of all placements that don't care about dimension type and should generate anywhere,
      * AFTER {@link net.minecraft.world.level.levelgen.GenerationStep.Decoration#UNDERGROUND_DECORATION}.
      * Any restrictions are handled in the feature itself, usually config based.
      */
     public static final List<ResourceKey<PlacedFeature>> ANY_DIMENSION_POST_DECORATION = new ArrayList<>();
-
+    
     /** List of all lone chest placements. */
     public static final List<ResourceKey<PlacedFeature>> LONE_CHEST_FEATURES = new ArrayList<>();
     /** List of all spawner placements. */
@@ -76,7 +77,7 @@ public class DWPlacedFeatureProvider {
     public static final List<ResourceKey<PlacedFeature>> SEA_MINE_FEATURES = new ArrayList<>();
     /** List of all dungeon placements. */
     public static final List<ResourceKey<PlacedFeature>> DUNGEON_FEATURES = new ArrayList<>();
-
+    
     
     private static final BlockPredicate PREDICATE_ANY_FLUID = BlockPredicate.not( BlockPredicate.noFluid() );
     private static final BlockPredicate PREDICATE_WATER = BlockPredicate.matchesFluids( Fluids.WATER );
@@ -121,17 +122,20 @@ public class DWPlacedFeatureProvider {
         registerFloorTrap( context, getter, FIRE_TRAP, overworldConfigs, netherConfigs );
         // Water trap variant
         register( context, getter, SEA_MINE_MOB_TRAP,
-                waterFloorFeature( FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs ) ) );
-
+                undergroundWaterFloorFeature( FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs ) ) );
+        register( context, getter, SEA_MINE_MOB_TRAP_OCEAN, SEA_MINE_MOB_TRAP.configuredKey,
+                oceanFloorFeature( ((WaterTrapConfig.SeaMineMobTrapTypeCategory)
+                        FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs )).countPerChunkInOcean ) );
+        
         // Spike trap patch placements
         registerSpikePatch( context, getter, STATIC_SPIKES, overworldConfigs, netherConfigs );
         registerSpikePatch( context, getter, MECHANICAL_SPIKES, overworldConfigs, netherConfigs );
-
+        
         // Standard pitfall trap placements
         registerPitfallTrap( context, getter, SPIKES_PITFALL_TRAP, overworldConfigs, netherConfigs );
         registerPitfallTrap( context, getter, LAVA_PITFALL_TRAP, overworldConfigs, netherConfigs );
         registerPitfallTrap( context, getter, COBWEB_PITFALL_TRAP, overworldConfigs, netherConfigs );
-
+        
         // Standard tower placements
         registerTower( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );
         registerTower( context, getter, FIRE_TOWER, overworldConfigs, netherConfigs );
@@ -169,12 +173,12 @@ public class DWPlacedFeatureProvider {
     protected static List<PlacementModifier> floorTrap( FloorTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
     }
-
+    
     /** @return Modifiers for a spike patch trap feature. */
     protected static List<PlacementModifier> pitfallTrap( SpikeTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
     }
-
+    
     /** @return Modifiers for a pitfall trap feature. */
     protected static List<PlacementModifier> pitfallTrap( PitfallTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
@@ -183,11 +187,6 @@ public class DWPlacedFeatureProvider {
     /** @return Modifiers for a tower feature. */
     protected static List<PlacementModifier> tower( TowerType type, DimensionConfigGroup dimConfigs ) {
         return surfaceFeature( type.getConfig( dimConfigs ) );
-    }
-    
-    /** @return Modifiers for a floor trap feature. */
-    protected static List<PlacementModifier> seaMine( SeaMineType type, DimensionConfigGroup dimConfigs ) {
-        return waterFloorFeature( type.getConfig( dimConfigs ) );
     }
     
     /** @return Modifiers for a feature that generates only on floors. */
@@ -212,6 +211,20 @@ public class DWPlacedFeatureProvider {
                 BlockPredicate.anyOf( PREDICATE_ANY_FLUID ) );
     }
     
+    /** @return Modifiers for a feature that generates only on the bottom of surface water. */
+    protected static List<PlacementModifier> oceanFloorFeature( DoubleField countPerChunk ) {
+        return baseOceanPlacement( countPerChunk )
+                .move( Direction.DOWN, BlockPredicate.solid(), BlockPredicate.anyOf( PREDICATE_WATER ), 12 )
+                .moveVertical( 1 ).requireAboveOceanFloor( 0 ).requireBiome().build();
+    }
+    
+    /** @return Modifiers for a feature that generates only on the bottom of water. */
+    protected static List<PlacementModifier> undergroundWaterFloorFeature( FeatureConfig.FeatureTypeCategory config ) {
+        return baseVerticalScan( config, false, BlockPredicate.solid(),
+                BlockPredicate.anyOf( PREDICATE_WATER ) )
+                .requireBelowOceanFloor( 2 ).requireBiome().build();
+    }
+    
     /** @return Modifiers for a feature that generates only on the bottom of water, including surface water. */
     protected static List<PlacementModifier> waterFloorFeature( FeatureConfig.FeatureTypeCategory config ) {
         return verticalScanFeature( config, false, BlockPredicate.solid(),
@@ -233,9 +246,8 @@ public class DWPlacedFeatureProvider {
     /** @return Modifiers for a feature that scans up or down for a potential valid underground location. */
     protected static List<PlacementModifier> undergroundVerticalScanFeature( FeatureConfig.FeatureTypeCategory config, boolean up,
                                                                              BlockPredicate scanFor, BlockPredicate scanWhile, int scanRange ) {
-        return basePlacement( config )
-                .move( up ? Direction.UP : Direction.DOWN, scanFor, scanWhile, scanRange )
-                .moveVertical( up ? -1 : 1 ).requireBelowOceanFloor( 2 ).requireBiome().build();
+        return baseVerticalScan( config, up, scanFor, scanWhile, scanRange )
+                .requireBelowOceanFloor( 2 ).requireBiome().build();
     }
     
     /** @return Modifiers for a feature that scans up or down (up to 12 blocks) for a potential valid location, including above ground. */
@@ -247,9 +259,7 @@ public class DWPlacedFeatureProvider {
     /** @return Modifiers for a feature that scans up or down for a potential valid location, including above ground. */
     protected static List<PlacementModifier> verticalScanFeature( FeatureConfig.FeatureTypeCategory config, boolean up,
                                                                   BlockPredicate scanFor, BlockPredicate scanWhile, int scanRange ) {
-        return basePlacement( config )
-                .move( up ? Direction.UP : Direction.DOWN, scanFor, scanWhile, scanRange )
-                .moveVertical( up ? -1 : 1 ).requireBiome().build();
+        return baseVerticalScan( config, up, scanFor, scanWhile, scanRange ).requireBiome().build();
     }
     
     /** @return Modifiers for a feature that simply tries placing randomly. */
@@ -260,6 +270,26 @@ public class DWPlacedFeatureProvider {
     /** @return Modifiers for a feature that simply tries placing randomly, including above ground. */
     protected static List<PlacementModifier> simpleFeature( FeatureConfig.FeatureTypeCategory config ) {
         return basePlacement( config ).requireBiome().build();
+    }
+    
+    
+    /** @return Modifiers for a feature that scans up or down for a potential valid location, including above ground. */
+    protected static PlacementBuilder baseVerticalScan( FeatureConfig.FeatureTypeCategory config, boolean up,
+                                                        BlockPredicate scanFor, BlockPredicate scanWhile ) {
+        return baseVerticalScan( config, up, scanFor, scanWhile, 12 );
+    }
+    
+    /** @return Modifiers for a feature that scans up or down for a potential valid location, including above ground. */
+    protected static PlacementBuilder baseVerticalScan( FeatureConfig.FeatureTypeCategory config, boolean up,
+                                                        BlockPredicate scanFor, BlockPredicate scanWhile, int scanRange ) {
+        return basePlacement( config )
+                .move( up ? Direction.UP : Direction.DOWN, scanFor, scanWhile, scanRange )
+                .moveVertical( up ? -1 : 1 );
+    }
+    
+    /** @return A new placement builder with the typical modifiers for an ocean feature already included. */
+    protected static PlacementBuilder baseOceanPlacement( DoubleField countPerChunk ) {
+        return new PlacementBuilder().multiply( countPerChunk ).spreadInChunk().spreadInOceanHeights();
     }
     
     /** @return A new placement builder with the typical modifiers for a feature already included. */
@@ -295,17 +325,17 @@ public class DWPlacedFeatureProvider {
         register( context, getter, featureKeys.overworldKeys, floorTrap( featureKeys.trapType, overworldConfigs ) );
         register( context, getter, featureKeys.netherKeys, floorTrap( featureKeys.trapType, netherConfigs ) );
     }
-
+    
     /** Registers a placed spike trap patch feature to each supported dimension. */
     protected static void registerSpikePatch( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                               FeatureKeys.SpikeTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+                                              FeatureKeys.SpikeTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         register( context, getter, featureKeys.overworldKeys, pitfallTrap( featureKeys.trapType, overworldConfigs ) );
         register( context, getter, featureKeys.netherKeys, pitfallTrap( featureKeys.trapType, netherConfigs ) );
     }
-
+    
     /** Registers a placed floor trap type feature to each supported dimension. */
     protected static void registerPitfallTrap( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                             FeatureKeys.PitfallTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+                                               FeatureKeys.PitfallTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         register( context, getter, featureKeys.overworldKeys, pitfallTrap( featureKeys.trapType, overworldConfigs ) );
         register( context, getter, featureKeys.netherKeys, pitfallTrap( featureKeys.trapType, netherConfigs ) );
     }
@@ -320,7 +350,8 @@ public class DWPlacedFeatureProvider {
     /** Registers a placed sea mine type feature for the overworld. */
     protected static void registerSeaMine( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
                                            FeatureKeys.SeaMine featureKeys, DimensionConfigGroup overworldConfigs ) {
-        register( context, getter, featureKeys.overworldKeys, seaMine( featureKeys.seaMineType, overworldConfigs ) );
+        register( context, getter, featureKeys.overworldKeys, undergroundWaterFloorFeature( featureKeys.seaMineType.getConfig( overworldConfigs ) ) );
+        register( context, getter, featureKeys, oceanFloorFeature( featureKeys.seaMineType.getConfig( overworldConfigs ).countPerChunkInOcean ) );
     }
     
     /** Registers a placed feature. */
@@ -336,6 +367,11 @@ public class DWPlacedFeatureProvider {
     /** Registers a placed feature. */
     protected static void register( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter, FeatureKeys featureKeys, List<PlacementModifier> modifiers ) {
         register( context, getter, featureKeys.placedKey, featureKeys.configuredKey, modifiers );
+    }
+    
+    /** Registers a placed feature. */
+    protected static void register( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter, FeatureKeys.OceanFeature oceanFeatureKeys, List<PlacementModifier> modifiers ) {
+        register( context, getter, oceanFeatureKeys.overworldOceanKey, oceanFeatureKeys.overworldKeys.configuredKey, modifiers );
     }
     
     /** Registers a placed feature. */
@@ -374,7 +410,7 @@ public class DWPlacedFeatureProvider {
         NETHER_ORE_FEATURES.add( key );
         return key;
     }
-
+    
     /** Creates a placed feature key that is automatically added to all biomes. */
     protected static ResourceKey<PlacedFeature> anyDimPostDecor( String name ) {
         final ResourceKey<PlacedFeature> key = key( name + "_any_dimension_post_decoration" );
