@@ -36,8 +36,9 @@ public class DWLangProvider extends DWAbstractLangProvider {
         
         // Mimics
         exception( DWEntities.CHEST_MIMIC.get().getDescriptionId(), "Mimic" );
+        exception( DWEntities.MINI_CHEST_MIMIC.get().getDescriptionId(), "Mini Mimic" );
         exception( DWEntities.JUKEBOX_MIMIC.get().getDescriptionId(), "Mimic" );
-        exception( DWEntities.MINI_SPAWNER_MIMIC.get().getDescriptionId(), "Mimic" );
+        exception( DWEntities.MINI_SPAWNER_MIMIC.get().getDescriptionId(), "Mini Mimic" );
     }
     
     @Override

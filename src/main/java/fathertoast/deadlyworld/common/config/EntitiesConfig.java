@@ -69,7 +69,7 @@ public class EntitiesConfig extends AbstractConfigFile {
     public static class Mimics extends AbstractConfigCategory<EntitiesConfig> {
         
         public final AttributeListField chestAttributes;
-        //public final AttributeListField miniChestAttributes;
+        public final AttributeListField miniChestAttributes;
         public final RLValueListField chestTargetLootTables;
         
         public final AttributeListField jukeboxAttributes;
@@ -82,7 +82,7 @@ public class EntitiesConfig extends AbstractConfigFile {
                     "Options to customize misc global settings." );
             
             chestAttributes = mimicAttributes( "chest" );
-            //miniChestAttributes = miniMimicAttributes( "chest" );
+            miniChestAttributes = miniMimicAttributes( "chest" );
             chestTargetLootTables = SPEC.define( new RLValueListField( "chest_target_loot_tables",
                     1, defaultChestMimicLootTables(),
                     "List of IDs for loot tables that can have a Mimic Core item added to them by Deadly World.",

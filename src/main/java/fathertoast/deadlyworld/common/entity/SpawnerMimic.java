@@ -13,6 +13,9 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -27,13 +30,38 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject, IEntityAdditionalSpawnData {
+    /**
+     * Modified copy-paste of the spawner portion of {@link SpawnEggItem#useOn(UseOnContext)}.
+     */
+    public static boolean spawnEggUseOn( PlayerInteractEvent.EntityInteract event, ServerLevel level ) {
+        ItemStack heldItem = event.getItemStack();
+        
+        if( heldItem.getItem() instanceof SpawnEggItem egg && event.getTarget() instanceof SpawnerMimic spawnerMimic ) {
+            Player player = event.getEntity();
+            
+            EntityType<?> spawnEntity = egg.getType( heldItem.getTag() );
+            spawnerMimic.spawner.setEntityId( spawnEntity, level, level.getRandom(), event.getPos() );
+            spawnerMimic.spawner.addSpawn(); // Let it spawn an extra mob, why not
+            spawnerMimic.sendUpdate( spawnerMimic.spawner, level, event.getPos() );
+            
+            if( !player.getAbilities().instabuild ) { // idk why the vanilla method doesn't need this, but we do
+                heldItem.shrink( 1 );
+            }
+            return true;
+        }
+        return false;
+    }
     
     public static final String TAG_SPAWNER_LOGIC = "SpawnerLogic";
     public static final String TAG_SPAWNER_TYPE = "SpawnerType";
@@ -47,7 +75,6 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         setMaxUpStep( 1.0F );
         setSpawner( new ProgressiveDelaySpawner( SpawnerType.SIMPLE, this ) );
     }
-    
     
     public static AttributeSupplier.Builder createSpawnerMimicAttributes() {
         return Monster.createMonsterAttributes()
@@ -101,6 +128,15 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         }
     }
     
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = new CompoundTag();
+        spawner.save( tag );
+        tag.remove( ProgressiveDelaySpawner.TAG_DYNAMIC_SPAWN_LIST );
+        tag.remove( ProgressiveDelaySpawner.TAG_SPAWN_POTENTIALS );
+        tag.remove( ProgressiveDelaySpawner.TAG_IS_MIMIC );
+        return tag;
+    }
+    
     /**
      * Overridden to return the loot table of the spawner block of the spawner type
      * this mimic's spawner logic uses.
@@ -119,25 +155,17 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
     
     /** Does not despawn in peaceful, but becomes completely passive. */
     @Override
-    protected boolean shouldDespawnInPeaceful() {
-        return false;
-    }
+    protected boolean shouldDespawnInPeaceful() { return false; }
     
     /** Does not despawn naturally. */
     @Override
-    public boolean requiresCustomPersistence() {
-        return true;
-    }
+    public boolean requiresCustomPersistence() { return true; }
     
     @Override
-    protected SoundEvent getHurtSound( DamageSource damageSource ) {
-        return DWSoundEvents.SPAWNER_MIMIC_HURT.get();
-    }
+    protected SoundEvent getHurtSound( DamageSource damageSource ) { return DWSoundEvents.SPAWNER_MIMIC_HURT.get(); }
     
     @Override
-    protected SoundEvent getAmbientSound() {
-        return null;
-    }
+    protected SoundEvent getAmbientSound() { return null; }
     
     @Override
     protected void playStepSound( BlockPos pos, BlockState state ) {
@@ -145,32 +173,22 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
     }
     
     @Override
-    protected SoundEvent getDeathSound() {
-        return DWSoundEvents.SPAWNER_MIMIC_DEATH.get();
-    }
+    protected SoundEvent getDeathSound() { return DWSoundEvents.SPAWNER_MIMIC_DEATH.get(); }
     
     /** Sets the spawner logic for this mimic. */
-    public void setSpawner( ProgressiveDelaySpawner spawnerLogic ) {
-        this.spawner = spawnerLogic;
-    }
+    public void setSpawner( ProgressiveDelaySpawner spawnerLogic ) { this.spawner = spawnerLogic; }
     
     /**
      * @return The current spawner logic for this mimic.
      * Generally SHOULDN'T be null, but might be.
      */
     @Nullable
-    public ProgressiveDelaySpawner getSpawner() {
-        return spawner;
-    }
+    public ProgressiveDelaySpawner getSpawner() { return spawner; }
     
     @Override // ISpawnerObject
-    public void entitySync( ProgressiveDelaySpawner spawner, ServerLevel level, BlockPos pos ) {
-        NetworkHelper.updateSpawnerMimic( level, this );
-    }
-    
-    @Override // ISpawnerObject
-    public void broadcastEvent( ProgressiveDelaySpawner spawner, Level level, BlockPos pos, int eventId ) {
-        // Can't really fire a block event for a non-block
+    public void sendUpdate( ProgressiveDelaySpawner spawner, Level level, BlockPos pos ) {
+        if( level instanceof ServerLevel serverLevel )
+            NetworkHelper.updateSpawnerMimic( serverLevel, this );
     }
     
     @Override // ISpawnerObject
@@ -192,16 +210,14 @@ public class SpawnerMimic extends PathfinderMob implements Enemy, ISpawnerObject
         
         RandomSource random = level.getRandom();
         double x = getX() + random.nextGaussian() / 2;
-        double y = (double) pos.getY() + getBoundingBox().getYsize() + 0.2D;
+        double y = (double) pos.getY() + getBoundingBox().getYsize() + 0.2;
         double z = getZ() + random.nextGaussian() / 2;
         level.addParticle( ParticleTypes.RAIN, x, y, z, 0.0, 0.0, 0.0 );
     }
     
     /** Overridden to make use of additional spawn data. */
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket( this );
-    }
+    public Packet<ClientGamePacketListener> getAddEntityPacket() { return NetworkHooks.getEntitySpawningPacket( this ); }
     
     /**
      * Called on server to write additional

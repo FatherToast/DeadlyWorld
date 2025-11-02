@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.network;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.network.message.S2CSetSpawnerMimicDE;
+import fathertoast.deadlyworld.common.network.message.S2CUpdateSpawnerMimic;
 import fathertoast.deadlyworld.common.network.message.S2CSyncPlaceableFeatures;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +37,7 @@ public final class PacketHandler {
     
     public void registerMessages() {
         // Server -> Client
-        registerMessage( S2CSetSpawnerMimicDE.class, S2CSetSpawnerMimicDE::encode, S2CSetSpawnerMimicDE::decode, S2CSetSpawnerMimicDE::handle );
+        registerMessage( S2CUpdateSpawnerMimic.class, S2CUpdateSpawnerMimic::encode, S2CUpdateSpawnerMimic::decode, S2CUpdateSpawnerMimic::handle );
         registerMessage( S2CSyncPlaceableFeatures.class, S2CSyncPlaceableFeatures::encode, S2CSyncPlaceableFeatures::decode, S2CSyncPlaceableFeatures::handle );
         
         // Client -> Server

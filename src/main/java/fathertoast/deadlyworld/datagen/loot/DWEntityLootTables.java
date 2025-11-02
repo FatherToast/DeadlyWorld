@@ -23,6 +23,7 @@ public class DWEntityLootTables extends EntityLootSubProvider {
     public void generate() {
         // New mobs
         add( DWEntities.CHEST_MIMIC, new LootTableBuilder().addPool( mimicCore() ) );
+        add( DWEntities.MINI_CHEST_MIMIC, new LootTableBuilder().addPool( mimicCore() ) );
         add( DWEntities.JUKEBOX_MIMIC, new LootTableBuilder().addPool( mimicCore() ).addLootTable( "jukebox", Blocks.JUKEBOX.getLootTable() ) );
         add( DWEntities.SPAWNER_MIMIC, new LootTableBuilder().addPool( mimicCore() ) );
         add( DWEntities.MINI_SPAWNER_MIMIC, new LootTableBuilder().addPool( mimicCore() ) );

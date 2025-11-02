@@ -5,33 +5,37 @@ import fathertoast.crust.api.lib.DeferredAction;
 import fathertoast.deadlyworld.api.IFishingPrank;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
 import fathertoast.deadlyworld.common.block.misc.DeadlyInfestedBlock;
-import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.entity.MiniArrow;
+import fathertoast.deadlyworld.common.entity.SpawnerMimic;
 import fathertoast.deadlyworld.common.entity.YeetTnt;
 import fathertoast.deadlyworld.common.item.EventItem;
 import fathertoast.deadlyworld.common.item.SeaMineBlockItem;
 import fathertoast.deadlyworld.common.network.NetworkHelper;
 import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import fathertoast.deadlyworld.common.util.MimicHelper;
+import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
@@ -46,6 +50,7 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -139,6 +144,29 @@ public final class GameEventHandler {
     }
     
     /**
+     * Called before {@link net.minecraft.world.entity.Mob#finalizeSpawn(ServerLevelAccessor, DifficultyInstance,
+     * MobSpawnType, SpawnGroupData, CompoundTag)} is called.
+     * If the event is canceled, Mob.finalizeSpawn is not called, but the entity will still be spawned unless
+     * the spawn is explicitly canceled via {@link MobSpawnEvent.FinalizeSpawn#setSpawnCancelled(boolean)}.
+     * <p>
+     * Note: This event may be called before the underlying chunk is fully loaded; you will cause chunk
+     * loading deadlocks if you do not delay world interactions!
+     *
+     * @param event The event data.
+     */
+    @SubscribeEvent( priority = EventPriority.NORMAL )
+    public static void onFinalizeSpawn( MobSpawnEvent.FinalizeSpawn event ) {
+        // Initialize spawner mimics created any way other than their "natural" triggered spawn method
+        if( event.getSpawnType() != MobSpawnType.TRIGGERED && event.getEntity() instanceof SpawnerMimic spawnerMimic ) {
+            ProgressiveDelaySpawner oldSpawner = spawnerMimic.getSpawner();
+            ProgressiveDelaySpawner newSpawner = new ProgressiveDelaySpawner( oldSpawner == null ?
+                    SpawnerType.SIMPLE : oldSpawner.getSpawnerType(), spawnerMimic );
+            newSpawner.initializeSpawner( event.getLevel().getLevel(), event.getEntity().blockPosition(), event.getLevel().getRandom() );
+            spawnerMimic.setSpawner( newSpawner );
+        }
+    }
+    
+    /**
      * Called whenever an entity is spawned during {@link Level#addFreshEntity(Entity)} through
      * {@link net.minecraft.world.level.entity.PersistentEntitySectionManager#addEntity(EntityAccess, boolean)}.
      * If the event is canceled, the entity will not be spawned.
@@ -218,6 +246,22 @@ public final class GameEventHandler {
                 event.setCancellationResult( InteractionResult.SUCCESS );
                 event.setCanceled( true );
             }
+        }
+    }
+    
+    /**
+     * This event is fired on both sides whenever the player right clicks while targeting an entity.
+     *
+     * @param event The event data.
+     */
+    @SubscribeEvent( priority = EventPriority.NORMAL )
+    public static void onEntityInteract( PlayerInteractEvent.EntityInteract event ) {
+        if( event.isCanceled() || !(event.getLevel() instanceof ServerLevel level) ) return;
+        
+        // Handle spawner mimic setting
+        if( SpawnerMimic.spawnEggUseOn( event, level ) ) {
+            event.setCancellationResult( InteractionResult.CONSUME );
+            event.setCanceled( true );
         }
     }
     

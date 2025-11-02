@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.network;
 
 import fathertoast.deadlyworld.common.entity.SpawnerMimic;
 import fathertoast.deadlyworld.common.item.FeaturePlacerItem;
-import fathertoast.deadlyworld.common.network.message.S2CSetSpawnerMimicDE;
+import fathertoast.deadlyworld.common.network.message.S2CUpdateSpawnerMimic;
 import fathertoast.deadlyworld.common.network.message.S2CSyncPlaceableFeatures;
 import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
 import net.minecraft.server.level.ServerLevel;
@@ -13,9 +13,7 @@ import java.util.List;
 public final class NetworkHelper {
     
     public static void updateSpawnerMimic( ServerLevel level, SpawnerMimic spawnerMimic ) {
-        ProgressiveDelaySpawner spawnerLogic = spawnerMimic.getSpawner();
-        S2CSetSpawnerMimicDE message = new S2CSetSpawnerMimicDE( spawnerMimic.getId(),
-                spawnerLogic == null ? 0 : spawnerLogic.getRemainingSpawns() );
+        S2CUpdateSpawnerMimic message = new S2CUpdateSpawnerMimic( spawnerMimic.getId(), spawnerMimic.getUpdateTag() );
         
         for( ServerPlayer player : level.players() ) {
             PacketHandler.sendToClient( message, player );

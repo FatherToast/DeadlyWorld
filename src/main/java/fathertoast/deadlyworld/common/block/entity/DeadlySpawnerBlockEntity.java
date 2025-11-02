@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObject, IBlockEntityDebugShapeProvider {
     
-    private static final Vec3 DEFAULT_EFFECT_OFFSETS = new Vec3( 0.0, 0.2, 0.0 );
+    private static final Vec3 DEFAULT_EFFECT_OFFSETS = new Vec3( 0.5, 0.2, 0.5 );
     
     protected final ProgressiveDelaySpawner spawnerLogic;
     protected final SpawnerType spawnerType;
@@ -73,6 +74,7 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
         CompoundTag tag = saveWithoutMetadata();
         tag.remove( ProgressiveDelaySpawner.TAG_DYNAMIC_SPAWN_LIST );
         tag.remove( ProgressiveDelaySpawner.TAG_SPAWN_POTENTIALS );
+        tag.remove( ProgressiveDelaySpawner.TAG_IS_MIMIC );
         return tag;
     }
     
@@ -84,8 +86,14 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     
     @Override
     public boolean onlyOpCanSetNbt() { return true; }
-
-
+    
+    @Override // ISpawnerObject
+    public void sendUpdate( ProgressiveDelaySpawner spawner, Level level, BlockPos pos ) {
+        setChanged();
+        BlockState state = level.getBlockState( pos );
+        level.sendBlockUpdated( pos, state, state, Block.UPDATE_ALL );
+    }
+    
     @Override // ISpawnerObject
     public void broadcastEvent( ProgressiveDelaySpawner spawner, Level level, BlockPos pos, int eventId ) {
         level.blockEvent( pos, DWBlocks.spawner( spawnerType ).get(), eventId, 0 );
@@ -112,7 +120,7 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     public Vec3 getEntityRenderOffset() { return DEFAULT_EFFECT_OFFSETS; }
     
     @Nullable
-    @Override
+    @Override // IBlockEntityDebugShapeProvider
     public List<IDebugShape> getDebugShapes() {
         // Show spawn range (activation range is spherical, so won't work yet)
         return List.of( new BoxShape( new AABB( worldPosition )
