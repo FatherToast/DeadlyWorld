@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.datagen.loot;
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
 import fathertoast.crust.api.datagen.loot.LootTableBuilder;
 import fathertoast.deadlyworld.common.block.chest.ChestType;
+import fathertoast.deadlyworld.common.config.dimension.EnvHazardConfig;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
 import net.minecraft.data.loot.packs.VanillaChestLoot;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +11,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -39,7 +41,7 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
         lootRegistry = registry;
         
         for( ChestType type : ChestType.values() ) {
-                add( type.getChestLootTable(), buildLoneChestLoot( type ) );
+            add( type.getChestLootTable(), buildLoneChestLoot( type ) );
         }
         //        for( SpawnerType type : SpawnerType.values() ) {
         //            add( type.getChestLootTable(), buildSpawnerChestLoot( type ) );
@@ -47,6 +49,20 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
         //        for( TowerType type : TowerType.values() ) {
         //            add( type.getChestLootTable(), buildTowerChestLoot( type ) );
         //        }
+        
+        // Buried chests
+        add( EnvHazardConfig.BuriedBlocksCategory.defaultChestLootTable( Level.OVERWORLD ),
+                new LootTableBuilder()
+                        .addPool( buildExplorationLootPool() )
+                        .addLootTable( "base", BuiltInLootTables.SIMPLE_DUNGEON ) );
+        add( EnvHazardConfig.BuriedBlocksCategory.defaultChestLootTable( Level.NETHER ),
+                new LootTableBuilder()
+                        .addPool( buildFieryLootPool() )
+                        .addLootTable( "base", BuiltInLootTables.SIMPLE_DUNGEON ) );
+        add( EnvHazardConfig.BuriedBlocksCategory.defaultChestLootTable( Level.END ),
+                new LootTableBuilder()
+                        .addPool( buildValuableLootPool() )
+                        .addLootTable( "base", BuiltInLootTables.SIMPLE_DUNGEON ) );
     }
     
     private LootTableBuilder buildLoneChestLoot( ChestType type ) {
@@ -97,7 +113,7 @@ public class DWChestLootTables extends VanillaChestLoot { // Extending the vanil
     private LootPool.Builder buildSingleItemLootPool( String name, ItemLike item ) {
         return new DWLootPoolBuilder( name ).setRolls( 1 ).addItem( item, 10 ).toLootPool();
     }
-
+    
     private LootPool.Builder buildExplorationLootPool() {
         return new DWLootPoolBuilder( "exploration" ).setRolls( 1, 3 )
                 // Weapons

@@ -1,10 +1,9 @@
 package fathertoast.deadlyworld.datagen.lang;
 
-import fathertoast.deadlyworld.common.block.unstable.UnstableBlock;
-import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import fathertoast.deadlyworld.common.block.misc.DeadlyInfestedBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.block.unstable.UnstableBlock;
 import fathertoast.deadlyworld.common.core.registry.*;
 import fathertoast.deadlyworld.common.item.AutoGenBlockItem;
 import fathertoast.deadlyworld.common.util.DWDamageTypes;
@@ -67,9 +66,6 @@ public class DWLangProvider extends DWAbstractLangProvider {
         soundSubtitle( DWSoundEvents.MINI_CHEST_OPEN, "Mini Chest opens" );
         soundSubtitle( DWSoundEvents.MINI_CHEST_CLOSE, "Mini Chest closes" );
         
-        // Containers
-        container( "mini_chest", "Mini Chest" );
-        
         // Item tooltips
         tooltip( DWItems.FEATURE_PLACER, "Generates:" );
         tooltip( DWItems.CONTAINER_INFESTATION, "When triggered:" );
@@ -84,12 +80,15 @@ public class DWLangProvider extends DWAbstractLangProvider {
         add( AutoGenBlockItem.translationKey( DeadlyInfestedBlock.BLOCK_KEY ), "Infested" );
         add( AutoGenBlockItem.translationKey( UnstableBlock.BLOCK_KEY ), "Unstable" );
         
+        // Misc stuff
+        container( "mini_chest", "Mini Chest" );
         deathMessage( DWDamageTypes.SPIKE_TRAP,
                 MsgPlaceholder.FIRST + " was impaled on a spike trap",
                 MsgPlaceholder.FIRST + " was impaled on a spike trap while trying to escape " + MsgPlaceholder.SECOND );
         deathMessage( DWDamageTypes.TRIGGER_SILVERFISH,
                 MsgPlaceholder.FIRST + " was consumed by anger",
                 MsgPlaceholder.FIRST + " was consumed by anger for " + MsgPlaceholder.SECOND );
+        add( DWEntities.MINI_SPIDER.get().getDescriptionId() + ".spooky", "Itchy Bitchy Spider" );
         
         // Auto-gen for registries
         items( DWItems.REGISTRY );

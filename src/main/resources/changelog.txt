@@ -4,7 +4,7 @@
         - API for registering custom DecoyTypes and renderers.
     - Added auto-generated infested blocks (based on config).
     - Added Runny Lava fluid / block.
-    - Added Mini Chest block.
+    - Added Mini Chest block and mimic.
     - Dungeon / Monster Room overhaul.
         - Added config option to disable vanilla monster room generation.
         - Added custom simple dungeon feature in place of the vanilla dungeon.
@@ -12,6 +12,7 @@
     - Added feature placer item to help with testing.
     - Added Lone Chest feature.
         - Added event items.
+    - Added new Spike Trap feature.
     - Added new Sea Mine feature.
         - Added Normal Sea Mine block.
         - Added Puffer Sea Mine block.
