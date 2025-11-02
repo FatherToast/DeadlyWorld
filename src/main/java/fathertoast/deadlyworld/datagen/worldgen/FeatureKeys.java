@@ -2,11 +2,11 @@ package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
-import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.VeinConfig;
 import net.minecraft.resources.ResourceKey;
@@ -47,9 +47,9 @@ public class FeatureKeys {
         return new FeatureKeys( DWConfiguredFeatureProvider.netherKey( name ),
                 DWPlacedFeatureProvider.netherKey( name ) );
     }
-
+    
     // Post decoration features
-
+    
     public static FeatureKeys anyDimPostDecoration( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.anyDimPostDecor( name ),
                 DWPlacedFeatureProvider.anyDimPostDecor( name ) );
@@ -72,7 +72,7 @@ public class FeatureKeys {
         DWAbstractCFProvider.NOT_PLACEABLE.add( configuredKey );
         return this;
     }
-
+    
     /**
      * Marks the configured feature as 'post decor',
      * delaying generation to after {@link net.minecraft.world.level.levelgen.GenerationStep.Decoration#UNDERGROUND_DECORATION}.
@@ -82,7 +82,7 @@ public class FeatureKeys {
         return this;
     }
     
-    /** Feature key-pair for features that generate in only in dimensions with naturally generating water. */
+    /** Feature key-pair for features that generate only in dimensions with naturally generating water. */
     public static class WaterFeature {
         
         public final FeatureKeys overworldKeys;
@@ -173,34 +173,34 @@ public class FeatureKeys {
         }
     }
     
-    public static class SpikeTrap extends TypicalFeature {
+    public static class SpikeTrap {
         
-        public static SpikeTrap of( SpikeTrapType type, String name ) { return new SpikeTrap( type, overworld( name ), nether( name ) ); }
-
+        public static SpikeTrap of( SpikeTrapType type, FeatureKeys featureKeys ) {
+            return new SpikeTrap( type, featureKeys );
+        }
+        
+        public final FeatureKeys featureKeys;
         public final SpikeTrapType trapType;
         
-        protected SpikeTrap( SpikeTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
-            super( overworld, nether );
-
+        protected SpikeTrap( SpikeTrapType type, FeatureKeys featureKeys ) {
             trapType = type;
+            this.featureKeys = featureKeys;
             
-            DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( overworld.configuredKey );
-            DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( nether.configuredKey );
-            DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( overworld.placedKey );
-            DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( nether.placedKey );
+            DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( featureKeys.configuredKey );
+            DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( featureKeys.placedKey );
         }
     }
-
+    
     public static class PitfallTrap extends TypicalFeature {
-
+        
         public static PitfallTrap of( PitfallTrapType type, String name ) { return new PitfallTrap( type, overworld( name ), nether( name ) ); }
-
+        
         public final PitfallTrapType trapType;
-
+        
         protected PitfallTrap( PitfallTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
             trapType = type;
-
+            
             DWAbstractCFProvider.PITFALL_TRAP_FEATURES.add( overworld.configuredKey );
             DWAbstractCFProvider.PITFALL_TRAP_FEATURES.add( nether.configuredKey );
             DWPlacedFeatureProvider.PITFALL_TRAP_FEATURES.add( overworld.placedKey );

@@ -2,11 +2,9 @@ package fathertoast.deadlyworld.common.world.levelgen.trap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.world.levelgen.ChestSettings;
 import fathertoast.deadlyworld.common.world.levelgen.SpikePatchSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -24,38 +22,37 @@ public class SpikeTrapPatchFeature extends DeadlyFeature<SpikeTrapPatchFeature.C
             SpikePatchSettings patchSettings,
             TagKey<Block> canReplace
     ) implements FeatureConfiguration {
-        public static final Codec<SpikeTrapPatchFeature.Configuration> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
+        public static final Codec<SpikeTrapPatchFeature.Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
                 BlockStateProvider.CODEC.fieldOf( "spikes_provider" ).forGetter( SpikeTrapPatchFeature.Configuration::spikesProvider ),
                 SpikePatchSettings.CODEC.fieldOf( "patch_settings" ).forGetter( SpikeTrapPatchFeature.Configuration::patchSettings ),
                 TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "can_replace" ).forGetter( SpikeTrapPatchFeature.Configuration::canReplace )
         ).apply( instance, SpikeTrapPatchFeature.Configuration::new ) );
     }
-
+    
     public SpikeTrapPatchFeature() {
         this( SpikeTrapPatchFeature.Configuration.CODEC );
     }
-
-    public SpikeTrapPatchFeature(Codec<SpikeTrapPatchFeature.Configuration> codec ) {
+    
+    public SpikeTrapPatchFeature( Codec<SpikeTrapPatchFeature.Configuration> codec ) {
         super( codec );
     }
-
+    
     @Override
     public boolean place( FeaturePlaceContext<SpikeTrapPatchFeature.Configuration> context ) {
-        final boolean notSubfeature = context.topFeature().isEmpty();
         final SpikeTrapPatchFeature.Configuration config = context.config();
         final RandomSource random = context.random();
         final BlockPos origin = context.origin();
         final WorldGenLevel level = context.level();
-        final Predicate<BlockState> predicate = (state) -> state.is( config.canReplace );
-
-
+        final Predicate<BlockState> predicate = ( state ) -> state.is( config.canReplace );
+        
+        
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
-
+        
         int placedBlocks = 0;
         int xzSpread = config.patchSettings.xzSpread().sample( random );
         int ySpread = config.patchSettings.ySpread().sample( random );
-        int patchSize = config.patchSettings.patchSize().sample( random );
-
+        int patchSize = config.patchSettings.placementTries().sample( random );
+        
         // Place spike patch
         for( int tries = 0; tries < patchSize; ++tries ) {
             cursor.setWithOffset(
@@ -64,28 +61,25 @@ public class SpikeTrapPatchFeature extends DeadlyFeature<SpikeTrapPatchFeature.C
                     random.nextInt( ySpread ) - random.nextInt( ySpread ),
                     random.nextInt( xzSpread ) - random.nextInt( xzSpread )
             );
-
-            if ( notSubfeature ) {
-                // Make sure the chest block can be placed
-                if ( !predicate.test( level.getBlockState( cursor ) ) ) continue;
-                // Don't replace blocks with block entities
-                if ( level.getExistingBlockEntity( cursor ) != null ) continue;
-            }
-
+            // Check if the existing state at target can be replaced
+            if( !predicate.test( level.getBlockState( cursor ) ) ) continue;
+            // Don't replace blocks with block entities
+            if( level.getExistingBlockEntity( cursor ) != null ) continue;
+            
             // Place spike trap
             BlockState spikes = config.spikesProvider.getState( random, cursor );
-
+            
             // Make sure the location is valid for the picked spikes
-            if ( spikes.canSurvive( level, cursor ) ) {
-                setBlock(level, cursor, config.spikesProvider, random);
+            if( spikes.canSurvive( level, cursor ) ) {
+                setBlock( level, cursor, config.spikesProvider, random );
                 ++placedBlocks;
             }
         }
-
+        
         // Generate debug marker
-        if ( placedBlocks > 0 && config.patchSettings.debugMarker().get() )
+        if( placedBlocks > 0 && config.patchSettings.debugMarker().get() )
             debugMarker( level, origin );
-
+        
         return placedBlocks > 0;
     }
 }

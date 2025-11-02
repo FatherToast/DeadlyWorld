@@ -1,7 +1,6 @@
 package fathertoast.deadlyworld.common.block.spike_trap;
 
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.util.DWDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -27,9 +26,9 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings( "deprecation" )
 public class BaseSpikeTrapBlock extends Block {
-
+    
     public static EnumProperty<Direction> FACING = BlockStateProperties.FACING;
-
+    
     /**
      * Contains the bounding boxes per facing to use when checking if any entities are
      * pressing this spike trap.<br><br>
@@ -48,7 +47,7 @@ public class BaseSpikeTrapBlock extends Block {
                     2.0D, 16.0D, 16.0D ).toAabbs().get( 0 ),
             Block.box( 14.0D, 0.0D, 0.0D,
                     16.0D, 16.0D, 16.0D ).toAabbs().get( 0 )
-
+        
     };
     /**
      * Contains the collision/visual shapes to use depending on facing when
@@ -68,7 +67,7 @@ public class BaseSpikeTrapBlock extends Block {
                     1.0D, 16.0D, 16.0D ),
             Block.box( 15.0D, 0.0D, 0.0D,
                     16.0D, 16.0D, 16.0D )
-
+        
     };
     /**
      * Contains the collision/visual shapes to use depending on facing
@@ -89,11 +88,10 @@ public class BaseSpikeTrapBlock extends Block {
             Block.box( 15.5D, 0.0D, 0.0D,
                     16.0D, 16.0D, 16.0D )
     };
-
+    
     protected final SpikeTrapType type;
-
-
-
+    
+    
     public BaseSpikeTrapBlock( SpikeTrapType type ) {
         super( Config.BLOCKS.get( type ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.STONE_PRESSURE_PLATE ) ) );
         this.type = type;
@@ -101,59 +99,67 @@ public class BaseSpikeTrapBlock extends Block {
                 .setValue( FACING, Direction.UP )
         );
     }
-
+    
     public SpikeTrapType getSpikeTrapType() {
         return type;
     }
-
+    
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
+    public VoxelShape getShape( BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
         Direction dir = state.getValue( FACING ).getOpposite();
         return OUTLINE_SHAPES[dir.ordinal()];
     }
-
+    
     @Override
-    public BlockState updateShape(BlockState state, Direction dir, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos ) {
+    public BlockState updateShape( BlockState state, Direction dir, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos ) {
         return !state.canSurvive( level, pos )
                 ? Blocks.AIR.defaultBlockState()
                 : super.updateShape( state, dir, neighborState, level, pos, neighborPos );
     }
-
+    
     @Override
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos ) {
+    public int getLightEmission( BlockState state, BlockGetter level, BlockPos pos ) {
+        return type.getLightLevel();
+    }
+    
+    @Override
+    public boolean canSurvive( BlockState state, LevelReader level, BlockPos pos ) {
         Direction facing = state.getValue( FACING );
         BlockPos attachedPos = pos.relative( facing.getOpposite() );
         BlockState neighborState = level.getBlockState( attachedPos );
-
+        
         return neighborState.isFaceSturdy( level, attachedPos, facing );
     }
-
+    
     @Override
     @Nullable
     public BlockState getStateForPlacement( BlockPlaceContext context ) {
         Direction facing = context.getClickedFace();
         BlockState stateForPlacement = defaultBlockState().setValue( FACING, facing );
-
-        if ( !canSurvive( stateForPlacement, context.getLevel(), context.getClickedPos() ) )
+        
+        if( !canSurvive( stateForPlacement, context.getLevel(), context.getClickedPos() ) )
             return null;
-
+        
         return stateForPlacement;
     }
-
+    
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity ) {
-        if ( entity instanceof LivingEntity livingEntity ) {
-            float damage = type.getConfig( level ).damage.getFloat();
-            livingEntity.hurt( DWDamageTypes.of( level, DWDamageTypes.SPIKE_TRAP ), damage );
+    public void entityInside( BlockState state, Level level, BlockPos pos, Entity entity ) {
+        if( !level.isClientSide && entity instanceof LivingEntity livingEntity ) {
+            hurtEntityInside( level, pos, livingEntity );
         }
     }
-
+    
+    protected void hurtEntityInside( Level level, BlockPos pos, LivingEntity entity ) {
+        type.hurtEntity( level, pos, entity );
+    }
+    
     @Override
     @Nullable
     public BlockPathTypes getBlockPathType( BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob ) {
-        return BlockPathTypes.DANGER_OTHER;
+        return BlockPathTypes.DAMAGE_OTHER;
     }
-
+    
     @Override
     protected void createBlockStateDefinition( StateDefinition.Builder<Block, BlockState> builder ) {
         super.createBlockStateDefinition( builder.add( FACING ) );

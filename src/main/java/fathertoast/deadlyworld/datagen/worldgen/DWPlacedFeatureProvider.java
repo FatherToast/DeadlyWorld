@@ -2,11 +2,11 @@ package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
-import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
@@ -52,14 +52,14 @@ public class DWPlacedFeatureProvider {
     public static final List<ResourceKey<PlacedFeature>> OVERWORLD_FEATURES = new ArrayList<>();
     /** List of all decoration placements that should generate in nether biomes. */
     public static final List<ResourceKey<PlacedFeature>> NETHER_FEATURES = new ArrayList<>();
-
+    
     /**
      * List of all placements that don't care about dimension type and should generate anywhere,
      * AFTER {@link net.minecraft.world.level.levelgen.GenerationStep.Decoration#UNDERGROUND_DECORATION}.
      * Any restrictions are handled in the feature itself, usually config based.
      */
     public static final List<ResourceKey<PlacedFeature>> ANY_DIMENSION_POST_DECORATION = new ArrayList<>();
-
+    
     /** List of all lone chest placements. */
     public static final List<ResourceKey<PlacedFeature>> LONE_CHEST_FEATURES = new ArrayList<>();
     /** List of all spawner placements. */
@@ -76,7 +76,7 @@ public class DWPlacedFeatureProvider {
     public static final List<ResourceKey<PlacedFeature>> SEA_MINE_FEATURES = new ArrayList<>();
     /** List of all dungeon placements. */
     public static final List<ResourceKey<PlacedFeature>> DUNGEON_FEATURES = new ArrayList<>();
-
+    
     
     private static final BlockPredicate PREDICATE_ANY_FLUID = BlockPredicate.not( BlockPredicate.noFluid() );
     private static final BlockPredicate PREDICATE_WATER = BlockPredicate.matchesFluids( Fluids.WATER );
@@ -122,16 +122,22 @@ public class DWPlacedFeatureProvider {
         // Water trap variant
         register( context, getter, SEA_MINE_MOB_TRAP,
                 waterFloorFeature( FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs ) ) );
-
+        
         // Spike trap patch placements
-        registerSpikePatch( context, getter, STATIC_SPIKES, overworldConfigs, netherConfigs );
-        registerSpikePatch( context, getter, MECHANICAL_SPIKES, overworldConfigs, netherConfigs );
-
+        registerSpikePatch( context, getter, MUNDANE_SPIKES, overworldConfigs );
+        registerSpikePatch( context, getter, POISON_SPIKES, overworldConfigs );
+        registerSpikePatch( context, getter, FIERY_SPIKES, netherConfigs );
+        registerSpikePatch( context, getter, WITHERING_SPIKES, netherConfigs );
+        registerSpikePatch( context, getter, MECHANICAL_MUNDANE_SPIKES, overworldConfigs );
+        registerSpikePatch( context, getter, MECHANICAL_POISON_SPIKES, overworldConfigs );
+        registerSpikePatch( context, getter, MECHANICAL_FIERY_SPIKES, netherConfigs );
+        registerSpikePatch( context, getter, MECHANICAL_WITHERING_SPIKES, netherConfigs );
+        
         // Standard pitfall trap placements
         registerPitfallTrap( context, getter, SPIKES_PITFALL_TRAP, overworldConfigs, netherConfigs );
         registerPitfallTrap( context, getter, LAVA_PITFALL_TRAP, overworldConfigs, netherConfigs );
         registerPitfallTrap( context, getter, COBWEB_PITFALL_TRAP, overworldConfigs, netherConfigs );
-
+        
         // Standard tower placements
         registerTower( context, getter, SIMPLE_TOWER, overworldConfigs, netherConfigs );
         registerTower( context, getter, FIRE_TOWER, overworldConfigs, netherConfigs );
@@ -169,12 +175,12 @@ public class DWPlacedFeatureProvider {
     protected static List<PlacementModifier> floorTrap( FloorTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
     }
-
+    
     /** @return Modifiers for a spike patch trap feature. */
     protected static List<PlacementModifier> pitfallTrap( SpikeTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
     }
-
+    
     /** @return Modifiers for a pitfall trap feature. */
     protected static List<PlacementModifier> pitfallTrap( PitfallTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
@@ -295,17 +301,16 @@ public class DWPlacedFeatureProvider {
         register( context, getter, featureKeys.overworldKeys, floorTrap( featureKeys.trapType, overworldConfigs ) );
         register( context, getter, featureKeys.netherKeys, floorTrap( featureKeys.trapType, netherConfigs ) );
     }
-
+    
     /** Registers a placed spike trap patch feature to each supported dimension. */
     protected static void registerSpikePatch( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                               FeatureKeys.SpikeTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        register( context, getter, featureKeys.overworldKeys, pitfallTrap( featureKeys.trapType, overworldConfigs ) );
-        register( context, getter, featureKeys.netherKeys, pitfallTrap( featureKeys.trapType, netherConfigs ) );
+                                              FeatureKeys.SpikeTrap featureKeys, DimensionConfigGroup dimConfig ) {
+        register( context, getter, featureKeys.featureKeys, pitfallTrap( featureKeys.trapType, dimConfig ) );
     }
-
+    
     /** Registers a placed floor trap type feature to each supported dimension. */
     protected static void registerPitfallTrap( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
-                                             FeatureKeys.PitfallTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+                                               FeatureKeys.PitfallTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         register( context, getter, featureKeys.overworldKeys, pitfallTrap( featureKeys.trapType, overworldConfigs ) );
         register( context, getter, featureKeys.netherKeys, pitfallTrap( featureKeys.trapType, netherConfigs ) );
     }
@@ -374,7 +379,7 @@ public class DWPlacedFeatureProvider {
         NETHER_ORE_FEATURES.add( key );
         return key;
     }
-
+    
     /** Creates a placed feature key that is automatically added to all biomes. */
     protected static ResourceKey<PlacedFeature> anyDimPostDecor( String name ) {
         final ResourceKey<PlacedFeature> key = key( name + "_any_dimension_post_decoration" );

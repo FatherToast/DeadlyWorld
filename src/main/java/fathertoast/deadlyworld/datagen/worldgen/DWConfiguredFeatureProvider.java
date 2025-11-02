@@ -2,11 +2,11 @@ package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
@@ -15,24 +15,20 @@ import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
-import fathertoast.deadlyworld.common.world.levelgen.dungeon.NormalDungeonFeature;
 import fathertoast.deadlyworld.common.world.levelgen.dungeon.MiniDungeonFeature;
+import fathertoast.deadlyworld.common.world.levelgen.dungeon.NormalDungeonFeature;
 import fathertoast.deadlyworld.common.world.levelgen.misc.BuriedBlocksFeature;
-import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.misc.LoneHangingSpawnerFeature;
+import fathertoast.deadlyworld.common.world.levelgen.trap.FloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature;
 import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 /**
  * For vanilla ore configured features, see {@link net.minecraft.data.worldgen.features.OreFeatures}.
@@ -68,14 +64,20 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.FloorTrap LAVA_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.LAVA, "lava_trap" );
     public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
-
-    public static final FeatureKeys.SpikeTrap STATIC_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.STATIC, "static_spikes" );
-    public static final FeatureKeys.SpikeTrap MECHANICAL_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL, "mechanical_spikes" );
-
+    
+    public static final FeatureKeys.SpikeTrap MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MUNDANE, FeatureKeys.overworld( "mundane_spikes" ) );
+    public static final FeatureKeys.SpikeTrap POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.POISON, FeatureKeys.overworld( "poison_spikes" ) );
+    public static final FeatureKeys.SpikeTrap FIERY_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.FIERY, FeatureKeys.nether( "fiery_spikes" ) );
+    public static final FeatureKeys.SpikeTrap WITHERING_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.WITHERING, FeatureKeys.nether( "withering_spikes" ) );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_MUNDANE, FeatureKeys.overworld( "mechanical_mundane_spikes" ) );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_POISON, FeatureKeys.overworld( "mechanical_poison_spikes" ) );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_FIERY_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_FIERY, FeatureKeys.nether( "mechanical_fiery_spikes" ) );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_WITHERING_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_WITHERING, FeatureKeys.nether( "mechanical_withering_spikes" ) );
+    
     public static final FeatureKeys.PitfallTrap SPIKES_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.SPIKES, "spikes_pitfall_trap" );
     public static final FeatureKeys.PitfallTrap LAVA_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.LAVA, "lava_pitfall_trap" );
     public static final FeatureKeys.PitfallTrap COBWEB_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.COBWEB, "cobweb_pitfall_trap" );
-
+    
     public static final FeatureKeys.TowerDispenser SIMPLE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.SIMPLE, "simple_tower" );
     public static final FeatureKeys.TowerDispenser FIRE_TOWER = FeatureKeys.TowerDispenser.of( TowerType.FIRE, "fire_tower" );
     public static final FeatureKeys.TowerDispenser POTION_TOWER = FeatureKeys.TowerDispenser.of( TowerType.POTION, "potion_tower" );
@@ -85,7 +87,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.SeaMine NORMAL_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.NORMAL, "normal_sea_mine" );
     public static final FeatureKeys.SeaMine PUFFER_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.PUFFER, "puffer_sea_mine" );
     public static final FeatureKeys.SeaMine GUARDIAN_SEA_MINE = FeatureKeys.SeaMine.of( SeaMineType.GUARDIAN, "guardian_sea_mine" );
-
+    
     public static final FeatureKeys.SimpleDungeon NORMAL_DUNGEON = FeatureKeys.SimpleDungeon.of( "simple_dungeon" );
     public static final FeatureKeys.SimpleDungeon MINI_DUNGEON = FeatureKeys.SimpleDungeon.of( "mini_dungeon" );
     
@@ -140,19 +142,19 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 block( Blocks.INFESTED_COBBLESTONE ),
                 SpawnerSettings.of( SILVERFISH_NEST.spawnerType, overworldConfigs ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-
+        
         register( context, SILVERFISH_NEST.netherKeys, new ConfiguredFeature<>( DWFeatures.SILVERFISH_NEST.get(), new SilverfishNestFeature.Configuration(
                 block( DWBlocks.spawner( SILVERFISH_NEST.spawnerType ) ),
                 block( Blocks.INFESTED_DEEPSLATE ),
                 SpawnerSettings.of( SILVERFISH_NEST.spawnerType, netherConfigs ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-
+        
         register( context, FLOATY_SPAWNER.overworldKeys, new ConfiguredFeature<>( DWFeatures.LONE_HANGING_SPAWNER.get(), new LoneHangingSpawnerFeature.Configuration(
                 block( DWBlocks.spawner( FLOATY_SPAWNER.spawnerType ) ),
                 block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y ) ),
                 ConfigConstantIntProvider.of( overworldConfigs.SPAWNERS.FLOATY.distFromFloor ),
                 SpawnerSettings.of( FLOATY_SPAWNER.spawnerType, overworldConfigs ), BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-
+        
         register( context, FLOATY_SPAWNER.netherKeys, new ConfiguredFeature<>( DWFeatures.LONE_HANGING_SPAWNER.get(), new LoneHangingSpawnerFeature.Configuration(
                 block( DWBlocks.spawner( FLOATY_SPAWNER.spawnerType ) ),
                 block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y ) ),
@@ -176,21 +178,27 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         register( context, POTION_TRAP.netherKeys, new ConfiguredFeature<>( DWFeatures.POTION_FLOOR_TRAP.get(), new PotionFloorTrapFeature.Configuration(
                 block( DWBlocks.floorTrap( POTION_TRAP.trapType ) ), PotionFloorTrapSettings.create( netherConfigs.FLOOR_TRAPS.POTION ),
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
-
+        
         // Spike traps
-        registerSpikePatch( context, STATIC_SPIKES, overworldConfigs, netherConfigs );
-        registerSpikePatch( context, MECHANICAL_SPIKES, overworldConfigs, netherConfigs );
-
+        registerSpikePatch( context, MUNDANE_SPIKES, overworldConfigs );
+        registerSpikePatch( context, POISON_SPIKES, overworldConfigs );
+        registerSpikePatch( context, FIERY_SPIKES, netherConfigs );
+        registerSpikePatch( context, WITHERING_SPIKES, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_MUNDANE_SPIKES, overworldConfigs );
+        registerSpikePatch( context, MECHANICAL_POISON_SPIKES, overworldConfigs );
+        registerSpikePatch( context, MECHANICAL_FIERY_SPIKES, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_WITHERING_SPIKES, netherConfigs );
+        
         // Pitfall traps
         registerPitfallTrap( context, SPIKES_PITFALL_TRAP,
                 // overworld
                 blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
                 block( Blocks.AIR ),
-                block( DWBlocks.spikeTrap( SpikeTrapType.STATIC ) ),
+                block( DWBlocks.spikeTrap( SpikeTrapType.MUNDANE ) ),
                 // nether
                 blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
                 block( Blocks.AIR ),
-                block( DWBlocks.spikeTrap( SpikeTrapType.STATIC ) ),
+                blocks( DWBlocks.spikeTrap( SpikeTrapType.FIERY ).get().defaultBlockState(), DWBlocks.spikeTrap( SpikeTrapType.MUNDANE ).get().defaultBlockState() ),
                 overworldConfigs, netherConfigs );
         registerPitfallTrap( context, LAVA_PITFALL_TRAP,
                 // overworld
@@ -212,7 +220,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 block( Blocks.COBWEB ),
                 block( Blocks.COBWEB ),
                 overworldConfigs, netherConfigs );
-
+        
         // Towers
         registerTower( context, SIMPLE_TOWER,
                 overworldConfigs, block( Blocks.COBBLESTONE ),

@@ -87,15 +87,15 @@ public abstract class DWAbstractCFProvider {
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> SEA_MINE_FEATURES = new ArrayList<>();
     /** List of all dungeon configurations. */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> DUNGEON_FEATURES = new ArrayList<>();
-
+    
     /**
      * List of all configurations that don't care about dimension type and should generate anywhere,
      * AFTER {@link net.minecraft.world.level.levelgen.GenerationStep.Decoration#UNDERGROUND_DECORATION}.
      * Any restrictions are handled in the feature itself, usually config based.
      */
     public static final List<ResourceKey<ConfiguredFeature<?, ?>>> ANY_DIMENSION_POST_DECORATION = new ArrayList<>();
-
-
+    
+    
     private static final ResourceLocation EMPTY_RESOURCE_LOCATION = ResourceLocation.fromNamespaceAndPath( "", "" );
     
     // We aren't adding any "actual" ores, so we just use the base stone replace rules like dirt, etc. does
@@ -110,21 +110,21 @@ public abstract class DWAbstractCFProvider {
     
     /** Convenience method for making a simple block state provider. */
     protected static BlockStateProvider block( BlockState block ) { return BlockStateProvider.simple( block ); }
-
+    
     /** Convenience method for making a simple weighted random state provider with equal weights. */
     protected static BlockStateProvider blocks( BlockState... blocks ) {
         SimpleWeightedRandomList.Builder<BlockState> builder = new SimpleWeightedRandomList.Builder<>();
-
+        
         for( BlockState state : blocks ) {
             builder.add( state, 1 );
         }
         return new WeightedStateProvider( builder );
     }
-
+    
     /** Convenience method for making a simple weighted random state provider. */
     protected static BlockStateProvider weightedBlocks( Pair<BlockState, Integer>... stateWeightPairs ) {
         SimpleWeightedRandomList.Builder<BlockState> builder = new SimpleWeightedRandomList.Builder<>();
-
+        
         for( Pair<BlockState, Integer> pair : stateWeightPairs ) {
             builder.add( pair.getFirst(), pair.getSecond() );
         }
@@ -189,7 +189,7 @@ public abstract class DWAbstractCFProvider {
                         SpawnerSettings.of( type.getConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE, vines ) ) );
     }
-
+    
     /** Registers a configured floor trap type feature to each supported dimension. */
     protected static void registerFloorTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.FloorTrap featureKeys,
                                              DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
@@ -206,27 +206,21 @@ public abstract class DWAbstractCFProvider {
                         FloorTrapSettings.of( type.getConfig( dimConfigs ) ),
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
-
-
-    /** Registers a configured spike trap type feature to each supported dimension. */
-    protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
-                                              DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        registerSpikePatch( context, featureKeys.overworldKeys, featureKeys.trapType, overworldConfigs );
-        registerSpikePatch( context, featureKeys.netherKeys, featureKeys.trapType, netherConfigs );
-    }
-
+    
+    
     /** Registers a configured spike trap type feature. */
-    protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                              SpikeTrapType type, DimensionConfigGroup dimConfigs ) {
+    protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
+                                              DimensionConfigGroup dimConfigs ) {
+        SpikeTrapType type = featureKeys.trapType;
         SpikeTrapConfig.SpikeTrapTypeCategory config = type.getConfig( dimConfigs );
-
-        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SINGLE_BLOCK.get(),
+        
+        register( context, featureKeys.featureKeys, new ConfiguredFeature<>( DWFeatures.SINGLE_BLOCK.get(),
                 new SpikeTrapPatchFeature.Configuration(
                         block( DWBlocks.spikeTrap( type ) ),
                         SpikePatchSettings.of( config ),
                         BlockTags.REPLACEABLE ) ) );
     }
-
+    
     /** Registers a configured pitfall trap type feature to each supported dimension. */
     protected static void registerPitfallTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.PitfallTrap featureKeys,
                                                BlockStateProvider overworldCoverProvider, BlockStateProvider overworldFillProvider,
@@ -240,7 +234,7 @@ public abstract class DWAbstractCFProvider {
         registerPitfallTrap( context, featureKeys.netherKeys, featureKeys.trapType,
                 netherCoverProvider, netherFillProvider, netherFloorProvider, netherConfigs );
     }
-
+    
     /** Registers a configured pitfall trap type feature. */
     protected static void registerPitfallTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
                                                PitfallTrapType type, BlockStateProvider coverProvider, BlockStateProvider fillProvider,
@@ -287,7 +281,7 @@ public abstract class DWAbstractCFProvider {
                         .setValue( SeaMineBlock.WATERLOGGED, true ) ), trailProvider,
                         SeaMineSettings.of( type.getConfig( dimConfigs ) ) ) ) );
     }
-
+    
     /** Registers a configured feature. */
     protected static void register( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys, ConfiguredFeature<?, ?> configuredFeature ) {
         context.register( featureKeys.configuredKey, configuredFeature );
@@ -305,7 +299,7 @@ public abstract class DWAbstractCFProvider {
         ANY_DIMENSION_ORE_FEATURES.add( key );
         return key;
     }
-
+    
     /** Creates a configured key for an "any dimension" post-decor feature. */
     protected static ResourceKey<ConfiguredFeature<?, ?>> anyDimPostDecor( String name ) {
         ResourceKey<ConfiguredFeature<?, ?>> key = key( name + "_any_dimension_post_decoration" );
