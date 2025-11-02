@@ -65,14 +65,14 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
     
-    public static final FeatureKeys.SpikeTrap MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MUNDANE, FeatureKeys.overworld( "mundane_spikes" ) );
-    public static final FeatureKeys.SpikeTrap POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.POISON, FeatureKeys.overworld( "poison_spikes" ) );
-    public static final FeatureKeys.SpikeTrap FIERY_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.FIERY, FeatureKeys.nether( "fiery_spikes" ) );
-    public static final FeatureKeys.SpikeTrap WITHERING_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.WITHERING, FeatureKeys.nether( "withering_spikes" ) );
-    public static final FeatureKeys.SpikeTrap MECHANICAL_MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_MUNDANE, FeatureKeys.overworld( "mechanical_mundane_spikes" ) );
-    public static final FeatureKeys.SpikeTrap MECHANICAL_POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_POISON, FeatureKeys.overworld( "mechanical_poison_spikes" ) );
-    public static final FeatureKeys.SpikeTrap MECHANICAL_FIERY_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_FIERY, FeatureKeys.nether( "mechanical_fiery_spikes" ) );
-    public static final FeatureKeys.SpikeTrap MECHANICAL_WITHERING_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_WITHERING, FeatureKeys.nether( "mechanical_withering_spikes" ) );
+    public static final FeatureKeys.SpikeTrap MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MUNDANE, "mundane_spikes" );
+    public static final FeatureKeys.SpikeTrap POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.POISON, "poison_spikes" );
+    public static final FeatureKeys.SpikeTrap FIERY_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.FIERY, "fiery_spikes" );
+    public static final FeatureKeys.SpikeTrap WITHERING_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.WITHERING, "withering_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_MUNDANE, "mechanical_mundane_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_POISON, "mechanical_poison_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_FIERY_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_FIERY, "mechanical_fiery_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_WITHERING_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_WITHERING, "mechanical_withering_spikes" );
     
     public static final FeatureKeys.PitfallTrap SPIKES_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.SPIKES, "spikes_pitfall_trap" );
     public static final FeatureKeys.PitfallTrap LAVA_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.LAVA, "lava_pitfall_trap" );
@@ -180,14 +180,14 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         
         // Spike traps
-        registerSpikePatch( context, MUNDANE_SPIKES, overworldConfigs );
-        registerSpikePatch( context, POISON_SPIKES, overworldConfigs );
-        registerSpikePatch( context, FIERY_SPIKES, netherConfigs );
-        registerSpikePatch( context, WITHERING_SPIKES, netherConfigs );
-        registerSpikePatch( context, MECHANICAL_MUNDANE_SPIKES, overworldConfigs );
-        registerSpikePatch( context, MECHANICAL_POISON_SPIKES, overworldConfigs );
-        registerSpikePatch( context, MECHANICAL_FIERY_SPIKES, netherConfigs );
-        registerSpikePatch( context, MECHANICAL_WITHERING_SPIKES, netherConfigs );
+        registerSpikePatch( context, MUNDANE_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, POISON_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, FIERY_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, WITHERING_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_MUNDANE_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_POISON_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_FIERY_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_WITHERING_SPIKES, overworldConfigs, netherConfigs );
         
         // Pitfall traps
         registerPitfallTrap( context, SPIKES_PITFALL_TRAP,

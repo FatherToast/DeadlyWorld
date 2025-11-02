@@ -207,14 +207,18 @@ public abstract class DWAbstractCFProvider {
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
     
+    protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
+                                              DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
+        registerSpikePatch( context, featureKeys.overworldKeys, featureKeys.trapType, overworldConfigs );
+        registerSpikePatch( context, featureKeys.netherKeys, featureKeys.trapType, netherConfigs );
+    }
     
     /** Registers a configured spike trap type feature. */
-    protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
-                                              DimensionConfigGroup dimConfigs ) {
-        SpikeTrapType type = featureKeys.trapType;
+    protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
+                                              SpikeTrapType type, DimensionConfigGroup dimConfigs ) {
         SpikeTrapConfig.SpikeTrapTypeCategory config = type.getConfig( dimConfigs );
         
-        register( context, featureKeys.featureKeys, new ConfiguredFeature<>( DWFeatures.SINGLE_BLOCK.get(),
+        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SPIKE_TRAP_PATCH.get(),
                 new SpikeTrapPatchFeature.Configuration(
                         block( DWBlocks.spikeTrap( type ) ),
                         SpikePatchSettings.of( config ),

@@ -173,21 +173,20 @@ public class FeatureKeys {
         }
     }
     
-    public static class SpikeTrap {
+    public static class SpikeTrap extends TypicalFeature {
         
-        public static SpikeTrap of( SpikeTrapType type, FeatureKeys featureKeys ) {
-            return new SpikeTrap( type, featureKeys );
-        }
+        public static SpikeTrap of( SpikeTrapType type, String name ) { return new SpikeTrap( type, overworld( name ), nether( name ) ); }
         
-        public final FeatureKeys featureKeys;
         public final SpikeTrapType trapType;
         
-        protected SpikeTrap( SpikeTrapType type, FeatureKeys featureKeys ) {
+        protected SpikeTrap( SpikeTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
+            super( overworld, nether );
             trapType = type;
-            this.featureKeys = featureKeys;
             
-            DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( featureKeys.configuredKey );
-            DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( featureKeys.placedKey );
+            DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( overworld.configuredKey );
+            DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( nether.configuredKey );
+            DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.SPIKE_TRAP_FEATURES.add( nether.placedKey );
         }
     }
     
