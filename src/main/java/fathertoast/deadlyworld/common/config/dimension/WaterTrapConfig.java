@@ -7,10 +7,12 @@ import fathertoast.crust.api.config.common.value.EntityEntry;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
+import fathertoast.deadlyworld.common.config.field.WeightedPotionListField;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.world.entity.EntityType;
 
-import static fathertoast.deadlyworld.common.util.References.*;
+import static fathertoast.deadlyworld.common.util.References.DEPTH_LAVA;
+import static fathertoast.deadlyworld.common.util.References.DEPTH_SEA_LEVEL;
 
 public class WaterTrapConfig extends FeatureConfig {
     
@@ -43,6 +45,11 @@ public class WaterTrapConfig extends FeatureConfig {
         
         public final IntField.RandomRange distanceFromBottom;
         
+        public final DoubleField explosionPower;
+        
+        public final WeightedPotionListField potions;
+        
+        
         SeaMineCategory( FeatureConfig parent, SeaMineType type, double placements, double oceanPlacements,
                          int minHeight, int maxHeight, int minDistFromBottom, int maxDistFromBottom ) {
             super( parent, type + "_sea_mine", placements, minHeight, maxHeight );
@@ -60,6 +67,19 @@ public class WaterTrapConfig extends FeatureConfig {
             distanceFromBottom = new IntField.RandomRange( SPEC, "dist_from_bottom", minDistFromBottom, maxDistFromBottom, IntField.Range.NON_NEGATIVE,
                     "How far up from the ocean floor in blocks the mine will be placed, with a trail of chains underneath it.",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE );
+            
+            SPEC.newLine();
+            
+            explosionPower = SPEC.define( new DoubleField( "explosion_power", type.defaultExplosionPower(), DoubleField.Range.NON_NEGATIVE,
+                    "The explosion power of this mine block.",
+                    "For reference, vanilla creepers = 3.0 and vanilla TNT = 4.0.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
+            
+            SPEC.newLine();
+            
+            potions = SPEC.define( new WeightedPotionListField( "potions", type.defaultPotions(),
+                    "A list of potions that may be applied to creatures caught in this mine's blast.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
     }
     

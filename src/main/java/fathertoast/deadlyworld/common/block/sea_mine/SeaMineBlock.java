@@ -70,12 +70,12 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
         return type;
     }
     
-    public float getExplosionPower() {
-        return Config.BLOCKS.get( type ).explosionPower.getFloat();
+    public float getExplosionPower( Level level ) {
+        return type.getConfig( level ).explosionPower.getFloat();
     }
     
-    private WeightedPotionList getPotionList() {
-        return Config.BLOCKS.get( type ).potions.get();
+    private WeightedPotionList getPotionList( Level level ) {
+        return type.getConfig( level ).potions.get();
     }
     
     @Override
@@ -191,17 +191,19 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
                 pos.getX() + 0.5D,
                 pos.getY() + 0.5D,
                 pos.getZ() + 0.5D,
-                getExplosionPower(),
+                getExplosionPower( level ),
                 Level.ExplosionInteraction.BLOCK
         );
-        // Pick a potion and apply it to all creatures caught in the blast
-        if( getPotionList().isEmpty() ) return;
+        final WeightedPotionList potionList = getPotionList( level );
         
-        final MobEffectInstance potion = getPotionList().next( random );
+        // Pick a potion and apply it to all creatures caught in the blast
+        if( potionList.isEmpty() ) return;
+        
+        final MobEffectInstance potion = potionList.next( random );
         
         if( potion == null ) return;
         
-        List<LivingEntity> nearbyCreatures = level.getEntitiesOfClass( LivingEntity.class, new AABB( pos ).inflate( getExplosionPower() ) );
+        List<LivingEntity> nearbyCreatures = level.getEntitiesOfClass( LivingEntity.class, new AABB( pos ).inflate( getExplosionPower( level ) ) );
         nearbyCreatures.forEach( ( livingEntity ) ->
                 livingEntity.addEffect( new MobEffectInstance( potion ) ) );
     }

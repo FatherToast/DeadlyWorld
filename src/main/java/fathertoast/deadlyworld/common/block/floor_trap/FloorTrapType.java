@@ -7,15 +7,12 @@ import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
-import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.config.dimension.WaterTrapConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
-import fathertoast.deadlyworld.common.util.References;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -254,23 +251,23 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
             level.playSound( null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, 1.0F );
         }
     },
-
+    
     SEA_MINE_MOB( "sea_mine_mob", ( dimConfig ) -> dimConfig.WATER_TRAPS.SEA_MINE_MOB ) {
         @Override
         public boolean spawnsMonster() { return true; }
-
+        
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
             WaterTrapConfig.SeaMineMobTrapTypeCategory config = dimConfig.WATER_TRAPS.SEA_MINE_MOB;
             Level level = trapEntity.getLevel();
-
+            
             double x = trapEntity.getBlockPos().getX() + 0.5;
             double y = trapEntity.getBlockPos().getY() + 1;
             double z = trapEntity.getBlockPos().getZ() + 0.5;
-
+            
             // Pick an entity to spawn
             EntityType<?> entityType = config.spawnList.get().next( level.random );
-
+            
             if( entityType == null ) {
                 DeadlyWorld.LOG.warn(
                         "Sea mine mob floor trap received null entity type!" +
@@ -278,7 +275,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
                 );
                 entityType = EntityType.DROWNED;
             }
-
+            
             // Try to create the entity to spawn
             Entity entity;
             LivingEntity livingEntity;
@@ -293,17 +290,17 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
                 DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", ForgeRegistries.ENTITY_TYPES.getKey( entityType ) );
                 return;
             }
-
+            
             // Initialize the entity
             entity.setPos( x, y, z );
             entity.setYRot( level.random.nextFloat() * 2.0F * (float) Math.PI );
             entity.setXRot( 0.0F );
             entity.setDeltaMovement( entity.getDeltaMovement().x, 0.3D, entity.getDeltaMovement().z );
-
+            
             if( entity instanceof LivingEntity ) {
                 livingEntity = (LivingEntity) entity;
                 AttributeInstance attribute;
-
+                
                 if( config.healthMultiplier.get() != 1.0D ) {
                     try {
                         attribute = livingEntity.getAttribute( Attributes.MAX_HEALTH );
@@ -323,12 +320,12 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
                     }
                 }
                 livingEntity.setHealth( livingEntity.getMaxHealth() );
-
+                
                 // Equip a sea mine on the mob's head
                 livingEntity.setItemSlot( EquipmentSlot.HEAD, new ItemStack( DWBlocks.seaMine( SeaMineType.fromIndex( 0 ) ).get() ) );
-
+                
                 Entity tripTarget = trapEntity.getTrapLogic().getTripTarget();
-
+                
                 if( tripTarget instanceof LivingEntity livingTarget ) {
                     livingEntity.setLastHurtByMob( livingTarget );
                 }
@@ -337,33 +334,16 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
         }
     };
     
-    
-    /** The path for loot tables associated with these types. */
-    public static final String LOOT_TABLE_PATH = "traps/";
-    public static final String BLOCK_CATEGORY = "trap";
+    public static final String BLOCK_CATEGORY = "floor_trap";
     
     private final String id;
-    private final String displayName;
     /** A function that returns the feature config associated with this spawner type for a given dimension config. */
     private final Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configGetter;
     
     
-    FloorTrapType(String id, Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configGetter ) {
-        this( id, id.replace( "_", " " ) + " floor traps", configGetter );
-    }
-    
-    FloorTrapType(String id, String displayName, Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configGetter ) {
+    FloorTrapType( String id, Function<DimensionConfigGroup, FloorTrapConfig.TrapTypeCategory> configGetter ) {
         this.id = id;
-        this.displayName = displayName;
         this.configGetter = configGetter;
-    }
-    
-    public String getDisplayName() {
-        return displayName;
-    }
-    
-    public ResourceLocation getChestLootTable() {
-        return DeadlyWorld.rl( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
     }
     
     /** @return A Supplier of the Spawner Block to register for this Spawner Type */
@@ -372,23 +352,23 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
     public boolean spawnsMonster() {
         return false;
     }
-
+    
     @Override
-    public FloorTrapConfig.TrapTypeCategory getConfig(Level level ) {
+    public FloorTrapConfig.TrapTypeCategory getConfig( Level level ) {
         return configGetter.apply( Config.getDimensionConfigs( level ) );
     }
-
+    
     @Override
     public FloorTrapConfig.TrapTypeCategory getConfig( DimensionConfigGroup dimConfig ) {
         return configGetter.apply( dimConfig );
     }
-
+    
     public abstract void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity );
     
     @Override
     public String toString() { return id; }
     
-    public static FloorTrapType fromIndex(int index ) {
+    public static FloorTrapType fromIndex( int index ) {
         if( index < 0 || index >= values().length ) {
             DeadlyWorld.LOG.warn( "Attempted to fetch invalid floor trap type from index '{}'", index );
             return TNT;

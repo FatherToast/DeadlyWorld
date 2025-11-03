@@ -5,9 +5,7 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,12 +46,12 @@ public enum SpawnerType implements IFeatureConfigProvider<SpawnerConfig.SpawnerT
         @Override
         public void initEntity( LivingEntity entity, DimensionConfigGroup dimConfigs, Level level, BlockPos pos ) {
             super.initEntity( entity, dimConfigs, level, pos );
-
+            
             // Apply potion effects
             final boolean hide = dimConfigs.SPAWNERS.FLOATY.ambientFx.get();
             final int slowFallingAmlp = dimConfigs.SPAWNERS.FLOATY.slowFallingAmpl.get();
             final int jumpBoostAmpl = dimConfigs.SPAWNERS.FLOATY.jumpBoostAmpl.get();
-
+            
             if( slowFallingAmlp > -1 ) {
                 entity.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, MobEffectInstance.INFINITE_DURATION, slowFallingAmlp, hide, !hide ) );
             }
@@ -72,8 +70,6 @@ public enum SpawnerType implements IFeatureConfigProvider<SpawnerConfig.SpawnerT
     BURIED( "buried", true, ( dimConfigs ) -> dimConfigs.SPAWNERS.BURIED ),
     DUNGEON( "dungeon", true, ( dimConfigs ) -> dimConfigs.SPAWNERS.DUNGEON );
     
-    /** The path for loot tables associated with these types. */
-    public static final String LOOT_TABLE_PATH = "deadly_spawners/";
     public static final String BLOCK_CATEGORY = "spawner";
     
     /** The unique id for this spawner type. This is used to save and load from disk. */
@@ -131,12 +127,6 @@ public enum SpawnerType implements IFeatureConfigProvider<SpawnerConfig.SpawnerT
     
     @Override
     public String toString() { return id; }
-    
-    public ResourceLocation getChestLootTable() {
-        if( isSubfeature() )
-            throw new UnsupportedOperationException( "Subfeatures do not have chest loot! (spawner type \"" + id + "\")" );
-        return DeadlyWorld.rl( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
-    }
     
     @Override
     public SpawnerConfig.SpawnerTypeCategory getConfig( Level level ) {

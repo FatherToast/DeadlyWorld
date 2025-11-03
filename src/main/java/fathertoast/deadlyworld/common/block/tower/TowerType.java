@@ -5,12 +5,9 @@ import fathertoast.deadlyworld.common.block.entity.PotionTowerDispenserBlockEnti
 import fathertoast.deadlyworld.common.block.entity.TowerDispenserBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.dimension.SpikeTrapConfig;
 import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -139,8 +136,6 @@ public enum TowerType implements IFeatureConfigProvider<TowerConfig.TowerTypeCat
         }
     };
     
-    /** The path for loot tables associated with these types. */
-    public static final String LOOT_TABLE_PATH = "tower_dispensers/";
     public static final String BLOCK_CATEGORY = "tower_dispenser";
     
     private final String id;
@@ -161,23 +156,19 @@ public enum TowerType implements IFeatureConfigProvider<TowerConfig.TowerTypeCat
     
     public String getDisplayName() { return displayName; }
     
-    public ResourceLocation getChestLootTable() {
-        return DeadlyWorld.rl( References.CHEST_LOOT_PATH + LOOT_TABLE_PATH + this );
-    }
-    
     /** @return A Supplier of the Spawner Block to register for this Spawner Type */
     public Supplier<TowerDispenserBlock> getBlock() { return () -> new TowerDispenserBlock( this ); }
-
+    
     @Override
-    public TowerConfig.TowerTypeCategory getConfig(Level level ) {
+    public TowerConfig.TowerTypeCategory getConfig( Level level ) {
         return configGetter.apply( Config.getDimensionConfigs( level ) );
     }
-
+    
     @Override
     public TowerConfig.TowerTypeCategory getConfig( DimensionConfigGroup dimConfig ) {
         return configGetter.apply( dimConfig );
     }
-
+    
     public abstract void triggerAttack( DimensionConfigGroup dimConfig, TowerDispenserBlockEntity towerDispenser, Entity target,
                                         Vec3 center, Vec3 offset, Vec3 vecToTarget, double distanceH );
     
