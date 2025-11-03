@@ -85,7 +85,9 @@ public class MechanicalSpikeTrapBlock extends BaseSpikeTrapBlock {
         return level.getEntitiesOfClass(
                 entityClass,
                 boundingBox,
-                EntitySelector.NO_SPECTATORS.and( ( entity ) -> !entity.isIgnoringBlockTriggers() && !entity.isSteppingCarefully() )
+                EntitySelector.NO_SPECTATORS.and( ( entity ) -> entity.isAlive()
+                        && !entity.isIgnoringBlockTriggers()
+                        && !entity.isSteppingCarefully() )
         ).size();
     }
     
