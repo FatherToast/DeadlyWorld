@@ -5,6 +5,10 @@
   "minVersion": "0.8",
   "refmap": "deadlyworld.refmap.json",
   "mixins": [
+    "EntityMixin",
+    "ExplosionMixin",
+    "MonsterRoomFeatureMixin",
+    "PointedDripstoneBlockMixin"
   ],
   "client": [],
   "server": [],

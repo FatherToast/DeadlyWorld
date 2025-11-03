@@ -17,14 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.function.Predicate;
 
-//@Mixin( MonsterRoomFeature.class )
+@Mixin( MonsterRoomFeature.class )
 public abstract class MonsterRoomFeatureMixin extends Feature<NoneFeatureConfiguration> {
-
+    
     public MonsterRoomFeatureMixin( Codec<NoneFeatureConfiguration> codec ) {
-        super(codec);
+        super( codec );
     }
-
-    /*
+    
     @Inject(
             method = "place",
             at = @At(
@@ -35,8 +34,7 @@ public abstract class MonsterRoomFeatureMixin extends Feature<NoneFeatureConfigu
             locals = LocalCapture.CAPTURE_FAILSOFT,
             cancellable = true
     )
-
-     */
+    
     public void onPlace( FeaturePlaceContext<NoneFeatureConfiguration> context, CallbackInfoReturnable<Boolean> cir, Predicate predicate, BlockPos blockpos, RandomSource randomsource, WorldGenLevel worldgenlevel ) {
         CommonMixinHooks.changeMonsterRoomSpawner( context, cir, predicate, blockpos, randomsource, worldgenlevel );
     }

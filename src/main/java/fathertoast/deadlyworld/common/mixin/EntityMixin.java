@@ -17,29 +17,31 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-//@Mixin( Entity.class )
+@Mixin( Entity.class )
 public abstract class EntityMixin extends CapabilityProvider<Entity> implements Nameable, EntityAccess, CommandSource, IForgeEntity {
-
-    //@Shadow protected Object2DoubleMap<FluidType> forgeFluidTypeHeight;
-    //@Shadow protected boolean firstTick;
-
-    public EntityMixin(EntityType<?> entityType, Level level ) {
+    
+    @Shadow
+    protected Object2DoubleMap<FluidType> forgeFluidTypeHeight;
+    @Shadow
+    protected boolean firstTick;
+    
+    public EntityMixin( EntityType<?> entityType, Level level ) {
         super( Entity.class );
     }
-
+    
     protected EntityMixin( Class<Entity> baseClass ) {
         super( baseClass );
     }
-
+    
     protected EntityMixin( Class<Entity> baseClass, boolean isLazy ) {
         super( baseClass, isLazy );
     }
-
+    
     /**
      * Yes, in order for our custom lava fluid to "count" as lava in many cases (without sacrificing the custom type),
      * we have to do this mixin. Very strange that fluid tag checks aren't being used instead.
      */
-    /*@Inject(
+    @Inject(
             method = "isInLava",
             at = @At( "HEAD" ),
             cancellable = true
@@ -47,6 +49,4 @@ public abstract class EntityMixin extends CapabilityProvider<Entity> implements 
     public void onIsInLava( CallbackInfoReturnable<Boolean> cir ) {
         CommonMixinHooks.onIsInLava( firstTick, forgeFluidTypeHeight, cir );
     }
-
-     */
 }
