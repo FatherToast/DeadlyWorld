@@ -37,7 +37,6 @@ public class SpikeTrapPatchFeature extends DeadlyFeature<SpikeTrapPatchFeature.C
     
     @Override
     public boolean place( FeaturePlaceContext<Configuration> context ) {
-        final boolean notSubfeature = context.topFeature().isEmpty();
         final Configuration config = context.config();
         final RandomSource random = context.random();
         final BlockPos origin = context.origin();
@@ -48,7 +47,7 @@ public class SpikeTrapPatchFeature extends DeadlyFeature<SpikeTrapPatchFeature.C
         
         int xzSpread = config.patchSettings.xzSpread().sample( random );
         int ySpread = config.patchSettings.ySpread().sample( random );
-        int patchSize = config.patchSettings.patchSize().sample( random );
+        int patchSize = config.patchSettings.placementTries().sample( random );
         
         // Place spike patch
         BlockState spikes = null;
@@ -61,14 +60,15 @@ public class SpikeTrapPatchFeature extends DeadlyFeature<SpikeTrapPatchFeature.C
                     random.nextInt( xzSpread ) - random.nextInt( xzSpread )
             );
             
-            if( notSubfeature ) {
-                // Don't replace blocks with block entities
-                if( level.getExistingBlockEntity( cursor ) != null ) continue;
-            }
+            // Check if the existing state at target can be replaced
+            if( !predicate.test( level.getBlockState( cursor ) ) ) continue;
+            // Don't replace blocks with block entities
+            if( level.getExistingBlockEntity( cursor ) != null ) continue;
             
-            // Try to place spike trap
+            // Make sure the location is valid for the picked spikes
             spikes = config.spikesProvider.getState( random, cursor );
-            if( predicate.test( level.getBlockState( cursor ) ) && spikes.canSurvive( level, cursor ) ) {
+            if( spikes.canSurvive( level, cursor ) ) {
+                // Place spike trap
                 setBlock( level, cursor, spikes );
                 ++placedBlocks;
             }

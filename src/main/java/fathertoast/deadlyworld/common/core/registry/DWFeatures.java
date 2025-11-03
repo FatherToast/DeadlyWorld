@@ -25,8 +25,8 @@ public final class DWFeatures {
     public static RegistryObject<TowerFeature> TOWER = register( "tower", TowerFeature::new );
     public static RegistryObject<SeaMineFeature> SEA_MINE = register( "sea_mine", SeaMineFeature::new );
     public static RegistryObject<PitfallTrapFeature> PITFALL_TRAP = register( "pitfall_trap", PitfallTrapFeature::new );
-    public static RegistryObject<SpikeTrapPatchFeature> SINGLE_BLOCK = register( "single_block", SpikeTrapPatchFeature::new );
-
+    public static RegistryObject<SpikeTrapPatchFeature> SPIKE_TRAP_PATCH = register( "spike_trap_patch", SpikeTrapPatchFeature::new );
+    
     // Dungeon features
     public static RegistryObject<NormalDungeonFeature> NORMAL_DUNGEON = register( "simple_dungeon", NormalDungeonFeature::new );
     public static RegistryObject<MiniDungeonFeature> MINI_DUNGEON = register( "mini_dungeon", MiniDungeonFeature::new );

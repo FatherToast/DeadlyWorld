@@ -45,7 +45,7 @@ public class TowerConfig extends FeatureConfig {
                 9.0, true, 6, 8, 1.0, 1.0, 0.2 );
         
         FIREBALL = new TowerTypeCategory( this, TowerType.FIREBALL, 0.05, DEPTH_LAVA, DEPTH_0,
-                16.0, true, 40, 60, 3.0, 1.3, 0.4 );
+                16.0, true, 40, 60, 3.0, 1.3, 3.5 );
     }
     
     public static class TowerTypeCategory extends FeatureTypeCategory {
@@ -97,8 +97,8 @@ public class TowerConfig extends FeatureConfig {
         public final DoubleField dynamicChance;
         public final WeightedPotionListField potionList;
         
-        PotionTowerTypeCategory( FeatureConfig parent, TowerType type, double
-                                         placements, int minHeight, int maxHeight, double activationRange, boolean checkSight, int minAttackDelay,
+        PotionTowerTypeCategory( FeatureConfig parent, TowerType type,
+                                 double placements, int minHeight, int maxHeight, double activationRange, boolean checkSight, int minAttackDelay,
                                  int maxAttackDelay, double damage, double projectileSpeed, double projectileVariance, double dynamicCh ) {
             super( parent, type, placements, minHeight, maxHeight, activationRange, checkSight, minAttackDelay, maxAttackDelay,
                     damage, projectileSpeed, projectileVariance );

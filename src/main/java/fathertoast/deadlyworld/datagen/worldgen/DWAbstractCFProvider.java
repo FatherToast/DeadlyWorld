@@ -216,7 +216,7 @@ public abstract class DWAbstractCFProvider {
                                               SpikeTrapType type, DimensionConfigGroup dimConfigs ) {
         SpikeTrapConfig.SpikeTrapTypeCategory config = type.getConfig( dimConfigs );
         
-        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SINGLE_BLOCK.get(),
+        register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SPIKE_TRAP_PATCH.get(),
                 new SpikeTrapPatchFeature.Configuration(
                         block( DWBlocks.spikeTrap( type ) ),
                         SpikePatchSettings.of( config ),

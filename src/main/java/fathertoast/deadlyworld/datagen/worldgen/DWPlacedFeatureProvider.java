@@ -3,6 +3,7 @@ package fathertoast.deadlyworld.datagen.worldgen;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
@@ -121,8 +122,14 @@ public class DWPlacedFeatureProvider {
                         FloorTrapType.SEA_MINE_MOB.getConfig( overworldConfigs )).countPerChunkInOcean ) );
         
         // Spike trap patch placements
-        registerSpikePatch( context, getter, STATIC_SPIKES, overworldConfigs, netherConfigs );
-        registerSpikePatch( context, getter, MECHANICAL_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, getter, MUNDANE_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, getter, POISON_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, getter, FIERY_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, getter, WITHERING_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, getter, MECHANICAL_MUNDANE_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, getter, MECHANICAL_POISON_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, getter, MECHANICAL_FIERY_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, getter, MECHANICAL_WITHERING_SPIKES, overworldConfigs, netherConfigs );
         
         // Standard pitfall trap placements
         registerPitfallTrap( context, getter, SPIKES_PITFALL_TRAP, overworldConfigs, netherConfigs );
@@ -171,7 +178,7 @@ public class DWPlacedFeatureProvider {
     }
     
     /** @return Modifiers for a spike patch trap feature. */
-    protected static List<PlacementModifier> pitfallTrap( SpikeTrapType type, DimensionConfigGroup dimConfigs ) {
+    protected static List<PlacementModifier> spikeTrapPatch( SpikeTrapType type, DimensionConfigGroup dimConfigs ) {
         return floorFeature( type.getConfig( dimConfigs ) );
     }
     
@@ -325,8 +332,8 @@ public class DWPlacedFeatureProvider {
     /** Registers a placed spike trap patch feature to each supported dimension. */
     protected static void registerSpikePatch( BootstapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> getter,
                                               FeatureKeys.SpikeTrap featureKeys, DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
-        register( context, getter, featureKeys.overworldKeys, pitfallTrap( featureKeys.trapType, overworldConfigs ) );
-        register( context, getter, featureKeys.netherKeys, pitfallTrap( featureKeys.trapType, netherConfigs ) );
+        register( context, getter, featureKeys.overworldKeys, spikeTrapPatch( featureKeys.trapType, overworldConfigs ) );
+        register( context, getter, featureKeys.netherKeys, spikeTrapPatch( featureKeys.trapType, netherConfigs ) );
     }
     
     /** Registers a placed floor trap type feature to each supported dimension. */

@@ -66,8 +66,14 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
     public static final ResourceKey<PlacedFeature> SEA_MINE_MOB_TRAP_OCEAN = FeatureKeys.overworldOcean( "sea_mine_mob_trap" );
     
-    public static final FeatureKeys.SpikeTrap STATIC_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.STATIC, "static_spikes" );
-    public static final FeatureKeys.SpikeTrap MECHANICAL_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL, "mechanical_spikes" );
+    public static final FeatureKeys.SpikeTrap MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MUNDANE, "mundane_spikes" );
+    public static final FeatureKeys.SpikeTrap POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.POISON, "poison_spikes" );
+    public static final FeatureKeys.SpikeTrap FIERY_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.FIERY, "fiery_spikes" );
+    public static final FeatureKeys.SpikeTrap WITHERING_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.WITHERING, "withering_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_MUNDANE, "mechanical_mundane_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_POISON, "mechanical_poison_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_FIERY_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_FIERY, "mechanical_fiery_spikes" );
+    public static final FeatureKeys.SpikeTrap MECHANICAL_WITHERING_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MECHANICAL_WITHERING, "mechanical_withering_spikes" );
     
     public static final FeatureKeys.PitfallTrap SPIKES_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.SPIKES, "spikes_pitfall_trap" );
     public static final FeatureKeys.PitfallTrap LAVA_PITFALL_TRAP = FeatureKeys.PitfallTrap.of( PitfallTrapType.LAVA, "lava_pitfall_trap" );
@@ -172,15 +178,21 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
                 BlockTags.FEATURES_CANNOT_REPLACE ) ) );
         
         // Spike traps
-        registerSpikePatch( context, STATIC_SPIKES, overworldConfigs, netherConfigs );
-        registerSpikePatch( context, MECHANICAL_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MUNDANE_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, POISON_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, FIERY_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, WITHERING_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_MUNDANE_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_POISON_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_FIERY_SPIKES, overworldConfigs, netherConfigs );
+        registerSpikePatch( context, MECHANICAL_WITHERING_SPIKES, overworldConfigs, netherConfigs );
         
         // Pitfall traps
         registerPitfallTrap( context, SPIKES_PITFALL_TRAP,
                 overworldConfigs, blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
-                block( Blocks.AIR ), block( DWBlocks.spikeTrap( SpikeTrapType.STATIC ) ),
+                block( Blocks.AIR ), block( DWBlocks.spikeTrap( SpikeTrapType.MUNDANE ) ),
                 netherConfigs, blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
-                block( Blocks.AIR ), block( DWBlocks.spikeTrap( SpikeTrapType.STATIC ) ) );
+                block( Blocks.AIR ), block( DWBlocks.spikeTrap( SpikeTrapType.MUNDANE ) ) );
         registerPitfallTrap( context, LAVA_PITFALL_TRAP,
                 overworldConfigs, blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
                 block( Blocks.AIR ), blocks( Blocks.LAVA.defaultBlockState(), DWBlocks.RUNNY_LAVA.get().defaultBlockState() ),

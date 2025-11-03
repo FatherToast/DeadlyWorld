@@ -6,10 +6,7 @@ import fathertoast.deadlyworld.client.renderer.block.MiniChestBlockEntityRendere
 import fathertoast.deadlyworld.client.renderer.block.bewlr.BEWLRHolders;
 import fathertoast.deadlyworld.client.renderer.entity.*;
 import fathertoast.deadlyworld.client.renderer.entity.layer.ChestMimicChestLayer;
-import fathertoast.deadlyworld.client.renderer.entity.model.ChestMimicModel;
-import fathertoast.deadlyworld.client.renderer.entity.model.JukeboxMimicModel;
-import fathertoast.deadlyworld.client.renderer.entity.model.MiniSpawnerMimicModel;
-import fathertoast.deadlyworld.client.renderer.entity.model.SpawnerMimicModel;
+import fathertoast.deadlyworld.client.renderer.entity.model.*;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWCreativeModeTabs;
@@ -87,7 +84,7 @@ public class ClientRegister {
         // Living entities
         event.registerLayerDefinition( DWModelLayers.JUKEBOX_MIMIC, JukeboxMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.CHEST_MIMIC, ChestMimicModel::createBodyLayer );
-        event.registerLayerDefinition( DWModelLayers.MINI_CHEST_MIMIC, ChestMimicModel::createBodyLayer );//TODO mini model
+        event.registerLayerDefinition( DWModelLayers.MINI_CHEST_MIMIC, MiniChestMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.MINI_SPAWNER_MIMIC, MiniSpawnerMimicModel::createBodyLayer );
         
@@ -100,7 +97,7 @@ public class ClientRegister {
     public static void registerEntityRenderers( EntityRenderersEvent.RegisterRenderers event ) {
         // New mobs
         event.registerEntityRenderer( DWEntities.CHEST_MIMIC.get(), ChestMimicRenderer::new );
-        event.registerEntityRenderer( DWEntities.MINI_CHEST_MIMIC.get(), ChestMimicRenderer::new );//TODO mini renderer
+        event.registerEntityRenderer( DWEntities.MINI_CHEST_MIMIC.get(), MiniChestMimicRenderer::new );
         event.registerEntityRenderer( DWEntities.JUKEBOX_MIMIC.get(), JukeboxMimicRenderer::new );
         event.registerEntityRenderer( DWEntities.SPAWNER_MIMIC.get(), SpawnerMimicRenderer::new );
         event.registerEntityRenderer( DWEntities.MINI_SPAWNER_MIMIC.get(), MiniSpawnerMimicRenderer::new );

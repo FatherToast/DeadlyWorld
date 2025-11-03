@@ -2,11 +2,11 @@ package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.deadlyworld.common.block.chest.ChestType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
-import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.VeinConfig;
 import net.minecraft.resources.ResourceKey;
@@ -81,7 +81,7 @@ public class FeatureKeys {
         return this;
     }
     
-    /** Feature key-pair for features that generate in only in dimensions with naturally generating water. */
+    /** Feature key-pair for features that generate only in dimensions with naturally generating water. */
     public static class WaterFeature {
         
         public final FeatureKeys overworldKeys;
@@ -191,7 +191,6 @@ public class FeatureKeys {
         
         protected SpikeTrap( SpikeTrapType type, FeatureKeys overworld, FeatureKeys nether ) {
             super( overworld, nether );
-            
             trapType = type;
             
             DWAbstractCFProvider.SPIKE_TRAP_FEATURES.add( overworld.configuredKey );
