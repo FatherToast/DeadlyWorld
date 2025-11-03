@@ -24,10 +24,8 @@ import java.util.Optional;
  */
 @Mod( DeadlyWorld.MOD_ID )
 public final class DeadlyWorld {
-    /* TODO LIST:
-     *  - finish all features; see features list
-     *
-     * Features list:
+    
+    /* Features list:
      * (KEY: - = complete in current version, o = incomplete feature from previous version,
      *       + = incomplete new feature, ? = feature to consider adding)
      *  - general
@@ -47,6 +45,8 @@ public final class DeadlyWorld {
      *      - static spike trap
      *      - mechanical spike trap
      *      - runny lava
+     *      + ambush trap - invisible 1-time trigger block (similar to sea mine?) spawns mobs, spooky noise; kinda like an event
+     *      + mini trophies
      *      ? storm drain / vortex thing
      *      + ceiling trap
      *      ? wall trap
@@ -75,7 +75,8 @@ public final class DeadlyWorld {
      *      ? water monsters
      *      ? lava monsters
      *  - vein world gen
-     *      - buried block (config-defined single block veins - water, lava, and runny lava by default)
+     *      - buried block (config-defined single block veins)
+     *          - water, lava, runny lava, chests, and spawners by default
      *      - infested block
      *      - water
      *      - sand
@@ -123,13 +124,13 @@ public final class DeadlyWorld {
      *      + unique/boss mob
      *      ? ambush
      *      ? blackout ambush
-     *  + spike trap world gen
+     *  - spike trap cluster world gen
      *      - mundane
      *      - poison
      *      - fiery
      *      - withering
      *      - mechanical variants
-     *  + pitfall trap world gen
+     *  - pitfall trap world gen
      *      - spikes
      *      - lava
      *      - cobwebs
@@ -144,6 +145,12 @@ public final class DeadlyWorld {
      *      ? water
      *      ? anvil
      *      ? more would be nice
+     *  + ambush trap world gen
+     *      + ambush
+     *      + spooky ambush (breaks nearby lights, maybe also blinds)
+     *      + boss
+     *      + mini ambush
+     *      + chicken
      *  ? wall trap world gen
      *      + arrow
      *      + potion

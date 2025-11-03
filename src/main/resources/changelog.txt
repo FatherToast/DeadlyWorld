@@ -2,25 +2,28 @@
     - Added trap decoys.
         - New Forge registry for DecoyTypes.
         - API for registering custom DecoyTypes and renderers.
-    - Added auto-generated infested blocks (based on config).
+    - Added auto-generated infested and unstable blocks (based on config).
     - Added Runny Lava fluid / block.
-    - Added Mini Chest block and mimic.
     - Dungeon / Monster Room overhaul.
         - Added config option to disable vanilla monster room generation.
         - Added custom simple dungeon feature in place of the vanilla dungeon.
         - Added Mini Dungeon variant.
+    - Added Mini Chest block and mimic.
     - Added feature placer item to help with testing.
     - Added Lone Chest feature.
         - Added event items.
     - Added new Spike Trap feature.
+        - Mundane, poison, fiery, and withering spike trap blocks.
+        - Static and mechanical version for each.
+    - Added new Pitfall Trap feature.
+        - Spikes, lava, and cobweb variants.
     - Added new Sea Mine feature.
-        - Added Normal Sea Mine block.
-        - Added Puffer Sea Mine block.
-        - Added Guardian Sea Mine block.
+        - Normal, puffer, and guardian sea mine blocks.
     - Added new floor trap variant: Sea mine mob trap
     - Added new veins feature with infested block, water, and sand veins.
+    - Added buried spawners and chests.
     - Changed the voice/sound pitch of mini entities and mini blocks.
-    - Updated some default configs.
+    - Updated most default configs.
 1.20.1-1.1.1
     - Added safety check when generating features to prevent replacing blocks with block entities, hopefully preventing a rare crash
 1.20.1-1.1.0
