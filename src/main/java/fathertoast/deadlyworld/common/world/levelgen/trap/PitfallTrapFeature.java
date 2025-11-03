@@ -58,8 +58,6 @@ public class PitfallTrapFeature extends DeadlyFeature<PitfallTrapFeature.Configu
         final int depth = config.pitfallTrapSettings.pitDepth().sample( random );
         final int outerDepth = depth + 1;
         
-        int radSqr = radius * radius;
-        
         // Check that we are building inside a solid cuboid area.
         // We want to avoid building if there are holes in the walls and whatnot.
         if( notSubfeature ) {
@@ -81,6 +79,7 @@ public class PitfallTrapFeature extends DeadlyFeature<PitfallTrapFeature.Configu
         final BlockState coverBlock = config.coverProvider.getState( random, buildPos );
         final BlockState floorBlock = config.floorProvider.getState( random, buildPos );
         final BlockState fillBlock = config.fillProvider.getState( random, buildPos );
+        final int radSqr = radius * radius;
         
         // Build the pit
         for( int x = centerX - radius; x <= centerX + radius; x++ ) {
