@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 
 public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<DeadlyTrapBlockEntity> {
     
-    private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.rl( "textures/misc/floor_trap_overlay.png" );
+    private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.rl( "textures/block/floor_trap_overlay.png" );
     
     private final ModelPart topOverlay;
     
