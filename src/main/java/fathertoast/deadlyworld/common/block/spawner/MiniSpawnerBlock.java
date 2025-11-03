@@ -85,7 +85,11 @@ public class MiniSpawnerBlock extends DeadlySpawnerBlock implements SimpleWaterl
     
     @Override
     public BlockState getStateForPlacement( BlockPlaceContext useContext ) {
-        return defaultBlockState().setValue( FACING, useContext.getClickedFace() );
+        FluidState fluidState = useContext.getLevel().getFluidState( useContext.getClickedPos() );
+        
+        return defaultBlockState()
+                .setValue( FACING, useContext.getClickedFace() )
+                .setValue( WATERLOGGED, fluidState.getType() == Fluids.WATER );
     }
     
     @Override
