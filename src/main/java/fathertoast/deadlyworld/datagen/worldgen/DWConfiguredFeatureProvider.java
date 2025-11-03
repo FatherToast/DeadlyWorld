@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 /**
  * For vanilla ore configured features, see {@link net.minecraft.data.worldgen.features.OreFeatures}.
@@ -64,6 +65,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.FloorTrap POTION_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.POTION, "potion_trap" );
     public static final FeatureKeys.FloorTrap LAVA_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.LAVA, "lava_trap" );
     public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
+    public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
     public static final ResourceKey<PlacedFeature> SEA_MINE_MOB_TRAP_OCEAN = FeatureKeys.overworldOcean( "sea_mine_mob_trap" );
     
     public static final FeatureKeys.SpikeTrap MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MUNDANE, "mundane_spikes" );
