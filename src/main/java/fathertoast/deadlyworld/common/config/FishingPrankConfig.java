@@ -18,6 +18,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Objects;
+
 public class FishingPrankConfig extends AbstractConfigFile {
     
     public final General GENERAL;
@@ -71,6 +73,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
                             "circumstances. If the prank cannot be executed, nothing happens." ) );
         }
         
+        @SuppressWarnings( "ConstantConditions" )
         private WeightedRegEntryList<IFishingPrank> makeDefaultPrankList() {
             return new WeightedRegEntryList<>( DWRegistries.FISHING_PRANKS_REGISTRY,
                     new RegistryValueEntry<>( DWFishingPranks.SINGLE_TNT.getId(), 50 ),
@@ -85,7 +88,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
     private static class FishingPrankCategory extends AbstractConfigCategory<FishingPrankConfig> {
         
         public FishingPrankCategory( FishingPrankConfig parent, RegistryObject<IFishingPrank> regObj ) {
-            super( parent, regObj.getId().getPath(),
+            super( parent, Objects.requireNonNull( regObj.getId() ).getPath(),
                     "Properties for the '" + regObj.getId() + "' fishing prank." );
         }
     }
