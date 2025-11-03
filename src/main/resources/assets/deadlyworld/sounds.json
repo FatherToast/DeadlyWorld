@@ -5,6 +5,18 @@
       "minecraft:random/bow"
     ]
   },
+  "block.spike_trap.click": {
+    "subtitle": "sound_event.deadlyworld.subtitle.block.spike_trap.click",
+    "sounds": [
+      "minecraft:random/click"
+    ]
+  },
+  "block.sea_mine.arming": {
+    "subtitle": "sound_event.deadlyworld.subtitle.block.sea_mine.arming",
+    "sounds": [
+      "minecraft:random/click"
+    ]
+  },
   "block.mini_chest.open": {
     "subtitle": "sound_event.deadlyworld.subtitle.block.mini_chest.open",
     "sounds": [

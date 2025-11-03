@@ -1,9 +1,9 @@
 package fathertoast.deadlyworld.common.block.spike_trap;
 
+import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -61,7 +61,6 @@ public class MechanicalSpikeTrapBlock extends BaseSpikeTrapBlock {
         }
     }
     
-    // TODO - Unique sound events with subtitles
     private void checkPressed( Level level, BlockPos pos, BlockState state ) {
         int aabbIndex = state.getValue( FACING ).getOpposite().ordinal();
         boolean pressed = getEntitiesInBox( level, PRESS_CHECK_AABBS[aabbIndex].move( pos ), LivingEntity.class ) > 0;
@@ -73,7 +72,7 @@ public class MechanicalSpikeTrapBlock extends BaseSpikeTrapBlock {
         
         if( !previouslyPressed ) {
             level.setBlock( pos, state.setValue( PRESSED, true ), Block.UPDATE_CLIENTS );
-            level.playSound( null, pos, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundSource.BLOCKS );
+            level.playSound( null, pos, DWSoundEvents.SPIKE_TRAP_CLICK.get(), SoundSource.BLOCKS, 0.5F, 0.6F );
         }
         else {
             if( !level.getBlockTicks().hasScheduledTick( pos, this ) )
@@ -100,7 +99,7 @@ public class MechanicalSpikeTrapBlock extends BaseSpikeTrapBlock {
         
         if( !pressed ) {
             level.setBlock( pos, state.setValue( PRESSED, false ), Block.UPDATE_CLIENTS );
-            level.playSound( null, pos, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundSource.BLOCKS );
+            level.playSound( null, pos, DWSoundEvents.SPIKE_TRAP_CLICK.get(), SoundSource.BLOCKS, 0.5F, 0.5F );
         }
     }
     

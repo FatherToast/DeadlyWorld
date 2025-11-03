@@ -2,10 +2,10 @@ package fathertoast.deadlyworld.common.block.sea_mine;
 
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
+import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
@@ -182,7 +182,7 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
     
     public void arm( LevelAccessor level, BlockPos pos ) {
         level.setBlock( pos, level.getBlockState( pos ).setValue( ARMED, true ), Block.UPDATE_CLIENTS );
-        level.playSound( null, pos, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, SoundSource.BLOCKS );
+        level.playSound( null, pos, DWSoundEvents.SEA_MINE_ARMING.get(), SoundSource.BLOCKS );
     }
     
     public void explode( Level level, BlockPos pos, RandomSource random ) {

@@ -58,6 +58,8 @@ public class DWLangProvider extends DWAbstractLangProvider {
         
         // Sound event subtitles
         soundSubtitle( DWSoundEvents.TOWER_DISPENSER_SHOOT, "Tower Dispenser shoots" );
+        soundSubtitle( DWSoundEvents.SPIKE_TRAP_CLICK, "Spike trap clicks" );
+        soundSubtitle( DWSoundEvents.SEA_MINE_ARMING, "Sea Mine arming" );
         soundSubtitle( DWSoundEvents.MIMIC_APPEAR, "Mimic appears" );
         soundSubtitle( DWSoundEvents.CHEST_MIMIC_HURT, "Mimic hurts" );
         soundSubtitle( DWSoundEvents.CHEST_MIMIC_DEATH, "Mimic dies" );
