@@ -68,7 +68,7 @@ public final class DeadlyWorld {
      *      - micro ghast
      *          - micro fireball
      *      - mimic chest
-     *      + mini mimic chest
+     *      - mini mimic chest
      *      - mimic spawner
      *      - mini mimic spawner
      *      ? dispenser fish hook
@@ -124,9 +124,11 @@ public final class DeadlyWorld {
      *      ? ambush
      *      ? blackout ambush
      *  + spike trap world gen
-     *      + static
-     *      + mechanical
-     *      ? potion
+     *      - mundane
+     *      - poison
+     *      - fiery
+     *      - withering
+     *      - mechanical variants
      *  + pitfall trap world gen
      *      - spikes
      *      - lava
