@@ -9,10 +9,12 @@ import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 
 import javax.annotation.Nullable;
@@ -35,12 +37,13 @@ public class PotionTrap extends BaseTrap {
     // Overridden in block
     @Override
     public void triggerTrap( ServerLevel level, BlockPos pos ) { }
-
+    
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random, PotionFloorTrapSettings trapSettings ) {
         final FloorTrapConfig.PotionTrapTypeCategory trapConfig = (FloorTrapConfig.PotionTrapTypeCategory) trapType.getConfig( level.getLevel() );
         DeadlyFeature.debugMarkerIfEnabled( level, pos, trapConfig );
         
-        initializeTrap( level.getLevel(), pos, random,
+        initializeTrap( level, level.getLevel().dimension(), pos, random,
+                trapSettings.camoChance().sample( random ) > random.nextFloat(),
                 trapSettings.decoyChance().sample( random ) > random.nextFloat(),
                 trapSettings.requiredPlayerRange().sample( random ),
                 trapSettings.checkSightChance().sample( random ) > random.nextFloat(),
@@ -51,21 +54,21 @@ public class PotionTrap extends BaseTrap {
                 trapConfig.potionList.get().next( random )
         );
     }
-
+    
     @Override
     public void initializeTrap( Level level, BlockPos pos, RandomSource random ) {
         final FloorTrapConfig.PotionTrapTypeCategory trapConfig = (FloorTrapConfig.PotionTrapTypeCategory) FloorTrapType.POTION.getConfig( level );
-        initializeTrap( level, pos, random, trapConfig.decoyChance.rollChance( random ),
+        initializeTrap( level, level.dimension(), pos, random, trapConfig.camoChance.rollChance( random ), trapConfig.decoyChance.rollChance( random ),
                 trapConfig.activationRange.get(), trapConfig.checkSightChance.rollChance( random ),
                 trapConfig.triggersRemaining.get(), trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(),
                 trapConfig.dynamicChance.rollChance( random ), trapConfig.potionList.get().next( random )
         );
     }
-
-    public void initializeTrap( Level level, BlockPos pos, RandomSource random, boolean spawnDecoy,
+    
+    public void initializeTrap( LevelAccessor level, ResourceKey<Level> dimension, BlockPos pos, RandomSource random, boolean useCamo, boolean spawnDecoy,
                                 double activationRange, boolean checkSight, int triggersRemaining, int minResetTime, int maxResetTime,
                                 boolean dynamic, @Nullable MobEffectInstance potion ) {
-        super.initializeTrap( level, pos, random, spawnDecoy, activationRange, checkSight, triggersRemaining, minResetTime, maxResetTime );
+        super.initializeTrap( level, dimension, pos, random, useCamo, spawnDecoy, activationRange, checkSight, triggersRemaining, minResetTime, maxResetTime );
         this.dynamic = dynamic;
         this.potion = potion;
     }

@@ -26,9 +26,9 @@ public final class DWEntities {
     public static final RegistryObject<EntityType<ChestMimic>> CHEST_MIMIC = register( "chest_mimic",
             EntityType.Builder.of( ChestMimic::new, MobCategory.MONSTER )
                     .sized( 0.9375F, 0.9375F ).clientTrackingRange( 8 ) );
-    //public static final RegistryObject<EntityType<MiniChestMimic>> MINI_CHEST_MIMIC = register( "mini_chest_mimic",
-    //        EntityType.Builder.of( MiniChestMimic::new, MobCategory.MONSTER )
-    //                .sized( 0.4375F, 0.4375F ).clientTrackingRange( 8 ) );
+    public static final RegistryObject<EntityType<MiniChestMimic>> MINI_CHEST_MIMIC = register( "mini_chest_mimic",
+            EntityType.Builder.of( MiniChestMimic::new, MobCategory.MONSTER )
+                    .sized( 0.4375F, 0.4375F ).clientTrackingRange( 8 ) );
     public static final RegistryObject<EntityType<JukeboxMimic>> JUKEBOX_MIMIC = register( "jukebox_mimic",
             EntityType.Builder.of( JukeboxMimic::new, MobCategory.MONSTER )
                     .sized( 1.0F, 1.625F ).clientTrackingRange( 8 ) );
@@ -74,7 +74,7 @@ public final class DWEntities {
     public static void createAttributes( EntityAttributeCreationEvent event ) {
         // Mimics
         createConfigAttributes( event, CHEST_MIMIC, Config.ENTITIES.MIMICS.chestAttributes, ChestMimic.createChestMimicAttributes() );
-        //createConfigAttributes( event, MINI_CHEST_MIMIC, Config.ENTITIES.MIMICS.miniChestAttributes, ChestMimic.createChestMimicAttributes() );
+        createConfigAttributes( event, MINI_CHEST_MIMIC, Config.ENTITIES.MIMICS.miniChestAttributes, ChestMimic.createChestMimicAttributes() );
         createConfigAttributes( event, JUKEBOX_MIMIC, Config.ENTITIES.MIMICS.jukeboxAttributes, JukeboxMimic.createJukeboxMimicAttributes() );
         createConfigAttributes( event, SPAWNER_MIMIC, Config.ENTITIES.MIMICS.spawnerAttributes, SpawnerMimic.createSpawnerMimicAttributes() );
         createConfigAttributes( event, MINI_SPAWNER_MIMIC, Config.ENTITIES.MIMICS.miniSpawnerAttributes, MiniSpawnerMimic.createSpawnerMimicAttributes() );

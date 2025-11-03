@@ -4,26 +4,26 @@ import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.item.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public final class DWItems {
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create( ForgeRegistries.ITEMS, DeadlyWorld.MOD_ID );
-
-
+    
+    
     //public static final RegistryObject<DeviceBlueprintItem> DEVICE_BLUEPRINT = register( "device_blueprint", DeviceBlueprintItem::new );
     
     public static final RegistryObject<Item> MIMIC_CORE = register( "mimic_core",
-            () -> new SimpleFoiledItem( new Item.Properties().stacksTo( 1 ).rarity( Rarity.UNCOMMON ) ) );
+            () -> new MimicCoreItem( new Item.Properties().stacksTo( 1 ).rarity( Rarity.UNCOMMON ) ) );
     public static final RegistryObject<Item> CONTAINER_INFESTATION = register( "container_infestation",
             () -> new EventItem<>( InfestedEventType.values(), new Item.Properties().stacksTo( 1 ) ) );
     public static final RegistryObject<Item> CONTAINER_TRAP = register( "container_trap",
@@ -34,6 +34,8 @@ public final class DWItems {
     // Spawn eggs
     public static final RegistryObject<ForgeSpawnEggItem> CHEST_MIMIC_SPAWN_EGG = registerSpawnEgg(
             DWEntities.CHEST_MIMIC, 0xAB792D, 0x443C30 );
+    public static final RegistryObject<ForgeSpawnEggItem> MINI_CHEST_MIMIC_SPAWN_EGG = registerSpawnEgg(
+            DWEntities.MINI_CHEST_MIMIC, 0xAB792D, 0x443C30 );
     public static final RegistryObject<ForgeSpawnEggItem> JUKEBOX_MIMIC_SPAWN_EGG = registerSpawnEgg(
             DWEntities.JUKEBOX_MIMIC, 0x945D41, 0x412818 );
     public static final RegistryObject<ForgeSpawnEggItem> SPAWNER_MIMIC_SPAWN_EGG = registerSpawnEgg(

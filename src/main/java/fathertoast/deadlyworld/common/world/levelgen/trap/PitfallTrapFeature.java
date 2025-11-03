@@ -72,13 +72,15 @@ public class PitfallTrapFeature extends DeadlyFeature<PitfallTrapFeature.Configu
                         if( !level.hasChunkAt( cursor ) ) return false;
                         
                         BlockState state = level.getBlockState( cursor );
-                        
-                        if( !state.isSolid() )
-                            return false;
+                        if( !state.isSolid() ) return false;
                     }
                 }
             }
         }
+        
+        final BlockState coverBlock = config.coverProvider.getState( random, buildPos );
+        final BlockState floorBlock = config.floorProvider.getState( random, buildPos );
+        final BlockState fillBlock = config.fillProvider.getState( random, buildPos );
         
         // Build the pit
         for( int x = centerX - radius; x <= centerX + radius; x++ ) {
@@ -92,15 +94,15 @@ public class PitfallTrapFeature extends DeadlyFeature<PitfallTrapFeature.Configu
                         
                         // Building the top cover
                         if( y == buildPos.getY() ) {
-                            safeSetUnstableBlock( level, cursor, config.coverProvider, random, predicate );
+                            safeSetUnstableBlock( level, cursor, coverBlock, predicate );
                         }
                         // Building the floor
                         else if( y == centerY - (depth - 1) ) {
-                            safeSetBlock( level, cursor, config.floorProvider, random, predicate );
+                            safeSetBlock( level, cursor, floorBlock, predicate );
                         }
                         // Fill the rest with the configured filling
                         else {
-                            safeSetBlock( level, cursor, config.fillProvider, random, predicate );
+                            safeSetBlock( level, cursor, fillBlock, predicate );
                         }
                     }
                 }
@@ -117,4 +119,5 @@ public class PitfallTrapFeature extends DeadlyFeature<PitfallTrapFeature.Configu
     
     
     // Hello :D
+    // (/ o .o )/  _|_|_|_ <-- this is a spike trap
 }

@@ -3,7 +3,6 @@ package fathertoast.deadlyworld.common.config.dimension;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.crust.api.config.common.field.StringListField;
 import fathertoast.crust.api.config.common.value.EntityEntry;
 import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
@@ -27,7 +26,7 @@ public class FloorTrapConfig extends FeatureConfig {
     public final FireTrapTypeCategory FIRE;
     
     /** Builds the config spec that should be used for this config. */
-    FloorTrapConfig(ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
+    FloorTrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "floor trap" );
         
         SPEC.newLine();
@@ -51,6 +50,7 @@ public class FloorTrapConfig extends FeatureConfig {
     
     public static class TrapTypeCategory extends FeatureTypeCategory {
         
+        public final DoubleField camoChance;
         public final DoubleField decoyChance;
         
         public final DoubleField activationRange;
@@ -58,13 +58,13 @@ public class FloorTrapConfig extends FeatureConfig {
         
         public final IntField triggersRemaining;
         public final IntField.RandomRange resetTime;
-
+        
         TrapTypeCategory( FeatureConfig parent, FloorTrapType type,
-                         double placements, int minHeight, int maxHeight, double decoyCh,
-                         double activationRng, boolean checkSight, int triggers, int minResetTime, int maxResetTime ) {
+                          double placements, int minHeight, int maxHeight, double decoyCh,
+                          double activationRng, boolean checkSight, int triggers, int minResetTime, int maxResetTime ) {
             this( parent, type.toString(), placements, minHeight, maxHeight, decoyCh,
                     activationRng, checkSight, triggers, minResetTime, maxResetTime );
-
+            
         }
         
         TrapTypeCategory( FeatureConfig parent, String name,
@@ -74,6 +74,10 @@ public class FloorTrapConfig extends FeatureConfig {
             
             SPEC.newLine();
             
+            camoChance = SPEC.define( new DoubleField( "camo_chance", isOverworldDimension() ? 0.33 : 0.66, DoubleField.Range.PERCENT,
+                    "The chance for " + FEATURE_TYPE_NAME + " to generate with camouflage.",
+                    "Camouflage disguises the trap as a random nearby block.",
+                    DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
             decoyChance = SPEC.define( new DoubleField( "decoy_chance", decoyCh, DoubleField.Range.PERCENT,
                     "The chance for " + FEATURE_TYPE_NAME + " to generate with a decoy above it.",
                     "Decoys range from fake cakes, illusionary mobs and other visual distractions that are not real.",
@@ -104,9 +108,9 @@ public class FloorTrapConfig extends FeatureConfig {
         public final IntField tntCount;
         public final DoubleField launchSpeed;
         
-        TntTrapTypeCategory(FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
-                            double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, int minFuseTime, int maxFuseTime,
-                            int tntCnt, double launchSpd ) {
+        TntTrapTypeCategory( FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
+                             double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, int minFuseTime, int maxFuseTime,
+                             int tntCnt, double launchSpd ) {
             super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minResetTime, maxResetTime );
             
             SPEC.newLine();
@@ -133,9 +137,9 @@ public class FloorTrapConfig extends FeatureConfig {
         public final DoubleField speedMultiplier;
         public final DoubleField healthMultiplier;
         
-        TntMobTrapTypeCategory(FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
-                               double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, int minFuseTime, int maxFuseTime,
-                               int tntCnt, double launchSpd ) {
+        TntMobTrapTypeCategory( FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
+                                double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, int minFuseTime, int maxFuseTime,
+                                int tntCnt, double launchSpd ) {
             super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight,
                     minResetTime, maxResetTime, triggers, minFuseTime, maxFuseTime, tntCnt, launchSpd );
             
@@ -190,8 +194,8 @@ public class FloorTrapConfig extends FeatureConfig {
         public final DoubleField dynamicChance;
         public final WeightedPotionListField potionList;
         
-        PotionTrapTypeCategory(FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
-                               double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, double dynamicCh ) {
+        PotionTrapTypeCategory( FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
+                                double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, double dynamicCh ) {
             super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minResetTime, maxResetTime );
             
             SPEC.newLine();
@@ -240,8 +244,8 @@ public class FloorTrapConfig extends FeatureConfig {
         
         public final DoubleField runnyChance;
         
-        LavaTrapTypeCategory(FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
-                             double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers ) {
+        LavaTrapTypeCategory( FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
+                              double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers ) {
             super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight, triggers, minResetTime, maxResetTime );
             
             SPEC.newLine();
@@ -257,8 +261,8 @@ public class FloorTrapConfig extends FeatureConfig {
         
         public final DoubleField throwPower;
         
-        FireTrapTypeCategory(FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
-                             double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, double thrPower ) {
+        FireTrapTypeCategory( FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
+                              double activationRng, boolean checkSight, int minResetTime, int maxResetTime, int triggers, double thrPower ) {
             super( parent, type, placements, minHeight, maxHeight, decoyCh, activationRng, checkSight,
                     triggers, minResetTime, maxResetTime );
             

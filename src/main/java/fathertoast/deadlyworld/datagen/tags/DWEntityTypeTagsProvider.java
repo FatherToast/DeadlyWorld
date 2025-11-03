@@ -24,7 +24,7 @@ public class DWEntityTypeTagsProvider extends EntityTypeTagsProvider {
                 DWEntities.MINI_CREEPER.get(), DWEntities.MICRO_GHAST.get(),
                 DWEntities.MINI_SKELETON.get(), DWEntities.MINI_SPIDER.get(),
                 DWEntities.MINI_ZOMBIE.get(),
-                DWEntities.MINI_SPAWNER_MIMIC.get()
+                DWEntities.MINI_CHEST_MIMIC.get(), DWEntities.MINI_SPAWNER_MIMIC.get()
         );
         
         tag( DWTags.EntityTypes.CREEPERS ).add( DWEntities.MINI_CREEPER.get() );
@@ -35,7 +35,8 @@ public class DWEntityTypeTagsProvider extends EntityTypeTagsProvider {
         
         // Mimics
         tag( DWTags.EntityTypes.MIMIC ).add(
-                DWEntities.CHEST_MIMIC.get(), DWEntities.JUKEBOX_MIMIC.get(),
+                DWEntities.CHEST_MIMIC.get(), DWEntities.MINI_CHEST_MIMIC.get(),
+                DWEntities.JUKEBOX_MIMIC.get(),
                 DWEntities.SPAWNER_MIMIC.get(), DWEntities.MINI_SPAWNER_MIMIC.get()
         );
         

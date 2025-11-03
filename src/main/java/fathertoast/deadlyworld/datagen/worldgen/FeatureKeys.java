@@ -43,6 +43,10 @@ public class FeatureKeys {
                 DWPlacedFeatureProvider.overworldKey( name ) );
     }
     
+    public static ResourceKey<PlacedFeature> overworldOcean( String name ) {
+        return DWPlacedFeatureProvider.overworldKey( name + "_ocean" );
+    }
+    
     public static FeatureKeys nether( String name ) {
         return new FeatureKeys( DWConfiguredFeatureProvider.netherKey( name ),
                 DWPlacedFeatureProvider.netherKey( name ) );
@@ -89,6 +93,17 @@ public class FeatureKeys {
         
         protected WaterFeature( FeatureKeys overworld ) {
             overworldKeys = overworld;
+        }
+    }
+    
+    /** Feature key-pair for features that generate in only in dimensions with naturally generating water. */
+    public static class OceanFeature extends WaterFeature {
+        
+        public final ResourceKey<PlacedFeature> overworldOceanKey;
+        
+        protected OceanFeature( FeatureKeys overworld, ResourceKey<PlacedFeature> overworldOcean ) {
+            super( overworld );
+            overworldOceanKey = overworldOcean;
         }
     }
     
@@ -238,18 +253,19 @@ public class FeatureKeys {
         }
     }
     
-    public static class SeaMine extends WaterFeature {
+    public static class SeaMine extends OceanFeature {
         
-        public static SeaMine of( SeaMineType type, String name ) { return new SeaMine( type, overworld( name ) ); }
+        public static SeaMine of( SeaMineType type, String name ) { return new SeaMine( type, overworld( name ), overworldOcean( name ) ); }
         
         public final SeaMineType seaMineType;
         
-        protected SeaMine( SeaMineType type, FeatureKeys overworld ) {
-            super( overworld );
+        protected SeaMine( SeaMineType type, FeatureKeys overworld, ResourceKey<PlacedFeature> overworldOcean ) {
+            super( overworld, overworldOcean );
             seaMineType = type;
             
             DWAbstractCFProvider.SEA_MINE_FEATURES.add( overworld.configuredKey );
             DWPlacedFeatureProvider.SEA_MINE_FEATURES.add( overworld.placedKey );
+            DWPlacedFeatureProvider.SEA_MINE_FEATURES.add( overworldOcean );
         }
     }
 }

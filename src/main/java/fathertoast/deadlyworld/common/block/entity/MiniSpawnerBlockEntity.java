@@ -22,28 +22,25 @@ import java.util.Map;
 public class MiniSpawnerBlockEntity extends DeadlySpawnerBlockEntity {
     
     private static final Map<Direction, Vec3> EFFECT_OFFSETS = new ImmutableMap.Builder<Direction, Vec3>()
-            .put( Direction.UP, new Vec3( 0.0, 0.15, 0.0 ) )
-            .put( Direction.DOWN, new Vec3( 0.0, 0.65, 0.0 ) )
-            .put( Direction.NORTH, new Vec3( 0.0, 0.40, 0.25 ) )
-            .put( Direction.WEST, new Vec3( 0.25, 0.40, 0.0 ) )
-            .put( Direction.EAST, new Vec3( -0.25, 0.40, 0.0 ) )
-            .put( Direction.SOUTH, new Vec3( 0.0, 0.40, -0.25 ) )
+            .put( Direction.UP, new Vec3( 0.5, 0.15, 0.5 ) )
+            .put( Direction.DOWN, new Vec3( 0.5, 0.65, 0.5 ) )
+            .put( Direction.NORTH, new Vec3( 0.5, 0.40, 0.75 ) )
+            .put( Direction.WEST, new Vec3( 0.75, 0.40, 0.5 ) )
+            .put( Direction.EAST, new Vec3( 0.25, 0.40, 0.5 ) )
+            .put( Direction.SOUTH, new Vec3( 0.5, 0.40, 0.25 ) )
             .build();
     
-    private Direction facing = Direction.NORTH;
+    private Direction facing = Direction.UP;
     
     public MiniSpawnerBlockEntity( BlockPos pos, BlockState state ) {
         super( DWBlockEntities.MINI_SPAWNER.get(), pos, state );
+        setFacing( state );
     }
     
     @Override
     public void load( CompoundTag loadTag ) {
         super.load( loadTag );
-        
-        BlockState state = getBlockState();
-        if( state.getBlock() instanceof MiniSpawnerBlock) {
-            facing = getBlockState().getValue( BlockStateProperties.FACING );
-        }
+        setFacing( getBlockState() );
     }
     
     @Override
@@ -52,11 +49,17 @@ public class MiniSpawnerBlockEntity extends DeadlySpawnerBlockEntity {
         
         RandomSource random = level.getRandom();
         Vec3 offset = getEntityRenderOffset();
-        double x = (double) pos.getX() + 0.25 + offset.x + random.nextDouble() / 2.0;
+        double x = (double) pos.getX() - 0.25 + offset.x + random.nextDouble() / 2.0;
         double y = (double) pos.getY() - 0.15 + offset.y + random.nextDouble() / 2.0;
-        double z = (double) pos.getZ() + 0.25 + offset.z + random.nextDouble() / 2.0;
+        double z = (double) pos.getZ() - 0.25 + offset.z + random.nextDouble() / 2.0;
         level.addParticle( ParticleTypes.SMOKE, x, y, z, 0.0, 0.0, 0.0 );
         level.addParticle( ParticleTypes.FLAME, x, y, z, 0.0, 0.0, 0.0 );
+    }
+    
+    private void setFacing( BlockState state ) {
+        if( state.getBlock() instanceof MiniSpawnerBlock ) {
+            facing = getBlockState().getValue( BlockStateProperties.FACING );
+        }
     }
     
     public Direction getFacing() { return facing; }

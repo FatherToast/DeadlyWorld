@@ -16,10 +16,11 @@ import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.WorldGenLevel;
 
 public record FloorTrapSettings(
-        FloatProvider decoyChance, FloatProvider requiredPlayerRange, FloatProvider checkSightChance,
-        IntProvider triggersRemaining, IntProvider resetTime
+        FloatProvider camoChance, FloatProvider decoyChance, FloatProvider requiredPlayerRange,
+        FloatProvider checkSightChance, IntProvider triggersRemaining, IntProvider resetTime
 ) {
     public static final Codec<FloorTrapSettings> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
+            FloatProvider.CODEC.fieldOf( "camo_chance" ).forGetter( FloorTrapSettings::camoChance ),
             FloatProvider.CODEC.fieldOf( "decoy_chance" ).forGetter( FloorTrapSettings::decoyChance ),
             FloatProvider.CODEC.fieldOf( "required_player_range" ).forGetter( FloorTrapSettings::requiredPlayerRange ),
             FloatProvider.CODEC.fieldOf( "activation_sight_check" ).forGetter( FloorTrapSettings::checkSightChance ),
@@ -27,10 +28,11 @@ public record FloorTrapSettings(
             IntProvider.CODEC.fieldOf( "reset_time" ).forGetter( FloorTrapSettings::resetTime )
     ).apply( instance, FloorTrapSettings::new ) );
     
-    public static FloorTrapSettings of(FloorTrapType type, DimensionConfigGroup dimConfigs ) { return of( type.getConfig( dimConfigs ) ); }
+    public static FloorTrapSettings of( FloorTrapType type, DimensionConfigGroup dimConfigs ) { return of( type.getConfig( dimConfigs ) ); }
     
     public static FloorTrapSettings of( FloorTrapConfig.TrapTypeCategory config ) {
         return new FloorTrapSettings(
+                ConfigConstantFloatProvider.of( config.camoChance ),
                 ConfigConstantFloatProvider.of( config.decoyChance ),
                 
                 ConfigConstantFloatProvider.of( config.activationRange ),

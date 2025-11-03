@@ -30,7 +30,6 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -88,6 +87,7 @@ public class ClientRegister {
         // Living entities
         event.registerLayerDefinition( DWModelLayers.JUKEBOX_MIMIC, JukeboxMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.CHEST_MIMIC, ChestMimicModel::createBodyLayer );
+        event.registerLayerDefinition( DWModelLayers.MINI_CHEST_MIMIC, ChestMimicModel::createBodyLayer );//TODO mini model
         event.registerLayerDefinition( DWModelLayers.SPAWNER_MIMIC, SpawnerMimicModel::createBodyLayer );
         event.registerLayerDefinition( DWModelLayers.MINI_SPAWNER_MIMIC, MiniSpawnerMimicModel::createBodyLayer );
         
@@ -100,6 +100,7 @@ public class ClientRegister {
     public static void registerEntityRenderers( EntityRenderersEvent.RegisterRenderers event ) {
         // New mobs
         event.registerEntityRenderer( DWEntities.CHEST_MIMIC.get(), ChestMimicRenderer::new );
+        event.registerEntityRenderer( DWEntities.MINI_CHEST_MIMIC.get(), ChestMimicRenderer::new );//TODO mini renderer
         event.registerEntityRenderer( DWEntities.JUKEBOX_MIMIC.get(), JukeboxMimicRenderer::new );
         event.registerEntityRenderer( DWEntities.SPAWNER_MIMIC.get(), SpawnerMimicRenderer::new );
         event.registerEntityRenderer( DWEntities.MINI_SPAWNER_MIMIC.get(), MiniSpawnerMimicRenderer::new );

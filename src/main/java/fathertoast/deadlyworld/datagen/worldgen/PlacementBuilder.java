@@ -1,8 +1,10 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
+import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigCountProvider;
 import fathertoast.deadlyworld.common.config.levelgen.ConfigHeightProvider;
+import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.Direction;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProvider;
@@ -10,6 +12,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
+import net.minecraft.world.level.levelgen.heightproviders.UniformHeight;
 import net.minecraft.world.level.levelgen.placement.*;
 
 import java.util.ArrayList;
@@ -39,6 +42,11 @@ public class PlacementBuilder {
         return multiply( ConfigCountProvider.of( config.countPerChunk ) ); // throws NPE if you use a subfeature
     }
     
+    /** Multiplies the number of placements based on the config field's setting. */
+    public PlacementBuilder multiply( DoubleField countPerChunk ) {
+        return multiply( ConfigCountProvider.of( countPerChunk ) );
+    }
+    
     /** Multiplies the number of placements. */
     public PlacementBuilder multiply( int count ) { return then( CountPlacement.of( count ) ); }
     
@@ -55,6 +63,11 @@ public class PlacementBuilder {
     public PlacementBuilder spreadInHeights( FeatureConfig.FeatureTypeCategory config ) {
         //noinspection ConstantConditions
         return spreadInHeights( ConfigHeightProvider.of( config.heights ) ); // throws NPE if you use a subfeature
+    }
+    
+    /** Randomizes the y coord of each placement within normal ocean ranges. */
+    public PlacementBuilder spreadInOceanHeights() {
+        return spreadInHeightsUniform( VerticalAnchor.BOTTOM, VerticalAnchor.absolute( References.DEPTH_SEA_LEVEL ) );
     }
     
     /** Randomizes the y coord of each placement with a uniform distribution. */

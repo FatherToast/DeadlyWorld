@@ -5,11 +5,16 @@ import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.ConfigUtil;
 import fathertoast.crust.api.config.common.field.RegistryEntryValueListField;
+import fathertoast.crust.api.config.common.field.StringField;
 import fathertoast.crust.api.config.common.value.RegistryEntryValueList;
 import fathertoast.crust.api.config.common.value.RegistryValueEntry;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
+import fathertoast.deadlyworld.common.util.References;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -59,6 +64,7 @@ public class EnvHazardConfig extends AbstractConfigFile {
         
         public final RegistryEntryValueListField<Block> list;
         
+        public final StringField chestLootTable;
         
         public BuriedBlocksCategory( EnvHazardConfig parent, String categoryName ) {
             super( parent, categoryName, "Settings related to buried blocks in the world; single-block " +
@@ -77,24 +83,44 @@ public class EnvHazardConfig extends AbstractConfigFile {
                     "Max height - the highest Y coordinate this block can generate at.",
                     "Placements - the amount of times the world generator will try to place this block in a chunk.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
+            
+            SPEC.newLine();
+            
+            chestLootTable = SPEC.define( new StringField( "chest_loot_table", defaultChestLootTable().toString(),
+                    "The loot table to apply to any 'buried' chest blocks generated in this dimension.",
+                    DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
+        }
+        
+        private ResourceLocation defaultChestLootTable() {
+            if( PARENT.isNetherDimension() ) return defaultChestLootTable( Level.NETHER );
+            if( PARENT.isEndDimension() ) return defaultChestLootTable( Level.END );
+            // For the overworld, as well as any dimensions added by mods
+            return defaultChestLootTable( Level.OVERWORLD );
+        }
+        
+        public static ResourceLocation defaultChestLootTable( ResourceKey<Level> dimension ) {
+            return DeadlyWorld.rl( References.CHEST_LOOT_PATH + dimension.location().getPath() + "_buried" );
         }
         
         @SuppressWarnings( "ConstantConditions" )
         private List<RegistryValueEntry<Block>> defaultBuriedBlocks() {
             if( PARENT.isNetherDimension() ) {
                 return List.of(
+                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 6 ),
                         new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 12 ),
                         new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
                 );
             }
             if( PARENT.isEndDimension() ) {
                 return List.of(
+                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 6 ),
                         new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 12 ),
                         new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
                 );
             }
             // For the overworld, as well as any dimensions added by mods
             return List.of(
+                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_LAVA, DEPTH_1, 3 ),
                     new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_LAVA, DEPTH_3, 5 ),
                     new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_SEA_LEVEL + 14, 10 ),
                     new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_VOID, DEPTH_2, 5 ),

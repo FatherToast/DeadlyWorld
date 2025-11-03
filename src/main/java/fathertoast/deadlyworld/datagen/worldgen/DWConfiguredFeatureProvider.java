@@ -24,6 +24,7 @@ import fathertoast.deadlyworld.common.world.levelgen.trap.PotionFloorTrapFeature
 import fathertoast.deadlyworld.common.world.levelgen.trap.SilverfishNestFeature;
 import net.minecraft.core.Direction;
 import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -63,7 +64,7 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
     public static final FeatureKeys.FloorTrap POTION_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.POTION, "potion_trap" );
     public static final FeatureKeys.FloorTrap LAVA_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.LAVA, "lava_trap" );
     public static final FeatureKeys.FloorTrap FIRE_TRAP = FeatureKeys.FloorTrap.of( FloorTrapType.FIRE, "fire_trap" );
-    public static final FeatureKeys SEA_MINE_MOB_TRAP = FeatureKeys.overworld( "sea_mine_mob_trap" );
+    public static final ResourceKey<PlacedFeature> SEA_MINE_MOB_TRAP_OCEAN = FeatureKeys.overworldOcean( "sea_mine_mob_trap" );
     
     public static final FeatureKeys.SpikeTrap MUNDANE_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.MUNDANE, "mundane_spikes" );
     public static final FeatureKeys.SpikeTrap POISON_SPIKES = FeatureKeys.SpikeTrap.of( SpikeTrapType.POISON, "poison_spikes" );
@@ -191,35 +192,20 @@ public class DWConfiguredFeatureProvider extends DWAbstractCFProvider {
         
         // Pitfall traps
         registerPitfallTrap( context, SPIKES_PITFALL_TRAP,
-                // overworld
-                blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
-                block( Blocks.AIR ),
-                block( DWBlocks.spikeTrap( SpikeTrapType.MUNDANE ) ),
-                // nether
-                blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
-                block( Blocks.AIR ),
-                blocks( DWBlocks.spikeTrap( SpikeTrapType.FIERY ).get().defaultBlockState(), DWBlocks.spikeTrap( SpikeTrapType.MUNDANE ).get().defaultBlockState() ),
-                overworldConfigs, netherConfigs );
+                overworldConfigs, blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.AIR ), block( DWBlocks.spikeTrap( SpikeTrapType.MUNDANE ) ),
+                netherConfigs, blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.AIR ), block( DWBlocks.spikeTrap( SpikeTrapType.MUNDANE ) ) );
         registerPitfallTrap( context, LAVA_PITFALL_TRAP,
-                // overworld
-                blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
-                block( Blocks.AIR ),
-                blocks( Blocks.LAVA.defaultBlockState(), DWBlocks.RUNNY_LAVA.get().defaultBlockState() ),
-                // nether
-                blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
-                block( Blocks.AIR ),
-                blocks( Blocks.LAVA.defaultBlockState(), DWBlocks.RUNNY_LAVA.get().defaultBlockState() ),
-                overworldConfigs, netherConfigs );
+                overworldConfigs, blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.AIR ), blocks( Blocks.LAVA.defaultBlockState(), DWBlocks.RUNNY_LAVA.get().defaultBlockState() ),
+                netherConfigs, blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.AIR ), blocks( Blocks.LAVA.defaultBlockState(), DWBlocks.RUNNY_LAVA.get().defaultBlockState() ) );
         registerPitfallTrap( context, COBWEB_PITFALL_TRAP,
-                // overworld
-                blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
-                block( Blocks.COBWEB ),
-                block( Blocks.COBWEB ),
-                // nether
-                blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
-                block( Blocks.COBWEB ),
-                block( Blocks.COBWEB ),
-                overworldConfigs, netherConfigs );
+                overworldConfigs, blocks( Blocks.SAND.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.COBWEB ), block( Blocks.COBWEB ),
+                netherConfigs, blocks( Blocks.SOUL_SOIL.defaultBlockState(), Blocks.GRAVEL.defaultBlockState() ),
+                block( Blocks.COBWEB ), block( Blocks.COBWEB ) );
         
         // Towers
         registerTower( context, SIMPLE_TOWER,

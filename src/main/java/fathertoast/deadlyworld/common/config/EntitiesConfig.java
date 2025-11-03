@@ -4,6 +4,7 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.AttributeListField;
+import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.value.AttributeEntry;
 import fathertoast.crust.api.config.common.value.AttributeList;
 import fathertoast.deadlyworld.common.config.field.RLValueListField;
@@ -39,6 +40,8 @@ public class EntitiesConfig extends AbstractConfigFile {
         public final AttributeListField spiderAttributes;
         public final AttributeListField ghastAttributes;
         
+        public final DoubleField spookySpiderChance;
+        
         Minis( EntitiesConfig parent ) {
             super( parent, "mini_mobs",
                     "Options to customize the \"mini\" entities; small versions of existing vanilla mobs." );
@@ -48,6 +51,11 @@ public class EntitiesConfig extends AbstractConfigFile {
             skeletonAttributes = miniAttributes( "skeleton" );
             spiderAttributes = miniAttributes( "spider" );
             ghastAttributes = miniAttributes( "ghast", "micro ghasts" );
+            
+            SPEC.newLine();
+            
+            spookySpiderChance = SPEC.define( new DoubleField( "spooky_spider_chance", 0.005, DoubleField.Range.PERCENT,
+                    "Chance for a very spooky spider." ) );
         }
         
         private AttributeListField miniAttributes( String key ) {
@@ -69,7 +77,7 @@ public class EntitiesConfig extends AbstractConfigFile {
     public static class Mimics extends AbstractConfigCategory<EntitiesConfig> {
         
         public final AttributeListField chestAttributes;
-        //public final AttributeListField miniChestAttributes;
+        public final AttributeListField miniChestAttributes;
         public final RLValueListField chestTargetLootTables;
         
         public final AttributeListField jukeboxAttributes;
@@ -82,7 +90,7 @@ public class EntitiesConfig extends AbstractConfigFile {
                     "Options to customize misc global settings." );
             
             chestAttributes = mimicAttributes( "chest" );
-            //miniChestAttributes = miniMimicAttributes( "chest" );
+            miniChestAttributes = miniMimicAttributes( "chest" );
             chestTargetLootTables = SPEC.define( new RLValueListField( "chest_target_loot_tables",
                     1, defaultChestMimicLootTables(),
                     "List of IDs for loot tables that can have a Mimic Core item added to them by Deadly World.",

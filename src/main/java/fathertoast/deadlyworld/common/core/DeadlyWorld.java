@@ -46,10 +46,10 @@ public final class DeadlyWorld {
      *      - sea mine
      *      - static spike trap
      *      - mechanical spike trap
+     *      - runny lava
      *      ? storm drain / vortex thing
      *      + ceiling trap
      *      ? wall trap
-     *      - runny lava
      *      ? cake
      *  - items
      *      - spawn eggs
@@ -90,6 +90,7 @@ public final class DeadlyWorld {
      *      - tnt floor trap
      *      - infested (event)
      *      - surprise (event)
+     *      - buried (via buried block veins)
      *      + cave-in (via surprise or combo w/ ceiling trap)
      *      ? random cake from #forge:cakes tag
      *  - spawner world gen
@@ -198,7 +199,7 @@ public final class DeadlyWorld {
         DWFluids.REGISTRY.register( eventBus );
         DWFluids.TYPE_REGISTRY.register( eventBus );
         //        DWStructures.REGISTRY.register( eventBus );
-
+        
         Config.initializeEarly();
         DeferredWorkQueue.lookup( Optional.of( ModLoadingStage.COMMON_SETUP ) ).ifPresent(
                 ( workQueue ) -> workQueue.enqueueWork( ModList.get().getModContainerById( MOD_ID ).orElseThrow(),

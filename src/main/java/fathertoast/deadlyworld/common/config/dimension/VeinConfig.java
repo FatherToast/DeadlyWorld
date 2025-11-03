@@ -20,7 +20,7 @@ public class VeinConfig extends FeatureConfig {
         
         INFESTED_VANILLA = new VeinCategory( this, "vanilla_infested_block", 14, DEPTH_VOID, DEPTH_SEA_LEVEL,
                 9, true ); // Settings identical to vanilla infested vein
-        INFESTED_ADDED = new VeinCategory( this, "added_infested_block", 1, DEPTH_LAVA, DEPTH_3,
+        INFESTED_ADDED = new VeinCategory( this, "added_infested_block", 0.33, DEPTH_LAVA, DEPTH_3,
                 33, true );
         WATER = new VeinCategory( this, "water", isOverworldDimension() ? 6 : 0, DEPTH_VOID, DEPTH_SEA_LEVEL,
                 7, false );

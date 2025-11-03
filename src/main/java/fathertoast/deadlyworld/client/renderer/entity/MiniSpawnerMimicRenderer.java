@@ -32,27 +32,8 @@ public class MiniSpawnerMimicRenderer extends MobRenderer<MiniSpawnerMimic, Mini
     @Override
     public void render( MiniSpawnerMimic spawnerMimic, float rotation, float partialTick, PoseStack stack, MultiBufferSource buffer, int packedLight ) {
         super.render( spawnerMimic, rotation, partialTick, stack, buffer, packedLight );
-        
-        ProgressiveDelaySpawner spawner = spawnerMimic.getSpawner();
-        if( spawner == null ) return;
-        
-        stack.pushPose();
-        
-        Entity entity = spawner.getOrCreateDisplayEntity( spawnerMimic.level(), spawnerMimic.getRandom(), spawnerMimic.blockPosition() );
-        if( entity != null ) {
-            float scale = 0.265625F;
-            float girth = Math.max( entity.getBbWidth(), entity.getBbHeight() );
-            if( girth > 1.0F ) scale /= girth;
-            
-            stack.translate( 0.0F, 0.525F, 0.0F );
-            stack.mulPose( Axis.YP.rotationDegrees( (float) Mth.lerp( partialTick, spawner.getoSpin(), spawner.getSpin() ) * 10.0F ) );
-            stack.mulPose( Axis.XP.rotationDegrees( -30.0F ) );
-            stack.scale( scale, scale, scale );
-            entityRenderer.render( entity, 0.0, 0.0, 0.0, 0.0F,
-                    partialTick, stack, buffer, packedLight );
-        }
-        
-        stack.popPose();
+        SpawnerMimicRenderer.renderDisplayEntity( spawnerMimic, partialTick, stack, buffer, packedLight, entityRenderer,
+                0.265625F, 0.525F );
     }
     
     @Override

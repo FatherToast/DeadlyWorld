@@ -207,6 +207,8 @@ public abstract class DWAbstractCFProvider {
                         BlockTags.FEATURES_CANNOT_REPLACE ) ) );
     }
     
+    
+    /** Registers a configured spike trap type feature to each supported dimension. */
     protected static void registerSpikePatch( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SpikeTrap featureKeys,
                                               DimensionConfigGroup overworldConfigs, DimensionConfigGroup netherConfigs ) {
         registerSpikePatch( context, featureKeys.overworldKeys, featureKeys.trapType, overworldConfigs );
@@ -227,22 +229,20 @@ public abstract class DWAbstractCFProvider {
     
     /** Registers a configured pitfall trap type feature to each supported dimension. */
     protected static void registerPitfallTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.PitfallTrap featureKeys,
-                                               BlockStateProvider overworldCoverProvider, BlockStateProvider overworldFillProvider,
-                                               BlockStateProvider overworldFloorProvider,
-                                               BlockStateProvider netherCoverProvider, BlockStateProvider netherFillProvider,
-                                               BlockStateProvider netherFloorProvider,
-                                               DimensionConfigGroup overworldConfigs,
-                                               DimensionConfigGroup netherConfigs ) {
+                                               DimensionConfigGroup overworldConfigs, BlockStateProvider overworldCoverProvider,
+                                               BlockStateProvider overworldFillProvider, BlockStateProvider overworldFloorProvider,
+                                               DimensionConfigGroup netherConfigs, BlockStateProvider netherCoverProvider,
+                                               BlockStateProvider netherFillProvider, BlockStateProvider netherFloorProvider ) {
         registerPitfallTrap( context, featureKeys.overworldKeys, featureKeys.trapType,
-                overworldCoverProvider, overworldFillProvider, overworldFloorProvider, overworldConfigs );
+                overworldConfigs, overworldCoverProvider, overworldFillProvider, overworldFloorProvider );
         registerPitfallTrap( context, featureKeys.netherKeys, featureKeys.trapType,
-                netherCoverProvider, netherFillProvider, netherFloorProvider, netherConfigs );
+                netherConfigs, netherCoverProvider, netherFillProvider, netherFloorProvider );
     }
     
     /** Registers a configured pitfall trap type feature. */
     protected static void registerPitfallTrap( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                               PitfallTrapType type, BlockStateProvider coverProvider, BlockStateProvider fillProvider,
-                                               BlockStateProvider floorProvider, DimensionConfigGroup dimConfigs ) {
+                                               PitfallTrapType type, DimensionConfigGroup dimConfigs, BlockStateProvider coverProvider,
+                                               BlockStateProvider fillProvider, BlockStateProvider floorProvider ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.PITFALL_TRAP.get(),
                 new PitfallTrapFeature.Configuration(
                         coverProvider, fillProvider, floorProvider,
@@ -255,13 +255,13 @@ public abstract class DWAbstractCFProvider {
     protected static void registerTower( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.TowerDispenser featureKeys,
                                          DimensionConfigGroup overworldConfigs, BlockStateProvider overworldBase,
                                          DimensionConfigGroup netherConfigs, BlockStateProvider netherBase ) {
-        registerTower( context, featureKeys.overworldKeys, featureKeys.towerType, overworldBase, overworldConfigs );
-        registerTower( context, featureKeys.netherKeys, featureKeys.towerType, netherBase, netherConfigs );
+        registerTower( context, featureKeys.overworldKeys, featureKeys.towerType, overworldConfigs, overworldBase );
+        registerTower( context, featureKeys.netherKeys, featureKeys.towerType, netherConfigs, netherBase );
     }
     
     /** Registers a configured tower dispenser type feature. */
     protected static void registerTower( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                         TowerType type, BlockStateProvider base, DimensionConfigGroup dimConfigs ) {
+                                         TowerType type, DimensionConfigGroup dimConfigs, BlockStateProvider base ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.TOWER.get(),
                 new TowerFeature.Configuration( block( DWBlocks.towerDispenser( type ) ), base,
                         TowerDispenserSettings.of( type.getConfig( dimConfigs ) ),
@@ -272,14 +272,14 @@ public abstract class DWAbstractCFProvider {
     /** Registers a configured registerSeaMine type feature to each supported dimension. */
     protected static void registerSeaMine( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys.SeaMine featureKeys,
                                            DimensionConfigGroup overworldConfigs ) {
-        registerSeaMine( context, featureKeys.overworldKeys, featureKeys.seaMineType, block( Blocks.CHAIN.defaultBlockState()
-                        .setValue( ChainBlock.AXIS, Direction.Axis.Y ).setValue( ChainBlock.WATERLOGGED, true ) ),
-                overworldConfigs );
+        registerSeaMine( context, featureKeys.overworldKeys, featureKeys.seaMineType, overworldConfigs,
+                block( Blocks.CHAIN.defaultBlockState().setValue( ChainBlock.AXIS, Direction.Axis.Y )
+                        .setValue( ChainBlock.WATERLOGGED, true ) ) );
     }
     
     /** Registers a configured sea mine type feature. */
     protected static void registerSeaMine( BootstapContext<ConfiguredFeature<?, ?>> context, FeatureKeys featureKeys,
-                                           SeaMineType type, BlockStateProvider trailProvider, DimensionConfigGroup dimConfigs ) {
+                                           SeaMineType type, DimensionConfigGroup dimConfigs, BlockStateProvider trailProvider ) {
         register( context, featureKeys, new ConfiguredFeature<>( DWFeatures.SEA_MINE.get(),
                 new SeaMineFeature.Configuration( block( DWBlocks.seaMine( type ).get().defaultBlockState()
                         .setValue( SeaMineBlock.WATERLOGGED, true ) ), trailProvider,

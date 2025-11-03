@@ -30,15 +30,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, IDecoyProvider {
-
-    public static final String CAMO_STATE_KEY = "CamoState";
-
+    
+    private static final BlockState DEFAULT_APPEARANCE = Blocks.DROPPER.defaultBlockState()
+            .setValue( DropperBlock.FACING, Direction.UP );
+    
     protected final BaseTrap trapLogic;
     protected final FloorTrapType trapType;
-
-    @Nullable
-    private BlockState camoState;
-
     
     public DeadlyTrapBlockEntity( BlockPos pos, BlockState state ) {
         this( DWBlockEntities.DEADLY_TRAP.get(), pos, state );
@@ -49,74 +46,31 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
         trapType = ((FloorTrapBlock) state.getBlock()).getTrapType();
         trapLogic = ((FloorTrapBlock) state.getBlock()).newTrapLogic( this );
     }
-
-    @Override
-    public void onLoad() {
-        pickCamoState();
-    }
-
-    /**
-     * Loops through adjacent block states and picks the first suitable one.<br>
-     * Directions are shuffled to get a random result.
-     */
-    protected void pickCamoState() {
-        if ( camoState != null ) return;
-
-        List<Direction> dirs = Arrays.asList( Direction.values() );
-        Collections.shuffle( dirs );
-
-        for ( Direction direction : dirs ) {
-            BlockPos pos = getBlockPos().relative( direction );
-            BlockState neighborState = level.getBlockState( pos );
-
-            if ( neighborState.getBlock() instanceof ICamoTrap ) continue;
-
-            if ( neighborState.isSolidRender( level, pos ) ) {
-                camoState = neighborState;
-                break;
-            }
-        }
-        if ( camoState == null )
-            camoState = Blocks.DROPPER.defaultBlockState().setValue( DropperBlock.FACING, Direction.UP );
-    }
-
-    @Nullable
+    
     public BlockState getCamoState() {
-        return camoState;
+        return trapLogic.getCamoState() == null ? DEFAULT_APPEARANCE : trapLogic.getCamoState();
     }
-
+    
     @Override
     public void load( CompoundTag loadTag ) {
         super.load( loadTag );
         trapLogic.load( level, worldPosition, loadTag );
-
-        if ( loadTag.contains( CAMO_STATE_KEY, Tag.TAG_COMPOUND ) ) {
-            camoState = TrapHelper.readBlockState( loadTag.getCompound( CAMO_STATE_KEY ) );
-
-            // NbtUtils#readBlockState returns air default state if something goes wrong.
-            // Replace with default cobblestone state if so.
-            if ( camoState == Blocks.AIR.defaultBlockState() ) camoState = Blocks.COBBLESTONE.defaultBlockState();
-        }
     }
     
     @Override
     protected void saveAdditional( CompoundTag saveTag ) {
         super.saveAdditional( saveTag );
         trapLogic.save( saveTag );
-
-        if ( camoState != null ) {
-            saveTag.put( CAMO_STATE_KEY, NbtUtils.writeBlockState( camoState ) );
-        }
     }
-
-    public static void clientTick(Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlyTrapBlockEntity blockEntity ) {
+    
+    public static void clientTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlyTrapBlockEntity blockEntity ) {
         blockEntity.getTrapLogic().clientTick( level, pos );
     }
     
     public static void serverTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlyTrapBlockEntity blockEntity ) {
         blockEntity.getTrapLogic().serverTick( (ServerLevel) level, pos );
     }
-
+    
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create( this );
@@ -125,20 +79,15 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = saveWithoutMetadata();
-
-        if ( camoState != null ) {
-            tag.put( CAMO_STATE_KEY, NbtUtils.writeBlockState( camoState ) );
-        }
         trapLogic.writeToUpdateTag( tag );
-
         return tag;
     }
-
+    
     @Override
     public void handleUpdateTag( CompoundTag tag ) {
-        super.handleUpdateTag(tag);
+        super.handleUpdateTag( tag );
     }
-
+    
     @Override
     public boolean triggerEvent( int id, int type ) {
         return level != null && trapLogic.onEventTriggered( level, id ) ||
@@ -147,15 +96,15 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     
     @Override
     public boolean onlyOpCanSetNbt() { return true; }
-
+    
     @Override
     public AABB getRenderBoundingBox() {
         // Return a bigger box to account for decoys
-        return new AABB( getBlockPos() ).inflate( 5.0D );
+        return new AABB( getBlockPos() ).inflate( 5.0 );
     }
-
+    
     public BaseTrap getTrapLogic() { return trapLogic; }
-
+    
     @Override // ITrapObject
     public void broadcastEvent( BaseTrap trap, Level level, BlockPos pos, int eventId ) {
         level.blockEvent( pos, level.getBlockState( pos ).getBlock(), eventId, 0 );
@@ -163,24 +112,24 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     
     @Override // ITrapObject
     public void spawnEffectParticle( BaseTrap trap, Level level, BlockPos pos ) { }
-
+    
     @Override
     @Nullable // IDecoyProvider
     public Level getProviderLevel() {
         return getLevel();
     }
-
+    
     @Override // IDecoyProvider
     public BlockPos getProviderPos() {
         return getBlockPos();
     }
-
+    
     @Override // IDecoyProvider
     @Nullable
     public DecoyType getDecoyType() {
         return getTrapLogic().getDecoyType();
     }
-
+    
     @Override // IDecoyProvider
     public boolean isDecoyActive() {
         return trapLogic.getDecoyType() != null;
