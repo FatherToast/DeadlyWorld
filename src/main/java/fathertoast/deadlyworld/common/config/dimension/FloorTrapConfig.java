@@ -32,19 +32,21 @@ public class FloorTrapConfig extends FeatureConfig {
         SPEC.newLine();
         SPEC.describeEntityList();
         
-        TNT = new TntTrapTypeCategory( this, FloorTrapType.TNT, 0.3, DEPTH_LAVA, DEPTH_0, 0.05,
+        final boolean isNether = isNetherDimension();
+        
+        TNT = new TntTrapTypeCategory( this, FloorTrapType.TNT, isNether ? 0.15 : 0.3, DEPTH_LAVA, DEPTH_0, 0.05,
                 4.0, true, 1, 20, 60, 40, 50, 4, 2.0 );
         
         TNT_MOB = new TntMobTrapTypeCategory( this, FloorTrapType.TNT_MOB, 0.05, DEPTH_LAVA, DEPTH_2, 0.05,
                 4.0, true, 1, 20, 60, 80, 180, 3, 0.6 );
         
-        POTION = new PotionTrapTypeCategory( this, FloorTrapType.POTION, 0.2, DEPTH_LAVA, DEPTH_0, 0.05,
+        POTION = new PotionTrapTypeCategory( this, FloorTrapType.POTION, isNether ? 0.15 : 0.2, DEPTH_LAVA, DEPTH_0, 0.05,
                 5.0, true, -1, 20, 60, 0.2 );
         
-        LAVA = new LavaTrapTypeCategory( this, FloorTrapType.LAVA, 0.1, DEPTH_LAVA, DEPTH_3, 0.05,
+        LAVA = new LavaTrapTypeCategory( this, FloorTrapType.LAVA, isNether ? 0.07 : 0.1, DEPTH_LAVA, DEPTH_3, 0.05,
                 5.0, true, 1, 20, 60 );
         
-        FIRE = new FireTrapTypeCategory( this, FloorTrapType.FIRE, 0.1, DEPTH_VOID, DEPTH_1, 0.05,
+        FIRE = new FireTrapTypeCategory( this, FloorTrapType.FIRE, isNether ? 0.07 : 0.1, DEPTH_VOID, DEPTH_1, 0.05,
                 5.0, false, -1, 4, 7, 4.0 );
     }
     

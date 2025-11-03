@@ -18,12 +18,14 @@ public class PitfallTrapConfig extends FeatureConfig {
     PitfallTrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "pitfall trap" );
         
+        final boolean isNether = isNetherDimension();
+        
         SPIKES = new PitfallTrapConfig.PitfallTrapTypeCategory( this, PitfallTrapType.SPIKES,
-                0.3, DEPTH_LAVA, DEPTH_1, 2, 4, 2, 4 );
+                isNether ? 0.4 : 0.3, DEPTH_LAVA, DEPTH_1, 2, 4, 2, 4 );
         LAVA = new PitfallTrapConfig.PitfallTrapTypeCategory( this, PitfallTrapType.LAVA,
-                0.2, DEPTH_LAVA, DEPTH_4, 2, 5, 2, 4 );
+                isNether ? 0.3 : 0.2, DEPTH_LAVA, DEPTH_4, 2, 5, 2, 4 );
         COBWEB = new PitfallTrapConfig.PitfallTrapTypeCategory( this, PitfallTrapType.COBWEB,
-                0.2, DEPTH_LAVA, DEPTH_1, 2, 4, 2, 4 );
+                isNether ? 0.35 : 0.2, DEPTH_LAVA, DEPTH_1, 2, 4, 2, 4 );
     }
     
     public static class PitfallTrapTypeCategory extends FeatureTypeCategory {

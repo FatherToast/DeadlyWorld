@@ -18,13 +18,15 @@ public class VeinConfig extends FeatureConfig {
     VeinConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "vein" );
         
+        final boolean isNether = isNetherDimension();
+        
         INFESTED_VANILLA = new VeinCategory( this, "infested_block.base", 14, DEPTH_VOID, DEPTH_SEA_LEVEL,
                 9, true ); // Settings identical to vanilla infested vein
         INFESTED_ADDED = new VeinCategory( this, "infested_block.added", 0.33, DEPTH_LAVA, DEPTH_3,
                 33, true );
-        WATER = new VeinCategory( this, "water", isOverworldDimension() ? 5 : 0, DEPTH_VOID, DEPTH_SEA_LEVEL,
+        WATER = new VeinCategory( this, "water", isNether ? 0 : 5, DEPTH_VOID, DEPTH_SEA_LEVEL,
                 7, false );
-        SAND = new VeinCategory( this, "sand", isOverworldDimension() ? 3 : 0, DEPTH_3, DEPTH_SKY,
+        SAND = new VeinCategory( this, "sand", isNether ? 0 : 3, DEPTH_3, DEPTH_SKY,
                 33, true );
     }
     

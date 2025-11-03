@@ -25,12 +25,14 @@ public class ChestConfig extends FeatureConfig {
     ChestConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "chest" );
         
-        SIMPLE = new ChestTypeCategory( this, ChestType.SIMPLE, 0.3, DEPTH_LAVA, DEPTH_0 );
-        VALUABLE = new ChestTypeCategory( this, ChestType.VALUABLE, 0.05, DEPTH_LAVA, DEPTH_3 );
-        TNT_TRAP = new ChestTypeCategory( this, ChestType.TNT_TRAP, 0.05, DEPTH_LAVA, DEPTH_2 );
-        INFESTED = new InfestedChestTypeCategory( this, ChestType.INFESTED, 0.1, DEPTH_LAVA, DEPTH_0,
+        final boolean isNether = isNetherDimension();
+        
+        SIMPLE = new ChestTypeCategory( this, ChestType.SIMPLE, isNether ? 0.15 : 0.3, DEPTH_LAVA, DEPTH_0 );
+        VALUABLE = new ChestTypeCategory( this, ChestType.VALUABLE, isNether ? 0.04 : 0.05, DEPTH_LAVA, DEPTH_3 );
+        TNT_TRAP = new ChestTypeCategory( this, ChestType.TNT_TRAP, isNether ? 0.04 : 0.05, DEPTH_LAVA, DEPTH_2 );
+        INFESTED = new InfestedChestTypeCategory( this, ChestType.INFESTED, isNether ? 0.075 : 0.1, DEPTH_LAVA, DEPTH_0,
                 InfestedEventType.values() );
-        SURPRISE = new SurpriseChestTypeCategory( this, ChestType.SURPRISE, 0.1, DEPTH_LAVA, DEPTH_1,
+        SURPRISE = new SurpriseChestTypeCategory( this, ChestType.SURPRISE, isNether ? 0.075 : 0.1, DEPTH_LAVA, DEPTH_1,
                 SurpriseEventType.values() );
     }
     

@@ -25,7 +25,7 @@ public class SpikeTrapConfig extends FeatureConfig {
     SpikeTrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "spike trap" );
         
-        boolean isNether = isNetherDimension();
+        final boolean isNether = isNetherDimension();
         
         MUNDANE = new SpikeTrapConfig.SpikeTrapTypeCategory( this, SpikeTrapType.MUNDANE, isNether ? 0.0 : 0.1, DEPTH_LAVA, DEPTH_0,
                 3.0F, 25, 5, 2 );
