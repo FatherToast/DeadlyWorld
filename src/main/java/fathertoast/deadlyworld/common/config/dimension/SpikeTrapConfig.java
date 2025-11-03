@@ -25,32 +25,30 @@ public class SpikeTrapConfig extends FeatureConfig {
     SpikeTrapConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "spike trap" );
         
-        SPEC.newLine();
-        
         boolean isNether = isNetherDimension();
         
-        MUNDANE = new SpikeTrapConfig.SpikeTrapTypeCategory( this, SpikeTrapType.MUNDANE, isNether ? 0.0 : 0.15, DEPTH_LAVA, DEPTH_0,
-                3.0F, 20, 5, 2 );
+        MUNDANE = new SpikeTrapConfig.SpikeTrapTypeCategory( this, SpikeTrapType.MUNDANE, isNether ? 0.0 : 0.1, DEPTH_LAVA, DEPTH_0,
+                3.0F, 25, 5, 2 );
         
         POISON = new SpikeTrapConfig.PotionSpikeTrapTypeCategory( this, SpikeTrapType.POISON, isNether ? 0.0 : 0.05, DEPTH_LAVA, DEPTH_0,
                 2.0F, 20, 5, 2, 200, 0 );
         
-        FIERY = new SpikeTrapConfig.FierySpikeTrapTypeCategory( this, SpikeTrapType.FIERY, isNether ? 0.15 : 0.0, DEPTH_LAVA, DEPTH_0,
+        FIERY = new SpikeTrapConfig.FierySpikeTrapTypeCategory( this, SpikeTrapType.FIERY, isNether ? 0.15 : 0.05, DEPTH_LAVA, DEPTH_0,
                 2.0F, 20, 5, 2, 6 );
         
         WITHERING = new SpikeTrapConfig.PotionSpikeTrapTypeCategory( this, SpikeTrapType.WITHERING, isNether ? 0.05 : 0.0, DEPTH_LAVA, DEPTH_0,
                 2.0F, 20, 5, 2, 140, 0 );
         
-        MECHANICAL_MUNDANE = new SpikeTrapConfig.SpikeTrapTypeCategory( this, SpikeTrapType.MECHANICAL_MUNDANE, isNether ? 0.0 : 0.15, DEPTH_LAVA, DEPTH_0,
-                4.0F, 20, 5, 2 );
+        MECHANICAL_MUNDANE = new SpikeTrapConfig.SpikeTrapTypeCategory( this, SpikeTrapType.MECHANICAL_MUNDANE, isNether ? 0.0 : 0.1, DEPTH_LAVA, DEPTH_0,
+                4.0F, 25, 5, 2 );
         
         MECHANICAL_POISON = new SpikeTrapConfig.PotionSpikeTrapTypeCategory( this, SpikeTrapType.MECHANICAL_POISON, isNether ? 0.0 : 0.05, DEPTH_LAVA, DEPTH_0,
                 3.0F, 20, 5, 2, 100, 1 );
         
-        MECHANICAL_FIERY = new SpikeTrapConfig.FierySpikeTrapTypeCategory( this, SpikeTrapType.MECHANICAL_FIERY, isNether ? 0.15 : 0, DEPTH_LAVA, DEPTH_0,
+        MECHANICAL_FIERY = new SpikeTrapConfig.FierySpikeTrapTypeCategory( this, SpikeTrapType.MECHANICAL_FIERY, isNether ? 0.15 : 0.05, DEPTH_LAVA, DEPTH_0,
                 3.0F, 20, 5, 2, 4 );
         
-        MECHANICAL_WITHERING = new SpikeTrapConfig.PotionSpikeTrapTypeCategory( this, SpikeTrapType.MECHANICAL_WITHERING, isNether ? 0.05 : 0, DEPTH_LAVA, DEPTH_0,
+        MECHANICAL_WITHERING = new SpikeTrapConfig.PotionSpikeTrapTypeCategory( this, SpikeTrapType.MECHANICAL_WITHERING, isNether ? 0.05 : 0.0, DEPTH_LAVA, DEPTH_0,
                 3.0F, 20, 5, 2, 80, 1 );
     }
     
