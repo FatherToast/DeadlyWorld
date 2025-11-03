@@ -118,11 +118,6 @@ public class BaseSpikeTrapBlock extends Block {
     }
     
     @Override
-    public int getLightEmission( BlockState state, BlockGetter level, BlockPos pos ) {
-        return type.getLightLevel();
-    }
-    
-    @Override
     public boolean canSurvive( BlockState state, LevelReader level, BlockPos pos ) {
         Direction facing = state.getValue( FACING );
         BlockPos attachedPos = pos.relative( facing.getOpposite() );

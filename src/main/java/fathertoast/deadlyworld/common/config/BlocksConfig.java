@@ -6,14 +6,15 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
-import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import fathertoast.deadlyworld.common.config.field.WeightedPotionListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.HashMap;
@@ -26,7 +27,8 @@ public class BlocksConfig extends AbstractConfigFile {
     /** Builds the config spec that should be used for this config. */
     BlocksConfig( ConfigManager manager, String fileName ) {
         super( manager, fileName,
-                "This config contains options to control the physical properties of the blocks added by this mod."
+                "This config contains options to control the physical properties of the blocks added by this mod.",
+                ChatFormatting.RED + "IMPORTANT: " + ChatFormatting.WHITE + "Any changes made to block properties while the game is running will not take effect until you restart the game!"
         );
         
         // Spawners
@@ -52,11 +54,12 @@ public class BlocksConfig extends AbstractConfigFile {
             LOOKUP.put( toKey( SeaMineType.BLOCK_CATEGORY, type.toString() ), new SeaMineBlockCategory( this, SeaMineType.BLOCK_CATEGORY, type.toString(),
                     0.0, 0.0, 1, type.defaultExplosionPower(), type.defaultPotions() ) );
         }
-
+        
         // Spike Traps
         for( SpikeTrapType type : SpikeTrapType.values() ) {
+            int lightLevel = type == SpikeTrapType.FIERY || type == SpikeTrapType.MECHANICAL_FIERY ? 7 : 0;
             LOOKUP.put( toKey( SpikeTrapType.BLOCK_CATEGORY, type.toString() ), new BlockCategory( this, SpikeTrapType.BLOCK_CATEGORY, type.toString(),
-                    5.0, 2.5, 1 ) );
+                    5.0, 2.5, 1, lightLevel ) );
         }
         //TODO add storm drain; will possibly include in a "water traps" category
     }
@@ -68,11 +71,10 @@ public class BlocksConfig extends AbstractConfigFile {
     public BlockCategory get( TowerType type ) { return get( TowerType.BLOCK_CATEGORY, type.toString() ); }
     
     public SeaMineBlockCategory get( SeaMineType type ) { return (SeaMineBlockCategory) get( SeaMineType.BLOCK_CATEGORY, type.toString() ); }
-
+    
     public BlockCategory get( SpikeTrapType type ) { return get( SpikeTrapType.BLOCK_CATEGORY, type.toString() ); }
-
-
-
+    
+    
     private BlockCategory get( String category, String type ) {
         BlocksConfig.BlockCategory blockCategory = LOOKUP.get( toKey( category, type ) );
         
@@ -97,11 +99,17 @@ public class BlocksConfig extends AbstractConfigFile {
         
         public final IntField lightLevel;
         
-        BlockCategory( BlocksConfig parent, String blockCat, String type, double breakTime, double explosionResist, int toolLevel ) {
+        BlockCategory( BlocksConfig parent, String blockCat, String type, double breakTime,
+                       double explosionResist, int toolLevel ) {
+            this( parent, blockCat, type, breakTime, explosionResist, toolLevel, 0 );
+        }
+        
+        BlockCategory( BlocksConfig parent, String blockCat, String type, double breakTime,
+                       double explosionResist, int toolLevel, int lightLvl ) {
             super( parent, toKey( blockCat, type ), // TODO implement tool level somehow
                     "Options to customize the physical properties of the " + type + " " + blockCat + " block." );
             final String name = type + " " + blockCat + " block";
-
+            
             destroyTime = SPEC.define( new DoubleField( "hardness", breakTime, -1.0, Double.POSITIVE_INFINITY,
                     "Influences the time it takes to break " + name + "s. Actual time in seconds is 1.5 times",
                     "this value when using a valid tool (ignoring any tool speed modifiers), and 5 times this value when",
@@ -132,7 +140,7 @@ public class BlocksConfig extends AbstractConfigFile {
             
             SPEC.newLine();
             
-            lightLevel = SPEC.define( new IntField( "light_level", 0, 0, 15,
+            lightLevel = SPEC.define( new IntField( "light_level", lightLvl, 0, 15,
                     "The level of light emitted by " + name + "s.",
                     "For reference: 0 = most things, 7 = glow lichen, 14 = torch, 15 = glowstone" ) );
         }

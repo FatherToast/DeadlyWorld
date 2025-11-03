@@ -32,7 +32,7 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
             entity.addEffect( new MobEffectInstance( MobEffects.POISON, effectDuration, effectAmpl ) );
         }
     },
-    FIERY( "fiery", 7, ( dimConfigs ) -> dimConfigs.SPIKE_TRAPS.FIERY ) {
+    FIERY( "fiery", ( dimConfigs ) -> dimConfigs.SPIKE_TRAPS.FIERY ) {
         @Override
         public void hurtEntity( Level level, BlockPos pos, LivingEntity entity ) {
             super.hurtEntity( level, pos, entity );
@@ -81,7 +81,7 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
             entity.addEffect( new MobEffectInstance( MobEffects.POISON, effectDuration, effectAmpl ) );
         }
     },
-    MECHANICAL_FIERY( "mechanical_fiery", 7, ( dimConfigs ) -> dimConfigs.SPIKE_TRAPS.MECHANICAL_FIERY ) {
+    MECHANICAL_FIERY( "mechanical_fiery", ( dimConfigs ) -> dimConfigs.SPIKE_TRAPS.MECHANICAL_FIERY ) {
         @Override
         public Supplier<BaseSpikeTrapBlock> getBlock() {
             return () -> new MechanicalSpikeTrapBlock( this );
@@ -122,20 +122,13 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
     
     /** The unique id for this spike trap type. This is used to save and load from disk. */
     private final String id;
-    /** The light level of this type's spike trap block. */
-    private final int lightLevel;
     
     /** A function that returns the feature config associated with this spike trap type for a given dimension config. */
     private final Function<DimensionConfigGroup, SpikeTrapConfig.SpikeTrapTypeCategory> configGetter;
     
     
     SpikeTrapType( String name, Function<DimensionConfigGroup, SpikeTrapConfig.SpikeTrapTypeCategory> configGetter ) {
-        this( name, 0, configGetter );
-    }
-    
-    SpikeTrapType( String name, int lightLevel, Function<DimensionConfigGroup, SpikeTrapConfig.SpikeTrapTypeCategory> configGetter ) {
         id = name;
-        this.lightLevel = lightLevel;
         this.configGetter = configGetter;
     }
     
@@ -147,11 +140,6 @@ public enum SpikeTrapType implements IFeatureConfigProvider<SpikeTrapConfig.Spik
     
     /** @return A Supplier of the spike trap block to register for this spike trap type */
     public Supplier<BaseSpikeTrapBlock> getBlock() { return () -> new BaseSpikeTrapBlock( this ); }
-    
-    /** @return The light level to be used by this type's spike trap block. */
-    public int getLightLevel() {
-        return lightLevel;
-    }
     
     @Override
     public SpikeTrapConfig.SpikeTrapTypeCategory getConfig( Level level ) {

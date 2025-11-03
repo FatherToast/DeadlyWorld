@@ -47,7 +47,7 @@ public class MechanicalSpikeTrapBlock extends BaseSpikeTrapBlock {
     
     @Override
     public int getLightEmission( BlockState state, BlockGetter level, BlockPos pos ) {
-        return state.getValue( PRESSED ) ? type.getLightLevel() : 0;
+        return state.getValue( PRESSED ) ? state.getLightEmission() : 0;
     }
     
     @Override
