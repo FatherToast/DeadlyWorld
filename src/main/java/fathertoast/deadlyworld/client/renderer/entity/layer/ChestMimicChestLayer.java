@@ -51,6 +51,7 @@ public class ChestMimicChestLayer extends RenderLayer<ChestMimic, ChestMimicMode
             if( block instanceof AbstractChestBlock<?> ) {
                 final ResourceLocation id = ForgeRegistries.BLOCKS.getKey( block );
                 
+                // noinspection ConstantConditions
                 for( ResourceLocation texturePath : createCommonLocations( id ) ) {
                     // Try loading the texture. If nothing goes wrong, assume we are good to go
                     try {
@@ -70,12 +71,11 @@ public class ChestMimicChestLayer extends RenderLayer<ChestMimic, ChestMimicMode
      * for chest textures for the given block ID.
      */
     private static ResourceLocation[] createCommonLocations( ResourceLocation blockId ) {
-        ResourceLocation[] consideredPaths = new ResourceLocation[3];
-        
-        consideredPaths[0] = ResourceLocation.fromNamespaceAndPath( blockId.getNamespace(), "textures/model/" + blockId.getPath() + ".png" );
-        consideredPaths[1] = ResourceLocation.fromNamespaceAndPath( blockId.getNamespace(), "textures/entity/chest/" + blockId.getPath() + ".png" );
-        consideredPaths[2] = ResourceLocation.fromNamespaceAndPath( blockId.getNamespace(), "textures/entity/chest/" + blockId.getPath().replaceFirst( "_chest", "" ) + ".png" );
-        
-        return consideredPaths;
+        return new ResourceLocation[] {
+                ResourceLocation.fromNamespaceAndPath( blockId.getNamespace(), "textures/model/" + blockId.getPath() + ".png" ),
+                ResourceLocation.fromNamespaceAndPath( blockId.getNamespace(), "textures/entity/chest/" + blockId.getPath() + ".png" ),
+                ResourceLocation.fromNamespaceAndPath( blockId.getNamespace(), "textures/entity/chest/" + blockId.getPath().replaceFirst( "_chest", "" ) + ".png" ),
+                ResourceLocation.fromNamespaceAndPath( blockId.getNamespace(), "textures/entity/chest/" + blockId.getPath().replaceFirst( "chest_", "" ) + ".png" )
+        };
     }
 }
