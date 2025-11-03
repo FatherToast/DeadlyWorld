@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.entity;
 
+import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
@@ -11,6 +12,7 @@ public class MiniChestMimic extends ChestMimic {
         super( entityType, level );
         // Is smol, can't take big steps like its older sibling
         setMaxUpStep( 0.5F );
+        setDisguiseState( DWBlocks.MINI_CHEST.get().defaultBlockState() );
     }
     
     @Override
