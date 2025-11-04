@@ -1,12 +1,11 @@
 package fathertoast.deadlyworld.common.world.logic;
 
 import fathertoast.crust.api.lib.NBTHelper;
-import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.FloorTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
-import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import fathertoast.deadlyworld.common.world.levelgen.PotionFloorTrapSettings;
+import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -29,7 +28,7 @@ public class PotionTrap extends BaseTrap {
     private MobEffectInstance potion;
     
     
-    public PotionTrap( DeadlyTrapBlockEntity trap ) {
+    public PotionTrap( FloorTrapBlockEntity trap ) {
         super( FloorTrapType.POTION, trap, trap );
     }
     

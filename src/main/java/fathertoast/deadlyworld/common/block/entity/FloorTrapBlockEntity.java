@@ -22,7 +22,7 @@ import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 
-public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, IDecoyProvider {
+public class FloorTrapBlockEntity extends BlockEntity implements ITrapObject, IDecoyProvider {
     
     private static final BlockState DEFAULT_APPEARANCE = Blocks.DROPPER.defaultBlockState()
             .setValue( DropperBlock.FACING, Direction.UP );
@@ -30,11 +30,11 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     protected final BaseTrap trapLogic;
     protected final FloorTrapType trapType;
     
-    public DeadlyTrapBlockEntity( BlockPos pos, BlockState state ) {
+    public FloorTrapBlockEntity( BlockPos pos, BlockState state ) {
         this( DWBlockEntities.DEADLY_TRAP.get(), pos, state );
     }
     
-    public DeadlyTrapBlockEntity( BlockEntityType<?> type, BlockPos pos, BlockState state ) {
+    public FloorTrapBlockEntity( BlockEntityType<?> type, BlockPos pos, BlockState state ) {
         super( type, pos, state );
         trapType = ((FloorTrapBlock) state.getBlock()).getTrapType();
         trapLogic = ((FloorTrapBlock) state.getBlock()).newTrapLogic( this );
@@ -56,11 +56,11 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
         trapLogic.save( saveTag );
     }
     
-    public static void clientTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlyTrapBlockEntity blockEntity ) {
+    public static void clientTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, FloorTrapBlockEntity blockEntity ) {
         blockEntity.getTrapLogic().clientTick( level, pos );
     }
     
-    public static void serverTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, DeadlyTrapBlockEntity blockEntity ) {
+    public static void serverTick( Level level, BlockPos pos, @SuppressWarnings( "unused" ) BlockState state, FloorTrapBlockEntity blockEntity ) {
         blockEntity.getTrapLogic().serverTick( (ServerLevel) level, pos );
     }
     

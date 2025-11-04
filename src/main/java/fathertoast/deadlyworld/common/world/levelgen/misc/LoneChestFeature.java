@@ -2,8 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen.misc;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
-import fathertoast.deadlyworld.common.core.DeadlyWorld;
+import fathertoast.deadlyworld.common.block.entity.FloorTrapBlockEntity;
 import fathertoast.deadlyworld.common.world.levelgen.ChestSettings;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;
@@ -80,7 +79,7 @@ public class LoneChestFeature extends DeadlyFeature<LoneChestFeature.Configurati
             
             // Prevent floor trap from using a decoy
             chestPos.move( Direction.DOWN );
-            if( level.getBlockEntity( chestPos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
+            if( level.getBlockEntity( chestPos ) instanceof FloorTrapBlockEntity trapBlockEntity ) {
                 trapBlockEntity.getTrapLogic().disableDecoy();
             }
             chestPos.move( Direction.UP );

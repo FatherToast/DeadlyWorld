@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.block.floor_trap;
 
 import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
-import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.FloorTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.entity.PotionTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.config.Config;
@@ -41,7 +41,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
     
     TNT( "tnt", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.TNT ) {
         @Override
-        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             FloorTrapConfig.TntTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT;
             Level level = trapEntity.getLevel();
             
@@ -71,7 +71,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
         public boolean spawnsMonster() { return true; }
         
         @Override
-        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             FloorTrapConfig.TntMobTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT_MOB;
             Level level = trapEntity.getLevel();
             
@@ -161,7 +161,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
     
     POTION( "potion", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.POTION ) {
         @Override
-        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             PotionTrapBlockEntity potionTrap = (PotionTrapBlockEntity) trapEntity;
             FloorTrapConfig.PotionTrapTypeCategory config = dimConfig.FLOOR_TRAPS.POTION;
             
@@ -196,7 +196,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
     
     LAVA( "lava", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.LAVA ) {
         @Override
-        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             FloorTrapConfig.LavaTrapTypeCategory config = dimConfig.FLOOR_TRAPS.LAVA;
             
             Level level = trapEntity.getLevel();
@@ -220,7 +220,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
     
     FIRE( "fire", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.FIRE ) {
         @Override
-        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             FloorTrapConfig.FireTrapTypeCategory config = dimConfig.FLOOR_TRAPS.FIRE;
             
             Level level = trapEntity.getLevel();
@@ -257,7 +257,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
         public boolean spawnsMonster() { return true; }
         
         @Override
-        public void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity ) {
+        public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             WaterTrapConfig.SeaMineMobTrapTypeCategory config = dimConfig.WATER_TRAPS.SEA_MINE_MOB;
             Level level = trapEntity.getLevel();
             
@@ -363,7 +363,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
         return configGetter.apply( dimConfig );
     }
     
-    public abstract void triggerTrap( DimensionConfigGroup dimConfig, DeadlyTrapBlockEntity trapEntity );
+    public abstract void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity );
     
     @Override
     public String toString() { return id; }

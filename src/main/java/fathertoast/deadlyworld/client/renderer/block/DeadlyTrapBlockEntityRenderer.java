@@ -6,7 +6,7 @@ import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.api.client.IDecoyRenderer;
 import fathertoast.deadlyworld.client.DWModelLayers;
 import fathertoast.deadlyworld.client.DecoyRendererRegistry;
-import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.FloorTrapBlockEntity;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
@@ -28,7 +28,7 @@ import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nullable;
 
-public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<DeadlyTrapBlockEntity> {
+public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<FloorTrapBlockEntity> {
     
     private static final ResourceLocation TOP_OVERLAY = DeadlyWorld.rl( "textures/block/floor_trap_overlay.png" );
     
@@ -55,7 +55,7 @@ public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<Deadly
     }
     
     @Override
-    public void render( DeadlyTrapBlockEntity deadlyTrap, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlayTexture ) {
+    public void render( FloorTrapBlockEntity deadlyTrap, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlayTexture ) {
         BlockState camoState = deadlyTrap.getCamoState();
         
         BlockPos pos = deadlyTrap.getBlockPos();

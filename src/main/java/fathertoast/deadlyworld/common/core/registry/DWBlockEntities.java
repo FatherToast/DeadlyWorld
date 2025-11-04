@@ -1,11 +1,12 @@
 package fathertoast.deadlyworld.common.core.registry;
 
 import fathertoast.deadlyworld.common.block.entity.*;
-import fathertoast.deadlyworld.common.block.spawner.*;
-import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
-import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
+import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
+import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
+import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
+import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,8 +27,8 @@ public final class DWBlockEntities {
     public static final RegistryObject<BlockEntityType<MiniSpawnerBlockEntity>> MINI_SPAWNER = register(
             "mini_spawner", MiniSpawnerBlockEntity::new, DWBlocks.spawner( SpawnerType.MINI ) );
     
-    public static final RegistryObject<BlockEntityType<DeadlyTrapBlockEntity>> DEADLY_TRAP = registerMultiple(
-            "deadly_trap", DeadlyTrapBlockEntity::new, DWBlockEntities::getStandardFloorTrapBlocks );
+    public static final RegistryObject<BlockEntityType<FloorTrapBlockEntity>> DEADLY_TRAP = registerMultiple(
+            "deadly_trap", FloorTrapBlockEntity::new, DWBlockEntities::getStandardFloorTrapBlocks );
     public static final RegistryObject<BlockEntityType<PotionTrapBlockEntity>> POTION_TRAP = register(
             "potion_trap", PotionTrapBlockEntity::new, DWBlocks.floorTrap( FloorTrapType.POTION ) );
     
@@ -38,12 +39,11 @@ public final class DWBlockEntities {
     
     //    public static final RegistryObject<BlockEntityType<StormDrainBlockEntity>> STORM_DRAIN = register( "storm_drain",
     //            () -> BlockEntityType.Builder.of( StormDrainBlockEntity::new, DWBlocks.STORM_DRAIN.get() ).build( null ) );
-
+    
     public static final RegistryObject<BlockEntityType<MiniChestBlockEntity>> MINI_CHEST = register(
             "mini_chest", MiniChestBlockEntity::new, DWBlocks.MINI_CHEST );
-
-
-
+    
+    
     /** Registers a block entity to a list of blocks. */
     private static <T extends BlockEntity, B extends Block> RegistryObject<BlockEntityType<T>> register(
             String name, BlockEntityType.BlockEntitySupplier<T> blockEntity, Supplier<B> block ) {
@@ -76,7 +76,7 @@ public final class DWBlockEntities {
         }
         return blocks.toArray( new DeadlySpawnerBlock[0] );
     }
-
+    
     /** @return Creates a new array of all blocks extracted from a list of block registry objects. */
     private static FloorTrapBlock[] getStandardFloorTrapBlocks() {
         List<FloorTrapBlock> blocks = new ArrayList<>();
@@ -85,7 +85,7 @@ public final class DWBlockEntities {
         }
         return blocks.toArray( new FloorTrapBlock[0] );
     }
-
+    
     private static TowerDispenserBlock[] getStandardTowerDisBlocks() {
         List<TowerDispenserBlock> blocks = new ArrayList<>();
         for( RegistryObject<TowerDispenserBlock> block : DWBlocks.TOWER_DISPENSERS ) {

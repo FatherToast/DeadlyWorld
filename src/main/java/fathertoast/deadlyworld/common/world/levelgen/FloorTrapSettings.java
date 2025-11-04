@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.FloorTrapBlockEntity;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
@@ -44,7 +44,7 @@ public record FloorTrapSettings(
     }
     
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random ) {
-        if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
+        if( level.getBlockEntity( pos ) instanceof FloorTrapBlockEntity trapBlockEntity ) {
             trapBlockEntity.getTrapLogic().initializeTrap( level, pos, random, this );
         }
     }

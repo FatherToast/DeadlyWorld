@@ -2,14 +2,15 @@ package fathertoast.deadlyworld.common.block.floor_trap;
 
 import fathertoast.deadlyworld.common.block.ICamoTrap;
 import fathertoast.deadlyworld.common.block.IDeadlyBlock;
-import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.block.entity.FloorTrapBlockEntity;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
@@ -22,19 +23,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class FloorTrapBlock extends BaseEntityBlock implements ICamoTrap, IDeadlyBlock {
-
+    
     private final FloorTrapType trapType;
-
-    public FloorTrapBlock(FloorTrapType trapType ) {
+    
+    public FloorTrapBlock( FloorTrapType trapType ) {
         super( Config.BLOCKS.get( trapType ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.DISPENSER ) ) );
         this.trapType = trapType;
     }
-
+    
     public FloorTrapType getTrapType() {
         return trapType;
     }
-
-    public BaseTrap newTrapLogic( DeadlyTrapBlockEntity blockEntity ) {
+    
+    public BaseTrap newTrapLogic( FloorTrapBlockEntity blockEntity ) {
         return new BaseTrap( trapType, blockEntity ) {
             @Override
             public void triggerTrap( ServerLevel level, BlockPos pos ) {
@@ -42,16 +43,16 @@ public class FloorTrapBlock extends BaseEntityBlock implements ICamoTrap, IDeadl
             }
         };
     }
-
+    
     @Override
     public void initDeadly( ServerLevel level, BlockPos pos, RandomSource random ) {
-        if( level.getBlockEntity( pos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
+        if( level.getBlockEntity( pos ) instanceof FloorTrapBlockEntity trapBlockEntity ) {
             trapBlockEntity.getTrapLogic().initializeTrap( level, pos, random );
         }
     }
-
+    
     @Override
-    public BlockEntity newBlockEntity( BlockPos pos, BlockState state ) { return new DeadlyTrapBlockEntity( pos, state ); }
+    public BlockEntity newBlockEntity( BlockPos pos, BlockState state ) { return new FloorTrapBlockEntity( pos, state ); }
     
     @Override
     @Nullable
@@ -60,9 +61,9 @@ public class FloorTrapBlock extends BaseEntityBlock implements ICamoTrap, IDeadl
     }
     
     @Nullable
-    public <T extends BlockEntity, V extends DeadlyTrapBlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockEntityType<T> type, BlockEntityType<V> expectedType ) {
+    public <T extends BlockEntity, V extends FloorTrapBlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockEntityType<T> type, BlockEntityType<V> expectedType ) {
         return createTickerHelper( type, expectedType,
-                level.isClientSide ? DeadlyTrapBlockEntity::clientTick : DeadlyTrapBlockEntity::serverTick );
+                level.isClientSide ? FloorTrapBlockEntity::clientTick : FloorTrapBlockEntity::serverTick );
     }
     
     @Override
