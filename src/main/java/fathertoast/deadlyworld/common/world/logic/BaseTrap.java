@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -68,9 +67,8 @@ public abstract class BaseTrap {
     private final ITrapObject trapObject;
     
     // Settings
-    /** The camo block state for this trap. Can be null. */
-    @Nullable
-    private BlockState camoState;
+    /** The camo block state for this trap. */
+    private BlockState camoState = Blocks.AIR.defaultBlockState();
     /** The decoy type for this trap. Can be null. */
     @Nullable
     protected DecoyType decoyType;
@@ -298,23 +296,16 @@ public abstract class BaseTrap {
     }
     
     public void load( @Nullable Level level, BlockPos pos, CompoundTag loadTag ) {
-        if( NBTHelper.containsCompound( loadTag, TAG_CAMO ) ) {
+        if( NBTHelper.containsCompound( loadTag, TAG_CAMO ) )
             camoState = TrapHelper.readBlockState( loadTag.getCompound( TAG_CAMO ) );
-            
-            // NbtUtils#readBlockState returns air default state if something goes wrong.
-            if( camoState == Blocks.AIR.defaultBlockState() ) camoState = null;
-        }
         if( NBTHelper.containsString( loadTag, TAG_DECOY_TYPE ) ) {
             String value = loadTag.getString( TAG_DECOY_TYPE );
-            
             if( value.equals( "null" ) ) {
                 decoyType = null;
             }
             else {
                 ResourceLocation typeId = ResourceLocation.tryParse( value );
-                
-                if( typeId != null )
-                    decoyType = DWRegistries.DECOY_TYPE_REGISTRY.get().getValue( typeId );
+                decoyType = typeId == null ? null : DWRegistries.DECOY_TYPE_REGISTRY.get().getValue( typeId );
             }
         }
         
@@ -339,14 +330,7 @@ public abstract class BaseTrap {
     }
     
     public CompoundTag save( CompoundTag saveTag ) {
-        if( camoState != null ) {
-            saveTag.put( TAG_CAMO, NbtUtils.writeBlockState( camoState ) );
-        }
-        if( decoyType != null ) {
-            ResourceLocation typeId = DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType );
-            if( typeId != null )
-                saveTag.putString( TAG_DECOY_TYPE, typeId.toString() );
-        }
+        writeToUpdateTag( saveTag );
         
         saveTag.putFloat( TAG_ACTIVATION_RANGE, (float) activationRange );
         saveTag.putBoolean( TAG_CHECK_SIGHT, checkSight );
@@ -362,9 +346,7 @@ public abstract class BaseTrap {
     }
     
     public void writeToUpdateTag( CompoundTag updateTag ) {
-        if( camoState != null ) {
-            updateTag.put( TAG_CAMO, NbtUtils.writeBlockState( camoState ) );
-        }
+        updateTag.put( TAG_CAMO, NbtUtils.writeBlockState( camoState ) );
         String typeId = decoyType == null ? "null" :
                 DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType ).toString();
         updateTag.putString( TAG_DECOY_TYPE, typeId );
@@ -384,9 +366,10 @@ public abstract class BaseTrap {
     @Nullable
     public BlockEntity getBlockEntity() { return blockEntity; }
     
-    @Nullable
     public BlockState getCamoState() { return camoState; }
     
     @Nullable
     public DecoyType getDecoyType() { return decoyType; }
+    
+    public void disableDecoy() { decoyType = null; }
 }

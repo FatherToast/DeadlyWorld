@@ -2,18 +2,14 @@ package fathertoast.deadlyworld.common.block.entity;
 
 import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.api.IDecoyProvider;
-import fathertoast.deadlyworld.common.block.ICamoTrap;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
-import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.logic.BaseTrap;
 import fathertoast.deadlyworld.common.world.logic.ITrapObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -25,9 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, IDecoyProvider {
     
@@ -48,7 +41,7 @@ public class DeadlyTrapBlockEntity extends BlockEntity implements ITrapObject, I
     }
     
     public BlockState getCamoState() {
-        return trapLogic.getCamoState() == null ? DEFAULT_APPEARANCE : trapLogic.getCamoState();
+        return trapLogic.getCamoState().isAir() ? DEFAULT_APPEARANCE : trapLogic.getCamoState();
     }
     
     @Override

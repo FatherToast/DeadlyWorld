@@ -2,6 +2,8 @@ package fathertoast.deadlyworld.common.world.levelgen.misc;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import fathertoast.deadlyworld.common.block.entity.DeadlyTrapBlockEntity;
+import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.world.levelgen.ChestSettings;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;
@@ -27,22 +29,22 @@ public class LoneChestFeature extends DeadlyFeature<LoneChestFeature.Configurati
             ResourceLocation floorTrap,
             TagKey<Block> cannotReplace
     ) implements FeatureConfiguration {
-        public static final Codec<LoneChestFeature.Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
-                BlockStateProvider.CODEC.fieldOf( "chest_provider" ).forGetter( LoneChestFeature.Configuration::chestProvider ),
-                ChestSettings.CODEC.fieldOf( "chest" ).forGetter( LoneChestFeature.Configuration::chestSettings ),
-                ResourceLocation.CODEC.fieldOf( "floor_trap" ).forGetter( LoneChestFeature.Configuration::floorTrap ),
-                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( LoneChestFeature.Configuration::cannotReplace )
-        ).apply( instance, LoneChestFeature.Configuration::new ) );
+        public static final Codec<Configuration> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
+                BlockStateProvider.CODEC.fieldOf( "chest_provider" ).forGetter( Configuration::chestProvider ),
+                ChestSettings.CODEC.fieldOf( "chest" ).forGetter( Configuration::chestSettings ),
+                ResourceLocation.CODEC.fieldOf( "floor_trap" ).forGetter( Configuration::floorTrap ),
+                TagKey.hashedCodec( Registries.BLOCK ).fieldOf( "cannot_replace" ).forGetter( Configuration::cannotReplace )
+        ).apply( instance, Configuration::new ) );
     }
     
-    public LoneChestFeature() { this( LoneChestFeature.Configuration.CODEC ); }
+    public LoneChestFeature() { this( Configuration.CODEC ); }
     
-    public LoneChestFeature( Codec<LoneChestFeature.Configuration> codec ) { super( codec ); }
+    public LoneChestFeature( Codec<Configuration> codec ) { super( codec ); }
     
     @Override
-    public boolean place( FeaturePlaceContext<LoneChestFeature.Configuration> context ) {
+    public boolean place( FeaturePlaceContext<Configuration> context ) {
         final boolean notSubfeature = context.topFeature().isEmpty();
-        final LoneChestFeature.Configuration config = context.config();
+        final Configuration config = context.config();
         final RandomSource random = context.random();
         final WorldGenLevel level = context.level();
         final Predicate<BlockState> predicate = isReplaceable( config.cannotReplace );
@@ -75,6 +77,13 @@ public class LoneChestFeature extends DeadlyFeature<LoneChestFeature.Configurati
         if( floorTrap != null ) {
             placeSubfeature( level, context.chunkGenerator(), context.origin(), floorTrap,
                     new ConfiguredFeature<>( this, config ) );
+            
+            // Prevent floor trap from using a decoy
+            chestPos.move( Direction.DOWN );
+            if( level.getBlockEntity( chestPos ) instanceof DeadlyTrapBlockEntity trapBlockEntity ) {
+                trapBlockEntity.getTrapLogic().disableDecoy();
+            }
+            chestPos.move( Direction.UP );
         }
         
         // Place the chest
