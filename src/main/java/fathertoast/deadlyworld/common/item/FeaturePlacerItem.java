@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.common.item;
 
 import fathertoast.crust.api.config.common.ConfigUtil;
+import fathertoast.crust.api.lib.DeferredAction;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWItems;
@@ -96,11 +97,13 @@ public class FeaturePlacerItem extends Item implements ICustomTabContents {
         BlockPos pos = context.getClickedPos().relative( context.getClickedFace() );
         ItemStack item = context.getItemInHand();
         
-        if( DeadlyFeature.placeSubfeature( level, pos, getFeatureKey( item ), null ) ) {
-            item.shrink( 1 );
-            return InteractionResult.CONSUME;
-        }
-        return InteractionResult.FAIL;
+        DeferredAction.queue( () -> {
+            DeadlyFeature.placeSubfeature( level, pos, getFeatureKey( item ), null );
+            return true;
+        } );
+        
+        item.shrink( 1 );
+        return InteractionResult.CONSUME;
     }
     
     @Override
