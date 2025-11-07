@@ -34,7 +34,7 @@ public class ClientBlockAutoGen {
         for( RegistryObject<? extends IAutoGenBlock> regObj : DWBlocks.getAutoGenBlocks() ) {
             IAutoGenBlock autoGenBlock = regObj.get();
             // Copy block state models
-            for( BlockState state : autoGenBlock.getStateDefinition().getPossibleStates() ) {
+            for( BlockState state : autoGenBlock.getBlockStateDefinition().getPossibleStates() ) {
                 mirrorModel( models, BlockModelShaper.stateToModelLocation( state ),
                         BlockModelShaper.stateToModelLocation( autoGenBlock.toOrigin( state ) ) );
             }

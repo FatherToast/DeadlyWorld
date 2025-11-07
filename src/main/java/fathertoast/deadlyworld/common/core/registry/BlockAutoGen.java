@@ -30,7 +30,7 @@ import java.util.function.Function;
  * Contains helper methods and the bulk of the logic for auto-generating blocks at runtime by
  * copying many properties (name, model, etc.) from "origin" blocks specified by configs.
  */
-public class BlockAutoGen {
+public final class BlockAutoGen {
     /** The logger used for block auto-generation. */
     public static final Logger LOG = LogManager.getLogger( DeadlyWorld.MOD_ID + "/block_autogen" );
     
@@ -59,7 +59,7 @@ public class BlockAutoGen {
         registerAutoGenBlockCategory( autoGenBlocks, dependencies, autoDependencies, UnstableBlock.BLOCK_KEY,
                 Config.UNSTABLE_BLOCKS.AUTO_GEN.hostBlocks.get(), ( originBlockLoc ) -> DWBlocks.registerAutoGenBlock(
                         UnstableBlock.BLOCK_KEY, originBlockLoc, UnstableBlock::new ) );
-
+        
         autoGenBlocks.trimToSize();
         DWBlocks.AUTO_GEN_BLOCKS = Collections.unmodifiableList( autoGenBlocks );
         
@@ -74,7 +74,7 @@ public class BlockAutoGen {
         final Map<String, Block> fallbackBlock = new HashMap<>();
         fallbackBlock.put( DeadlyInfestedBlock.BLOCK_KEY, Config.INFESTED_BLOCKS.AUTO_GEN.getFallbackBlock() );
         fallbackBlock.put( UnstableBlock.BLOCK_KEY, Config.UNSTABLE_BLOCKS.AUTO_GEN.getFallbackBlock() );
-
+        
         // Remap any mappings we can safely assume previously belonged to an auto-generated block to the config default
         for( MissingMappingsEvent.Mapping<Block> mapping : mappings ) {
             if( !DeadlyWorld.MOD_ID.equals( mapping.getKey().getNamespace() ) ) continue;
@@ -141,8 +141,8 @@ public class BlockAutoGen {
         blockForStateDef = null;
         return autoGenBlock;
     }
-
-
+    
+    
     /**
      * Call this from the auto-generated block's {@link Block#createBlockStateDefinition(StateDefinition.Builder)}
      * override to copy all state properties from its origin block.

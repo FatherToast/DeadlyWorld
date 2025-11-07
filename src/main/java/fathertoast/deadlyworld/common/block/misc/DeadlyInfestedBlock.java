@@ -132,6 +132,10 @@ public class DeadlyInfestedBlock extends InfestedBlock implements IAutoGenBlock 
         BlockAutoGen.copyBlockStateDefinition( builder );
     }
     
+    /** @return This auto-generated block's block state definition. */
+    @Override
+    public StateDefinition<Block, BlockState> getBlockStateDefinition() { return getStateDefinition(); }
+    
     /** @return The origin block. */
     @Override
     public Block getOriginBlock() { return getHostBlock(); }
