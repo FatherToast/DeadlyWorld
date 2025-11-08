@@ -6,11 +6,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
 /**
- *
+ * Represents a block that can be automatically generated based on another block (the "origin" block).
+ * It will copy its block state and inventory models from the origin block; the rest depends on implementation.
+ * <p>
+ * If you implement this interface, it is expected that you extend {@link Block}.
  */
 public interface IAutoGenBlock {
-    /** @return This auto-generated block's block state definition. The Block.class implementation is fine as-is. */
-    StateDefinition<Block, BlockState> getStateDefinition();
+    /** @return This auto-generated block's block state definition. */
+    StateDefinition<Block, BlockState> getBlockStateDefinition();
     
     /** @return The origin block. */
     Block getOriginBlock();
