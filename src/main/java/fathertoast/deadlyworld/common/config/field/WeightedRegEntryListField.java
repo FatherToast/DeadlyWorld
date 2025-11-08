@@ -41,8 +41,8 @@ public class WeightedRegEntryListField<T> extends RegistryEntryValueListField<T>
             value = valueDefault;
             return;
         }
-        
         if( raw instanceof WeightedRegEntryList ) {
+            // noinspection unchecked, rawtypes
             value = (WeightedRegEntryList) raw;
         }
         else {

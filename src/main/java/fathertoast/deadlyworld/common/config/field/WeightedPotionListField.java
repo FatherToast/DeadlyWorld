@@ -15,6 +15,7 @@ import java.util.List;
 public class WeightedPotionListField extends RegistryEntryValueListField<MobEffect> {
     
     public static WeightedPotionList fromNBT( ListTag tag, int reqValues, double minVal, double maxVal ) {
+        // noinspection unchecked
         RegistryValueEntry<MobEffect>[] entries = new RegistryValueEntry[tag.size()];
         for( int i = 0; i < entries.length; i++ ) {
             RegistryValueEntry<MobEffect> entry = parseEntry( tag.getString( i ), null, reqValues, minVal, maxVal,
