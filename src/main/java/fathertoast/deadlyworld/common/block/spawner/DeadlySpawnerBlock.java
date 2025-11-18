@@ -25,10 +25,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -76,7 +73,11 @@ public class DeadlySpawnerBlock extends BaseEntityBlock implements IDeadlyBlock 
     private final SpawnerType spawnerType;
     
     public DeadlySpawnerBlock( SpawnerType type ) {
-        super( Config.BLOCKS.get( type ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.SPAWNER ) ) );
+        this( type, SoundType.METAL );
+    }
+    
+    public DeadlySpawnerBlock( SpawnerType type, SoundType soundType ) {
+        super( Config.BLOCKS.get( type ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.SPAWNER ) ).sound( soundType ) );
         spawnerType = type;
     }
     

@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.block.spawner;
 
+import fathertoast.deadlyworld.common.block.DWSoundTypes;
 import fathertoast.deadlyworld.common.block.entity.MiniSpawnerBlockEntity;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
@@ -41,7 +42,7 @@ public class MiniSpawnerBlock extends DeadlySpawnerBlock implements SimpleWaterl
     };
     
     public MiniSpawnerBlock() {
-        super( SpawnerType.MINI ); //TODO Make sound type SoundType.METAL, but mini
+        super( SpawnerType.MINI, DWSoundTypes.MINI_METAL );
         registerDefaultState( stateDefinition.any().setValue( FACING, Direction.UP ).setValue( WATERLOGGED, false ) );
     }
     

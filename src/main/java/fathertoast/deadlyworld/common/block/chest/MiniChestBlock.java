@@ -1,5 +1,6 @@
 package fathertoast.deadlyworld.common.block.chest;
 
+import fathertoast.deadlyworld.common.block.DWSoundTypes;
 import fathertoast.deadlyworld.common.block.entity.MiniChestBlockEntity;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -39,7 +40,7 @@ public class MiniChestBlock extends ChestBlock {
     
     
     public MiniChestBlock( Properties properties ) {
-        super( properties, DWBlockEntities.MINI_CHEST::get );//TODO Make sound type SoundType.WOOD, but mini
+        super( properties.sound( DWSoundTypes.MINI_WOOD ), DWBlockEntities.MINI_CHEST::get );
         registerDefaultState( stateDefinition.any().setValue( FACING, Direction.NORTH ).setValue( WATERLOGGED, false ) );
     }
     
