@@ -47,7 +47,6 @@ public class EnvHazardConfig extends AbstractConfigFile {
                     Config.MAIN.SPEC.NAME + "\")." );
             SPEC.increaseIndent();
         }
-        
         BURIED_BLOCKS = new BuriedBlocksCategory( this, "buried_blocks" );
     }
     

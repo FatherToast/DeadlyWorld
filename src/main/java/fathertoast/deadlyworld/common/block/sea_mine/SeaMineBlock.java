@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.block.sea_mine;
 
+import fathertoast.crust.api.config.common.value.weighted.WeightedPotionList;
 import fathertoast.deadlyworld.common.config.Config;
-import fathertoast.deadlyworld.common.config.field.WeightedPotionList;
 import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

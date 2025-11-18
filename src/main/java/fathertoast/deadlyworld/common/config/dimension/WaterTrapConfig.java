@@ -3,11 +3,11 @@ package fathertoast.deadlyworld.common.config.dimension;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.crust.api.config.common.field.WeightedPotionListField;
 import fathertoast.crust.api.config.common.value.EntityEntry;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
 import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
-import fathertoast.deadlyworld.common.config.field.WeightedPotionListField;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.world.entity.EntityType;
 

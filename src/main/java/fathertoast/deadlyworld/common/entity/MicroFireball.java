@@ -43,6 +43,7 @@ public class MicroFireball extends Fireball {
     public void tick() {
         Entity owner = getOwner();
         
+        // noinspection deprecation
         if( level().isClientSide || (owner == null || !owner.isRemoved()) && level().hasChunkAt( blockPosition() ) ) {
             // Mark projectile as shot first tick
             if( !hasBeenShot ) {

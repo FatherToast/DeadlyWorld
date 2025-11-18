@@ -46,9 +46,11 @@ public class MiniCreeper extends Creeper {
     
     @Override
     protected void explodeCreeper() {
+        // noinspection resource
         if( !level().isClientSide ) {
             float f = (isPowered() ? 2.0F : 1.0F) / 2.0F; // Only change from vanilla method, halve explosion power
             dead = true;
+            // noinspection resource
             level().explode( this, getX(), getY(), getZ(), (float) explosionRadius * f, Level.ExplosionInteraction.MOB );
             discard();
             spawnLingeringCloud();

@@ -112,6 +112,7 @@ public class MiniArrow extends AbstractArrow {
     public void tick() {
         super.tick();
         
+        // noinspection resource
         if( level().isClientSide ) {
             if( inGround ) {
                 if( inGroundTime % 5 == 0 ) {
@@ -123,6 +124,7 @@ public class MiniArrow extends AbstractArrow {
             }
         }
         else if( inGround && inGroundTime != 0 && !effects.isEmpty() && inGroundTime >= EXPOSED_POTION_DECAY_TIME ) {
+            // noinspection resource
             level().broadcastEntityEvent( this, (byte) 0 );
             potion = Potions.EMPTY;
             effects.clear();
@@ -139,6 +141,7 @@ public class MiniArrow extends AbstractArrow {
             double b = CrustMath.getBlue( color );
             
             for( int i = 0; i < count; ++i ) {
+                // noinspection resource
                 level().addParticle( ParticleTypes.ENTITY_EFFECT,
                         getRandomX( 0.5 ), getRandomY(), getRandomZ( 0.5 ),
                         r, g, b );
@@ -240,6 +243,7 @@ public class MiniArrow extends AbstractArrow {
                 double b = CrustMath.getBlue( color );
                 
                 for( int i = 0; i < 20; i++ ) {
+                    // noinspection resource
                     level().addParticle( ParticleTypes.ENTITY_EFFECT,
                             getRandomX( 0.5 ), getRandomY(), getRandomZ( 0.5 ),
                             r, g, b );

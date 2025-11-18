@@ -33,6 +33,7 @@ public class MiniSpider extends Spider {
     
     @Nullable
     @Override
+    @SuppressWarnings( "ConstantConditions" )
     public SpawnGroupData finalizeSpawn( ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType,
                                          @Nullable SpawnGroupData groupData, @Nullable CompoundTag groupTag ) {
         groupData = super.finalizeSpawn( level, difficulty, spawnType, groupData, groupTag );

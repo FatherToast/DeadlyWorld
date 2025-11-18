@@ -25,8 +25,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-import javax.annotation.Nonnull;
-
 public class ChestMimic extends Monster {
     
     public static final EntityDataAccessor<BlockState> DISGUISE_BLOCK_STATE = SynchedEntityData.defineId( ChestMimic.class, EntityDataSerializers.BLOCK_STATE );
@@ -138,7 +136,8 @@ public class ChestMimic extends Monster {
      * Sets the mimic's "camo" block state.<br>
      * Called from {@link fathertoast.deadlyworld.common.event.GameEventHandler#onRightClickChest(PlayerInteractEvent.RightClickBlock)}
      */
-    public void setDisguiseState( @Nonnull BlockState blockState ) {
+    @SuppressWarnings( "JavadocReference" )
+    public void setDisguiseState( BlockState blockState ) {
         entityData.set( DISGUISE_BLOCK_STATE, blockState );
     }
     

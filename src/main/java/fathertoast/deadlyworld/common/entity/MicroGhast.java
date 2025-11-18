@@ -131,6 +131,7 @@ public class MicroGhast extends Ghast {
             for( int i = 1; i < length; ++i ) {
                 boundingBox = boundingBox.move( destination );
                 
+                // noinspection resource
                 if( !ghast.level().noCollision( ghast, boundingBox ) ) {
                     return false;
                 }

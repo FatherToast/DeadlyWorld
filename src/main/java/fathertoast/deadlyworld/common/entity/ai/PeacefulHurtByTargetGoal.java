@@ -9,16 +9,17 @@ import org.jetbrains.annotations.Nullable;
 
 /** Simple override of {@link HurtByTargetGoal} that doesn't run in peaceful difficulty. */
 public class PeacefulHurtByTargetGoal extends HurtByTargetGoal {
-
+    
     public PeacefulHurtByTargetGoal( PathfinderMob pathfinderMob, Class<?>... ignoreDamageFor ) {
         super( pathfinderMob, ignoreDamageFor );
     }
-
+    
     @Override
     protected boolean canAttack( @Nullable LivingEntity target, TargetingConditions conditions ) {
-        if ( mob.level().getDifficulty() == Difficulty.PEACEFUL )
+        // noinspection resource
+        if( mob.level().getDifficulty() == Difficulty.PEACEFUL )
             return false;
-
+        
         return super.canAttack( target, conditions );
     }
 }
