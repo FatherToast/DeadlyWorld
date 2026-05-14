@@ -1,6 +1,7 @@
 package fathertoast.deadlyworld.datagen.loot;
 
 import fathertoast.crust.api.datagen.loot.LootEntryItemBuilder;
+import fathertoast.crust.api.datagen.loot.LootEntryTagBuilder;
 import fathertoast.crust.api.datagen.loot.LootPoolBuilder;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.tags.TagKey;
@@ -32,9 +33,8 @@ public class DWLootPoolBuilder extends LootPoolBuilder {
         return addEntry( new LootEntryItemBuilder( item ).setWeight( weight ).setCount( count ).toLootEntry() );
     }
     
-    // TODO - Random item from item tag (Requires Crust update)
     public DWLootPoolBuilder addRandomFromTag( TagKey<Item> tag, int weight, int count ) {
-        return null;
+        return addEntry( new LootEntryTagBuilder( tag ).setWeight( weight ).setCount( count ).toLootEntry() );
     }
     
     /** Adds a simple item loot entry with a count of 1-4. */
