@@ -23,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -119,13 +120,30 @@ public final class GameEventHandler {
     public static void onLivingDamage( LivingDamageEvent event ) {
         // Too lazy to override the on hit method for the mini arrow entity, setting damage to 1.0 here instead
         // Note, this kinda makes them ignore armor/enchant damage reduction, but still consumes durability
+        // TODO - Yuh, gotta handle this better
         if( event.getSource().getDirectEntity() instanceof MiniArrow && event.getAmount() > 0.0F ) {
             event.setAmount( 1.0F );
         }
-        
-        // Negate all damage from Yeet TNT
-        else if( event.getSource().getDirectEntity() instanceof YeetTnt ) {
+        // Cancel YeetNT damage and apply chonk knockback
+        if( event.getSource().getDirectEntity() instanceof YeetTnt yeetTnt ) {
             event.setAmount( 0.0F );
+            
+            final Entity entity = event.getEntity();
+            
+            // noinspection resource
+            if( !entity.level().isClientSide ) {
+                final Vec3 velocity = new Vec3(
+                        entity.getX() - yeetTnt.getX(),
+                        entity.getY() >= yeetTnt.getY() ? 1.0 : -1.0,
+                        entity.getZ() - yeetTnt.getZ()
+                ).normalize().multiply( 10.0D, 10.0D, 10.0D );
+                
+                entity.setDeltaMovement( velocity );
+                
+                if( event.getEntity() instanceof ServerPlayer player ) {
+                    player.connection.connection.send( new ClientboundSetEntityMotionPacket( entity ) );
+                }
+            }
         }
     }
     

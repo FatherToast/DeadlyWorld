@@ -4,7 +4,9 @@ import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import javax.annotation.Nullable;
@@ -40,7 +42,11 @@ public class YeetTnt extends PrimedTnt {
     
     @Override
     protected void explode() {
-        // noinspection resource
-        level().explode( this, getX(), getY( 0.0625D ), getZ(), 5.0F, Level.ExplosionInteraction.NONE );
+        final Explosion explosion = new Explosion( level(), this, getX(), getY( 0.0625D ), getZ(),
+                4.0F, true, Explosion.BlockInteraction.KEEP );
+        if( ForgeEventFactory.onExplosionStart( level(), explosion ) ) return;
+        
+        explosion.explode();
+        explosion.finalizeExplosion( false );
     }
 }
