@@ -114,6 +114,7 @@ public final class GameEventHandler {
      *
      * @param event The event data.
      */
+    @SuppressWarnings( "JavadocReference" )
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onLivingDamage( LivingDamageEvent event ) {
         // Too lazy to override the on hit method for the mini arrow entity, setting damage to 1.0 here instead
@@ -176,6 +177,7 @@ public final class GameEventHandler {
      *
      * @param event The event data.
      */
+    @SuppressWarnings( "JavadocReference" )
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onEntityJoinLevel( EntityJoinLevelEvent event ) {
         if( event.isCanceled() || !(event.getLevel() instanceof ServerLevel level) ) return;
@@ -341,6 +343,7 @@ public final class GameEventHandler {
      */
     @SubscribeEvent( priority = EventPriority.LOW )
     public static void onItemFished( ItemFishedEvent event ) {
+        // noinspection resource
         if( !event.getEntity().level().isClientSide && Config.FISHING_PRANKS.GENERAL.prankChance.rollChance( event.getEntity().getRandom() ) ) {
             ServerPlayer player = (ServerPlayer) event.getEntity();
             ServerLevel level = (ServerLevel) player.level();
