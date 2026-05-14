@@ -1,3 +1,5 @@
+1.20.1-1.2.3
+    - Updated min required Crust version.
 1.20.1-1.2.2
     - Updated min required Crust version.
     - Removed some config field implementations that are now provided by Crust.
