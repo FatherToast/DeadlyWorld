@@ -17,53 +17,49 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.function.Predicate;
-
 public class CommonMixinHooks {
-
+    
     public static void pointedDripstoneProjectileHit( Level level, BlockState state, BlockHitResult hitResult, Projectile projectile, CallbackInfo ci ) {
-        if ( !Config.MAIN.STALACTITE_OVERHAUL.pointedDripstoneSniping.get() ) return;
-
+        if( !Config.MAIN.STALACTITE_OVERHAUL.pointedDripstoneSniping.get() ) return;
+        
         BlockPos pos = hitResult.getBlockPos();
-
-        if ( !level.isClientSide && projectile.mayInteract( level, pos )
+        
+        if( !level.isClientSide && projectile.mayInteract( level, pos )
                 && projectile.getType().is( EntityTypeTags.IMPACT_PROJECTILES )
                 && projectile.getDeltaMovement().length() > 0.5D ) {
             level.destroyBlock( pos, true );
             ci.cancel();
         }
     }
-
-    public static void changeMonsterRoomSpawner( FeaturePlaceContext<NoneFeatureConfiguration> context, CallbackInfoReturnable<Boolean> cir,
-                                                 Predicate predicate, BlockPos blockpos, RandomSource randomsource, WorldGenLevel worldgenlevel ) {
+    
+    public static void changeMonsterRoomSpawner( CallbackInfoReturnable<Boolean> cir, BlockPos blockpos,
+                                                 RandomSource randomsource, WorldGenLevel worldgenlevel ) {
         worldgenlevel.setBlock( blockpos, DWBlocks.spawner( SpawnerType.DUNGEON ).get().defaultBlockState(), Block.UPDATE_CLIENTS );
-
-        if ( worldgenlevel.getBlockEntity( blockpos ) instanceof DeadlySpawnerBlockEntity spawner ) {
+        
+        if( worldgenlevel.getBlockEntity( blockpos ) instanceof DeadlySpawnerBlockEntity spawner ) {
             SpawnerSettings settings = SpawnerSettings.of( SpawnerType.DUNGEON, Config.getDimensionConfigs( worldgenlevel.getLevel().dimension() ) );
             spawner.getSpawnerLogic().initializeSpawner( worldgenlevel, blockpos, randomsource, settings );
-
-            if ( Config.getDimensionConfigs( worldgenlevel.getLevel().dimension() ).SPAWNERS.DUNGEON.useForgeHookEntities.get() )
+            
+            if( Config.getDimensionConfigs( worldgenlevel.getLevel().dimension() ).SPAWNERS.DUNGEON.useForgeHookEntities.get() )
                 spawner.getSpawnerLogic().enableUseForgeHook( worldgenlevel.getLevel(), blockpos );
         }
         cir.setReturnValue( true );
     }
-
+    
     public static double modifyExplosionKnockback( Entity source, double original ) {
-        if ( source instanceof YeetTnt ) {
+        if( source instanceof YeetTnt ) {
             return original * 15.0;
         }
         return original;
     }
-
+    
     public static void onIsInLava( boolean firstTick, Object2DoubleMap<FluidType> forgeFluidTypeHeight, CallbackInfoReturnable<Boolean> cir ) {
-        if ( forgeFluidTypeHeight.getDouble( DWFluids.RUNNY_LAVA_TYPE.get() ) > 0.0 )
+        if( forgeFluidTypeHeight.getDouble( DWFluids.RUNNY_LAVA_TYPE.get() ) > 0.0 )
             cir.setReturnValue( !firstTick );
     }
 }

@@ -6,7 +6,6 @@
   "refmap": "deadlyworld.refmap.json",
   "mixins": [
     "EntityMixin",
-    "ExplosionMixin",
     "MonsterRoomFeatureMixin",
     "PointedDripstoneBlockMixin"
   ],
