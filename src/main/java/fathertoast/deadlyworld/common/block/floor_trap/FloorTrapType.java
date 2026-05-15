@@ -221,20 +221,27 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
     FIRE( "fire", ( dimConfig ) -> dimConfig.FLOOR_TRAPS.FIRE ) {
         @Override
         public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
-            FloorTrapConfig.FireTrapTypeCategory config = dimConfig.FLOOR_TRAPS.FIRE;
-            
-            Level level = trapEntity.getLevel();
-            BlockPos pos = trapEntity.getBlockPos();
+            final FloorTrapConfig.FireTrapTypeCategory config = dimConfig.FLOOR_TRAPS.FIRE;
+            final Level level = trapEntity.getLevel();
+            final BlockPos pos = trapEntity.getBlockPos();
             
             // Abort if there is something blocking the trap above
             if( level.getBlockState( pos.above() ).isFaceSturdy( level, pos.above(), Direction.DOWN, SupportType.CENTER ) )
                 return;
             
-            FallingBlockEntity fire = new FallingBlockEntity( level, pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, Blocks.FIRE.defaultBlockState() );
-            fire.time = 1; // Prevent the entity from instantly dying
-            fire.dropItem = false;
-            fire.fallDistance = 3.0F;
-            fire.blocksBuilding = false; // Make it somewhat possible to break the trap from above
+            final FallingBlockEntity fallingFire = new FallingBlockEntity( level, pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, Blocks.FIRE.defaultBlockState() ) {
+                @Override
+                public void tick() {
+                    super.tick();
+                    if( !level.isClientSide && onGround() ) {
+                        discard();
+                    }
+                }
+            };
+            //fallingFire.time = 1; // Prevent the entity from instantly dying
+            fallingFire.dropItem = false;
+            fallingFire.fallDistance = 3.0F;
+            fallingFire.blocksBuilding = false;
             
             final float throwPower = config.throwPower.getFloat();
             
@@ -242,11 +249,11 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
             final float pitch = level.random.nextFloat() * (float) Math.PI;
             final float yaw = level.random.nextFloat() * 2.0F * (float) Math.PI;
             
-            fire.setDeltaMovement(
+            fallingFire.setDeltaMovement(
                     Mth.cos( yaw ) * speed,
                     Mth.sin( pitch ) * (throwPower + level.random.nextFloat() * throwPower) / 18.0F,
                     Mth.sin( yaw ) * speed );
-            level.addFreshEntity( fire );
+            level.addFreshEntity( fallingFire );
             
             level.playSound( null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, 1.0F );
         }
@@ -322,7 +329,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
                 livingEntity.setHealth( livingEntity.getMaxHealth() );
                 
                 // Equip a sea mine on the mob's head
-                livingEntity.setItemSlot( EquipmentSlot.HEAD, new ItemStack( DWBlocks.seaMine( SeaMineType.fromIndex( 0 ) ).get() ) );
+                livingEntity.setItemSlot( EquipmentSlot.HEAD, new ItemStack( DWBlocks.seaMine( SeaMineType.NORMAL ).get() ) );
                 
                 Entity tripTarget = trapEntity.getTrapLogic().getTripTarget();
                 
