@@ -36,6 +36,6 @@ public abstract class MonsterRoomFeatureMixin extends Feature<NoneFeatureConfigu
     )
     
     public void onPlace( FeaturePlaceContext<NoneFeatureConfiguration> context, CallbackInfoReturnable<Boolean> cir, Predicate predicate, BlockPos blockpos, RandomSource randomsource, WorldGenLevel worldgenlevel ) {
-        CommonMixinHooks.changeMonsterRoomSpawner( context, cir, predicate, blockpos, randomsource, worldgenlevel );
+        CommonMixinHooks.changeMonsterRoomSpawner( cir, blockpos, randomsource, worldgenlevel );
     }
 }
