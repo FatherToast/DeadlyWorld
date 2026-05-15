@@ -95,8 +95,6 @@ public class LoneHangingSpawnerFeature extends DeadlyFeature<LoneHangingSpawnerF
         // Check if we can place here
         if( notSubfeature ) {
             if( !makeChain ) return false;
-            
-            // TODO - replace with something less bad
             if( hasNearbyTraps( level, spawnerPos, 3 ) ) return false;
             
             // Make sure the spawner block at least can be placed

@@ -52,7 +52,6 @@ public class PotionFloorTrapFeature extends DeadlyFeature<PotionFloorTrapFeature
         
         // Check if we can place here
         if( notSubfeature ) {
-            // TODO - replace with something less bad
             if( hasNearbyTraps( level, trapPos, 3 ) ) return false;
             
             // Make sure the trap block can be placed

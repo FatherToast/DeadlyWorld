@@ -176,7 +176,7 @@ public class DeadlyInfestedBlock extends InfestedBlock implements IAutoGenBlock 
     @SuppressWarnings( "deprecation" )
     @Override
     public List<ItemStack> getDrops( BlockState infestedState, LootParams.Builder builder ) {
-        // Drop a loot table, if one exists TODO test this later to make sure it actually works lol
+        // Drop a loot table, if one exists
         ServerLevel level = builder.getLevel();
         LootTable lootTable = level.getServer().getLootData().getElement( LootDataType.TABLE, getLootTable() );
         if( lootTable != null ) {

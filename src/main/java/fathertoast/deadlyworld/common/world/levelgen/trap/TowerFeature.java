@@ -72,8 +72,6 @@ public class TowerFeature extends DeadlyFeature<TowerFeature.Configuration> {
                     dispenserPos.getX() + 1, dispenserPos.getY() + 1, dispenserPos.getZ() + 1 ) ) {
                 if( level.getBlockState( pos ).blocksMotion() ) return false;
             }
-            
-            // TODO - replace with something less bad
             if( hasNearbyTraps( level, basePos, 3 ) ) return false;
             
             // Make sure the tower dispenser block at least can be placed

@@ -52,7 +52,6 @@ public class LoneSpawnerFeature extends DeadlyFeature<LoneSpawnerFeature.Configu
         
         // Check if we can place here
         if( notSubfeature ) {
-            // TODO - replace with something less bad
             if( hasNearbyTraps( level, context.origin(), 3 ) ) return false;
             
             // Make sure the spawner block at least can be placed

@@ -52,7 +52,6 @@ public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configurati
         
         // Check if we can place here
         if( notSubfeature ) {
-            // TODO - replace with something less bad
             if( hasNearbyTraps( level, trapPos, 3 ) ) return false;
             
             // Make sure the trap block can be placed
