@@ -297,7 +297,7 @@ public abstract class BaseTrap {
     
     public void load( @Nullable Level level, BlockPos pos, CompoundTag loadTag ) {
         if( NBTHelper.containsCompound( loadTag, TAG_CAMO ) )
-            camoState = TrapHelper.readBlockState( loadTag.getCompound( TAG_CAMO ) );
+            camoState = NBTHelper.readBlockState( loadTag.getCompound( TAG_CAMO ) );
         if( NBTHelper.containsString( loadTag, TAG_DECOY_TYPE ) ) {
             String value = loadTag.getString( TAG_DECOY_TYPE );
             if( value.equals( "null" ) ) {

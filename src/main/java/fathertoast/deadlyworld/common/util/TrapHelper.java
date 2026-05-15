@@ -5,11 +5,8 @@ import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderGetter;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -22,15 +19,11 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -178,43 +171,6 @@ public final class TrapHelper {
         if( !effects.isEmpty() ) {
             int color = PotionUtils.getColor( effects );
             potionStack.getOrCreateTag().putInt( PotionUtils.TAG_CUSTOM_POTION_COLOR, color );
-        }
-    }
-    
-    // TODO - Might as well move this to Crust at some point
-    
-    /**
-     * Modified copy-paste of {@link net.minecraft.nbt.NbtUtils#readBlockState(HolderGetter, CompoundTag)}.<br>
-     * Original implementation requires level access. This one checks the forge registry for blocks.
-     */
-    public static BlockState readBlockState( CompoundTag compoundTag ) {
-        if( !compoundTag.contains( "Name", Tag.TAG_STRING ) ) {
-            return Blocks.AIR.defaultBlockState();
-        }
-        else {
-            ResourceLocation blockId = ResourceLocation.parse( compoundTag.getString( "Name" ) );
-            Block block = ForgeRegistries.BLOCKS.getValue( blockId );
-            
-            if( block == null ) {
-                return Blocks.AIR.defaultBlockState();
-            }
-            else {
-                BlockState blockState = block.defaultBlockState();
-                
-                if( compoundTag.contains( "Properties", Tag.TAG_COMPOUND ) ) {
-                    CompoundTag propertiesTag = compoundTag.getCompound( "Properties" );
-                    StateDefinition<Block, BlockState> statedefinition = block.getStateDefinition();
-                    
-                    for( String key : propertiesTag.getAllKeys() ) {
-                        Property<?> property = statedefinition.getProperty( key );
-                        
-                        if( property != null ) {
-                            blockState = setValueHelper( blockState, property, key, propertiesTag, compoundTag );
-                        }
-                    }
-                }
-                return blockState;
-            }
         }
     }
     
