@@ -1,22 +1,23 @@
 package fathertoast.deadlyworld.common.entity;
 
+import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
 /**
- * Similar to normal TNT, but has a slightly larger explosion radius, does not damage blocks or entities and applies
- * massive knockback to living entities.<br><br>
+ * Similar to normal TNT, but has a configurable explosion radius, does not damage blocks or entities and applies
+ * configurable knockback to living entities.
  * <p>
- * Knockback is changed with a mixin, {@link fathertoast.deadlyworld.common.mixin.ExplosionMixin}<br>
- * Damage to entities is canceled via event at
+ * "Additional" knockback is applied via event listener at
  * {@link fathertoast.deadlyworld.common.event.GameEventHandler#onLivingDamage(LivingDamageEvent)}
  */
 public class YeetTnt extends PrimedTnt {
@@ -42,11 +43,13 @@ public class YeetTnt extends PrimedTnt {
     
     @Override
     protected void explode() {
-        final Explosion explosion = new Explosion( level(), this, getX(), getY( 0.0625D ), getZ(),
-                4.0F, true, Explosion.BlockInteraction.KEEP );
-        if( ForgeEventFactory.onExplosionStart( level(), explosion ) ) return;
-        
-        explosion.explode();
-        explosion.finalizeExplosion( false );
+        final float explosionPower = Config.ENTITIES.MISC.yeetntPower.getFloat();
+        // noinspection resource
+        level().explode( this, getX(), getY( 0.0625D ), getZ(), explosionPower, Level.ExplosionInteraction.NONE );
+    }
+    
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket( this );
     }
 }

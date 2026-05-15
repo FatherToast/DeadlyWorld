@@ -165,6 +165,7 @@ public class EntitiesConfig extends AbstractConfigFile {
         
         public final DoubleField yeetntKnockbackMult;
         
+        public final DoubleField yeetntPower;
         
         Misc( EntitiesConfig parent ) {
             super( parent, "misc",
@@ -172,6 +173,9 @@ public class EntitiesConfig extends AbstractConfigFile {
             
             yeetntKnockbackMult = SPEC.define( new DoubleField( "yeetnt.knockback_mult", 10.0, 1.0, 100.0,
                     "The multiplier used by YeetNT when calculating the knockback to apply to entities affected by the blast." ) );
+            
+            yeetntPower = SPEC.define( new DoubleField( "yeetnt.power", 4.0, 1.0, 100.0,
+                    "The multiplier used by YeetNT when calculating its blast area." ) );
         }
     }
 }
