@@ -18,6 +18,7 @@ public class EntitiesConfig extends AbstractConfigFile {
     
     public final Minis MINIS;
     public final Mimics MIMICS;
+    public final Misc MISC;
     
     /** Builds the config spec that should be used for this config. */
     EntitiesConfig( ConfigManager manager, String fileName ) {
@@ -30,6 +31,7 @@ public class EntitiesConfig extends AbstractConfigFile {
         
         MINIS = new Minis( this );
         MIMICS = new Mimics( this );
+        MISC = new Misc( this );
     }
     
     public static class Minis extends AbstractConfigCategory<EntitiesConfig> {
@@ -156,6 +158,20 @@ public class EntitiesConfig extends AbstractConfigFile {
             );
             return SPEC.define( new AttributeListField( "mini_" + key + "_attributes", defaults,
                     "Attribute modifiers for " + name + "." ) );
+        }
+    }
+    
+    public static class Misc extends AbstractConfigCategory<EntitiesConfig> {
+        
+        public final DoubleField yeetntKnockbackMult;
+        
+        
+        Misc( EntitiesConfig parent ) {
+            super( parent, "misc",
+                    "Options to customize various entities that doesn't fit in any other categories." );
+            
+            yeetntKnockbackMult = SPEC.define( new DoubleField( "yeetnt.knockback_mult", 10.0, 1.0, 100.0,
+                    "The multiplier used by YeetNT when calculating the knockback to apply to entities affected by the blast." ) );
         }
     }
 }

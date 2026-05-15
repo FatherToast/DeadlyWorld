@@ -132,11 +132,13 @@ public final class GameEventHandler {
             
             // noinspection resource
             if( !entity.level().isClientSide ) {
+                final double mult = Config.ENTITIES.MISC.yeetntKnockbackMult.get();
+                
                 final Vec3 velocity = new Vec3(
                         entity.getX() - yeetTnt.getX(),
                         entity.getY() >= yeetTnt.getY() ? 1.0 : -1.0,
                         entity.getZ() - yeetTnt.getZ()
-                ).normalize().multiply( 10.0D, 10.0D, 10.0D );
+                ).normalize().scale( mult );
                 
                 entity.setDeltaMovement( velocity );
                 
@@ -173,6 +175,7 @@ public final class GameEventHandler {
      *
      * @param event The event data.
      */
+    @SuppressWarnings( { "OverrideOnly", "deprecation" } )
     @SubscribeEvent( priority = EventPriority.NORMAL )
     public static void onFinalizeSpawn( MobSpawnEvent.FinalizeSpawn event ) {
         // Initialize spawner mimics created any way other than their "natural" triggered spawn method
