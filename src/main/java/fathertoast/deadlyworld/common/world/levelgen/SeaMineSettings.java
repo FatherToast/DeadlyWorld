@@ -11,12 +11,12 @@ import net.minecraft.util.valueproviders.IntProvider;
 public record SeaMineSettings(
         IntProvider distanceFromBottom
 ) {
-    public static final Codec<SeaMineSettings> CODEC = RecordCodecBuilder.create( (instance ) -> instance.group(
+    public static final Codec<SeaMineSettings> CODEC = RecordCodecBuilder.create( ( instance ) -> instance.group(
             IntProvider.CODEC.fieldOf( "min_distance_from_bottom" ).forGetter( SeaMineSettings::distanceFromBottom )
     ).apply( instance, SeaMineSettings::new ) );
-
+    
     public static SeaMineSettings of( SeaMineType type, DimensionConfigGroup dimConfigs ) { return of( type.getConfig( dimConfigs ) ); }
-
+    
     public static SeaMineSettings of( WaterTrapConfig.SeaMineCategory config ) {
         return new SeaMineSettings(
                 ConfigUniformIntProvider.of( config.distanceFromBottom )

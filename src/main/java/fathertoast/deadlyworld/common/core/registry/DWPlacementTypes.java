@@ -2,9 +2,7 @@ package fathertoast.deadlyworld.common.core.registry;
 
 import com.mojang.serialization.Codec;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.levelgen.heightproviders.HeightProviderType;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraftforge.registries.DeferredRegister;

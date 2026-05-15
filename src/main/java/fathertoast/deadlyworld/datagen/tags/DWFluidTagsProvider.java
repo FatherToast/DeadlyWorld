@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class DWFluidTagsProvider extends FluidTagsProvider {
-
+    
     public DWFluidTagsProvider( PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper fileHelper ) {
         super( packOutput, lookupProvider, DeadlyWorld.MOD_ID, fileHelper );
     }
-
+    
     @Override
     protected void addTags( HolderLookup.Provider provider ) {
         tag( FluidTags.LAVA ).add(

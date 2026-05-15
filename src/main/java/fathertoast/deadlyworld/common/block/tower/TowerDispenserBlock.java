@@ -22,52 +22,52 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class TowerDispenserBlock extends BaseEntityBlock implements IDeadlyBlock {
-
+    
     private final TowerType towerType;
-
+    
     public TowerDispenserBlock( TowerType type ) {
         super( Config.BLOCKS.get( type ).adjustBlockProperties( BlockBehaviour.Properties.copy( Blocks.DISPENSER ) ) );
         towerType = type;
     }
-
+    
     public BaseTower newTowerLogic( TowerDispenserBlockEntity blockEntity ) {
         return new BaseTower( towerType, blockEntity ) {
             @Override
-            public void activateTower(ServerLevel level, BlockPos pos, Entity target,
-                                      Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance ) {
+            public void activateTower( ServerLevel level, BlockPos pos, Entity target,
+                                       Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance ) {
                 towerType.triggerAttack( Config.getDimensionConfigs( level ), blockEntity, target, center, offset, vecToTarget, distance );
             }
         };
     }
-
+    
     public TowerType getTowerType() {
         return towerType;
     }
-
+    
     @Override
-    public void initDeadly(ServerLevel level, BlockPos pos, RandomSource random) {
+    public void initDeadly( ServerLevel level, BlockPos pos, RandomSource random ) {
         if( level.getBlockEntity( pos ) instanceof TowerDispenserBlockEntity towerBlockEntity ) {
             towerBlockEntity.getTowerLogic().initializeTower( level, pos, random );
         }
     }
-
+    
     @Override
     public @Nullable BlockEntity newBlockEntity( BlockPos pos, BlockState state ) {
         return new TowerDispenserBlockEntity( pos, state );
     }
-
+    
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockState state, BlockEntityType<T> type ) {
         return getTicker( level, type, DWBlockEntities.TOWER_DISPENSER.get() );
     }
-
+    
     @Nullable
-    public <T extends BlockEntity, V extends TowerDispenserBlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockEntityType<T> type, BlockEntityType<V> expectedType ) {
+    public <T extends BlockEntity, V extends TowerDispenserBlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockEntityType<T> type, BlockEntityType<V> expectedType ) {
         return createTickerHelper( type, expectedType,
                 level.isClientSide ? TowerDispenserBlockEntity::clientTick : TowerDispenserBlockEntity::serverTick );
     }
-
+    
     @Override
     public RenderShape getRenderShape( BlockState state ) {
         return RenderShape.MODEL;

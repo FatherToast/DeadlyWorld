@@ -9,14 +9,14 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class JukeboxMimicRenderer extends MobRenderer<JukeboxMimic, JukeboxMimicModel<JukeboxMimic>> {
-
-    private static final ResourceLocation TEXTURE = DeadlyWorld.rl("textures/entity/jukebox_mimic.png");
-
-
+    
+    private static final ResourceLocation TEXTURE = DeadlyWorld.rl( "textures/entity/jukebox_mimic.png" );
+    
+    
     public JukeboxMimicRenderer( EntityRendererProvider.Context context ) {
         super( context, new JukeboxMimicModel<>( context.bakeLayer( DWModelLayers.JUKEBOX_MIMIC ) ), 0.65F );
     }
-
+    
     @Override
     public ResourceLocation getTextureLocation( JukeboxMimic mimic ) {
         return TEXTURE;

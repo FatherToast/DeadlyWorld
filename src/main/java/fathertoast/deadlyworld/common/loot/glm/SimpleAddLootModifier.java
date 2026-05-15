@@ -20,20 +20,20 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 /**
- *  Simple implementation of a loot modifier that adds an item stack with
- *  variable size to a list of loot table IDs.
+ * Simple implementation of a loot modifier that adds an item stack with
+ * variable size to a list of loot table IDs.
  */
 public class SimpleAddLootModifier extends LootModifier {
-
+    
     private static final ListCodec<ResourceLocation> RL_LIST_CODEC = new ListCodec<>( ResourceLocation.CODEC );
-
+    
     public final Item itemToAdd;
     public final double chance;
     public final int maxStackCount;
     public final int minStackCount;
     public final List<ResourceLocation> lootTables;
-
-
+    
+    
     public static final Supplier<Codec<SimpleAddLootModifier>> CODEC = () -> RecordCodecBuilder.create( inst -> LootModifier.codecStart( inst )
             .and( inst.group(
                             ForgeRegistries.ITEMS.getCodec()
@@ -52,44 +52,44 @@ public class SimpleAddLootModifier extends LootModifier {
             )
             .apply( inst, SimpleAddLootModifier::new )
     );
-
+    
     public SimpleAddLootModifier( LootItemCondition[] conditionsIn, Item itemToAdd, double chance, int maxStackCount, int minStackCount, List<ResourceLocation> lootTables ) {
-        super(conditionsIn);
+        super( conditionsIn );
         this.itemToAdd = itemToAdd;
         this.chance = chance;
         this.maxStackCount = maxStackCount;
         this.minStackCount = minStackCount;
         this.lootTables = lootTables;
     }
-
+    
     public SimpleAddLootModifier( LootItemCondition[] conditionsIn, Item itemToAdd, double chance, List<ResourceLocation> lootTables ) {
-        super(conditionsIn);
+        super( conditionsIn );
         this.itemToAdd = itemToAdd;
         this.chance = chance;
         this.maxStackCount = 1;
         this.minStackCount = 1;
         this.lootTables = lootTables;
     }
-
+    
     @Nonnull
     @Override
     protected ObjectArrayList<ItemStack> doApply( ObjectArrayList<ItemStack> generatedLoot, LootContext context ) {
-        if ( lootTables.contains( context.getQueriedLootTableId() ) ) {
+        if( lootTables.contains( context.getQueriedLootTableId() ) ) {
             Random random = new Random();
-
-            if ( random.nextDouble() <= chance ) {
-                if ( minStackCount == 1 && maxStackCount == minStackCount ) {
+            
+            if( random.nextDouble() <= chance ) {
+                if( minStackCount == 1 && maxStackCount == minStackCount ) {
                     generatedLoot.add( new ItemStack( itemToAdd ) );
                     return generatedLoot;
                 }
                 int stackSize = minStackCount + random.nextInt( (maxStackCount - minStackCount) + 1 );
-                ItemStack stack = new ItemStack ( itemToAdd, stackSize );
+                ItemStack stack = new ItemStack( itemToAdd, stackSize );
                 generatedLoot.add( stack );
             }
         }
         return generatedLoot;
     }
-
+    
     @Override
     public Codec<? extends IGlobalLootModifier> codec() {
         return DWLootModifiers.SIMPLE_ADD.get();

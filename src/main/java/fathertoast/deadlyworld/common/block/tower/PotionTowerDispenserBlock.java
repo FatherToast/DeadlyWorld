@@ -19,28 +19,28 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 
 public class PotionTowerDispenserBlock extends TowerDispenserBlock {
-
+    
     public PotionTowerDispenserBlock() {
         super( TowerType.POTION );
     }
-
+    
     @Override
-    public BaseTower newTowerLogic(TowerDispenserBlockEntity blockEntity ) {
+    public BaseTower newTowerLogic( TowerDispenserBlockEntity blockEntity ) {
         return new PotionTower( blockEntity ) {
             @Override
             public void activateTower( ServerLevel level, BlockPos pos, Entity target,
-                                      Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance ) {
+                                       Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance ) {
                 towerType.triggerAttack( Config.getDimensionConfigs( level ), blockEntity, target, center, offset, vecToTarget, distance );
             }
         };
     }
-
+    
     @Override
     public BlockEntity newBlockEntity( BlockPos pos, BlockState state ) { return new PotionTowerDispenserBlockEntity( pos, state ); }
-
+    
     @Override
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type ) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockState state, BlockEntityType<T> type ) {
         return getTicker( level, type, DWBlockEntities.POTION_TOWER.get() );
     }
 }

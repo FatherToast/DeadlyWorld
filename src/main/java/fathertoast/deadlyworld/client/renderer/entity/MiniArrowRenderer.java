@@ -12,15 +12,12 @@ import net.minecraft.client.renderer.entity.TippableArrowRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 /**
  * Modified copy-paste of {@link net.minecraft.client.renderer.entity.ArrowRenderer} combined with {@link TippableArrowRenderer}.
  */
-@OnlyIn( Dist.CLIENT )
 public class MiniArrowRenderer extends EntityRenderer<MiniArrow> {
     
     public MiniArrowRenderer( EntityRendererProvider.Context renderContext ) { super( renderContext ); }

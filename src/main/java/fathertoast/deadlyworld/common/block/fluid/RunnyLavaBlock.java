@@ -10,7 +10,7 @@ import net.minecraft.world.level.material.PushReaction;
 import java.util.function.Supplier;
 
 public class RunnyLavaBlock extends LiquidBlock {
-
+    
     public RunnyLavaBlock( Supplier<? extends FlowingFluid> fluidSupplier ) {
         super( fluidSupplier, BlockBehaviour.Properties.of()
                 .mapColor( MapColor.FIRE )
@@ -18,7 +18,7 @@ public class RunnyLavaBlock extends LiquidBlock {
                 .noCollission()
                 .randomTicks()
                 .strength( 100.0F )
-                .lightLevel( (state) -> 15 )
+                .lightLevel( ( state ) -> 15 )
                 .pushReaction( PushReaction.DESTROY )
                 .noLootTable()
                 .liquid()

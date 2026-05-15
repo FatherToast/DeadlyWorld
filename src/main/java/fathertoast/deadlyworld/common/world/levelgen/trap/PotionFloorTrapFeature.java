@@ -64,7 +64,7 @@ public class PotionFloorTrapFeature extends DeadlyFeature<PotionFloorTrapFeature
         // Place the trap
         BlockState trapBlock = config.trapProvider.getState( random, trapPos );
         setBlock( level, trapPos, trapBlock );
-        if( trapBlock.getBlock() instanceof PotionFloorTrapBlock) {
+        if( trapBlock.getBlock() instanceof PotionFloorTrapBlock ) {
             config.trapSettings.initializeTrap( level, trapPos, random );
         }
         

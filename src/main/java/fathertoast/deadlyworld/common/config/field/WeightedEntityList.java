@@ -1,7 +1,6 @@
 package fathertoast.deadlyworld.common.config.field;
 
 import fathertoast.crust.api.config.common.ConfigUtil;
-import fathertoast.crust.api.config.common.value.DefaultValueEntry;
 import fathertoast.crust.api.config.common.value.EntityEntry;
 import fathertoast.crust.api.config.common.value.EntityList;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -29,7 +28,7 @@ public class WeightedEntityList extends EntityList {
      * Weighted entity lists will require exactly one value, and the value can be any non-negative double.
      */
     public WeightedEntityList( List<EntityEntry> entries ) { this( entries.toArray( new EntityEntry[0] ) ); }
-
+    
     /**
      * Create a new weighted entity list from an array of entries. Used for creating default configs.
      * Does not support "default" entries. Extendability is generally ignored.

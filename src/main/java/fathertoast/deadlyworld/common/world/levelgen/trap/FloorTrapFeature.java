@@ -64,7 +64,7 @@ public class FloorTrapFeature extends DeadlyFeature<FloorTrapFeature.Configurati
         // Place the trap
         BlockState trapBlock = config.trapProvider.getState( random, trapPos );
         setBlock( level, trapPos, trapBlock );
-        if( trapBlock.getBlock() instanceof FloorTrapBlock) {
+        if( trapBlock.getBlock() instanceof FloorTrapBlock ) {
             config.trapSettings.initializeTrap( level, trapPos, random );
         }
         

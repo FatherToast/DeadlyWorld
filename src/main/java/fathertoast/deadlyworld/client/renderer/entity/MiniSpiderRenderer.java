@@ -4,10 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import fathertoast.deadlyworld.common.entity.MiniSpider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.SpiderRenderer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn( Dist.CLIENT )
 public class MiniSpiderRenderer extends SpiderRenderer<MiniSpider> {
     
     public MiniSpiderRenderer( EntityRendererProvider.Context renderContext ) {

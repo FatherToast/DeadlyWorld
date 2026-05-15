@@ -5,10 +5,7 @@ import net.minecraft.client.renderer.entity.CreeperRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn( Dist.CLIENT )
 public class MiniCreeperRenderer extends CreeperRenderer {
     
     public MiniCreeperRenderer( EntityRendererProvider.Context renderContext ) {

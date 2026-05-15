@@ -29,13 +29,13 @@ import java.util.function.Supplier;
 public final class DWFluids {
     public static final DeferredRegister<Fluid> REGISTRY = DeferredRegister.create( ForgeRegistries.FLUIDS, DeadlyWorld.MOD_ID );
     public static final DeferredRegister<FluidType> TYPE_REGISTRY = DeferredRegister.create( ForgeRegistries.Keys.FLUID_TYPES, DeadlyWorld.MOD_ID );
-
+    
     //
     // FLUIDS
     //
     public static final RegistryObject<FlowingFluid> RUNNY_LAVA_SOURCE = RegistryObject.create( DeadlyWorld.rl( "runny_lava" ), ForgeRegistries.FLUIDS );
-    public static final RegistryObject<FlowingFluid> RUNNY_LAVA_FLOWING = RegistryObject.create( DeadlyWorld.rl( "flowing_runny_lava" ), ForgeRegistries.FLUIDS );;
-
+    public static final RegistryObject<FlowingFluid> RUNNY_LAVA_FLOWING = RegistryObject.create( DeadlyWorld.rl( "flowing_runny_lava" ), ForgeRegistries.FLUIDS );
+    
     //
     // TYPES
     //
@@ -52,42 +52,41 @@ public final class DWFluids {
                     .density( 3000 )
                     .viscosity( 6000 )
                     .temperature( 1400 )
-            )
-    {
+    ) {
         @Override
         public double motionScale( Entity entity ) {
             return 0.007D;
         }
-
+        
         @Override
         public void setItemMovement( ItemEntity entity ) {
             Vec3 vec3 = entity.getDeltaMovement();
             entity.setDeltaMovement(
                     vec3.x * (double) 0.95F,
-                    vec3.y + (double)( vec3.y < (double) 0.06F ? 5.0E-4F : 0.0F ),
+                    vec3.y + (double) (vec3.y < (double) 0.06F ? 5.0E-4F : 0.0F),
                     vec3.z * (double) 0.95F
             );
         }
-
+        
         @Override
-        public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-            consumer.accept(new IClientFluidTypeExtensions() {
+        public void initializeClient( Consumer<IClientFluidTypeExtensions> consumer ) {
+            consumer.accept( new IClientFluidTypeExtensions() {
                 private static final ResourceLocation STILL = DeadlyWorld.rl( "block/runny_lava_still" );
                 private static final ResourceLocation FLOWING = DeadlyWorld.rl( "block/runny_lava_flow" );
-
+                
                 @Override
                 public ResourceLocation getStillTexture() {
                     return STILL;
                 }
-
+                
                 @Override
                 public ResourceLocation getFlowingTexture() {
                     return FLOWING;
                 }
-            });
+            } );
         }
-    });
-
+    } );
+    
     // Note: fluids require properties, and the properties require the fluids. Lol!
     static {
         ForgeFlowingFluid.Properties runnyLavaProperties = new ForgeFlowingFluid.Properties( RUNNY_LAVA_TYPE, RUNNY_LAVA_SOURCE, RUNNY_LAVA_FLOWING )
@@ -99,7 +98,7 @@ public final class DWFluids {
         REGISTRY.register( "runny_lava", () -> new RunnyLavaFluid.Source( runnyLavaProperties ) );
         REGISTRY.register( "flowing_runny_lava", () -> new RunnyLavaFluid.Flowing( runnyLavaProperties ) );
     }
-
+    
     /**
      * Called from {@link DeadlyWorld#onCommonSetup(FMLCommonSetupEvent)}.<br><br>
      * Here we register the logic for how our custom fluids should interact with other fluids in the world.
@@ -108,10 +107,10 @@ public final class DWFluids {
         FluidInteractionRegistry.addInteraction( DWFluids.RUNNY_LAVA_TYPE.get(), new FluidInteractionRegistry.InteractionInformation(
                 ForgeMod.WATER_TYPE.get(),
                 fluidState -> fluidState.isSource() ? Blocks.OBSIDIAN.defaultBlockState() : Blocks.COBBLESTONE.defaultBlockState()
-        ));
+        ) );
     }
-
-
+    
+    
     private static <TYPE extends FluidType> RegistryObject<TYPE> registerType( String name, Supplier<TYPE> typeSupplier ) {
         return TYPE_REGISTRY.register( name, typeSupplier );
     }

@@ -3,15 +3,16 @@ package fathertoast.deadlyworld.common.config;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.crust.api.config.common.field.*;
+import fathertoast.crust.api.config.common.field.RestartNote;
+import fathertoast.crust.api.config.common.field.StringListField;
 
 import java.util.ArrayList;
 
 public class BlockAutoGenConfig extends AbstractConfigFile {
-
+    
     public final BlockAutoGenConfig.General GENERAL;
-
-
+    
+    
     /** Builds the config spec that should be used for this config. */
     BlockAutoGenConfig( ConfigManager manager, String fileName ) {
         super( manager, fileName,
@@ -19,15 +20,15 @@ public class BlockAutoGenConfig extends AbstractConfigFile {
         );
         GENERAL = new General( this );
     }
-
+    
     public static class General extends AbstractConfigCategory<BlockAutoGenConfig> {
-
+        
         public final StringListField blockAutoGenDependencies;
-
+        
         General( BlockAutoGenConfig parent ) {
             super( parent, "general",
                     "General settings for all auto-generated blocks created and registered by DeadlyWorld." );
-
+            
             blockAutoGenDependencies = SPEC.define( new StringListField( "block_auto_gen.dependencies", "mod_id",
                     new ArrayList<>(),
                     "By default (that is, when this list is empty), Deadly World will attempt to adjust load " +

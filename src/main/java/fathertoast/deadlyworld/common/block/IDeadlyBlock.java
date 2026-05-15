@@ -9,6 +9,6 @@ import net.minecraft.util.RandomSource;
  * that needs to have their config-based logic setup on placement.
  */
 public interface IDeadlyBlock {
-
+    
     void initDeadly( ServerLevel level, BlockPos pos, RandomSource random );
 }

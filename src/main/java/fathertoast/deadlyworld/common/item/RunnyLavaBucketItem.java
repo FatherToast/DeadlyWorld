@@ -9,11 +9,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class RunnyLavaBucketItem extends BucketItem {
-
+    
     public RunnyLavaBucketItem( Supplier<? extends Fluid> supplier, Properties builder ) {
         super( supplier, builder );
     }
-
+    
     @Override
     public int getBurnTime( ItemStack itemStack, @Nullable RecipeType<?> recipeType ) {
         return 20000;

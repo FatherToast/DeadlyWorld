@@ -13,21 +13,21 @@ import java.util.List;
 
 /** Block item used for auto-gen blocks. */
 public class AutoGenBlockItem extends BlockItem {
-
+    
     private final String tooltipKey;
-
+    
     public AutoGenBlockItem( String blockKey, Block block, Properties properties ) {
         super( block, properties );
         tooltipKey = translationKey( blockKey );
     }
-
+    
     @Override
     public void appendHoverText( ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag ) {
         // Add a translatable component to show the auto-gen block type
         components.add( Component.translatable( tooltipKey ).withStyle( ChatFormatting.GRAY ) );
     }
-
+    
     public static String translationKey( String blockKey ) {
-        return "block_auto_gen.block_key." + blockKey +".tooltip";
+        return "block_auto_gen.block_key." + blockKey + ".tooltip";
     }
 }

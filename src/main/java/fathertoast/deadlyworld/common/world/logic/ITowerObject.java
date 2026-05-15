@@ -8,8 +8,8 @@ import net.minecraft.world.level.Level;
  * Usually, the entity or block entity that acts as the tower dispenser will implement this interface.
  */
 public interface ITowerObject {
-
+    
     void broadcastEvent( BaseTower tower, Level level, BlockPos pos, int eventId );
-
+    
     void spawnEffectParticle( BaseTower trap, Level level, BlockPos pos );
 }

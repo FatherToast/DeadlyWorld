@@ -10,15 +10,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class ChestMimicRenderer extends MobRenderer<ChestMimic, ChestMimicModel> {
-
-    private static final ResourceLocation TEXTURE = DeadlyWorld.rl("textures/entity/chest_mimic.png");
-
-
+    
+    private static final ResourceLocation TEXTURE = DeadlyWorld.rl( "textures/entity/chest_mimic.png" );
+    
+    
     public ChestMimicRenderer( EntityRendererProvider.Context context ) {
         super( context, new ChestMimicModel( context.bakeLayer( DWModelLayers.CHEST_MIMIC ) ), 0.65F );
         addLayer( new ChestMimicChestLayer( this, new ChestMimicModel( context.bakeLayer( DWModelLayers.CHEST_MIMIC ) ) ) );
     }
-
+    
     @Override
     public ResourceLocation getTextureLocation( ChestMimic mimic ) {
         return TEXTURE;

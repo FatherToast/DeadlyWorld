@@ -9,16 +9,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class PotionTowerDispenserBlockEntity extends TowerDispenserBlockEntity {
-
+    
     public PotionTowerDispenserBlockEntity( BlockPos pos, BlockState state ) {
         super( DWBlockEntities.POTION_TOWER.get(), pos, state );
     }
-
+    
     @Nullable
     public MobEffectInstance getPotionCopy() {
         return ((PotionTower) getTowerLogic()).getPotionCopy();
     }
-
+    
     public boolean isDynamic() {
         return ((PotionTower) getTowerLogic()).isDynamic();
     }

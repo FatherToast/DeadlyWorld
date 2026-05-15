@@ -1,4 +1,3 @@
-
 package fathertoast.deadlyworld.common.item;
 
 import fathertoast.deadlyworld.common.config.dimension.ChestConfig;

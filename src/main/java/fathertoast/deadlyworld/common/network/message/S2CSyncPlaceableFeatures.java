@@ -29,6 +29,7 @@ public record S2CSyncPlaceableFeatures(List<String> featureKeys) {
         }
         catch( IndexOutOfBoundsException | DecoderException ex ) {
             DeadlyWorld.LOG.error( ex );
+            // noinspection CallToPrintStackTrace
             ex.printStackTrace();
         }
         return new S2CSyncPlaceableFeatures( featureKeys );

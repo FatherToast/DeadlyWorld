@@ -20,10 +20,7 @@ public final class ModEventHandler {
      * @param event The event data.
      */
     @SubscribeEvent( priority = EventPriority.NORMAL )
-    public static void onCommonSetup( FMLCommonSetupEvent event ) {
-        //Config.initialize();
-        //DWConfiguredFeatures.register();
-    }
+    public static void onCommonSetup( FMLCommonSetupEvent event ) { }
     
     /**
      * This event is called to allow each entity type to register its own spawn predicate.

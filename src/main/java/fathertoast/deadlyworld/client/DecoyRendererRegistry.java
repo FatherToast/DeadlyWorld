@@ -22,13 +22,13 @@ import java.util.function.Supplier;
  * Helper class for registering decoy renderers.
  */
 public class DecoyRendererRegistry {
-
+    
     /** A map of type-to-factory. This map is queried on resource reload and constructs the renderers. */
     private static final Map<DecoyType, Supplier<IDecoyRenderer>> FACTORIES = new ConcurrentHashMap<>();
     /** The map containing the actual decoy renderers linked to their type. */
     private static final Map<DecoyType, IDecoyRenderer> RENDERERS = new HashMap<>();
-
-
+    
+    
     /** Registers decoy renderer factories added by Deadly World. */
     protected static void registerDefaults() {
         register( DWDecoyTypes.CAKE.get(), () -> new SimpleBlockDecoyRenderer( Blocks.CAKE ) );
@@ -42,8 +42,8 @@ public class DecoyRendererRegistry {
         register( DWDecoyTypes.WITHER_SKELETON.get(), () -> new SimpleEntityDecoyRenderer( EntityType.WITHER_SKELETON ) );
         register( DWDecoyTypes.MAGMA_CUBE.get(), () -> new SimpleEntityDecoyRenderer( EntityType.MAGMA_CUBE ) );
     }
-
-
+    
+    
     /**
      * Registers a decoy factory and maps it to the given decoy type.
      * <br><br>
@@ -52,19 +52,19 @@ public class DecoyRendererRegistry {
     public static void register( DecoyType type, Supplier<IDecoyRenderer> rendererSupplier ) {
         Objects.requireNonNull( type );
         Objects.requireNonNull( rendererSupplier );
-
+        
         FACTORIES.put( type, rendererSupplier );
     }
-
+    
     /**
      * @return A new decoy renderer instance for the given decoy type.
-     *         Returns null if no factory is registered for the decoy type.
+     * Returns null if no factory is registered for the decoy type.
      */
     @Nullable
     public static IDecoyRenderer getRendererForType( DecoyType type ) {
         return RENDERERS.get( type );
     }
-
+    
     /**
      * Queries the registered factories to instantiate
      * and validate decoy renderers.
@@ -73,16 +73,16 @@ public class DecoyRendererRegistry {
      */
     protected static void setupDecoyRenderers() {
         RENDERERS.clear();
-
-        FACTORIES.forEach( (decoyType, supplier) -> {
+        
+        FACTORIES.forEach( ( decoyType, supplier ) -> {
             try {
                 IDecoyRenderer renderer = supplier.get();
                 RENDERERS.put( decoyType, renderer );
             }
-            catch ( Exception e ) {
+            catch( Exception e ) {
                 DeadlyWorld.LOG.error( "Failed to construct decoy renderer for type \"{}\"!", DWRegistries.DECOY_TYPE_REGISTRY.get().getKey( decoyType ) );
                 e.printStackTrace();
             }
-        });
+        } );
     }
 }

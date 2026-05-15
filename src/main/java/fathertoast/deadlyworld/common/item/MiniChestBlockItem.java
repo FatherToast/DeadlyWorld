@@ -10,11 +10,11 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import java.util.function.Consumer;
 
 public class MiniChestBlockItem extends BlockItem {
-
+    
     public MiniChestBlockItem( Block block ) {
         super( block, new Item.Properties() );
     }
-
+    
     @Override
     public void initializeClient( Consumer<IClientItemExtensions> consumer ) {
         consumer.accept( new IClientItemExtensions() {
@@ -22,6 +22,6 @@ public class MiniChestBlockItem extends BlockItem {
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return BEWLRHolders.MINI_CHEST.getInstance();
             }
-        });
+        } );
     }
 }

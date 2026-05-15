@@ -34,7 +34,6 @@ public abstract class MonsterRoomFeatureMixin extends Feature<NoneFeatureConfigu
             locals = LocalCapture.CAPTURE_FAILSOFT,
             cancellable = true
     )
-    
     public void onPlace( FeaturePlaceContext<NoneFeatureConfiguration> context, CallbackInfoReturnable<Boolean> cir, Predicate predicate, BlockPos blockpos, RandomSource randomsource, WorldGenLevel worldgenlevel ) {
         CommonMixinHooks.changeMonsterRoomSpawner( cir, blockpos, randomsource, worldgenlevel );
     }

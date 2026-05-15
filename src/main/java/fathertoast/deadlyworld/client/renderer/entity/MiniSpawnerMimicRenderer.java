@@ -1,7 +1,6 @@
 package fathertoast.deadlyworld.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import fathertoast.deadlyworld.client.DWModelLayers;
 import fathertoast.deadlyworld.client.renderer.entity.model.MiniSpawnerMimicModel;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
@@ -12,8 +11,6 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 
 public class MiniSpawnerMimicRenderer extends MobRenderer<MiniSpawnerMimic, MiniSpawnerMimicModel> {
     

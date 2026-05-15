@@ -18,14 +18,14 @@ import java.util.function.Supplier;
  * to render the block entity renderer's model.
  */
 public class SimpleBEWLR extends BlockEntityWithoutLevelRenderer {
-
+    
     private final Supplier<BlockEntity> blockEntitySupplier;
-
-    public SimpleBEWLR(BlockEntityRenderDispatcher renderDispatcher, EntityModelSet modelSet, Supplier<BlockEntity> blockEntitySupplier ) {
+    
+    public SimpleBEWLR( BlockEntityRenderDispatcher renderDispatcher, EntityModelSet modelSet, Supplier<BlockEntity> blockEntitySupplier ) {
         super( renderDispatcher, modelSet );
         this.blockEntitySupplier = Suppliers.memoize( blockEntitySupplier::get );
     }
-
+    
     @Override
     public void renderByItem( ItemStack itemStack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int overlayTexture ) {
         blockEntityRenderDispatcher.renderItem( blockEntitySupplier.get(), poseStack, bufferSource, packedLight, overlayTexture );

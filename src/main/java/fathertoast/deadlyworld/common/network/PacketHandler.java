@@ -1,8 +1,8 @@
 package fathertoast.deadlyworld.common.network;
 
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
-import fathertoast.deadlyworld.common.network.message.S2CUpdateSpawnerMimic;
 import fathertoast.deadlyworld.common.network.message.S2CSyncPlaceableFeatures;
+import fathertoast.deadlyworld.common.network.message.S2CUpdateSpawnerMimic;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;

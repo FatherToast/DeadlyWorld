@@ -26,7 +26,6 @@ public abstract class PointedDripstoneBlockMixin extends Block implements Fallab
             at = @At( "HEAD" ),
             cancellable = true
     )
-    
     public void injectOnProjectileHit( Level level, BlockState state, BlockHitResult hitResult, Projectile projectile, CallbackInfo ci ) {
         CommonMixinHooks.pointedDripstoneProjectileHit( level, state, hitResult, projectile, ci );
     }

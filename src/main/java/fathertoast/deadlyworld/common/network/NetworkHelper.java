@@ -2,9 +2,8 @@ package fathertoast.deadlyworld.common.network;
 
 import fathertoast.deadlyworld.common.entity.SpawnerMimic;
 import fathertoast.deadlyworld.common.item.FeaturePlacerItem;
-import fathertoast.deadlyworld.common.network.message.S2CUpdateSpawnerMimic;
 import fathertoast.deadlyworld.common.network.message.S2CSyncPlaceableFeatures;
-import fathertoast.deadlyworld.common.world.logic.ProgressiveDelaySpawner;
+import fathertoast.deadlyworld.common.network.message.S2CUpdateSpawnerMimic;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 

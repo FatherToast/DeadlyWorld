@@ -12,14 +12,14 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public final class DWBiomeModifiers {
-
+    
     public static final DeferredRegister<Codec<? extends BiomeModifier>> REGISTRY = DeferredRegister.create( ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, DeadlyWorld.MOD_ID );
-
-
+    
+    
     public static final RegistryObject<Codec<GlobalAddFeaturesModifier>> GLOBAL_ADD_FEATURES = register( "global_add_features", GlobalAddFeaturesModifier.codecForRegistry() );
     public static final RegistryObject<Codec<ConfigRemoveFeaturesModifier>> CONFIG_REMOVE_FEATURES = register( "config_remove_features", ConfigRemoveFeaturesModifier.codecForRegistry() );
-
-
+    
+    
     private static <T extends BiomeModifier> RegistryObject<Codec<T>> register( String name, Supplier<Codec<T>> supplier ) {
         return REGISTRY.register( name, supplier );
     }

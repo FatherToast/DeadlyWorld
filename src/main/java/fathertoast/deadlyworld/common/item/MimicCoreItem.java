@@ -6,7 +6,6 @@ import fathertoast.deadlyworld.common.util.MimicHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SimpleFoiledItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;

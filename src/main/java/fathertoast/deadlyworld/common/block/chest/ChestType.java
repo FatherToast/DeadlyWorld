@@ -4,7 +4,6 @@ import fathertoast.deadlyworld.common.block.IFeatureConfigProvider;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.ChestConfig;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.dimension.TowerConfig;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +23,7 @@ public enum ChestType implements IFeatureConfigProvider<ChestConfig.ChestTypeCat
     private final String displayName;
     /** A function that returns the feature config associated with this chest type for a given dimension config. */
     private final Function<DimensionConfigGroup, ChestConfig.ChestTypeCategory> configGetter;
-
+    
     
     ChestType( String id, Function<DimensionConfigGroup, ChestConfig.ChestTypeCategory> configGetter ) {
         this( id, id.replace( "_", " " ) + " chests", configGetter );
@@ -39,17 +38,17 @@ public enum ChestType implements IFeatureConfigProvider<ChestConfig.ChestTypeCat
     public String getDisplayName() { return displayName; }
     
     public ResourceLocation getChestLootTable() { return DeadlyWorld.rl( References.CHEST_LOOT_PATH + this ); }
-
+    
     @Override
-    public ChestConfig.ChestTypeCategory getConfig(Level level ) {
+    public ChestConfig.ChestTypeCategory getConfig( Level level ) {
         return configGetter.apply( Config.getDimensionConfigs( level ) );
     }
-
+    
     @Override
     public ChestConfig.ChestTypeCategory getConfig( DimensionConfigGroup dimConfig ) {
         return configGetter.apply( dimConfig );
     }
-
+    
     @Override
     public String toString() { return id; }
     
