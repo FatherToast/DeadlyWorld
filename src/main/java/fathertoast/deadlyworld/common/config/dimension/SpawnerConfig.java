@@ -155,7 +155,7 @@ public class SpawnerConfig extends FeatureConfig {
                     "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamic'.",
                     "Dynamic spawners pick a new mob to spawn after each spawn.",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
-            spawnList = SPEC.define( new RegistryWeightedListField<>( "spawn_list", makeDefaultSpawnList(),
+            spawnList = SPEC.define( new RegistryWeightedListField<>( "spawn_choices", makeDefaultSpawnList(),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME +
                             ". One of these is chosen at random when the spawner is generated.",
                     "Spawners generated as 'dynamic' pick again after each spawn.",

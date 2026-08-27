@@ -107,7 +107,7 @@ public class WaterTrapConfig extends FeatureConfig {
             
             SPEC.newLine();
             
-            spawnList = SPEC.define( new RegistryWeightedListField<>( "spawn_list", makeDefaultSpawnList(),
+            spawnList = SPEC.define( new RegistryWeightedListField<>( "spawn_choices", makeDefaultSpawnList(),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + ". One of these is chosen " +
                             "at random when the trap is generated.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
