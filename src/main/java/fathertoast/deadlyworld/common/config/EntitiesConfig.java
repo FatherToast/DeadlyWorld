@@ -114,26 +114,26 @@ public class EntitiesConfig extends AbstractConfigFile {
         
         private FuzzyMap<ResourceLocation, Double> defaultChestMimicLootTables() {
             return new FuzzyMap.Builder<>( ResourceLocKey.PARSER, DoubleValueCodec.PERCENT )
-                    .put( ResourceLocKey.of( BuiltInLootTables.ABANDONED_MINESHAFT ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.ANCIENT_CITY ), 0.1 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.BASTION_BRIDGE ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.BASTION_TREASURE ), 0.1 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.DESERT_PYRAMID ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.END_CITY_TREASURE ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.IGLOO_CHEST ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.JUNGLE_TEMPLE ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.NETHER_BRIDGE ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.RUINED_PORTAL ), 0.1 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.SIMPLE_DUNGEON ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.STRONGHOLD_CORRIDOR ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.STRONGHOLD_CROSSING ), 0.05 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.STRONGHOLD_LIBRARY ), 0.1 )
-                    .put( ResourceLocKey.of( BuiltInLootTables.WOODLAND_MANSION ), 0.1 )
+                    .put( rlKey( BuiltInLootTables.ABANDONED_MINESHAFT ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.ANCIENT_CITY ), 0.1 )
+                    .put( rlKey( BuiltInLootTables.BASTION_BRIDGE ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.BASTION_TREASURE ), 0.1 )
+                    .put( rlKey( BuiltInLootTables.DESERT_PYRAMID ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.END_CITY_TREASURE ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.IGLOO_CHEST ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.JUNGLE_TEMPLE ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.NETHER_BRIDGE ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.RUINED_PORTAL ), 0.1 )
+                    .put( rlKey( BuiltInLootTables.SIMPLE_DUNGEON ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.STRONGHOLD_CORRIDOR ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.STRONGHOLD_CROSSING ), 0.05 )
+                    .put( rlKey( BuiltInLootTables.STRONGHOLD_LIBRARY ), 0.1 )
+                    .put( rlKey( BuiltInLootTables.WOODLAND_MANSION ), 0.1 )
                     .build();
         }
         
-        private static String chestMimicLootTableEntry( ResourceLocation lootTableId, double chance ) {
-            return lootTableId + " " + chance;
+        private static ResourceLocKey rlKey( ResourceLocation lootTableId ) {
+            return ResourceLocKey.of( lootTableId );
         }
         
         private AttributeOpListField mimicAttributes( String key ) {

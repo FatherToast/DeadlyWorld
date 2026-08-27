@@ -224,9 +224,10 @@ public final class DeadlyWorld {
         } );
     }
     
-    /** @return A ResourceLocation with the mod's modid. */
+    /** @return A resource location with Deadly World's namespace. */
     public static ResourceLocation rl( String path ) { return ResourceLocation.fromNamespaceAndPath( MOD_ID, path ); }
     
+    /** @return A log prefix string from the given class's simple name. */
     public static String logPrefix( Class<?> clazz ) {
         return "[" + MOD_ID + "/" + clazz.getSimpleName() + "] ";
     }

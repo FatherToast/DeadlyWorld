@@ -35,10 +35,11 @@ public class SeaMineBlockItem extends BlockItem {
     /**
      * Called from {@link fathertoast.deadlyworld.common.event.GameEventHandler#onLivingTick(LivingEvent.LivingTickEvent)}.
      * <br><br>
-     * Checks if the sea mine item stack is armed, and triggers a mine explosion if so.<br>
+     * Checks if the sea mine item stack is armed, and triggers a mine explosion if so.
      * Otherwise, we check for nearby valid player targets and arm the sea mine item stack.
      */
     public void onLivingUpdate( LivingEntity livingEntity, ItemStack seaMine ) {
+        // noinspection resource
         if( livingEntity.level().isClientSide ) return;
         
         // Single second delay between each check

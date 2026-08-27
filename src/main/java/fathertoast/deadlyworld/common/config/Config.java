@@ -67,19 +67,13 @@ public class Config {
      * Called by the mod's constructor.
      */
     public static void initializeEarly() {
-        MANAGER.freezeFileWatcher = true;
-        
         BLOCKS.SPEC.initialize();
         BlockAutoGen.initialize();
         ENTITIES.SPEC.initialize();
-        
-        MANAGER.freezeFileWatcher = false;
     }
     
     /** Performs loading of configs in this mod. Added to deferred work queue at common setup. */
     public static void initialize() {
-        MANAGER.freezeFileWatcher = true;
-        
         MAIN = new MainConfig( MANAGER, "_main" );
         MAIN.SPEC.initialize();
         FISHING_PRANKS = new FishingPrankConfig( MANAGER, "fishing_pranks" );
@@ -97,7 +91,5 @@ public class Config {
             dimConfigs.initialize();
             DIMENSIONS.put( key, dimConfigs );
         }
-        
-        MANAGER.freezeFileWatcher = false;
     }
 }
