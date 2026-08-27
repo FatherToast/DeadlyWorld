@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 public final class DWRegistries {
     
+    /** Deadly World's mod ID. */
     public static final String MOD_ID = "deadlyworld";
     
     /**
