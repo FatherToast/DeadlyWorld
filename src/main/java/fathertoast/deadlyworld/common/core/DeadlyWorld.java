@@ -160,6 +160,8 @@ public final class DeadlyWorld {
      *      + undead spawner & splash harm dispenser
      *      + any spawner & fish hook dispenser
      *      + any floor trap & fish hook dispenser
+     *      + any spike trap & fish hook dispenser
+     *      + any pitfall trap & fish hook dispenser
      *      + fire immune spawner & fireball dispenser
      *      + fire immune spawner & fire floor trap
      *      + creeper spawner & lightning dispenser
@@ -208,7 +210,6 @@ public final class DeadlyWorld {
         // Enqueue early config init
         ModLoadingStage.CONSTRUCT.getDeferredWorkQueue().enqueueWork( context.getContainer(), Config::initializeEarly );
         
-        DWFieldProviders.register( eventBus );
         DWFeatures.REGISTRY.register( eventBus );
         DWPlacementTypes.REGISTRY.register( eventBus );
         

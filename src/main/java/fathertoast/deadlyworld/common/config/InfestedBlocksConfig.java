@@ -4,8 +4,9 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.*;
+import fathertoast.crust.api.config.common.field.collection.RegistrySetField;
 import fathertoast.crust.api.config.common.file.TomlHelper;
-import fathertoast.crust.api.config.common.value.RegistryEntryList;
+import fathertoast.crust.api.config.common.value.collection.RegistrySet;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.BlockAutoGen;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +27,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
     
     /** Builds the config spec that should be used for this config. */
     InfestedBlocksConfig( ConfigManager manager, String fileName ) {
-        super( manager, fileName,
+        super( manager, fileName, false,
                 "This config contains options to customize auto-generated infested blocks, including " +
                         "which to generate and how they behave."
         );
@@ -37,7 +38,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
     
     public static class General extends AbstractConfigCategory<InfestedBlocksConfig> {
         
-        public final RegistryEntryListField<Item> cleanseTools;
+        public final RegistrySetField<Item> cleanseTools;
         public final IntField cleanseDamage;
         public final BooleanField cleanseSpawnsSilverfish;
         
@@ -46,15 +47,16 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                     "Options that apply to infested blocks as a whole " +
                             "(not just Deadly World's infested blocks)." );
             
-            cleanseTools = SPEC.define( new LazyRegistryEntryListField<>( "cleanse.tools",
-                    new RegistryEntryList<>( ForgeRegistries.ITEMS, null, List.of( ItemTags.SHOVELS ) ),
+            cleanseTools = SPEC.define( new RegistrySetField<>( "cleanse.tools",
+                    new RegistrySet.Builder<>( ForgeRegistries.ITEMS ).addTag( ItemTags.SHOVELS ).build(),
                     "A list of items that can interact with infested blocks to revert them to their host " +
                             "block. This will release the silverfish infesting it and damage the tool, depending on " +
                             "the settings below.",
                     "For reference, the standard tool tags are: " +
-                            TomlHelper.literalList( new RegistryEntryList<>( ForgeRegistries.ITEMS, null, List.of(
-                                    ItemTags.SWORDS, ItemTags.AXES, ItemTags.HOES, ItemTags.PICKAXES, ItemTags.SHOVELS, ItemTags.TOOLS
-                            ) ).toStringList() ) + "." ) );
+                            TomlHelper.literalList( new RegistrySet.Builder<>( ForgeRegistries.ITEMS )
+                                    .addTag( ItemTags.SWORDS ).addTag( ItemTags.AXES ).addTag( ItemTags.HOES )
+                                    .addTag( ItemTags.PICKAXES ).addTag( ItemTags.SHOVELS ).addTag( ItemTags.TOOLS )
+                                    .build().toStringList() ) + "." ) );
             cleanseDamage = SPEC.define( new IntField( "cleanse.tool_damage", 2, IntField.Range.NON_NEGATIVE,
                     "The amount of damage tools take when successfully cleansing an infested block." ) );
             cleanseSpawnsSilverfish = SPEC.define( new BooleanField( "cleanse.spawns_silverfish", true,
@@ -64,8 +66,8 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
     
     public static class AutoGen extends AbstractConfigCategory<InfestedBlocksConfig> {
         
-        public final PredicateStringListField hostBlocks;
-        public final InjectionWrapperField<StringField> fallbackBlock;
+        public final StringListField hostBlocks;
+        public final StringField fallbackBlock;
         
         public final EnumField<BlockAutoGen.NameStyle> nameStyle;
         
@@ -82,8 +84,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                     "Options that apply to automatic generation of this Deadly World's infested " +
                             "blocks, as well as their behavior." );
             
-            hostBlocks = SPEC.define( new PredicateStringListField( "host_blocks", "namespace:block_name",
-                    buildDefaultSilverfishBlocks(), ResourceLocation::isValidResourceLocation,
+            hostBlocks = SPEC.define( new StringListField( "host_blocks", buildDefaultSilverfishBlocks(),
                     "A list of blocks to generate an \"infested\" version for. The infested version of a block " +
                             "looks identical, but has modified behavior (see below) and spawns a silverfish when broken.",
                     "Only blocks that are solid, full cubes with no block entity should be put on this list.",
@@ -97,7 +98,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
                     "The vanilla fallback block to replace missing infested blocks with. If the \"host_blocks\" " +
                             "list is changed and you load into a world that used to have infested blocks that no longer " +
                             "exist, they will be replaced with this block."
-            ), this::checkFallbackBlock ) );
+            ), this::checkFallbackBlock ) ).field();
             
             SPEC.newLine();
             
@@ -162,7 +163,7 @@ public class InfestedBlocksConfig extends AbstractConfigFile {
         public Block getFallbackBlock() {
             Block fallbackFallback = Blocks.INFESTED_STONE; // Lol
             
-            ResourceLocation id = ResourceLocation.tryParse( fallbackBlock.field().get() );
+            ResourceLocation id = ResourceLocation.tryParse( fallbackBlock.get() );
             
             if( id == null ) return fallbackFallback;
             if( !ForgeRegistries.BLOCKS.containsKey( id ) ) return fallbackFallback;

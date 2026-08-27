@@ -2,9 +2,10 @@ package fathertoast.deadlyworld.common.world.levelgen.misc;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.crust.api.config.common.value.RegistryValueEntry;
+import fathertoast.crust.api.config.common.value.collection.FuzzyValueList;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.EnvHazardConfig;
+import fathertoast.deadlyworld.common.config.value.BuriedBlockStats;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Predicate;
 
@@ -57,16 +57,15 @@ public class BuriedBlocksFeature extends DeadlyFeature<BuriedBlocksFeature.Confi
             final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
             
             // Go through each buried block specified in the config
-            for( RegistryValueEntry<Block> entry : category.list.get().getEntries() ) {
-                final Block block = ForgeRegistries.BLOCKS.getValue( entry.REG_KEY );
-                if( block == null ) continue;
-                final BlockState blockState = block.defaultBlockState();
-                final int minY = Math.max( (int) entry.VALUES[0], level.getMinBuildHeight() );
-                final int maxY = Math.min( (int) entry.VALUES[1], level.getMaxBuildHeight() );
+            for( FuzzyValueList.Pair<BlockState, BuriedBlockStats> pair : category.list.entries() ) {
+                if( pair == null ) continue;
+                final BlockState block = pair.key();
+                final BuriedBlockStats stats = pair.value();
+                final int minY = Math.max( stats.minY.get(), level.getMinBuildHeight() );
+                final int maxY = Math.min( stats.maxY.get(), level.getMaxBuildHeight() );
                 final boolean areYEqual = minY >= maxY;
-                final int placementTries = (int) entry.VALUES[2];
                 
-                for( int i = 0; i < placementTries; i++ ) {
+                for( double p = stats.placements.get(); p >= 1.0 || p > 0.0 && random.nextDouble() < p; p-- ) {
                     // Pick a random position
                     pos.set(
                             chunkPos.getMinBlockX() + random.nextInt( chunkPos.getMaxBlockX() - chunkPos.getMinBlockX() ),
@@ -87,8 +86,8 @@ public class BuriedBlocksFeature extends DeadlyFeature<BuriedBlocksFeature.Confi
                     if( !canPlace ) continue;
                     
                     // Place the block
-                    if( block instanceof ChestBlock ) {
-                        safeSetBlock( level, pos, blockState.setValue( HorizontalDirectionalBlock.FACING,
+                    if( block.getBlock() instanceof ChestBlock ) {
+                        safeSetBlock( level, pos, block.setValue( HorizontalDirectionalBlock.FACING,
                                 Direction.Plane.HORIZONTAL.getRandomDirection( random ) ), predicate );
                         ResourceLocation lootTable = ResourceLocation.tryParse( category.chestLootTable.get() );
                         if( lootTable != null && level.getBlockEntity( pos ) instanceof RandomizableContainerBlockEntity chestBlockEntity ) {
@@ -96,7 +95,7 @@ public class BuriedBlocksFeature extends DeadlyFeature<BuriedBlocksFeature.Confi
                         }
                     }
                     else {
-                        safeSetBlock( level, pos, blockState, predicate );
+                        safeSetBlock( level, pos, block, predicate );
                     }
                 }
             }

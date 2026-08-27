@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.dimension.PitfallTrapConfig;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
+import fathertoast.crust.api.config.common.value.provider.ConfigUniformIntProvider;
 import net.minecraft.util.valueproviders.IntProvider;
 
 public record PitfallTrapSettings(

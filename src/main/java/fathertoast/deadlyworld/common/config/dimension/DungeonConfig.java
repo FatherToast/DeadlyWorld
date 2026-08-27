@@ -2,7 +2,7 @@ package fathertoast.deadlyworld.common.config.dimension;
 
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
-import fathertoast.crust.api.config.common.field.PredicateStringListField;
+import fathertoast.crust.api.config.common.field.StringListField;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import fathertoast.deadlyworld.datagen.worldgen.DWConfiguredFeatureProvider;
 import net.minecraft.resources.ResourceKey;
@@ -46,14 +46,14 @@ public class DungeonConfig extends FeatureConfig {
     
     public static class ModularDungeonCategory extends DungeonCategory {
         
-        public final PredicateStringListField subfeatures;
+        public final StringListField subfeatures;
         
         ModularDungeonCategory( FeatureConfig parent, String name, double placements, int minHeight, int maxHeight ) {
             super( parent, name, placements, minHeight, maxHeight );
             
             SPEC.newLine();
             
-            subfeatures = SPEC.define( new PredicateStringListField( "subfeatures", makeDefaultSubfeatures(), ResourceLocation::isValidResourceLocation,
+            subfeatures = SPEC.define( new StringListField( "subfeatures", makeDefaultSubfeatures(), ResourceLocation::isValidResourceLocation,
                     "A list of registry IDs for subfeatures that can generate in the middle of the dungeon room.",
                     "By default, this includes most spawners and tower dispensers from Deadly World.",
                     "You can technically specify the ID of any configured feature here, but whether it will generate correctly is never guaranteed.",

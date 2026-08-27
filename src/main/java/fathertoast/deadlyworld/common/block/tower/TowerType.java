@@ -37,7 +37,7 @@ public enum TowerType implements IFeatureConfigProvider<TowerConfig.TowerTypeCat
             AbstractArrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
-                    (float) getConfig( dimConfig ).projectileSpeed.get(), (float) getConfig( dimConfig ).projectileVariance.get(), arrow
+                    getConfig( dimConfig ).projectileSpeed.getFloat(), getConfig( dimConfig ).projectileVariance.getFloat(), arrow
             );
         }
     },
@@ -54,7 +54,7 @@ public enum TowerType implements IFeatureConfigProvider<TowerConfig.TowerTypeCat
             arrow.setSecondsOnFire( 5 );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
-                    (float) getConfig( dimConfig ).projectileSpeed.get(), (float) getConfig( dimConfig ).projectileVariance.get(), arrow
+                    getConfig( dimConfig ).projectileSpeed.getFloat(), getConfig( dimConfig ).projectileVariance.getFloat(), arrow
             );
         }
     },
@@ -73,14 +73,14 @@ public enum TowerType implements IFeatureConfigProvider<TowerConfig.TowerTypeCat
             // Create the arrow
             Arrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
             MobEffectInstance potion = potionTower.isDynamic() ?
-                    config.potionList.get().next( level.random ) :
+                    config.potionList.get().nextPotion( level.random ) :
                     potionTower.getPotionCopy();
             arrow.addEffect( potion == null ?
                     new MobEffectInstance( MobEffects.DIG_SLOWDOWN, 120 ) :
                     potion );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
-                    (float) getConfig( dimConfig ).projectileSpeed.get(), (float) getConfig( dimConfig ).projectileVariance.get(), arrow
+                    getConfig( dimConfig ).projectileSpeed.getFloat(), getConfig( dimConfig ).projectileVariance.getFloat(), arrow
             );
         }
         
@@ -99,7 +99,7 @@ public enum TowerType implements IFeatureConfigProvider<TowerConfig.TowerTypeCat
             AbstractArrow arrow = new Arrow( level, pos.getX(), pos.getY(), pos.getZ() );
             towerDispenser.getTowerLogic().shootArrow(
                     center, offset, vecToTarget, distanceH,
-                    (float) getConfig( dimConfig ).projectileSpeed.get(), (float) getConfig( dimConfig ).projectileVariance.get(), arrow
+                    getConfig( dimConfig ).projectileSpeed.getFloat(), getConfig( dimConfig ).projectileVariance.getFloat(), arrow
             );
         }
     },
@@ -118,10 +118,10 @@ public enum TowerType implements IFeatureConfigProvider<TowerConfig.TowerTypeCat
                 level.setBlock( topBlock, Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL );
             }
             
-            float accel = (float) getConfig( dimConfig ).projectileSpeed.get();
-            float var = (float) Math.sqrt( distanceH ) / 12.0F * (float) getConfig( dimConfig ).projectileVariance.get();
+            float accel = getConfig( dimConfig ).projectileSpeed.getFloat();
+            float var = (float) Math.sqrt( distanceH ) / 12.0F * getConfig( dimConfig ).projectileVariance.getFloat();
             
-            for( float count = (float) getConfig( dimConfig ).attackDamage.get(); count >= 1.0F || count > 0.0F && count > level.random.nextFloat(); count-- ) {
+            for( float count = getConfig( dimConfig ).attackDamage.getFloat(); count >= 1.0F || count > 0.0F && count > level.random.nextFloat(); count-- ) {
                 SmallFireball fireball = new SmallFireball(
                         level, center.x + offset.x * spawnOffset, center.y, center.z + offset.z * spawnOffset,
                         vecToTarget.x * accel + level.random.nextGaussian() * var,

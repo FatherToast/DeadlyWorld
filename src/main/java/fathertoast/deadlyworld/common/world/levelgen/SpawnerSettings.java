@@ -2,13 +2,13 @@ package fathertoast.deadlyworld.common.world.levelgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import fathertoast.crust.api.config.common.value.provider.ConfigConstantFloatProvider;
+import fathertoast.crust.api.config.common.value.provider.ConfigConstantIntProvider;
+import fathertoast.crust.api.config.common.value.provider.ConfigUniformIntProvider;
 import fathertoast.deadlyworld.common.block.entity.DeadlySpawnerBlockEntity;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.FloatProvider;

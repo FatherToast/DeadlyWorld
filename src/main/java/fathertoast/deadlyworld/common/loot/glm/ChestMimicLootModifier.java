@@ -32,14 +32,9 @@ public class ChestMimicLootModifier extends LootModifier {
     @Override
     protected ObjectArrayList<ItemStack> doApply( ObjectArrayList<ItemStack> generatedLoot, LootContext context ) {
         ResourceLocation lootTableId = context.getQueriedLootTableId();
-        Double[] values = Config.ENTITIES.MIMICS.chestTargetLootTables.getValuesFor( lootTableId );
-        
-        if( values != null ) {
-            double chance = values[0];
-            
-            if( context.getRandom().nextFloat() <= chance ) {
-                generatedLoot.add( new ItemStack( DWItems.MIMIC_CORE.get() ) );
-            }
+        double chance = Config.ENTITIES.MIMICS.chestTargetLootTables.getOrElse( lootTableId, 0.0 );
+        if( chance > 0.0 && context.getRandom().nextFloat() < chance ) {
+            generatedLoot.add( new ItemStack( DWItems.MIMIC_CORE.get() ) );
         }
         return generatedLoot;
     }

@@ -3,13 +3,12 @@ package fathertoast.deadlyworld.common.config.dimension;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.crust.api.config.common.field.WeightedPotionListField;
-import fathertoast.crust.api.config.common.value.EntityEntry;
-import fathertoast.crust.api.config.common.value.RegistryValueEntry;
-import fathertoast.crust.api.config.common.value.weighted.WeightedPotionList;
+import fathertoast.crust.api.config.common.field.collection.EntitySetField;
+import fathertoast.crust.api.config.common.field.collection.RegistryWeightedListField;
+import fathertoast.crust.api.config.common.value.collection.RegistryWeightedList;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
+import fathertoast.deadlyworld.common.config.value.MobEffectWeightedList;
+import fathertoast.deadlyworld.common.config.value.MobEffectWeightedListField;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -30,7 +29,7 @@ public class FloorTrapConfig extends FeatureConfig {
         super( manager, dir, dimConfigs, "floor trap" );
         
         SPEC.newLine();
-        SPEC.describeEntityList();
+        EntitySetField.describe( SPEC );
         
         final boolean isNether = isNetherDimension();
         
@@ -134,7 +133,7 @@ public class FloorTrapConfig extends FeatureConfig {
     
     public static class TntMobTrapTypeCategory extends TntTrapTypeCategory {
         
-        public final WeightedEntityListField spawnList;
+        public final RegistryWeightedListField<EntityType<?>> spawnList;
         
         public final DoubleField speedMultiplier;
         public final DoubleField healthMultiplier;
@@ -147,7 +146,7 @@ public class FloorTrapConfig extends FeatureConfig {
             
             SPEC.newLine();
             
-            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList(),
+            spawnList = SPEC.define( new RegistryWeightedListField<>( "spawn_list", makeDefaultSpawnList(),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + ". One of these is chosen " +
                             "at random when the trap is generated.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
@@ -163,38 +162,38 @@ public class FloorTrapConfig extends FeatureConfig {
         }
         
         /** @return The default spawn list to use for this trap type and dimension. */
-        protected WeightedEntityList makeDefaultSpawnList() {
+        protected RegistryWeightedList<EntityType<?>> makeDefaultSpawnList() {
             if( isNetherDimension() ) {
-                return new WeightedEntityList(
-                        new EntityEntry( EntityType.WITHER_SKELETON, 200 ),
-                        new EntityEntry( EntityType.HUSK, 100 ),
-                        new EntityEntry( EntityType.CAVE_SPIDER, 10 ),
-                        new EntityEntry( EntityType.CREEPER, 10 )
-                );
+                return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                        .add( 200, EntityType.WITHER_SKELETON )
+                        .add( 100, EntityType.HUSK )
+                        .add( 10, EntityType.CAVE_SPIDER )
+                        .add( 10, EntityType.CREEPER )
+                        .build();
             }
             if( isEndDimension() ) {
-                return new WeightedEntityList(
-                        new EntityEntry( EntityType.ENDERMAN, 200 ),
-                        new EntityEntry( EntityType.CREEPER, 10 )
-                );
+                return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                        .add( 200, EntityType.ENDERMAN )
+                        .add( 10, EntityType.CREEPER )
+                        .build();
             }
             // For the overworld, as well as any dimensions added by mods
-            return new WeightedEntityList(
+            return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
                     // Vanilla dungeon mobs
-                    new EntityEntry( EntityType.ZOMBIE, 200 ),
-                    new EntityEntry( EntityType.SKELETON, 100 ),
-                    new EntityEntry( EntityType.SPIDER, 100 ),
+                    .add( 200, EntityType.ZOMBIE )
+                    .add( 100, EntityType.SKELETON )
+                    .add( 100, EntityType.SPIDER )
                     // Extras
-                    new EntityEntry( EntityType.CAVE_SPIDER, 10 ),
-                    new EntityEntry( EntityType.CREEPER, 10 )
-            );
+                    .add( 10, EntityType.CAVE_SPIDER )
+                    .add( 10, EntityType.CREEPER )
+                    .build();
         }
     }
     
     public static class PotionTrapTypeCategory extends TrapTypeCategory {
         
         public final DoubleField dynamicChance;
-        public final WeightedPotionListField potionList;
+        public final MobEffectWeightedListField potionList;
         
         PotionTrapTypeCategory( FeatureConfig parent, FloorTrapType type, double placements, int minHeight, int maxHeight, double decoyCh,
                                 double activationRng, boolean checkSight, int triggers, int minResetTime, int maxResetTime, double dynamicCh ) {
@@ -206,7 +205,7 @@ public class FloorTrapConfig extends FeatureConfig {
                     "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamicChance'.",
                     "Dynamic potion traps pick a new potion every time they trigger.",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
-            potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList(),
+            potionList = SPEC.define( new MobEffectWeightedListField( "potion_list", makeDefaultPotionList(),
                     "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME + "s when hurling splash potions. One of these is chosen",
                     "at random when the trap is generated. If the trap is generated as 'dynamic_chance' it will pick again",
                     "between each potion effect.",
@@ -214,31 +213,30 @@ public class FloorTrapConfig extends FeatureConfig {
         }
         
         /** @return The default potion list to use for this trap type and dimension. */
-        @SuppressWarnings( "ConstantConditions" )
-        protected WeightedPotionList makeDefaultPotionList() {
+        protected MobEffectWeightedList makeDefaultPotionList() {
             if( isNetherDimension() ) {
-                return new WeightedPotionList(
-                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.WITHER ), 5, 100, 0 ),
-                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.MOVEMENT_SLOWDOWN ), 30, 200, 2 ),
-                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 20, 100, 1 ),
-                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.BLINDNESS ), 10, 200, 0 )
-                );
+                return new MobEffectWeightedList.Builder<>()
+                        .put( 5, MobEffects.WITHER, 100, 0 )
+                        .put( 30, MobEffects.MOVEMENT_SLOWDOWN, 200, 2 )
+                        .put( 20, MobEffects.POISON, 100, 1 )
+                        .put( 10, MobEffects.BLINDNESS, 200, 0 )
+                        .build();
             }
             if( isEndDimension() ) {
-                return new WeightedPotionList(
-                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.LEVITATION ), 40, 240, 0 ),
-                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.CONFUSION ), 40, 200, 0 ),
-                        new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.WEAKNESS ), 20, 280, 2 )
-                );
+                return new MobEffectWeightedList.Builder<>()
+                        .put( 40, MobEffects.LEVITATION, 240, 0 )
+                        .put( 40, MobEffects.CONFUSION, 200, 0 )
+                        .put( 20, MobEffects.WEAKNESS, 280, 2 )
+                        .build();
             }
             // For the overworld, as well as any dimensions added by mods
-            return new WeightedPotionList(
-                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.POISON ), 20, 200, 0 ),
-                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.MOVEMENT_SLOWDOWN ), 20, 200, 1 ),
-                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.WEAKNESS ), 20, 150, 1 ),
-                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.HARM ), 20, 1, 1 ),
-                    new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( MobEffects.HUNGER ), 20, 500, 1 )
-            );
+            return new MobEffectWeightedList.Builder<>()
+                    .put( 20, MobEffects.POISON, 200, 0 )
+                    .put( 20, MobEffects.MOVEMENT_SLOWDOWN, 200, 1 )
+                    .put( 20, MobEffects.WEAKNESS, 150, 1 )
+                    .put( 20, MobEffects.HARM, 1, 1 )
+                    .put( 20, MobEffects.HUNGER, 500, 1 )
+                    .build();
         }
     }
     

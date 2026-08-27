@@ -1,13 +1,12 @@
 package fathertoast.deadlyworld.common.world.logic;
 
+import fathertoast.crust.api.config.common.value.collection.RegistryWeightedList;
 import fathertoast.crust.api.lib.LevelEventHelper;
 import fathertoast.crust.api.lib.NBTHelper;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SpawnerConfig;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.util.TrapHelper;
 import fathertoast.deadlyworld.common.world.levelgen.SpawnerSettings;
@@ -33,6 +32,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -96,7 +96,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     protected int spawnsRemaining;
     /** Weighted list of entities to pick from for each spawn batch, if present. */
     @Nullable
-    protected WeightedEntityList dynamicSpawnList;
+    protected RegistryWeightedList<EntityType<?>> dynamicSpawnList;
     
     /** True if this spawner logic belongs to a spawner mimic. */
     protected boolean isMimic = false;
@@ -153,19 +153,20 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     public void initializeSpawner( Level level, BlockPos pos, RandomSource random ) {
         final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getConfig( level );
         initializeSpawner( level, pos, random,
-                spawnerConfig.activationRange.get(), (float) spawnerConfig.checkSightChance.get(),
+                spawnerConfig.activationRange.get(), spawnerConfig.checkSightChance.getFloat(),
                 spawnerConfig.maxNearbyEntities.get(),
                 spawnerConfig.delay.getMin(), spawnerConfig.delay.getMax(),
-                spawnerConfig.delayProgression.get(), (float) spawnerConfig.delayRecovery.get(),
+                spawnerConfig.delayProgression.get(), spawnerConfig.delayRecovery.getFloat(),
                 spawnerConfig.maxSpawns.get(), spawnerConfig.spawnCount.get(),
-                spawnerConfig.spawnRange.get(), (float) spawnerConfig.dynamicChance.get(), (float) spawnerConfig.mimicChance.get(),
+                spawnerConfig.spawnRange.get(), spawnerConfig.dynamicChance.getFloat(), spawnerConfig.mimicChance.getFloat(),
                 spawnerConfig.spawnList.get() );
     }
     
     public void initializeSpawner( @Nullable Level level, @SuppressWarnings( "unused" ) BlockPos pos, RandomSource random,
                                    int activationRange, float checkSightChance, int maxNearby,
                                    int delayMin, int delayMax, int delayProgression, float delayRecovery,
-                                   int maxSpawns, int count, int range, float dynamicChance, float mimicChance, WeightedEntityList spawnList ) {
+                                   int maxSpawns, int count, int range, float dynamicChance, float mimicChance,
+                                   RegistryWeightedList<EntityType<?>> spawnList ) {
         requiredPlayerRange = activationRange;
         checkSight = roll( random, checkSightChance );
         maxNearbyEntities = maxNearby;
@@ -179,7 +180,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         spawnCount = count;
         spawnRange = range;
         
-        dynamicSpawnList = !spawnList.isDisabled() && roll( random, dynamicChance ) ? spawnList : null;
+        dynamicSpawnList = spawnList.isEnabled() && roll( random, dynamicChance ) ? spawnList : null;
         isMimic = roll( random, mimicChance );
         
         EntityType<?> toSpawn = spawnList.next( random );
@@ -384,7 +385,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
             }
         }
         
-        if( dynamicSpawnList != null && !dynamicSpawnList.isDisabled() ) {
+        if( dynamicSpawnList != null && dynamicSpawnList.isEnabled() ) {
             if( useForgeHookSpawnList ) {
                 setEntityId( DungeonHooks.getRandomDungeonMob( level.random ), level, level.random, pos );
             }
@@ -432,9 +433,16 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         
         if( NBTHelper.containsNumber( loadTag, TAG_IS_MIMIC ) )
             isMimic = loadTag.getBoolean( TAG_IS_MIMIC );
-        if( NBTHelper.containsList( loadTag, TAG_DYNAMIC_SPAWN_LIST ) )
-            dynamicSpawnList = WeightedEntityListField.fromNBT( loadTag.getList( TAG_DYNAMIC_SPAWN_LIST, Tag.TAG_STRING ),
-                    1, 0.0, Double.MAX_VALUE );
+        if( NBTHelper.containsList( loadTag, TAG_DYNAMIC_SPAWN_LIST ) ) {
+            dynamicSpawnList = new RegistryWeightedList<>( ForgeRegistries.ENTITY_TYPES );
+            dynamicSpawnList.load( loadTag, TAG_DYNAMIC_SPAWN_LIST );
+            
+            // Try to detect and reset legacy lists TODO remove this when updating beyond 1.20.1?
+            if( level != null && !NBTHelper.getStringList( loadTag, TAG_DYNAMIC_SPAWN_LIST ).isEmpty() && dynamicSpawnList.isEmpty() ) {
+                final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getConfig( level );
+                dynamicSpawnList = spawnerConfig.spawnList.get();
+            }
+        }
         
         super.load( level, pos, loadTag );
     }
@@ -450,8 +458,8 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         
         saveTag.putBoolean( TAG_IS_MIMIC, isMimic );
         
-        if( dynamicSpawnList != null && !dynamicSpawnList.isDisabled() )
-            saveTag.put( TAG_DYNAMIC_SPAWN_LIST, dynamicSpawnList.toNBT( new ListTag() ) );
+        if( dynamicSpawnList != null && dynamicSpawnList.isEnabled() )
+            dynamicSpawnList.write( saveTag, TAG_DYNAMIC_SPAWN_LIST );
         
         return super.save( saveTag );
     }

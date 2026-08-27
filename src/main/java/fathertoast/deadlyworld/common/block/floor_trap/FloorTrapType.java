@@ -44,6 +44,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
         public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             FloorTrapConfig.TntTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT;
             Level level = trapEntity.getLevel();
+            assert level != null;
             
             double x = trapEntity.getBlockPos().getX() + 0.5;
             double y = trapEntity.getBlockPos().getY() + 1;
@@ -57,7 +58,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
             for( int i = 0; i < config.tntCount.get(); i++ ) {
                 PrimedTnt tnt = new PrimedTnt( level, x, y, z, null );
                 
-                float speed = (float) config.launchSpeed.get() * level.random.nextFloat() + 0.02F;
+                float speed = config.launchSpeed.getFloat() * level.random.nextFloat() + 0.02F;
                 tnt.setFuse( config.fuseTime.getMin() + level.random.nextInt( fuseRange ) );
                 tnt.getDeltaMovement().multiply( speed, 0.1F * level.random.nextDouble(), speed );
                 level.addFreshEntity( tnt );
@@ -74,6 +75,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
         public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             FloorTrapConfig.TntMobTrapTypeCategory config = dimConfig.FLOOR_TRAPS.TNT_MOB;
             Level level = trapEntity.getLevel();
+            assert level != null;
             
             double x = trapEntity.getBlockPos().getX() + 0.5;
             double y = trapEntity.getBlockPos().getY() + 1;
@@ -106,7 +108,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
                 return;
             }
             if( entity == null ) {
-                DeadlyWorld.LOG.error( "Encountered exception while constructing entity '{}'", ForgeRegistries.ENTITY_TYPES.getKey( entityType ) );
+                DeadlyWorld.LOG.error( "Failed to construct entity '{}'", ForgeRegistries.ENTITY_TYPES.getKey( entityType ) );
                 return;
             }
             
@@ -120,23 +122,15 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
                 livingEntity = (LivingEntity) entity;
                 AttributeInstance attribute;
                 
-                if( config.healthMultiplier.get() != 1.0D ) {
-                    try {
-                        attribute = livingEntity.getAttribute( Attributes.MAX_HEALTH );
+                if( config.healthMultiplier.get() != 1.0 ) {
+                    attribute = livingEntity.getAttribute( Attributes.MAX_HEALTH );
+                    if( attribute != null )
                         attribute.setBaseValue( attribute.getBaseValue() * config.healthMultiplier.get() );
-                    }
-                    catch( Exception ex ) {
-                        // This is fine, entity just doesn't have the attribute
-                    }
                 }
                 if( config.speedMultiplier.get() != 1.0F ) {
-                    try {
-                        attribute = livingEntity.getAttribute( Attributes.MOVEMENT_SPEED );
+                    attribute = livingEntity.getAttribute( Attributes.MOVEMENT_SPEED );
+                    if( attribute != null )
                         attribute.setBaseValue( attribute.getBaseValue() * config.speedMultiplier.get() );
-                    }
-                    catch( Exception ex ) {
-                        // This is fine, entity just doesn't have the attribute
-                    }
                 }
                 livingEntity.setHealth( livingEntity.getMaxHealth() );
                 Entity tripTarget = trapEntity.getTrapLogic().getTripTarget();
@@ -166,6 +160,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
             FloorTrapConfig.PotionTrapTypeCategory config = dimConfig.FLOOR_TRAPS.POTION;
             
             Level level = trapEntity.getLevel();
+            assert level != null;
             
             double x = trapEntity.getBlockPos().getX() + 0.5;
             double y = trapEntity.getBlockPos().getY() + 1.1;
@@ -200,6 +195,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
             FloorTrapConfig.LavaTrapTypeCategory config = dimConfig.FLOOR_TRAPS.LAVA;
             
             Level level = trapEntity.getLevel();
+            assert level != null;
             BlockPos pos = trapEntity.getBlockPos();
             
             boolean placedLava = false;
@@ -223,6 +219,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
         public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             final FloorTrapConfig.FireTrapTypeCategory config = dimConfig.FLOOR_TRAPS.FIRE;
             final Level level = trapEntity.getLevel();
+            assert level != null;
             final BlockPos pos = trapEntity.getBlockPos();
             
             // Abort if there is something blocking the trap above
@@ -267,6 +264,7 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
         public void triggerTrap( DimensionConfigGroup dimConfig, FloorTrapBlockEntity trapEntity ) {
             WaterTrapConfig.SeaMineMobTrapTypeCategory config = dimConfig.WATER_TRAPS.SEA_MINE_MOB;
             Level level = trapEntity.getLevel();
+            assert level != null;
             
             double x = trapEntity.getBlockPos().getX() + 0.5;
             double y = trapEntity.getBlockPos().getY() + 1;
@@ -308,23 +306,15 @@ public enum FloorTrapType implements IFeatureConfigProvider<FloorTrapConfig.Trap
                 livingEntity = (LivingEntity) entity;
                 AttributeInstance attribute;
                 
-                if( config.healthMultiplier.get() != 1.0D ) {
-                    try {
-                        attribute = livingEntity.getAttribute( Attributes.MAX_HEALTH );
+                if( config.healthMultiplier.get() != 1.0 ) {
+                    attribute = livingEntity.getAttribute( Attributes.MAX_HEALTH );
+                    if( attribute != null )
                         attribute.setBaseValue( attribute.getBaseValue() * config.healthMultiplier.get() );
-                    }
-                    catch( Exception ex ) {
-                        // This is fine, entity just doesn't have the attribute
-                    }
                 }
                 if( config.speedMultiplier.get() != 1.0F ) {
-                    try {
-                        attribute = livingEntity.getAttribute( Attributes.MOVEMENT_SPEED );
+                    attribute = livingEntity.getAttribute( Attributes.MOVEMENT_SPEED );
+                    if( attribute != null )
                         attribute.setBaseValue( attribute.getBaseValue() * config.speedMultiplier.get() );
-                    }
-                    catch( Exception ex ) {
-                        // This is fine, entity just doesn't have the attribute
-                    }
                 }
                 livingEntity.setHealth( livingEntity.getMaxHealth() );
                 

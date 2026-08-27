@@ -3,7 +3,7 @@ package fathertoast.deadlyworld.common.biome.modifier;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fathertoast.deadlyworld.common.config.levelgen.setting.BooleanFieldSetting;
+import fathertoast.crust.api.config.common.ConfigFieldReference;
 import fathertoast.deadlyworld.common.core.registry.DWBiomeModifiers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * with the addition of a config-driven boolean value used to determine if the modifier should run or not.
  */
 public record ConfigRemoveFeaturesModifier(
-        BooleanFieldSetting enabled,
+        ConfigFieldReference<Boolean> enabled,
         HolderSet<Biome> biomes,
         HolderSet<PlacedFeature> features,
         Set<GenerationStep.Decoration> steps
@@ -33,7 +33,7 @@ public record ConfigRemoveFeaturesModifier(
     
     public static Supplier<Codec<ConfigRemoveFeaturesModifier>> codecForRegistry() {
         return () -> RecordCodecBuilder.create( builder -> builder.group(
-                BooleanFieldSetting.CODEC.fieldOf( "enabled" ).forGetter( ConfigRemoveFeaturesModifier::enabled ),
+                ConfigFieldReference.BOOLEAN_CODEC.fieldOf( "enabled" ).forGetter( ConfigRemoveFeaturesModifier::enabled ),
                 Biome.LIST_CODEC.fieldOf( "biomes" ).forGetter( ConfigRemoveFeaturesModifier::biomes ),
                 PlacedFeature.LIST_CODEC.fieldOf( "features" ).forGetter( ConfigRemoveFeaturesModifier::features ),
                 
@@ -46,7 +46,7 @@ public record ConfigRemoveFeaturesModifier(
     
     @Override
     public void modify( Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder ) {
-        if( !enabled.get() ) return;
+        if( Boolean.FALSE.equals( enabled.get() ) ) return;
         
         if( phase == Phase.REMOVE && biomes.contains( biome ) ) {
             BiomeGenerationSettingsBuilder generationSettings = builder.getGenerationSettings();

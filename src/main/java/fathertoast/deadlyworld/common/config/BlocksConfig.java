@@ -24,7 +24,7 @@ public class BlocksConfig extends AbstractConfigFile {
     
     /** Builds the config spec that should be used for this config. */
     BlocksConfig( ConfigManager manager, String fileName ) {
-        super( manager, fileName,
+        super( manager, fileName, false,
                 "This config contains options to control the physical properties of the blocks added by this mod.",
                 ChatFormatting.RED + "IMPORTANT: " + ChatFormatting.WHITE + "Any changes made to block properties while the game is running will not take effect until you restart the game!"
         );
@@ -146,8 +146,9 @@ public class BlocksConfig extends AbstractConfigFile {
         /** Called by this mod's blocks during construction to apply configured stats. */
         public BlockBehaviour.Properties adjustBlockProperties( BlockBehaviour.Properties props ) {
             props.requiresCorrectToolForDrops = requiresTool.get();
-            return props.strength( (float) destroyTime.get(), (float) explosionResistance.get() )
-                    .friction( (float) slipperiness.get() ).speedFactor( (float) speedFactor.get() ).jumpFactor( (float) jumpFactor.get() )
+            return props.strength( destroyTime.getFloat(), explosionResistance.getFloat() )
+                    .friction( slipperiness.getFloat() ).speedFactor( speedFactor.getFloat() )
+                    .jumpFactor( jumpFactor.getFloat() )
                     .lightLevel( ( state ) -> lightLevel.get() );
         }
     }

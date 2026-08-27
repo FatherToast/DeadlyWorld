@@ -35,7 +35,7 @@ public class PotionTrap extends BaseTrap {
     
     // Overridden in block
     @Override
-    public void triggerTrap( ServerLevel level, BlockPos pos ) { }
+    public void triggerTrap( ServerLevel level, BlockPos pos ) {}
     
     public void initializeTrap( WorldGenLevel level, BlockPos pos, RandomSource random, PotionFloorTrapSettings trapSettings ) {
         final FloorTrapConfig.PotionTrapTypeCategory trapConfig = (FloorTrapConfig.PotionTrapTypeCategory) trapType.getConfig( level.getLevel() );
@@ -50,7 +50,7 @@ public class PotionTrap extends BaseTrap {
                 trapSettings.resetTime().getMinValue(),
                 trapSettings.resetTime().getMaxValue(),
                 trapSettings.dynamicChance().sample( random ) > random.nextFloat(),
-                trapConfig.potionList.get().next( random )
+                trapConfig.potionList.get().nextPotion( random )
         );
     }
     
@@ -60,7 +60,7 @@ public class PotionTrap extends BaseTrap {
         initializeTrap( level, level.dimension(), pos, random, trapConfig.camoChance.rollChance( random ), trapConfig.decoyChance.rollChance( random ),
                 trapConfig.activationRange.get(), trapConfig.checkSightChance.rollChance( random ),
                 trapConfig.triggersRemaining.get(), trapConfig.resetTime.getMin(), trapConfig.resetTime.getMax(),
-                trapConfig.dynamicChance.rollChance( random ), trapConfig.potionList.get().next( random )
+                trapConfig.dynamicChance.rollChance( random ), trapConfig.potionList.get().nextPotion( random )
         );
     }
     

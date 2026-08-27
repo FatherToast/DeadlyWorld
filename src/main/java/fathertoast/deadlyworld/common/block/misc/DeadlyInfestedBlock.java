@@ -73,7 +73,7 @@ public class DeadlyInfestedBlock extends InfestedBlock implements IAutoGenBlock 
         BlockPos pos = event.getPos();
         BlockState blockState = level.getBlockState( pos );
         
-        if( config().GENERAL.cleanseTools.get().containsOrTag( heldItem.getItem(), heldItem::is ) &&
+        if( config().GENERAL.cleanseTools.contains( heldItem.getItem() ) &&
                 blockState.getBlock() instanceof InfestedBlock block ) {
             Player player = event.getEntity();
             

@@ -32,7 +32,7 @@ public abstract class FeatureConfig extends AbstractConfigFile {
     public final DimensionConfigGroup DIMENSION_CONFIGS;
     
     FeatureConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs, String name ) {
-        super( manager, dir + ConfigUtil.noSpaces( name + "s" ),
+        super( manager, dir + ConfigUtil.noSpaces( name + "s" ), false,
                 "This config contains options for all " + name + " features specific to the " +
                         dimConfigs.longDimensionName() + "." );
         DIMENSION_CONFIGS = dimConfigs;
@@ -178,5 +178,5 @@ public abstract class FeatureConfig extends AbstractConfigFile {
      * Any feature category implementing this interface should have all placement-sensitive config options stripped,
      * since these options will be handled by the primary feature.
      */
-    public interface SubfeatureCategory { }
+    public interface SubfeatureCategory {}
 }

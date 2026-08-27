@@ -3,16 +3,16 @@ package fathertoast.deadlyworld.common.config;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.crust.api.config.common.field.AttributeListField;
 import fathertoast.crust.api.config.common.field.DoubleField;
-import fathertoast.crust.api.config.common.field.RLValueListField;
-import fathertoast.crust.api.config.common.value.AttributeEntry;
-import fathertoast.crust.api.config.common.value.AttributeList;
+import fathertoast.crust.api.config.common.field.collection.AttributeOpListField;
+import fathertoast.crust.api.config.common.field.collection.FuzzyMapField;
+import fathertoast.crust.api.config.common.value.collection.AttributeOpList;
+import fathertoast.crust.api.config.common.value.collection.FuzzyMap;
+import fathertoast.crust.api.config.common.value.collection.key.ResourceLocKey;
+import fathertoast.crust.api.config.common.value.collection.value.DoubleValueCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-
-import java.util.List;
 
 public class EntitiesConfig extends AbstractConfigFile {
     
@@ -22,12 +22,12 @@ public class EntitiesConfig extends AbstractConfigFile {
     
     /** Builds the config spec that should be used for this config. */
     EntitiesConfig( ConfigManager manager, String fileName ) {
-        super( manager, fileName,
+        super( manager, fileName, false,
                 "This config contains options for the entities added by this mod."
         );
         
         SPEC.newLine();
-        SPEC.describeAttributeList();
+        AttributeOpListField.describe( SPEC );
         
         MINIS = new Minis( this );
         MIMICS = new Mimics( this );
@@ -36,11 +36,11 @@ public class EntitiesConfig extends AbstractConfigFile {
     
     public static class Minis extends AbstractConfigCategory<EntitiesConfig> {
         
-        public final AttributeListField creeperAttributes;
-        public final AttributeListField zombieAttributes;
-        public final AttributeListField skeletonAttributes;
-        public final AttributeListField spiderAttributes;
-        public final AttributeListField ghastAttributes;
+        public final AttributeOpListField creeperAttributes;
+        public final AttributeOpListField zombieAttributes;
+        public final AttributeOpListField skeletonAttributes;
+        public final AttributeOpListField spiderAttributes;
+        public final AttributeOpListField ghastAttributes;
         
         public final DoubleField spookySpiderChance;
         
@@ -60,17 +60,16 @@ public class EntitiesConfig extends AbstractConfigFile {
                     "Chance for a very spooky spider." ) );
         }
         
-        private AttributeListField miniAttributes( String key ) {
+        private AttributeOpListField miniAttributes( String key ) {
             return miniAttributes( key, "mini " + key + "s" );
         }
         
-        private AttributeListField miniAttributes( String key, String name ) {
-            AttributeList defaults = new AttributeList(
-                    AttributeEntry.mult( Attributes.MAX_HEALTH, 0.333 ),
-                    AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.3 ),
-                    AttributeEntry.mult( Attributes.ATTACK_DAMAGE, 0.5 )
-            );
-            return SPEC.define( new AttributeListField( key + "_attributes", defaults,
+        private AttributeOpListField miniAttributes( String key, String name ) {
+            return SPEC.define( new AttributeOpListField( key + "_attributes", new AttributeOpList.Builder<>()
+                    .putMultiply( Attributes.MAX_HEALTH, 0.333 )
+                    .putMultiply( Attributes.MOVEMENT_SPEED, 1.3 )
+                    .putMultiply( Attributes.ATTACK_DAMAGE, 0.5 )
+                    .build(),
                     "Attribute modifiers for " + name + ". If no attribute changes are defined here, " +
                             name + " will have the exact same attributes as the full-size version vanilla mob." ) );
         }
@@ -78,14 +77,15 @@ public class EntitiesConfig extends AbstractConfigFile {
     
     public static class Mimics extends AbstractConfigCategory<EntitiesConfig> {
         
-        public final AttributeListField chestAttributes;
-        public final AttributeListField miniChestAttributes;
-        public final RLValueListField chestTargetLootTables;
+        public final AttributeOpListField chestAttributes;
+        public final AttributeOpListField miniChestAttributes;
+        public final FuzzyMapField<ResourceLocation, Double, FuzzyMap<ResourceLocation, Double>>
+                chestTargetLootTables;
         
-        public final AttributeListField jukeboxAttributes;
+        public final AttributeOpListField jukeboxAttributes;
         
-        public final AttributeListField spawnerAttributes;
-        public final AttributeListField miniSpawnerAttributes;
+        public final AttributeOpListField spawnerAttributes;
+        public final AttributeOpListField miniSpawnerAttributes;
         
         Mimics( EntitiesConfig parent ) {
             super( parent, "mimics",
@@ -93,8 +93,8 @@ public class EntitiesConfig extends AbstractConfigFile {
             
             chestAttributes = mimicAttributes( "chest" );
             miniChestAttributes = miniMimicAttributes( "chest" );
-            chestTargetLootTables = SPEC.define( new RLValueListField( "chest_target_loot_tables",
-                    1, defaultChestMimicLootTables(),
+            chestTargetLootTables = SPEC.define( new FuzzyMapField<>( "chest_target_loot_tables",
+                    defaultChestMimicLootTables(),
                     "List of IDs for loot tables that can have a Mimic Core item added to them by Deadly World.",
                     "Each ID is paired with a chance value (the chance for a Mimic Core to be added to the loot table). " +
                             "Chance is in percents, so it should range from 0.0 to 1.0.",
@@ -112,51 +112,49 @@ public class EntitiesConfig extends AbstractConfigFile {
             miniSpawnerAttributes = miniMimicAttributes( "spawner" );
         }
         
-        private List<String> defaultChestMimicLootTables() {
-            return List.of(
-                    chestMimicLootTableEntry( BuiltInLootTables.ABANDONED_MINESHAFT, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.ANCIENT_CITY, 0.1 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.BASTION_BRIDGE, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.BASTION_TREASURE, 0.1 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.DESERT_PYRAMID, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.END_CITY_TREASURE, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.IGLOO_CHEST, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.JUNGLE_TEMPLE, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.NETHER_BRIDGE, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.RUINED_PORTAL, 0.1 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.SIMPLE_DUNGEON, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CORRIDOR, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_CROSSING, 0.05 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.STRONGHOLD_LIBRARY, 0.1 ),
-                    chestMimicLootTableEntry( BuiltInLootTables.WOODLAND_MANSION, 0.1 )
-            );
+        private FuzzyMap<ResourceLocation, Double> defaultChestMimicLootTables() {
+            return new FuzzyMap.Builder<>( ResourceLocKey.PARSER, DoubleValueCodec.PERCENT )
+                    .put( ResourceLocKey.of( BuiltInLootTables.ABANDONED_MINESHAFT ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.ANCIENT_CITY ), 0.1 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.BASTION_BRIDGE ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.BASTION_TREASURE ), 0.1 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.DESERT_PYRAMID ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.END_CITY_TREASURE ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.IGLOO_CHEST ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.JUNGLE_TEMPLE ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.NETHER_BRIDGE ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.RUINED_PORTAL ), 0.1 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.SIMPLE_DUNGEON ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.STRONGHOLD_CORRIDOR ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.STRONGHOLD_CROSSING ), 0.05 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.STRONGHOLD_LIBRARY ), 0.1 )
+                    .put( ResourceLocKey.of( BuiltInLootTables.WOODLAND_MANSION ), 0.1 )
+                    .build();
         }
         
         private static String chestMimicLootTableEntry( ResourceLocation lootTableId, double chance ) {
             return lootTableId + " " + chance;
         }
         
-        private AttributeListField mimicAttributes( String key ) {
+        private AttributeOpListField mimicAttributes( String key ) {
             return mimicAttributes( key, key + " mimics" );
         }
         
-        private AttributeListField mimicAttributes( String key, String name ) {
-            AttributeList defaults = new AttributeList();
-            return SPEC.define( new AttributeListField( key + "_attributes", defaults,
+        private AttributeOpListField mimicAttributes( String key, String name ) {
+            return SPEC.define( new AttributeOpListField( key + "_attributes", new AttributeOpList(),
                     "Attribute modifiers for " + name + "." ) );
         }
         
-        private AttributeListField miniMimicAttributes( String key ) {
+        private AttributeOpListField miniMimicAttributes( String key ) {
             return miniMimicAttributes( key, "mini " + key + " mimics" );
         }
         
-        private AttributeListField miniMimicAttributes( String key, String name ) {
-            AttributeList defaults = new AttributeList(
-                    AttributeEntry.mult( Attributes.MAX_HEALTH, 0.333 ),
-                    AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.3 ),
-                    AttributeEntry.mult( Attributes.ATTACK_DAMAGE, 0.5 )
-            );
-            return SPEC.define( new AttributeListField( "mini_" + key + "_attributes", defaults,
+        private AttributeOpListField miniMimicAttributes( String key, String name ) {
+            return SPEC.define( new AttributeOpListField( "mini_" + key + "_attributes", new AttributeOpList.Builder<>()
+                    .putMultiply( Attributes.MAX_HEALTH, 0.333 )
+                    .putMultiply( Attributes.MOVEMENT_SPEED, 1.3 )
+                    .putMultiply( Attributes.ATTACK_DAMAGE, 0.5 )
+                    .build(),
                     "Attribute modifiers for " + name + "." ) );
         }
     }
