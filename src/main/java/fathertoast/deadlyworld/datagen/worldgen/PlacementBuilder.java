@@ -1,9 +1,9 @@
 package fathertoast.deadlyworld.datagen.worldgen;
 
 import fathertoast.crust.api.config.common.field.DoubleField;
+import fathertoast.crust.api.config.common.value.provider.ConfigCountIntProvider;
+import fathertoast.crust.api.config.common.value.provider.ConfigUniformHeightProvider;
 import fathertoast.deadlyworld.common.config.dimension.FeatureConfig;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigCountProvider;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigHeightProvider;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.core.Direction;
 import net.minecraft.util.valueproviders.ConstantInt;
@@ -42,12 +42,12 @@ public class PlacementBuilder {
      */
     public PlacementBuilder multiply( FeatureConfig.FeatureTypeCategory config ) {
         //noinspection ConstantConditions
-        return multiply( ConfigCountProvider.of( config.countPerChunk ) );
+        return multiply( ConfigCountIntProvider.of( config.countPerChunk ) );
     }
     
     /** Multiplies the number of placements based on the config field's setting. */
     public PlacementBuilder multiply( DoubleField countPerChunk ) {
-        return multiply( ConfigCountProvider.of( countPerChunk ) );
+        return multiply( ConfigCountIntProvider.of( countPerChunk ) );
     }
     
     /** Multiplies the number of placements. */
@@ -69,7 +69,7 @@ public class PlacementBuilder {
      */
     public PlacementBuilder spreadInHeights( FeatureConfig.FeatureTypeCategory config ) {
         //noinspection ConstantConditions
-        return spreadInHeights( ConfigHeightProvider.of( config.heights ) );
+        return spreadInHeights( ConfigUniformHeightProvider.of( config.heights ) );
     }
     
     /** Randomizes the y coord of each placement within normal ocean ranges. */

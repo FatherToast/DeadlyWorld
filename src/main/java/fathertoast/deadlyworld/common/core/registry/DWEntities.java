@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
-import fathertoast.crust.api.config.common.field.AttributeListField;
-import fathertoast.crust.api.config.common.value.ConfigDrivenAttributeModifierMap;
+import fathertoast.crust.api.config.common.field.collection.AttributeOpListField;
+import fathertoast.crust.api.config.common.value.ConfigDrivenAttributeSupplier;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.entity.*;
@@ -88,8 +88,8 @@ public final class DWEntities {
     }
     
     private static <T extends LivingEntity> void createConfigAttributes(
-            EntityAttributeCreationEvent event, RegistryObject<EntityType<T>> type, AttributeListField attributeConfig, AttributeSupplier.Builder attributeBuilder ) {
-        event.put( type.get(), new ConfigDrivenAttributeModifierMap( attributeConfig, attributeBuilder ) );
+            EntityAttributeCreationEvent event, RegistryObject<EntityType<T>> type, AttributeOpListField attributeConfig, AttributeSupplier.Builder attributeBuilder ) {
+        event.put( type.get(), new ConfigDrivenAttributeSupplier( attributeConfig, attributeBuilder ) );
     }
     
     public static void registerMonsterSpawnPlacements( SpawnPlacementRegisterEvent event ) {

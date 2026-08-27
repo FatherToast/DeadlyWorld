@@ -3,14 +3,11 @@ package fathertoast.deadlyworld.common.config.dimension;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.crust.api.config.common.field.WeightedPotionListField;
-import fathertoast.crust.api.config.common.value.RegistryValueEntry;
-import fathertoast.crust.api.config.common.value.weighted.WeightedPotionList;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
+import fathertoast.deadlyworld.common.config.value.MobEffectWeightedList;
+import fathertoast.deadlyworld.common.config.value.MobEffectWeightedListField;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import static fathertoast.deadlyworld.common.util.References.DEPTH_0;
 import static fathertoast.deadlyworld.common.util.References.DEPTH_LAVA;
@@ -27,9 +24,6 @@ public class TowerConfig extends FeatureConfig {
     /** Builds the config spec that should be used for this config. */
     TowerConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
         super( manager, dir, dimConfigs, "tower" );
-        
-        //SPEC.newLine();
-        //SPEC.describePotionList();
         
         final boolean isNether = isNetherDimension();
         
@@ -97,7 +91,7 @@ public class TowerConfig extends FeatureConfig {
     public static class PotionTowerTypeCategory extends TowerTypeCategory {
         
         public final DoubleField dynamicChance;
-        public final WeightedPotionListField potionList;
+        public final MobEffectWeightedListField potionList;
         
         PotionTowerTypeCategory( FeatureConfig parent, TowerType type,
                                  double placements, int minHeight, int maxHeight, double activationRange, boolean checkSight, int minAttackDelay,
@@ -111,7 +105,7 @@ public class TowerConfig extends FeatureConfig {
                     "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamic'.",
                     "Dynamic potion towers pick a new potion every time they shoot a tipped arrow.",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
-            potionList = SPEC.define( new WeightedPotionListField( "potion_list", makeDefaultPotionList(),
+            potionList = SPEC.define( new MobEffectWeightedListField( "potion_list", makeDefaultPotionList(),
                     "Weighted list of potion effects that can be used by " + FEATURE_TYPE_NAME +
                             " when shooting tipped arrows. One of these is chosen at random when the tower is generated.",
                     "Towers generated as 'dynamic' pick again for each shot.",
@@ -119,37 +113,32 @@ public class TowerConfig extends FeatureConfig {
         }
         
         /** @return The default potion list to use for the potion tower dispenser config. */
-        protected WeightedPotionList makeDefaultPotionList() {
+        protected MobEffectWeightedList makeDefaultPotionList() {
             if( isNetherDimension() ) {
-                return new WeightedPotionList(
-                        potion( MobEffects.WITHER, 5, 100, 0 ),
-                        potion( MobEffects.MOVEMENT_SLOWDOWN, 30, 200, 2 ),
-                        potion( MobEffects.POISON, 20, 100, 1 ),
-                        potion( MobEffects.BLINDNESS, 10, 200, 0 )
-                );
+                return new MobEffectWeightedList.Builder<>()
+                        .put( 5, MobEffects.WITHER, 100, 0 )
+                        .put( 30, MobEffects.MOVEMENT_SLOWDOWN, 200, 2 )
+                        .put( 20, MobEffects.POISON, 100, 1 )
+                        .put( 10, MobEffects.BLINDNESS, 200, 0 )
+                        .build();
             }
             if( isEndDimension() ) {
-                return new WeightedPotionList(
-                        potion( MobEffects.LEVITATION, 40, 240, 0 ),
-                        potion( MobEffects.CONFUSION, 40, 200, 0 ),
-                        potion( MobEffects.WEAKNESS, 20, 280, 2 )
-                );
+                return new MobEffectWeightedList.Builder<>()
+                        .put( 40, MobEffects.LEVITATION, 240, 0 )
+                        .put( 40, MobEffects.CONFUSION, 200, 0 )
+                        .put( 20, MobEffects.WEAKNESS, 280, 2 )
+                        .build();
             }
             // For the overworld, as well as any dimensions added by mods
-            return new WeightedPotionList(
-                    potion( MobEffects.POISON, 30, 280, 0 ),
-                    potion( MobEffects.MOVEMENT_SLOWDOWN, 20, 300, 1 ),
-                    potion( MobEffects.WEAKNESS, 20, 250, 1 ),
-                    potion( MobEffects.HARM, 20, 1, 1 ),
-                    potion( MobEffects.HUNGER, 20, 500, 1 ),
-                    potion( MobEffects.BLINDNESS, 20, 250 ),
-                    potion( MobEffects.UNLUCK, 5, 9000 )
-            );
-        }
-        
-        private RegistryValueEntry<MobEffect> potion( MobEffect potion, double... values ) {
-            //noinspection ConstantConditions
-            return new RegistryValueEntry<>( ForgeRegistries.MOB_EFFECTS.getKey( potion ), values );
+            return new MobEffectWeightedList.Builder<>()
+                    .put( 30, MobEffects.POISON, 280, 0 )
+                    .put( 20, MobEffects.MOVEMENT_SLOWDOWN, 300, 1 )
+                    .put( 20, MobEffects.WEAKNESS, 250, 1 )
+                    .put( 20, MobEffects.HARM, 1, 1 )
+                    .put( 20, MobEffects.HUNGER, 500, 1 )
+                    .put( 20, MobEffects.BLINDNESS, 250, 0 )
+                    .put( 5, MobEffects.UNLUCK, 9000, 0 )
+                    .build();
         }
     }
 }

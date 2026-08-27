@@ -4,11 +4,12 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.ConfigUtil;
-import fathertoast.crust.api.config.common.field.RegistryEntryValueListField;
 import fathertoast.crust.api.config.common.field.StringField;
-import fathertoast.crust.api.config.common.value.RegistryEntryValueList;
-import fathertoast.crust.api.config.common.value.RegistryValueEntry;
+import fathertoast.crust.api.config.common.field.collection.BlockStateValueListField;
+import fathertoast.crust.api.config.common.field.collection.RegistryValueListField;
+import fathertoast.crust.api.config.common.value.collection.BlockStateValueList;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.config.value.BuriedBlockStats;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
@@ -16,11 +17,8 @@ import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.List;
 
 import static fathertoast.deadlyworld.common.util.References.*;
 
@@ -33,7 +31,7 @@ public class EnvHazardConfig extends AbstractConfigFile {
     
     
     public EnvHazardConfig( ConfigManager manager, String dir, DimensionConfigGroup dimConfigs ) {
-        super( manager, dir + ConfigUtil.noSpaces( "environmental hazards" ),
+        super( manager, dir + ConfigUtil.noSpaces( "environmental hazards" ), false,
                 "This config contains options for misc environmental hazard features specific to the " +
                         dimConfigs.longDimensionName() + "." );
         DIMENSION_CONFIGS = dimConfigs;
@@ -61,7 +59,7 @@ public class EnvHazardConfig extends AbstractConfigFile {
     
     public static class BuriedBlocksCategory extends AbstractConfigCategory<EnvHazardConfig> {
         
-        public final RegistryEntryValueListField<Block> list;
+        public final BlockStateValueListField<BuriedBlockStats> list;
         
         public final StringField chestLootTable;
         
@@ -69,12 +67,10 @@ public class EnvHazardConfig extends AbstractConfigFile {
             super( parent, categoryName, "Settings related to buried blocks in the world; single-block " +
                     "'ore veins' of varying kinds that generate in the ground, not exposed to air." );
             
-            SPEC.describeRegistryEntryValueList();
+            RegistryValueListField.describe( SPEC );
             SPEC.newLine();
             
-            list = SPEC.define( new RegistryEntryValueListField<>( "list",
-                    new RegistryEntryValueList<>( null, () -> ForgeRegistries.BLOCKS, defaultBuriedBlocks() )
-                            .setMultiValue( 3 ),
+            list = SPEC.define( new BlockStateValueListField<>( "list", defaultBuriedBlocks(),
                     "This list defines buried block entries. Each entry consists of the following in the given order:",
                     "Block ID - for example \"" + ForgeRegistries.BLOCKS.getKey( Blocks.WATER ) +
                             "\" or \"" + ForgeRegistries.BLOCKS.getKey( Blocks.CACTUS ) + "\".",
@@ -101,30 +97,30 @@ public class EnvHazardConfig extends AbstractConfigFile {
             return DeadlyWorld.rl( References.CHEST_LOOT_PATH + dimension.location().getPath() + "_buried" );
         }
         
-        @SuppressWarnings( "ConstantConditions" )
-        private List<RegistryValueEntry<Block>> defaultBuriedBlocks() {
+        private BlockStateValueList<BuriedBlockStats> defaultBuriedBlocks() {
+            var builder = new BlockStateValueList.Builder<>( BuriedBlockStats.CODEC );
             if( PARENT.isNetherDimension() ) {
-                return List.of(
-                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 5 ),
-                        new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 ),
-                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
-                );
+                return builder
+                        .put( Blocks.CHEST, BuriedBlockStats.of( DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 5 ) )
+                        .put( DWBlocks.INACTIVE_BURIED_SPAWNER, BuriedBlockStats.of( DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 ) )
+                        .put( Blocks.LAVA, BuriedBlockStats.of( DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 ) )
+                        .build();
             }
             if( PARENT.isEndDimension() ) {
-                return List.of(
-                        new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 5 ),
-                        new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 ),
-                        new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 )
-                );
+                return builder
+                        .put( Blocks.CHEST, BuriedBlockStats.of( DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 5 ) )
+                        .put( DWBlocks.INACTIVE_BURIED_SPAWNER, BuriedBlockStats.of( DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 ) )
+                        .put( DWBlocks.RUNNY_LAVA, BuriedBlockStats.of( DEPTH_NETHER_VOID, DEPTH_NETHER_CEIL, 10 ) )
+                        .build();
             }
             // For the overworld, as well as any dimensions added by mods
-            return List.of(
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.CHEST ), DEPTH_LAVA, DEPTH_1, 2.5 ),
-                    new RegistryValueEntry<>( DWBlocks.INACTIVE_BURIED_SPAWNER.getId(), DEPTH_LAVA, DEPTH_3, 5 ),
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.WATER ), DEPTH_4, DEPTH_SEA_LEVEL + 14, 8 ),
-                    new RegistryValueEntry<>( ForgeRegistries.BLOCKS.getKey( Blocks.LAVA ), DEPTH_VOID, DEPTH_2, 5 ),
-                    new RegistryValueEntry<>( DWBlocks.RUNNY_LAVA.getId(), DEPTH_VOID, DEPTH_4, 1 )
-            );
+            return builder
+                    .put( Blocks.CHEST, BuriedBlockStats.of( DEPTH_LAVA, DEPTH_1, 2.5 ) )
+                    .put( DWBlocks.INACTIVE_BURIED_SPAWNER, BuriedBlockStats.of( DEPTH_LAVA, DEPTH_3, 5 ) )
+                    .put( Blocks.WATER, BuriedBlockStats.of( DEPTH_4, DEPTH_SEA_LEVEL + 14, 8 ) )
+                    .put( Blocks.LAVA, BuriedBlockStats.of( DEPTH_VOID, DEPTH_2, 5 ) )
+                    .put( DWBlocks.RUNNY_LAVA, BuriedBlockStats.of( DEPTH_VOID, DEPTH_4, 1 ) )
+                    .build();
         }
     }
 }

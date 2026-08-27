@@ -9,7 +9,7 @@ import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.block.unstable.PitfallTrapType;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
+import fathertoast.crust.api.config.common.value.provider.ConfigUniformIntProvider;
 import fathertoast.deadlyworld.common.core.registry.DWBlocks;
 import fathertoast.deadlyworld.common.core.registry.DWFeatures;
 import fathertoast.deadlyworld.common.world.levelgen.FloorTrapSettings;

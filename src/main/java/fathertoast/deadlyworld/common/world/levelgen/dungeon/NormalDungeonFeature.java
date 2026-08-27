@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.DungeonConfig;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantFloatProvider;
+import fathertoast.crust.api.config.common.value.provider.ConfigConstantFloatProvider;
 import fathertoast.deadlyworld.common.core.registry.DWTags;
 import fathertoast.deadlyworld.common.world.levelgen.trap.DeadlyFeature;
 import net.minecraft.core.BlockPos;

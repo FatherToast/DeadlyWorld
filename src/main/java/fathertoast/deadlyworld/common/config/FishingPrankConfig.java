@@ -5,17 +5,14 @@ import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.crust.api.config.common.value.EntityEntry;
-import fathertoast.crust.api.config.common.value.RegistryValueEntry;
+import fathertoast.crust.api.config.common.field.collection.RegistryWeightedListField;
+import fathertoast.crust.api.config.common.value.collection.RegistryWeightedList;
 import fathertoast.deadlyworld.api.DWRegistries;
 import fathertoast.deadlyworld.api.IFishingPrank;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
-import fathertoast.deadlyworld.common.config.field.WeightedRegEntryList;
-import fathertoast.deadlyworld.common.config.field.WeightedRegEntryListField;
 import fathertoast.deadlyworld.common.core.registry.DWFishingPranks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Objects;
@@ -30,7 +27,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
     
     /** Builds the config spec that should be used for this config. */
     FishingPrankConfig( ConfigManager manager, String fileName ) {
-        super( manager, fileName,
+        super( manager, fileName, false,
                 "This config contains options for fishing pranks."
         );
         
@@ -52,7 +49,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
         
         public final DoubleField prankChance;
         
-        public final WeightedRegEntryListField<IFishingPrank> prankList;
+        public final RegistryWeightedListField<IFishingPrank> prankList;
         
         
         General( FishingPrankConfig parent ) {
@@ -67,20 +64,16 @@ public class FishingPrankConfig extends AbstractConfigFile {
             
             SPEC.newLine();
             
-            prankList = SPEC.define( new WeightedRegEntryListField<>( "prank_list", makeDefaultPrankList(),
+            prankList = SPEC.define( new RegistryWeightedListField<>( "prank_list",
+                    new RegistryWeightedList.Builder<>( DWRegistries.FISHING_PRANKS_REGISTRY.get() )
+                            .add( 50, DWFishingPranks.SINGLE_TNT )
+                            .add( 50, DWFishingPranks.YEET_TNT )
+                            .add( 200, DWFishingPranks.MOB )
+                            .add( 100, DWFishingPranks.SNAG )
+                            .build(),
                     "Weighted list of fishing pranks to pick from when pranking a player that is fishing.",
                     "Note that some pranks have custom checks to see if they can be executed under the current " +
                             "circumstances. If the prank cannot be executed, nothing happens." ) );
-        }
-        
-        @SuppressWarnings( "ConstantConditions" )
-        private WeightedRegEntryList<IFishingPrank> makeDefaultPrankList() {
-            return new WeightedRegEntryList<>( DWRegistries.FISHING_PRANKS_REGISTRY,
-                    new RegistryValueEntry<>( DWFishingPranks.SINGLE_TNT.getId(), 50 ),
-                    new RegistryValueEntry<>( DWFishingPranks.YEET_TNT.getId(), 50 ),
-                    new RegistryValueEntry<>( DWFishingPranks.MOB.getId(), 200 ),
-                    new RegistryValueEntry<>( DWFishingPranks.SNAG.getId(), 100 )
-            );
         }
     }
     
@@ -107,26 +100,23 @@ public class FishingPrankConfig extends AbstractConfigFile {
     
     public static class Mob extends FishingPrankCategory {
         
-        public final WeightedEntityListField mobList;
+        public final RegistryWeightedListField<EntityType<?>> mobList;
         
         Mob( FishingPrankConfig parent, RegistryObject<IFishingPrank> regObj ) {
             super( parent, regObj );
             
-            mobList = SPEC.define( new WeightedEntityListField( "mob_list", makeDefaultMobs(),
+            mobList = SPEC.define( new RegistryWeightedListField<>( "mob_list",
+                    new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                            .add( 100, EntityType.CREEPER )
+                            .add( 300, EntityType.DROWNED )
+                            .add( 100, EntityType.SKELETON )
+                            .add( 100, EntityType.PUFFERFISH )
+                            .add( 5, EntityType.PIG )
+                            .add( 50, EntityType.GUARDIAN )
+                            .add( 1, EntityType.ELDER_GUARDIAN )
+                            .add( 40, EntityType.MINECART )
+                            .build(),
                     "A weighted list of the different mobs that this prank can spawn." ) );
-        }
-        
-        private WeightedEntityList makeDefaultMobs() {
-            return new WeightedEntityList(
-                    new EntityEntry( EntityType.CREEPER, 100 ),
-                    new EntityEntry( EntityType.DROWNED, 300 ),
-                    new EntityEntry( EntityType.SKELETON, 100 ),
-                    new EntityEntry( EntityType.PUFFERFISH, 100 ),
-                    new EntityEntry( EntityType.PIG, 5 ),
-                    new EntityEntry( EntityType.GUARDIAN, 50 ),
-                    new EntityEntry( EntityType.ELDER_GUARDIAN, 1 ),
-                    new EntityEntry( EntityType.MINECART, 40 )
-            );
         }
     }
     

@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package fathertoast.deadlyworld.common.config.levelgen.setting;
+package fathertoast.deadlyworld.common.config.value;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

@@ -22,7 +22,7 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
     
     /** Builds the config spec that should be used for this config. */
     UnstableBlocksConfig( ConfigManager manager, String fileName ) {
-        super( manager, fileName,
+        super( manager, fileName, false,
                 "This config contains options to customize auto-generated unstable blocks, including " +
                         "which to generate and how they behave."
         );
@@ -31,8 +31,8 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
     
     public static class AutoGen extends AbstractConfigCategory<UnstableBlocksConfig> {
         
-        public final PredicateStringListField hostBlocks;
-        public final InjectionWrapperField<StringField> fallbackBlock;
+        public final StringListField hostBlocks;
+        public final StringField fallbackBlock;
         
         public final EnumField<BlockAutoGen.NameStyle> nameStyle;
         
@@ -49,8 +49,7 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
                     "Options that apply to automatic generation of this Deadly World's unstable " +
                             "blocks, as well as their behavior." );
             
-            hostBlocks = SPEC.define( new PredicateStringListField( "host_blocks", "namespace:block_name",
-                    buildDefaultUnstableBlocks(), ResourceLocation::isValidResourceLocation,
+            hostBlocks = SPEC.define( new StringListField( "host_blocks", buildDefaultUnstableBlocks(),
                     "A list of blocks to generate an \"unstable\" version for. The unstable version of a block " +
                             "looks identical, but has modified behavior (see below) and pops itself and other neighboring unstable blocks when stepped on.",
                     "Only blocks that are solid, full cubes with no block entity should be put on this list.",
@@ -63,7 +62,7 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
                     "The vanilla fallback block to replace missing unstable blocks with. If the \"host_blocks\" " +
                             "list is changed and you load into a world that used to have unstable blocks that no longer " +
                             "exist, they will be replaced with this block."
-            ), this::checkFallbackBlock ) );
+            ), this::checkFallbackBlock ) ).field();
             
             SPEC.newLine();
             
@@ -121,7 +120,7 @@ public class UnstableBlocksConfig extends AbstractConfigFile {
         public Block getFallbackBlock() {
             Block fallbackFallback = Blocks.SAND;
             
-            ResourceLocation id = ResourceLocation.tryParse( fallbackBlock.field().get() );
+            ResourceLocation id = ResourceLocation.tryParse( fallbackBlock.get() );
             
             if( id == null ) return fallbackFallback;
             if( !ForgeRegistries.BLOCKS.containsKey( id ) ) return fallbackFallback;

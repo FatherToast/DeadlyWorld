@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.spike_trap.SpikeTrapType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.SpikeTrapConfig;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigConstantIntProvider;
+import fathertoast.crust.api.config.common.value.provider.ConfigConstantIntProvider;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProvider;
 

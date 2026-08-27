@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.block.entity;
 
 import fathertoast.crust.api.util.BoxShape;
-import fathertoast.crust.api.util.IBlockEntityDebugShapeProvider;
+import fathertoast.crust.api.util.IDebugShapeProvider;
 import fathertoast.crust.api.util.IDebugShape;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Modified copy-paste of {@link net.minecraft.world.level.block.entity.SpawnerBlockEntity}.
  */
-public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObject, IBlockEntityDebugShapeProvider {
+public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObject, IDebugShapeProvider {
     
     private static final Vec3 DEFAULT_EFFECT_OFFSETS = new Vec3( 0.5, 0.2, 0.5 );
     

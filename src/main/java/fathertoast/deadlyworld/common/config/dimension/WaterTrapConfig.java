@@ -3,13 +3,13 @@ package fathertoast.deadlyworld.common.config.dimension;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.crust.api.config.common.field.WeightedPotionListField;
-import fathertoast.crust.api.config.common.value.EntityEntry;
+import fathertoast.crust.api.config.common.field.collection.RegistryWeightedListField;
+import fathertoast.crust.api.config.common.value.collection.RegistryWeightedList;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
+import fathertoast.deadlyworld.common.config.value.MobEffectWeightedListField;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static fathertoast.deadlyworld.common.util.References.DEPTH_LAVA;
 import static fathertoast.deadlyworld.common.util.References.DEPTH_SEA_LEVEL;
@@ -47,7 +47,7 @@ public class WaterTrapConfig extends FeatureConfig {
         
         public final DoubleField explosionPower;
         
-        public final WeightedPotionListField potions;
+        public final MobEffectWeightedListField potions;
         
         
         SeaMineCategory( FeatureConfig parent, SeaMineType type, double placements, double oceanPlacements,
@@ -77,7 +77,7 @@ public class WaterTrapConfig extends FeatureConfig {
             
             SPEC.newLine();
             
-            potions = SPEC.define( new WeightedPotionListField( "potions", type.defaultPotions(),
+            potions = SPEC.define( new MobEffectWeightedListField( "potions", type.defaultPotions(),
                     "A list of potions that may be applied to creatures caught in this mine's blast.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
         }
@@ -87,7 +87,7 @@ public class WaterTrapConfig extends FeatureConfig {
         
         public final DoubleField countPerChunkInOcean;
         
-        public final WeightedEntityListField spawnList;
+        public final RegistryWeightedListField<EntityType<?>> spawnList;
         
         public final DoubleField speedMultiplier;
         public final DoubleField healthMultiplier;
@@ -107,7 +107,7 @@ public class WaterTrapConfig extends FeatureConfig {
             
             SPEC.newLine();
             
-            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList(),
+            spawnList = SPEC.define( new RegistryWeightedListField<>( "spawn_list", makeDefaultSpawnList(),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME + ". One of these is chosen " +
                             "at random when the trap is generated.",
                     DimensionConfigHelper.MESSAGE_NO_OVERRIDE ) );
@@ -123,18 +123,18 @@ public class WaterTrapConfig extends FeatureConfig {
         }
         
         /** @return The default spawn list to use for this trap type and dimension. */
-        protected WeightedEntityList makeDefaultSpawnList() {
+        protected RegistryWeightedList<EntityType<?>> makeDefaultSpawnList() {
             if( isNetherDimension() ) {
-                return new WeightedEntityList();
+                return new RegistryWeightedList<>( ForgeRegistries.ENTITY_TYPES );
             }
             if( isEndDimension() ) {
-                return new WeightedEntityList();
+                return new RegistryWeightedList<>( ForgeRegistries.ENTITY_TYPES );
             }
             // For the overworld, as well as any dimensions added by mods
-            return new WeightedEntityList(
-                    new EntityEntry( EntityType.DROWNED, 100 ),
-                    new EntityEntry( EntityType.SQUID, 50 )
-            );
+            return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                    .add( 100, EntityType.DROWNED )
+                    .add( 50, EntityType.SQUID )
+                    .build();
         }
     }
 }

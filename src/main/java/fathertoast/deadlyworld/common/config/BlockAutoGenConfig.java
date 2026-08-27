@@ -15,7 +15,7 @@ public class BlockAutoGenConfig extends AbstractConfigFile {
     
     /** Builds the config spec that should be used for this config. */
     BlockAutoGenConfig( ConfigManager manager, String fileName ) {
-        super( manager, fileName,
+        super( manager, fileName, false,
                 "This config contains options for DeadlyWorld's auto-generated blocks (e.g. infested blocks and unstable blocks)."
         );
         GENERAL = new General( this );

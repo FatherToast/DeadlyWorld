@@ -2,20 +2,20 @@ package fathertoast.deadlyworld.common.config.dimension;
 
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.ConfigUtil;
-import fathertoast.crust.api.config.common.field.AttributeListField;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import fathertoast.crust.api.config.common.value.AttributeEntry;
-import fathertoast.crust.api.config.common.value.AttributeList;
-import fathertoast.crust.api.config.common.value.EntityEntry;
+import fathertoast.crust.api.config.common.field.collection.AttributeOpListField;
+import fathertoast.crust.api.config.common.field.collection.EntitySetField;
+import fathertoast.crust.api.config.common.field.collection.RegistryWeightedListField;
+import fathertoast.crust.api.config.common.value.collection.AttributeOpList;
+import fathertoast.crust.api.config.common.value.collection.RegistryWeightedList;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityList;
-import fathertoast.deadlyworld.common.config.field.WeightedEntityListField;
 import fathertoast.deadlyworld.common.core.registry.DWEntities;
 import fathertoast.deadlyworld.common.util.DimensionConfigHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static fathertoast.deadlyworld.common.util.References.*;
 
@@ -37,7 +37,7 @@ public class SpawnerConfig extends FeatureConfig {
         super( manager, dir, dimConfigs, "spawner" );
         
         SPEC.newLine();
-        SPEC.describeEntityList();
+        EntitySetField.describe( SPEC );
         
         SPEC.newLine();
         SPEC.comment( "Progressive Spawn Delay:",
@@ -98,11 +98,11 @@ public class SpawnerConfig extends FeatureConfig {
         public final IntField spawnRange;
         
         public final DoubleField dynamicChance;
-        public final WeightedEntityListField spawnList;
+        public final RegistryWeightedListField<EntityType<?>> spawnList;
         
         public final DoubleField mimicChance;
         
-        public final AttributeListField attributeAdjustments;
+        public final AttributeOpListField attributeAdjustments;
         
         SpawnerTypeCategory( FeatureConfig parent, SpawnerType type,
                              double placements, int minHeight, int maxHeight,
@@ -155,7 +155,7 @@ public class SpawnerConfig extends FeatureConfig {
                     "The chance for " + FEATURE_TYPE_NAME + " to generate as 'dynamic'.",
                     "Dynamic spawners pick a new mob to spawn after each spawn.",
                     DimensionConfigHelper.MESSAGE_CONFIGURED_FEATURE_OVERRIDE ) );
-            spawnList = SPEC.define( new WeightedEntityListField( "spawn_list", makeDefaultSpawnList(),
+            spawnList = SPEC.define( new RegistryWeightedListField<>( "spawn_list", makeDefaultSpawnList(),
                     "Weighted list of mobs that can be spawned by " + FEATURE_TYPE_NAME +
                             ". One of these is chosen at random when the spawner is generated.",
                     "Spawners generated as 'dynamic' pick again after each spawn.",
@@ -170,58 +170,58 @@ public class SpawnerConfig extends FeatureConfig {
             
             SPEC.newLine();
             
-            attributeAdjustments = SPEC.define( new AttributeListField( "attribute_adjustments", makeDefaultAttributeList( type ),
+            attributeAdjustments = SPEC.define( new AttributeOpListField( "attribute_adjustments", makeDefaultAttributeList( type ),
                     "Base attribute adjustments applied to entities spawned by " + FEATURE_TYPE_NAME + ", if applicable.",
                     DimensionConfigHelper.MESSAGE_WORK_IN_PROGRESS_OVERRIDE ) ); // TODO
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */
-        protected AttributeList makeDefaultAttributeList( SpawnerType type ) {
+        protected AttributeOpList makeDefaultAttributeList( SpawnerType type ) {
             if( type == SpawnerType.BRUTAL ) {
-                return new AttributeList(
-                        AttributeEntry.add( Attributes.MAX_HEALTH, 5.0 ),
-                        AttributeEntry.mult( Attributes.MAX_HEALTH, 1.2 ),
-                        AttributeEntry.add( Attributes.KNOCKBACK_RESISTANCE, 0.5 ),
-                        AttributeEntry.add( Attributes.ARMOR, 12.0 ),
-                        AttributeEntry.add( Attributes.ARMOR_TOUGHNESS, 8.0 ),
-                        AttributeEntry.add( Attributes.ATTACK_DAMAGE, 1.0 ),
-                        AttributeEntry.mult( Attributes.ATTACK_DAMAGE, 1.2 ),
-                        AttributeEntry.add( Attributes.ATTACK_KNOCKBACK, 2.0 ),
-                        AttributeEntry.mult( Attributes.MOVEMENT_SPEED, 1.1 )
-                );
+                return new AttributeOpList.Builder<>()
+                        .putAdd( Attributes.MAX_HEALTH, 5.0 )
+                        .putMultiply( Attributes.MAX_HEALTH, 1.2 )
+                        .putAdd( Attributes.KNOCKBACK_RESISTANCE, 0.5 )
+                        .putAdd( Attributes.ARMOR, 12.0 )
+                        .putAdd( Attributes.ARMOR_TOUGHNESS, 8.0 )
+                        .putAdd( Attributes.ATTACK_DAMAGE, 1.0 )
+                        .putMultiply( Attributes.ATTACK_DAMAGE, 1.2 )
+                        .putAdd( Attributes.ATTACK_KNOCKBACK, 2.0 )
+                        .putMultiply( Attributes.MOVEMENT_SPEED, 1.1 )
+                        .build();
             }
-            return new AttributeList();
+            return new AttributeOpList();
         }
         
         /** @return The default spawn list to use for this spawner type and dimension. */
-        protected WeightedEntityList makeDefaultSpawnList() {
+        protected RegistryWeightedList<EntityType<?>> makeDefaultSpawnList() {
             if( isNetherDimension() ) {
-                return new WeightedEntityList(
-                        new EntityEntry( EntityType.WITHER_SKELETON, 200 ),
-                        new EntityEntry( EntityType.HUSK, 100 ),
-                        new EntityEntry( EntityType.BLAZE, 100 ),
-                        new EntityEntry( EntityType.CAVE_SPIDER, 10 ),
-                        new EntityEntry( EntityType.CREEPER, 10 ),
-                        new EntityEntry( EntityType.MAGMA_CUBE, 10 )
-                );
+                return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                        .add( 200, EntityType.WITHER_SKELETON )
+                        .add( 100, EntityType.HUSK )
+                        .add( 100, EntityType.BLAZE )
+                        .add( 10, EntityType.CAVE_SPIDER )
+                        .add( 10, EntityType.CREEPER )
+                        .add( 10, EntityType.MAGMA_CUBE )
+                        .build();
             }
             if( isEndDimension() ) {
-                return new WeightedEntityList(
-                        new EntityEntry( EntityType.ENDERMAN, 200 ),
-                        new EntityEntry( EntityType.CREEPER, 10 )
-                );
+                return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                        .add( 200, EntityType.ENDERMAN )
+                        .add( 10, EntityType.CREEPER )
+                        .build();
             }
             // For the overworld, as well as any dimensions added by mods
-            return new WeightedEntityList(
+            return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
                     // Vanilla dungeon mobs
-                    new EntityEntry( EntityType.ZOMBIE, 200 ),
-                    new EntityEntry( EntityType.SKELETON, 100 ),
-                    new EntityEntry( EntityType.SPIDER, 100 ),
+                    .add( 200, EntityType.ZOMBIE )
+                    .add( 100, EntityType.SKELETON )
+                    .add( 100, EntityType.SPIDER )
                     // Extras
-                    new EntityEntry( EntityType.CAVE_SPIDER, 10 ),
-                    new EntityEntry( EntityType.CREEPER, 10 ),
-                    new EntityEntry( EntityType.SILVERFISH, 10 )
-            );
+                    .add( 10, EntityType.CAVE_SPIDER )
+                    .add( 10, EntityType.CREEPER )
+                    .add( 10, EntityType.SILVERFISH )
+                    .build();
         }
     }
     
@@ -332,8 +332,9 @@ public class SpawnerConfig extends FeatureConfig {
         
         /** @return The default spawn list to use for this spawner type and dimension. */
         @Override
-        protected WeightedEntityList makeDefaultSpawnList() {
-            return new WeightedEntityList( new EntityEntry( EntityType.SILVERFISH, 100 ) );
+        protected RegistryWeightedList<EntityType<?>> makeDefaultSpawnList() {
+            return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                    .add( 100, EntityType.SILVERFISH ).build();
         }
     }
     
@@ -347,24 +348,22 @@ public class SpawnerConfig extends FeatureConfig {
         
         /** @return The default spawn list to use for this spawner type and dimension. */
         @Override
-        protected WeightedEntityList makeDefaultSpawnList() {
+        protected RegistryWeightedList<EntityType<?>> makeDefaultSpawnList() {
             if( isNetherDimension() ) {
-                return new WeightedEntityList(
-                        new EntityEntry( DWEntities.MINI_ZOMBIE.get(), true, 200 ),
-                        new EntityEntry( DWEntities.MINI_SKELETON.get(), true, 100 ),
-                        new EntityEntry( DWEntities.MINI_SPIDER.get(), true, 100 ),
-                        new EntityEntry( DWEntities.MINI_CREEPER.get(), true, 50 ),
-                        new EntityEntry( DWEntities.MICRO_GHAST.get(), true, 40 )
-                );
+                return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                        .add( 200, DWEntities.MINI_ZOMBIE )
+                        .add( 100, DWEntities.MINI_SKELETON )
+                        .add( 100, DWEntities.MINI_SPIDER )
+                        .add( 50, DWEntities.MINI_CREEPER )
+                        .add( 40, DWEntities.MICRO_GHAST )
+                        .build();
             }
-            else {
-                return new WeightedEntityList(
-                        new EntityEntry( DWEntities.MINI_ZOMBIE.get(), true, 200 ),
-                        new EntityEntry( DWEntities.MINI_SKELETON.get(), true, 100 ),
-                        new EntityEntry( DWEntities.MINI_SPIDER.get(), true, 100 ),
-                        new EntityEntry( DWEntities.MINI_CREEPER.get(), true, 50 )
-                );
-            }
+            return new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
+                    .add( 200, DWEntities.MINI_ZOMBIE )
+                    .add( 100, DWEntities.MINI_SKELETON )
+                    .add( 100, DWEntities.MINI_SPIDER )
+                    .add( 50, DWEntities.MINI_CREEPER )
+                    .build();
         }
     }
 }

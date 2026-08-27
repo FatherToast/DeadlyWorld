@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fathertoast.deadlyworld.common.block.sea_mine.SeaMineType;
 import fathertoast.deadlyworld.common.config.dimension.DimensionConfigGroup;
 import fathertoast.deadlyworld.common.config.dimension.WaterTrapConfig;
-import fathertoast.deadlyworld.common.config.levelgen.ConfigUniformIntProvider;
+import fathertoast.crust.api.config.common.value.provider.ConfigUniformIntProvider;
 import net.minecraft.util.valueproviders.IntProvider;
 
 public record SeaMineSettings(

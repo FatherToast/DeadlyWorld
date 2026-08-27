@@ -132,9 +132,9 @@ public abstract class BaseTower {
     public void initializeTower( Level level, BlockPos pos, RandomSource random ) {
         final TowerConfig.TowerTypeCategory towerConfig = towerType.getConfig( level );
         initializeTower( level, pos, random,
-                towerConfig.activationRange.get(), (float) towerConfig.checkSightChance.get(),
-                towerConfig.attackDelay.getMin(), towerConfig.attackDelay.getMax(), towerConfig.attackDamage == null ? -1.0F : (float) towerConfig.attackDamage.get(),
-                (float) towerConfig.projectileSpeed.get(), (float) towerConfig.projectileVariance.get()
+                towerConfig.activationRange.get(), towerConfig.checkSightChance.getFloat(),
+                towerConfig.attackDelay.getMin(), towerConfig.attackDelay.getMax(), towerConfig.attackDamage == null ? -1.0F : towerConfig.attackDamage.getFloat(),
+                towerConfig.projectileSpeed.getFloat(), towerConfig.projectileVariance.getFloat()
         );
     }
     
@@ -154,7 +154,7 @@ public abstract class BaseTower {
     
     public double getActivationRange() { return activationRange; }
     
-    public void clientTick( Level level, BlockPos pos ) { }
+    public void clientTick( Level level, BlockPos pos ) {}
     
     public void serverTick( ServerLevel level, BlockPos pos ) {
         switch( getState() ) {
@@ -166,7 +166,7 @@ public abstract class BaseTower {
     }
     
     /** Called each server tick while this tower is disabled. */
-    protected void disabledTick( ServerLevel level, BlockPos pos ) { }
+    protected void disabledTick( ServerLevel level, BlockPos pos ) {}
     
     /** Called each server tick while this tower is resetting. */
     protected void resettingTick( ServerLevel level, BlockPos pos ) { delay++; }

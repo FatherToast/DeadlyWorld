@@ -34,7 +34,7 @@ public class PotionTower extends BaseTower {
     
     // Overridden in block
     @Override
-    public void activateTower( ServerLevel level, BlockPos pos, Entity target, Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance ) { }
+    public void activateTower( ServerLevel level, BlockPos pos, Entity target, Vec3 center, Vec3 offset, Vec3 vecToTarget, double distance ) {}
     
     public void initializeTower( WorldGenLevel level, BlockPos pos, RandomSource random, FloorTrapSettings trapSettings ) {
         final TowerConfig.PotionTowerTypeCategory towerConfig =
@@ -58,16 +58,21 @@ public class PotionTower extends BaseTower {
         final TowerConfig.PotionTowerTypeCategory towerConfig =
                 (TowerConfig.PotionTowerTypeCategory) towerType.getConfig( level );
         
+        boolean dynamic = towerConfig.dynamicChance.rollChance( random );
+        MobEffectInstance potion = dynamic ? null : towerConfig.potionList.nextPotion( random );
+        
         initializeTower( level, pos, random,
-                towerConfig.activationRange.get(), (float) towerConfig.checkSightChance.get(),
-                towerConfig.attackDelay.getMin(), towerConfig.attackDelay.getMax(), towerConfig.attackDamage == null ? -1.0F : (float) towerConfig.attackDamage.get(),
-                (float) towerConfig.projectileSpeed.get(), (float) towerConfig.projectileVariance.get(), towerConfig.dynamicChance.rollChance( random )
+                towerConfig.activationRange.get(), towerConfig.checkSightChance.getFloat(),
+                towerConfig.attackDelay.getMin(), towerConfig.attackDelay.getMax(), towerConfig.attackDamage == null ? -1.0F : towerConfig.attackDamage.getFloat(),
+                towerConfig.projectileSpeed.getFloat(), towerConfig.projectileVariance.getFloat(),
+                dynamic, potion
         );
     }
     
     public void initializeTower( Level level, BlockPos pos, RandomSource random, double activationRange,
                                  float checkSightChance, int minAttackDelay, int maxAttackDelay, float attackDamage,
-                                 float projectileSpeed, float projectileVariance, boolean dynamic ) {
+                                 float projectileSpeed, float projectileVariance,
+                                 boolean dynamic, @Nullable MobEffectInstance potion ) {
         this.checkSight = roll( random, checkSightChance );
         this.activationRange = activationRange;
         this.minAttackDelay = minAttackDelay;
@@ -76,6 +81,7 @@ public class PotionTower extends BaseTower {
         this.projectileSpeed = projectileSpeed;
         this.projectileVariance = projectileVariance;
         this.dynamic = dynamic;
+        this.potion = potion;
     }
     
     public boolean isDynamic() {

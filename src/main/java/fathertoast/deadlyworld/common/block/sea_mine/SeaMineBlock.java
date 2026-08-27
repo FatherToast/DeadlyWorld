@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.block.sea_mine;
 
-import fathertoast.crust.api.config.common.value.weighted.WeightedPotionList;
 import fathertoast.deadlyworld.common.config.Config;
+import fathertoast.deadlyworld.common.config.value.MobEffectWeightedList;
 import fathertoast.deadlyworld.common.core.registry.DWSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -74,7 +74,7 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
         return type.getConfig( level ).explosionPower.getFloat();
     }
     
-    private WeightedPotionList getPotionList( Level level ) {
+    private MobEffectWeightedList getPotionList( Level level ) {
         return type.getConfig( level ).potions.get();
     }
     
@@ -194,13 +194,9 @@ public class SeaMineBlock extends Block implements SimpleWaterloggedBlock {
                 getExplosionPower( level ),
                 Level.ExplosionInteraction.BLOCK
         );
-        final WeightedPotionList potionList = getPotionList( level );
         
         // Pick a potion and apply it to all creatures caught in the blast
-        if( potionList.isEmpty() ) return;
-        
-        final MobEffectInstance potion = potionList.next( random );
-        
+        final MobEffectInstance potion = getPotionList( level ).nextPotion( random );
         if( potion == null ) return;
         
         List<LivingEntity> nearbyCreatures = level.getEntitiesOfClass( LivingEntity.class, new AABB( pos ).inflate( getExplosionPower( level ) ) );

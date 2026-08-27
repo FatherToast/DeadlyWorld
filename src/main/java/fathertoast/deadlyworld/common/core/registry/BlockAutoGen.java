@@ -53,11 +53,11 @@ public final class BlockAutoGen {
         
         // Register infested blocks
         registerAutoGenBlockCategory( autoGenBlocks, dependencies, autoDependencies, DeadlyInfestedBlock.BLOCK_KEY,
-                Config.INFESTED_BLOCKS.AUTO_GEN.hostBlocks.get(), ( originBlockLoc ) -> DWBlocks.registerAutoGenBlock(
+                Config.INFESTED_BLOCKS.AUTO_GEN.hostBlocks.get(), originBlockLoc -> DWBlocks.registerAutoGenBlock(
                         DeadlyInfestedBlock.BLOCK_KEY, originBlockLoc, DeadlyInfestedBlock::new ) );
         // Register unstable blocks
         registerAutoGenBlockCategory( autoGenBlocks, dependencies, autoDependencies, UnstableBlock.BLOCK_KEY,
-                Config.UNSTABLE_BLOCKS.AUTO_GEN.hostBlocks.get(), ( originBlockLoc ) -> DWBlocks.registerAutoGenBlock(
+                Config.UNSTABLE_BLOCKS.AUTO_GEN.hostBlocks.get(), originBlockLoc -> DWBlocks.registerAutoGenBlock(
                         UnstableBlock.BLOCK_KEY, originBlockLoc, UnstableBlock::new ) );
         
         autoGenBlocks.trimToSize();
