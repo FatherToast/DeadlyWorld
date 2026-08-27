@@ -28,6 +28,7 @@ public class DeadlySpawnerBlockEntityRenderer implements BlockEntityRenderer<Dea
         entityRenderer = renderContext.getEntityRenderer();
     }
     
+    @Override
     public void render( DeadlySpawnerBlockEntity blockEntity, float partialTick, PoseStack stack, MultiBufferSource buffer, int packedLight, int overlayTexture ) {
         Level level = blockEntity.getLevel();
         if( level == null ) return;

@@ -7,8 +7,6 @@ import fathertoast.deadlyworld.common.util.DWDispenserBehavior;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DeferredWorkQueue;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -17,7 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * The core of the mod. Contains basic info about the mod, initializes configs, and hooks into FML.
@@ -207,13 +204,9 @@ public final class DeadlyWorld {
         DWDecoyTypes.REGISTRY.register( eventBus );
         DWFluids.REGISTRY.register( eventBus );
         DWFluids.TYPE_REGISTRY.register( eventBus );
-        //        DWStructures.REGISTRY.register( eventBus );
         
-        Config.initializeEarly();
-        DeferredWorkQueue.lookup( Optional.of( ModLoadingStage.COMMON_SETUP ) ).ifPresent(
-                ( workQueue ) -> workQueue.enqueueWork( ModList.get().getModContainerById( MOD_ID ).orElseThrow(),
-                        Config::initialize )
-        );
+        // Enqueue early config init
+        ModLoadingStage.CONSTRUCT.getDeferredWorkQueue().enqueueWork( context.getContainer(), Config::initializeEarly );
         
         DWFieldProviders.register( eventBus );
         DWFeatures.REGISTRY.register( eventBus );
@@ -224,6 +217,7 @@ public final class DeadlyWorld {
     
     public void onCommonSetup( FMLCommonSetupEvent event ) {
         event.enqueueWork( () -> {
+            Config.initialize();
             DWFluids.registerFluidInteractions();
             DWDispenserBehavior.register();
         } );

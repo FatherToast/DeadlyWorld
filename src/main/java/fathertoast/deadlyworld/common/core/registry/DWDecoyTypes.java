@@ -19,7 +19,7 @@ import static fathertoast.deadlyworld.common.core.registry.DWTags.DecoyTypes.*;
 
 public final class DWDecoyTypes {
     
-    public static final DeferredRegister<DecoyType> REGISTRY = DeferredRegister.create( DeadlyWorld.rl( "decoy_types" ), DeadlyWorld.MOD_ID );
+    public static final DeferredRegister<DecoyType> REGISTRY = DeferredRegister.create( DWRegistries.DECOY_TYPE_REG_KEY, DeadlyWorld.MOD_ID );
     
     static {
         DWRegistries.DECOY_TYPE_REGISTRY = REGISTRY.makeRegistry( () -> new RegistryBuilder<DecoyType>().hasTags() );

@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public final class DWFishingPranks {
     
-    public static final DeferredRegister<IFishingPrank> REGISTRY = DeferredRegister.create( DeadlyWorld.rl( "fishing_pranks" ), DeadlyWorld.MOD_ID );
+    public static final DeferredRegister<IFishingPrank> REGISTRY = DeferredRegister.create( DWRegistries.FISHING_PRANKS_REG_KEY, DeadlyWorld.MOD_ID );
     
     static {
         DWRegistries.FISHING_PRANKS_REGISTRY = REGISTRY.makeRegistry( () ->

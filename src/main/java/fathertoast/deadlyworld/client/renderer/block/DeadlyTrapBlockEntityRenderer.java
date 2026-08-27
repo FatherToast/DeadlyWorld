@@ -92,15 +92,11 @@ public class DeadlyTrapBlockEntityRenderer implements BlockEntityRenderer<FloorT
         poseStack.pushPose();
         // Move the overlay model a tiiiny bit up to avoid Z-fighting at close ranges (hardly noticeable at longer ranges)
         poseStack.translate( 0.5D, 0.001D, 0.5D );
-        int packedLight;
+        // Use light color of above position if possible, since the block we are at is solid
+        int packedLight = level == null
+                ? 15728880
+                : LevelRenderer.getLightColor( level, origin.above() );
         
-        // Use light color of above position since the block we are at is solid
-        if( level != null ) {
-            packedLight = LevelRenderer.getLightColor( level, origin.above() );
-        }
-        else {
-            packedLight = 15728880;
-        }
         topOverlay.render( poseStack, buffer.getBuffer( RenderType.entityCutout( TOP_OVERLAY ) ), packedLight, overlayTexture );
         poseStack.popPose();
     }
