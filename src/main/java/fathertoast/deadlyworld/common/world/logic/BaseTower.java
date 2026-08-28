@@ -152,9 +152,23 @@ public abstract class BaseTower {
     
     protected static boolean roll( RandomSource random, float chance ) { return chance >= 1.0F || chance > 0.0F && random.nextFloat() < chance; }
     
+    public boolean checksSight() { return checkSight; }
+    
     public double getActivationRange() { return activationRange; }
     
-    public void clientTick( Level level, BlockPos pos ) {}
+    public int getMinAttackDelay() { return minAttackDelay; }
+    
+    public int getMaxAttackDelay() { return maxAttackDelay; }
+    
+    public float getAttackDamage() { return attackDamage; }
+    
+    public float getProjectileSpeed() { return projectileSpeed; }
+    
+    public float getProjectileVariance() { return projectileVariance; }
+    
+    public int getDelay() { return delay; }
+    
+    public void clientTick( Level level, BlockPos pos ) { }
     
     public void serverTick( ServerLevel level, BlockPos pos ) {
         switch( getState() ) {
@@ -166,7 +180,7 @@ public abstract class BaseTower {
     }
     
     /** Called each server tick while this tower is disabled. */
-    protected void disabledTick( ServerLevel level, BlockPos pos ) {}
+    protected void disabledTick( ServerLevel level, BlockPos pos ) { }
     
     /** Called each server tick while this tower is resetting. */
     protected void resettingTick( ServerLevel level, BlockPos pos ) { delay++; }

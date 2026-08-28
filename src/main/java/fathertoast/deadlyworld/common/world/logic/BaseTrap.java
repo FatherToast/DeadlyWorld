@@ -1,8 +1,8 @@
 package fathertoast.deadlyworld.common.world.logic;
 
 import fathertoast.crust.api.lib.NBTHelper;
-import fathertoast.deadlyworld.api.DWRegistries;
-import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.api.lib.DWRegistries;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
 import fathertoast.deadlyworld.common.block.ICamoTrap;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.config.dimension.FloorTrapConfig;
@@ -187,7 +187,22 @@ public abstract class BaseTrap {
         }
     }
     
+    public BlockState getCamoState() { return camoState; }
+    
+    @Nullable
+    public DecoyType getDecoyType() { return decoyType; }
+    
     public double getActivationRange() { return activationRange; }
+    
+    public boolean checksSight() { return checkSight; }
+    
+    public int getMinResetTime() { return minResetTime; }
+    
+    public int getMaxResetTime() { return maxResetTime; }
+    
+    public int getMaxTriggerDelay() { return maxTriggerDelay; }
+    
+    public int getTriggersRemaining() { return triggersRemaining; }
     
     public void clientTick( Level level, BlockPos pos ) { }
     
@@ -365,11 +380,6 @@ public abstract class BaseTrap {
     
     @Nullable
     public BlockEntity getBlockEntity() { return blockEntity; }
-    
-    public BlockState getCamoState() { return camoState; }
-    
-    @Nullable
-    public DecoyType getDecoyType() { return decoyType; }
     
     public void disableDecoy() { decoyType = null; }
 }

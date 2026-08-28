@@ -196,6 +196,25 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         else super.setEntityId( entityType, level, random, pos );
     }
     
+    public int getSpawnRange() { return spawnRange; }
+    
+    public boolean checksSight() { return checkSight; }
+    
+    public int getDelayProgression() { return spawnDelayProgression; }
+    
+    public float getDelayRecovery() { return spawnDelayRecovery; }
+    
+    public boolean usesForgeHookSpawns() { return useForgeHookSpawnList; }
+    
+    public boolean isMimic() { return isMimic; }
+    
+    public float getDelayBuildup() { return spawnDelayBuildup; }
+    
+    public int getRemainingSpawns() { return spawnsRemaining; }
+    
+    @Nullable
+    public RegistryWeightedList<EntityType<?>> getDynamicSpawnList() { return dynamicSpawnList; }
+    
     @Override
     public void clientTick( Level level, BlockPos pos ) {
         updateActivationStatus( level, pos );
@@ -470,6 +489,10 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         if( level != null ) spawnerObject.sendUpdate( this, level, pos );
     }
     
+    /**
+     * @return The spawn data of the next mob to spawn, if it exists.
+     * Creates new spawn data and returns it otherwise.
+     */
     @Override
     protected SpawnData getOrCreateNextSpawnData( @Nullable Level level, RandomSource random, BlockPos pos ) {
         if( nextSpawnData == null ) {
@@ -479,6 +502,12 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
                 setEntityId( DungeonHooks.getRandomDungeonMob( random ), level, random, pos );
             }
         }
+        return nextSpawnData;
+    }
+    
+    /** @return The spawn data of the next mob to spawn. Can be null. */
+    @Nullable
+    public SpawnData getSpawnData() {
         return nextSpawnData;
     }
     
@@ -510,8 +539,6 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         setEntityId( DungeonHooks.getRandomDungeonMob( level.random ), getLevel(), level.random, pos );
     }
     
-    public int getSpawnRange() { return spawnRange; }
-    
     /** Increments the number of mobs this is allowed to spawn, if it has limited spawns. */
     public void addSpawn() { if( hasLimitedSpawns() ) setRemainingSpawns( getRemainingSpawns() + 1 ); }
     
@@ -520,10 +547,6 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     public void setUnlimitedSpawns() { setRemainingSpawns( -1 ); }
     
     public void setRemainingSpawns( int spawns ) { spawnsRemaining = spawns; }
-    
-    public int getRemainingSpawns() { return spawnsRemaining; }
-    
-    public boolean isMimic() { return isMimic; }
     
     public void setMimic( boolean value ) { isMimic = value; }
     

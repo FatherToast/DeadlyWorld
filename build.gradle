@@ -97,8 +97,11 @@ dependencies {
     // Add in JEI, JER and Jade to assist debugging during development
     runtimeOnly fg.deobf("curse.maven:jei-238222:${jei_version}")
     runtimeOnly fg.deobf("curse.maven:jer-240630:${jer_version}")
-    implementation fg.deobf("curse.maven:jade-324717:${jade_version}")
+    runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
+    // Compile against Jade's API
+    compileOnly fg.deobf("curse.maven:jade-api-324717:${jade_api_version}")
 
+    // Add Twilight Forest so we have a non-vanilla dimension to test stuff in
     runtimeOnly fg.deobf("curse.maven:twilightforest-227639:${twiforest_version}")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
