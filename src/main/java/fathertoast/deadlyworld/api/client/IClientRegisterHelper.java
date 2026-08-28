@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.api.client;
 
-import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Supplier;

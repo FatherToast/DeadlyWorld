@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
-import fathertoast.deadlyworld.api.DWRegistries;
-import fathertoast.deadlyworld.api.IFishingPrank;
+import fathertoast.deadlyworld.api.lib.DWRegistries;
+import fathertoast.deadlyworld.api.registry.fishprank.IFishingPrank;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.fishpranks.MobPrank;
 import fathertoast.deadlyworld.common.fishpranks.SingleTntPrank;

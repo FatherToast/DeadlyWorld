@@ -1,9 +1,9 @@
 package fathertoast.deadlyworld.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import fathertoast.deadlyworld.api.DWRegistries;
-import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.api.client.IDecoyRenderer;
+import fathertoast.deadlyworld.api.lib.DWRegistries;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
 import fathertoast.deadlyworld.client.DWModelLayers;
 import fathertoast.deadlyworld.client.DecoyRendererRegistry;
 import fathertoast.deadlyworld.common.block.entity.FloorTrapBlockEntity;

@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.core.registry;
 
-import fathertoast.deadlyworld.api.DWRegistries;
-import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.api.lib.DWRegistries;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;

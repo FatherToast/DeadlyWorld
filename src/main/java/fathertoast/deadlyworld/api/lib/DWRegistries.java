@@ -1,5 +1,8 @@
-package fathertoast.deadlyworld.api;
+package fathertoast.deadlyworld.api.lib;
 
+import fathertoast.deadlyworld.api.IDeadlyWorldApi;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
+import fathertoast.deadlyworld.api.registry.fishprank.IFishingPrank;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -7,10 +10,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.function.Supplier;
 
+// TODO Move this stuff over to DeadlyWorldObjects
 public final class DWRegistries {
-    
-    /** Deadly World's mod ID. */
-    public static final String MOD_ID = "deadlyworld";
     
     /**
      * The forge registry for Deadly World fishing pranks.
@@ -30,7 +31,7 @@ public final class DWRegistries {
     
     /** @return A ResourceLocation under the Deadly World namespace with the given path. */
     private static ResourceLocation id( String path ) {
-        return ResourceLocation.fromNamespaceAndPath( MOD_ID, path );
+        return ResourceLocation.fromNamespaceAndPath( IDeadlyWorldApi.MOD_ID, path );
     }
     
     private DWRegistries() { }

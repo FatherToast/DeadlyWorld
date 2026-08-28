@@ -2,8 +2,8 @@ package fathertoast.deadlyworld.client.renderer.decoy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import fathertoast.deadlyworld.api.IDecoyProvider;
 import fathertoast.deadlyworld.api.client.IDecoyRenderer;
+import fathertoast.deadlyworld.api.registry.decoy.IDecoyProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;

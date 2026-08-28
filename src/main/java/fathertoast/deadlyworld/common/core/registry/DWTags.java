@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.common.core.registry;
 
-import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;

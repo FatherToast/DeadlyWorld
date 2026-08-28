@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.api.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import fathertoast.deadlyworld.api.IDecoyProvider;
+import fathertoast.deadlyworld.api.registry.decoy.IDecoyProvider;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;

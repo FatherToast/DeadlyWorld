@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.common.fishpranks;
 
-import fathertoast.deadlyworld.api.IFishingPrank;
+import fathertoast.deadlyworld.api.registry.fishprank.IFishingPrank;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;

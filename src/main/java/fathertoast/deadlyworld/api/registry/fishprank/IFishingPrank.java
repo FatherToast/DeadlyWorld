@@ -1,12 +1,14 @@
-package fathertoast.deadlyworld.api;
+package fathertoast.deadlyworld.api.registry.fishprank;
 
+import fathertoast.deadlyworld.api.lib.DWRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The logic for a fishing prank.<br><br>
- * To register a new prank, create a deferred register using
+ * Represents a fishing prank.
+ * <br><br>
+ * To register a new fishing prank, create a deferred register using
  * {@link DWRegistries#FISHING_PRANKS_REGISTRY}
  */
 public interface IFishingPrank {

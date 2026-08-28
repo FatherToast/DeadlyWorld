@@ -1,5 +1,9 @@
 package fathertoast.deadlyworld.common.core;
 
+import fathertoast.deadlyworld.api.DeadlyWorldPlugin;
+import fathertoast.deadlyworld.api.IDeadlyWorldApi;
+import fathertoast.deadlyworld.api.IDeadlyWorldPlugin;
+import fathertoast.deadlyworld.api.impl.DeadlyWorldApi;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.*;
 import fathertoast.deadlyworld.common.network.PacketHandler;
@@ -7,6 +11,7 @@ import fathertoast.deadlyworld.common.util.DWDispenserBehavior;
 import fathertoast.deadlyworld.common.util.References;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -182,11 +187,15 @@ public final class DeadlyWorld {
     /** The logger used by this mod. */
     public static final Logger LOG = LogManager.getLogger( MOD_ID );
     
+    /** API instance. */
+    public final IDeadlyWorldApi API;
+    
     /** Packet handler instance */
     public PacketHandler packetHandler = new PacketHandler();
     
     
     public DeadlyWorld( FMLJavaModLoadingContext context ) {
+        API = new DeadlyWorldApi();
         IEventBus eventBus = context.getModEventBus();
         
         packetHandler.registerMessages();
@@ -222,6 +231,32 @@ public final class DeadlyWorld {
             DWFluids.registerFluidInteractions();
             DWDispenserBehavior.register();
         } );
+    }
+    
+    @SuppressWarnings( "all" )
+    private void processPlugins() {
+        // Load mod plugins
+        ModList.get().getAllScanData().forEach( ( scanData ) ->
+                scanData.getAnnotations().forEach( ( annotationData ) -> {
+                    // Look for classes annotated with @CrustPlugin
+                    if( annotationData.annotationType().getClassName().equals( DeadlyWorldPlugin.class.getName() ) ) {
+                        try {
+                            Class<?> pluginClass = Class.forName( annotationData.memberName() );
+                            
+                            if( IDeadlyWorldPlugin.class.isAssignableFrom( pluginClass ) ) {
+                                IDeadlyWorldPlugin plugin = (IDeadlyWorldPlugin) pluginClass.getDeclaredConstructor().newInstance();
+                                plugin.onLoad( API );
+                                LOG.info( "Found Deadly World plugin at {} with plugin ID: {}",
+                                        annotationData.memberName(), plugin.getId() );
+                            }
+                        }
+                        catch( Exception ex ) {
+                            LOG.error( "Failed to load a Deadly World plugin! Plugin class: {}",
+                                    annotationData.memberName() );
+                            ex.printStackTrace();
+                        }
+                    }
+                } ) );
     }
     
     /** @return A resource location with Deadly World's namespace. */

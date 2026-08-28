@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.common.fishpranks;
 
-import fathertoast.deadlyworld.api.IFishingPrank;
+import fathertoast.deadlyworld.api.registry.fishprank.IFishingPrank;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

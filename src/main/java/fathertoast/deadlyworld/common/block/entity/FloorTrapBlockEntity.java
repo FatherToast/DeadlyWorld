@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.common.block.entity;
 
-import fathertoast.deadlyworld.api.DecoyType;
-import fathertoast.deadlyworld.api.IDecoyProvider;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
+import fathertoast.deadlyworld.api.registry.decoy.IDecoyProvider;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;

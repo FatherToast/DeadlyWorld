@@ -1,8 +1,8 @@
 package fathertoast.deadlyworld.client;
 
-import fathertoast.deadlyworld.api.DWRegistries;
-import fathertoast.deadlyworld.api.DecoyType;
 import fathertoast.deadlyworld.api.client.IDecoyRenderer;
+import fathertoast.deadlyworld.api.lib.DWRegistries;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
 import fathertoast.deadlyworld.client.renderer.decoy.SimpleBlockDecoyRenderer;
 import fathertoast.deadlyworld.client.renderer.decoy.SimpleEntityDecoyRenderer;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;

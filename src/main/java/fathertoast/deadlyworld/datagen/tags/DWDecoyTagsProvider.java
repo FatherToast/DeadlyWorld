@@ -1,7 +1,7 @@
 package fathertoast.deadlyworld.datagen.tags;
 
-import fathertoast.deadlyworld.api.DWRegistries;
-import fathertoast.deadlyworld.api.DecoyType;
+import fathertoast.deadlyworld.api.lib.DWRegistries;
+import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
 import fathertoast.deadlyworld.common.core.DeadlyWorld;
 import fathertoast.deadlyworld.common.core.registry.DWDecoyTypes;
 import fathertoast.deadlyworld.common.core.registry.DWTags;

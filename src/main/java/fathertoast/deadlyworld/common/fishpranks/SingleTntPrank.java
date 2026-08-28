@@ -1,6 +1,6 @@
 package fathertoast.deadlyworld.common.fishpranks;
 
-import fathertoast.deadlyworld.api.IFishingPrank;
+import fathertoast.deadlyworld.api.registry.fishprank.IFishingPrank;
 import fathertoast.deadlyworld.common.config.Config;
 import fathertoast.deadlyworld.common.core.registry.DWFishingPranks;
 import fathertoast.deadlyworld.common.entity.YeetTnt;

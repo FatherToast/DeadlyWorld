@@ -1,4 +1,6 @@
-package fathertoast.deadlyworld.api;
+package fathertoast.deadlyworld.api.registry.decoy;
+
+import fathertoast.deadlyworld.api.lib.DWRegistries;
 
 import java.util.function.Supplier;
 
