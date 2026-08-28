@@ -1,8 +1,9 @@
 package fathertoast.deadlyworld.common.block.entity;
 
 import fathertoast.crust.api.util.BoxShape;
-import fathertoast.crust.api.util.IDebugShapeProvider;
 import fathertoast.crust.api.util.IDebugShape;
+import fathertoast.crust.api.util.IDebugShapeProvider;
+import fathertoast.crust.api.util.shape.SphereShape;
 import fathertoast.deadlyworld.common.block.spawner.DeadlySpawnerBlock;
 import fathertoast.deadlyworld.common.block.spawner.SpawnerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
@@ -87,6 +88,16 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
     @Override
     public boolean onlyOpCanSetNbt() { return true; }
     
+    public ProgressiveDelaySpawner getSpawnerLogic() { return spawnerLogic; }
+    
+    public void setEntityId( EntityType<?> entityType, RandomSource random ) {
+        spawnerLogic.setEntityId( entityType, level, random, worldPosition );
+    }
+    
+    public float getEntityRenderScale() { return 0.53125F; }
+    
+    public Vec3 getEntityRenderOffset() { return DEFAULT_EFFECT_OFFSETS; }
+    
     @Override // ISpawnerObject
     public void sendUpdate( ProgressiveDelaySpawner spawner, Level level, BlockPos pos ) {
         setChanged();
@@ -109,21 +120,24 @@ public class DeadlySpawnerBlockEntity extends BlockEntity implements ISpawnerObj
         level.addParticle( ParticleTypes.FLAME, x, y, z, 0.0, 0.0, 0.0 );
     }
     
-    public ProgressiveDelaySpawner getSpawnerLogic() { return spawnerLogic; }
-    
-    public void setEntityId( EntityType<?> entityType, RandomSource random ) {
-        spawnerLogic.setEntityId( entityType, level, random, worldPosition );
-    }
-    
-    public float getEntityRenderScale() { return 0.53125F; }
-    
-    public Vec3 getEntityRenderOffset() { return DEFAULT_EFFECT_OFFSETS; }
-    
     @Nullable
     @Override // IBlockEntityDebugShapeProvider
     public List<IDebugShape> getDebugShapes() {
-        // Show spawn range (activation range is spherical, so won't work yet)
-        return List.of( new BoxShape( new AABB( worldPosition )
-                .inflate( spawnerLogic.getSpawnRange(), 1.0, spawnerLogic.getSpawnRange() ) ) );
+        Vec3 pos = new Vec3( getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ() );
+        
+        // Spawn range
+        return List.of(
+                new BoxShape( new AABB( getBlockPos() )
+                        .inflate( spawnerLogic.getSpawnRange(), 1.0, spawnerLogic.getSpawnRange() ) )
+                        .withPos( pos.add( 0.5, 0.5, 0.5 ) ),
+                new SphereShape( spawnerLogic.getActivationRange() )
+                        .withPos( pos.add( 0.5, 0.5, 0.5 ) )
+                        .withColor( 0.0F, 1.0F, 0.0F )
+        );
+    }
+    
+    @Override
+    public boolean useWorldPosition() {
+        return false;
     }
 }

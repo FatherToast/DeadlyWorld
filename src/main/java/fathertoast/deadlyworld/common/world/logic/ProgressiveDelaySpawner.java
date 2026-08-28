@@ -196,6 +196,8 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         else super.setEntityId( entityType, level, random, pos );
     }
     
+    public int getActivationRange() { return requiredPlayerRange; }
+    
     public int getSpawnRange() { return spawnRange; }
     
     public boolean checksSight() { return checkSight; }

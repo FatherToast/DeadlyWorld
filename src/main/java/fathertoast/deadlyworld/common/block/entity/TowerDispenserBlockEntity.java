@@ -1,5 +1,8 @@
 package fathertoast.deadlyworld.common.block.entity;
 
+import fathertoast.crust.api.util.IDebugShape;
+import fathertoast.crust.api.util.IDebugShapeProvider;
+import fathertoast.crust.api.util.shape.SphereShape;
 import fathertoast.deadlyworld.common.block.tower.TowerDispenserBlock;
 import fathertoast.deadlyworld.common.block.tower.TowerType;
 import fathertoast.deadlyworld.common.core.registry.DWBlockEntities;
@@ -7,13 +10,17 @@ import fathertoast.deadlyworld.common.world.logic.BaseTower;
 import fathertoast.deadlyworld.common.world.logic.ITowerObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-public class TowerDispenserBlockEntity extends BlockEntity implements ITowerObject {
+import java.util.List;
+
+public class TowerDispenserBlockEntity extends BlockEntity implements ITowerObject, IDebugShapeProvider {
     
     protected final BaseTower towerLogic;
     protected final TowerType towerType;
@@ -49,6 +56,26 @@ public class TowerDispenserBlockEntity extends BlockEntity implements ITowerObje
     }
     
     @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create( this );
+    }
+    
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = saveWithoutMetadata();
+        
+        tag.remove( BaseTower.TAG_CHECK_SIGHT );
+        tag.remove( BaseTower.TAG_MIN_ATTACK_DELAY );
+        tag.remove( BaseTower.TAG_MAX_ATTACK_DELAY );
+        tag.remove( BaseTower.TAG_ATTACK_DAMAGE );
+        tag.remove( BaseTower.TAG_PROJECTILE_SPEED );
+        tag.remove( BaseTower.TAG_PROJECTILE_VARIANCE );
+        tag.remove( BaseTower.TAG_DELAY );
+        
+        return tag;
+    }
+    
+    @Override
     public boolean triggerEvent( int id, int type ) {
         return level != null && towerLogic.onEventTriggered( level, id ) ||
                 super.triggerEvent( id, type );
@@ -56,6 +83,8 @@ public class TowerDispenserBlockEntity extends BlockEntity implements ITowerObje
     
     @Override
     public boolean onlyOpCanSetNbt() { return true; }
+    
+    public BaseTower getTowerLogic() { return towerLogic; }
     
     @Override // ITowerObject
     public void broadcastEvent( BaseTower trap, Level level, BlockPos pos, int eventId ) {
@@ -65,5 +94,11 @@ public class TowerDispenserBlockEntity extends BlockEntity implements ITowerObje
     @Override // ITowerObject
     public void spawnEffectParticle( BaseTower trap, Level level, BlockPos pos ) { }
     
-    public BaseTower getTowerLogic() { return towerLogic; }
+    @Nullable
+    @Override // IDebugShapeProvider
+    public List<IDebugShape> getDebugShapes() {
+        return List.of( new SphereShape( (float) getTowerLogic().getActivationRange() )
+                .withColor( 1.0F, 0.0F, 0.0F )
+        );
+    }
 }

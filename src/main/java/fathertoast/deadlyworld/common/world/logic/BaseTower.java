@@ -280,8 +280,9 @@ public abstract class BaseTower {
      * If the random is null, the duration will be the maximum reset time.
      */
     public void newAttackDelay( @Nullable RandomSource random ) {
-        delay = -1 - (random == null || maxAttackDelay <= minAttackDelay ? maxAttackDelay :
-                minAttackDelay + random.nextInt( maxAttackDelay - minAttackDelay ));
+        delay = -1 - (random == null || maxAttackDelay <= minAttackDelay
+                ? maxAttackDelay
+                : minAttackDelay + random.nextInt( maxAttackDelay - minAttackDelay ));
         towerTarget = null;
     }
     
@@ -298,6 +299,7 @@ public abstract class BaseTower {
         arrow.setPos( center.x + offset.x * spawnOffset, center.y, center.z + offset.z * spawnOffset );
         arrow.shoot( vecToTarget.x, vecToTarget.y + distanceH * 0.2F, vecToTarget.z, velocity, variance );
         
+        // noinspection ConstantConditions
         getLevel().addFreshEntity( arrow );
     }
     

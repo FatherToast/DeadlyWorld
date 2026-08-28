@@ -1,5 +1,8 @@
 package fathertoast.deadlyworld.common.block.entity;
 
+import fathertoast.crust.api.util.IDebugShape;
+import fathertoast.crust.api.util.IDebugShapeProvider;
+import fathertoast.crust.api.util.shape.SphereShape;
 import fathertoast.deadlyworld.api.registry.decoy.DecoyType;
 import fathertoast.deadlyworld.api.registry.decoy.IDecoyProvider;
 import fathertoast.deadlyworld.common.block.floor_trap.FloorTrapBlock;
@@ -21,8 +24,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
-public class FloorTrapBlockEntity extends BlockEntity implements ITrapObject, IDecoyProvider {
+public class FloorTrapBlockEntity extends BlockEntity implements ITrapObject, IDecoyProvider, IDebugShapeProvider {
     
     private static final BlockState DEFAULT_APPEARANCE = Blocks.DROPPER.defaultBlockState()
             .setValue( DropperBlock.FACING, Direction.UP );
@@ -72,13 +76,15 @@ public class FloorTrapBlockEntity extends BlockEntity implements ITrapObject, ID
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = saveWithoutMetadata();
-        trapLogic.writeToUpdateTag( tag );
+        
+        tag.remove( BaseTrap.TAG_CHECK_SIGHT );
+        tag.remove( BaseTrap.TAG_MIN_RESET_TIME );
+        tag.remove( BaseTrap.TAG_MAX_RESET_TIME );
+        tag.remove( BaseTrap.TAG_MAX_TRIGGER_DELAY );
+        tag.remove( BaseTrap.TAG_TRIGGERS_REMAINING );
+        tag.remove( BaseTrap.TAG_DELAY );
+        
         return tag;
-    }
-    
-    @Override
-    public void handleUpdateTag( CompoundTag tag ) {
-        super.handleUpdateTag( tag );
     }
     
     @Override
@@ -126,5 +132,13 @@ public class FloorTrapBlockEntity extends BlockEntity implements ITrapObject, ID
     @Override // IDecoyProvider
     public boolean isDecoyActive() {
         return trapLogic.getDecoyType() != null;
+    }
+    
+    @Nullable
+    @Override // IDebugShapeProvider
+    public List<IDebugShape> getDebugShapes() {
+        return List.of( new SphereShape( (float) getTrapLogic().getActivationRange() )
+                .withColor( 0.0F, 0.0F, 1.0F )
+        );
     }
 }
