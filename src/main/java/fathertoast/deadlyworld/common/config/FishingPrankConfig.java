@@ -105,7 +105,7 @@ public class FishingPrankConfig extends AbstractConfigFile {
         Mob( FishingPrankConfig parent, RegistryObject<IFishingPrank> regObj ) {
             super( parent, regObj );
             
-            mobList = SPEC.define( new RegistryWeightedListField<>( "mob_list",
+            mobList = SPEC.define( new RegistryWeightedListField<>( "entity_list",
                     new RegistryWeightedList.Builder<>( ForgeRegistries.ENTITY_TYPES )
                             .add( 100, EntityType.CREEPER )
                             .add( 300, EntityType.DROWNED )

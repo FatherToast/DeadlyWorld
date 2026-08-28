@@ -65,7 +65,7 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
     // Logic tags
     public static final String TAG_DELAY_BUILDUP = "DelayBuildup";
     public static final String TAG_SPAWNS_REMAINING = "SpawnsRemaining";
-    public static final String TAG_DYNAMIC_SPAWN_LIST = "DynamicSpawnList";
+    public static final String TAG_DYNAMIC_SPAWN_LIST = "DynamicSpawnChoices";
     // Vanilla tags
     public static final String TAG_SPAWN_POTENTIALS = "SpawnPotentials";
     
@@ -455,12 +455,6 @@ public class ProgressiveDelaySpawner extends BaseSpawner {
         if( NBTHelper.containsList( loadTag, TAG_DYNAMIC_SPAWN_LIST ) ) {
             dynamicSpawnList = new RegistryWeightedList<>( ForgeRegistries.ENTITY_TYPES );
             dynamicSpawnList.load( loadTag, TAG_DYNAMIC_SPAWN_LIST );
-            
-            // Try to detect and reset legacy lists TODO remove this when updating beyond 1.20.1?
-            if( level != null && !NBTHelper.getStringList( loadTag, TAG_DYNAMIC_SPAWN_LIST ).isEmpty() && dynamicSpawnList.isEmpty() ) {
-                final SpawnerConfig.SpawnerTypeCategory spawnerConfig = spawnerType.getConfig( level );
-                dynamicSpawnList = spawnerConfig.spawnList.get();
-            }
         }
         
         super.load( level, pos, loadTag );
